@@ -176,12 +176,45 @@ const statusPill: Record<string, string> = {
               Palette repo ↗
             </a>
           )}
-          {version.data.languagePaperUrl && (
+          {version.data.languagePaperUrl && !version.data.flagPaper && (
             <a href={version.data.languagePaperUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
               Reference paper ↗
             </a>
           )}
         </div>
+
+        {version.data.flagPaper && (
+          <div class={`vp__flag${version.data.flagPaper.isFoundation ? ' vp__flag--foundation' : ''}`}>
+            <div class="vp__flag-head">
+              <span class="vp__flag-tag">
+                {version.data.flagPaper.isFoundation ? 'Foundation paper' : 'Flag paper'}
+              </span>
+              {version.data.flagPaper.doi && (
+                <span class="vp__flag-doi">DOI: {version.data.flagPaper.doi}</span>
+              )}
+            </div>
+            <p class="vp__flag-cite">
+              <strong>{version.data.flagPaper.authors}</strong> ({version.data.flagPaper.year}).
+              <em>{version.data.flagPaper.title}</em>
+              {version.data.flagPaper.venue && <>. {version.data.flagPaper.venue}</>}.
+            </p>
+            {version.data.flagPaper.note && (
+              <p class="vp__flag-note" set:html={
+                version.data.flagPaper.note.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+              } />
+            )}
+            <div class="vp__flag-actions">
+              {version.data.flagPaper.url && (
+                <a href={version.data.flagPaper.url} target="_blank" rel="noopener" class="vp__btn">
+                  Open paper ↗
+                </a>
+              )}
+              <a href={`${B}/cite/`} class="vp__btn vp__btn--ghost">
+                How to cite EM →
+              </a>
+            </div>
+          </div>
+        )}
       </section>
 
       <!-- ── Tools matrix with inline downloads ──────────────── -->
@@ -337,6 +370,56 @@ const statusPill: Record<string, string> = {
     font-size: 11px;
   }
   .vp__lang-links { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* Flag paper block */
+  .vp__flag {
+    margin-top: 22px;
+    padding: 18px 22px;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--em-border);
+    border-left: 4px solid var(--em-navy);
+    border-radius: var(--radius-sm);
+  }
+  .vp__flag--foundation { border-left-color: var(--em-gold); background: var(--em-gold-tint); }
+  .vp__flag-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .vp__flag-tag {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-navy);
+    background: var(--em-navy-tint);
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .vp__flag--foundation .vp__flag-tag { color: var(--em-gold); background: rgba(255, 255, 255, 0.7); }
+  .vp__flag-doi {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em-text-muted);
+  }
+  .vp__flag-cite {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.6;
+    margin: 0 0 8px;
+  }
+  .vp__flag-note {
+    font-size: 13px;
+    color: var(--em-text-muted);
+    font-style: italic;
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
+  .vp__flag-note a { color: var(--em-gold); }
+  .vp__flag-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
   .vp__dl {
     display: grid;

@@ -70,9 +70,23 @@ const groupLabel: Record<string, string> = {
           </p>
 
           <h2>Citation</h2>
-          <p>To cite Extended Matrix in academic work:</p>
-          <pre class="cite" is:raw>
-@misc{demetrescu_extendedmatrix,
+          <p>
+            EM uses a <strong>cumulative citation rule</strong>: always cite
+            the 2015 foundation paper, then add the flag paper of the EM
+            version you actually used (and a software DOI when relevant).
+            The full guidance and BibTeX entries live on the dedicated
+            <a href={`${B}/cite/`}><strong>How to cite EM</strong></a> page.
+          </p>
+          <p>
+            For the canonical bibliography and glossary of formal terms,
+            see the
+            <a href="https://docs.extendedmatrix.org/en/latest/references.html" target="_blank" rel="noopener">References</a>
+            and
+            <a href="https://docs.extendedmatrix.org/en/latest/glossary.html" target="_blank" rel="noopener">Glossary</a>
+            pages of the language documentation.
+          </p>
+          <p class="about__cite-quick">Software DOI for quick reference:</p>
+          <pre class="cite" is:raw>@misc{demetrescu_extendedmatrix,
   title     = {Extended Matrix},
   author    = {Demetrescu, Emanuel},
   publisher = {Zenodo},
@@ -85,7 +99,7 @@ const groupLabel: Record<string, string> = {
             All EM software components — the s3dgraphy library, EM Tools,
             3DSC, Heriverse — are released under <strong>GPL-3.0</strong>.
             See the individual repositories on
-            <a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener">GitHub</a>
+            <a href="https://github.com/topics/extendedmatrix" target="_blank" rel="noopener">GitHub</a>
             for the exact licence files. Datasets, examples and case studies
             deposited on the
             <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Zenodo community</a>
@@ -110,12 +124,13 @@ const groupLabel: Record<string, string> = {
           <h2>Quick links</h2>
           <ul class="links">
             <li><a href={`${B}/start`}>→ Start here</a></li>
+            <li><a href={`${B}/cite`}>→ How to cite EM</a></li>
             <li><a href={`${B}/projects`}>→ Projects</a></li>
             <li><a href={`${B}/community`}>→ Community &amp; meetings</a></li>
             <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">→ Language docs</a></li>
             <li><a href="https://docs.extendedmatrix.org/projects/EM-tools/" target="_blank" rel="noopener">→ EM Tools manual</a></li>
             <li><a href="https://docs.extendedmatrix.org/projects/heriverse/" target="_blank" rel="noopener">→ Heriverse</a></li>
-            <li><a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener">→ GitHub</a></li>
+            <li><a href="https://github.com/topics/extendedmatrix" target="_blank" rel="noopener">→ GitHub</a></li>
             <li><a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">→ Zenodo community</a></li>
           </ul>
         </aside>

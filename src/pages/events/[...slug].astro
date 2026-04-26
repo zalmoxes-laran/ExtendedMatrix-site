@@ -25,14 +25,16 @@ const kindLabel: Record<string, string> = {
   talk: 'Talk',
 };
 
-// Convert YouTube watch URL → embed URL (best effort, no-op for unknown forms)
+// Convert YouTube watch URL → embed URL using the privacy-enhanced
+// youtube-nocookie.com domain (GDPR: defers persistent identifiers
+// until the user actually presses Play). See /privacy for details.
 const ytEmbed = (url: string): string | null => {
   const m1 = url.match(/youtube\.com\/watch\?v=([\w-]+)/);
-  if (m1) return `https://www.youtube.com/embed/${m1[1]}`;
+  if (m1) return `https://www.youtube-nocookie.com/embed/${m1[1]}`;
   const m2 = url.match(/youtu\.be\/([\w-]+)/);
-  if (m2) return `https://www.youtube.com/embed/${m2[1]}`;
+  if (m2) return `https://www.youtube-nocookie.com/embed/${m2[1]}`;
   const m3 = url.match(/youtube\.com\/playlist\?list=([\w-]+)/);
-  if (m3) return `https://www.youtube.com/embed/videoseries?list=${m3[1]}`;
+  if (m3) return `https://www.youtube-nocookie.com/embed/videoseries?list=${m3[1]}`;
   return null;
 };
 

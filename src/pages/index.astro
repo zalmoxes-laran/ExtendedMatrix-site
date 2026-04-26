@@ -327,6 +327,30 @@ const partnerLogos = allPartners
     </div>
   </section>
 
+  <!-- ============ CITE EM ============ -->
+  <section class="cite-prompt">
+    <div class="container cite-prompt__row">
+      <div>
+        <span class="tag">Citing EM</span>
+        <h2 class="cite-prompt__title">Used EM in a paper? Cite it the right way.</h2>
+        <p class="cite-prompt__lede">
+          Extended Matrix grows version after version. The
+          <strong>2015 foundation paper</strong> is always cited; each
+          release additionally contributes a <strong>flag paper</strong>
+          you cite when you used features it introduced. The
+          <a href={`${B}/cite`}>How to cite EM</a> page assembles the
+          full list per version, with ready-made BibTeX, and links to
+          the canonical
+          <a href="https://docs.extendedmatrix.org/en/latest/references.html" target="_blank" rel="noopener">References</a>
+          and
+          <a href="https://docs.extendedmatrix.org/en/latest/glossary.html" target="_blank" rel="noopener">Glossary</a>
+          pages of the language documentation.
+        </p>
+        <a href={`${B}/cite`} class="btn btn-ghost">How to cite EM →</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ OPEN DATA ============ -->
   <section class="opendata">
     <div class="container">
@@ -702,6 +726,21 @@ const partnerLogos = allPartners
     margin-bottom: 24px;
     line-height: 1.7;
   }
+
+  /* Cite EM teaser */
+  .cite-prompt {
+    padding: 60px 0;
+    border-top: 1px solid var(--em-border);
+  }
+  .cite-prompt__row { display: block; }
+  .cite-prompt__title { margin: 12px 0 16px; max-width: 720px; }
+  .cite-prompt__lede {
+    color: var(--em-text);
+    max-width: 760px;
+    margin-bottom: 22px;
+    line-height: 1.7;
+  }
+  .cite-prompt__lede a { color: var(--em-gold); font-weight: 600; }
 
   /* ── Used by ───────────────────────────────────────────── */
   .usedby {

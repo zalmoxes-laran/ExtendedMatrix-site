@@ -1,0 +1,210 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Last review of this notice. Bump when the substance changes.
+const lastReviewed = '2026-04-27';
+---
+
+<BaseLayout
+  title="Privacy notice"
+  description="Privacy notice for extendedmatrix.org — what (little) data is processed when you visit, the third-party embeds we use, your rights under the GDPR, and how to contact us."
+>
+  <section class="privacy">
+    <div class="container">
+      <span class="tag">Privacy</span>
+      <h1>Privacy notice.</h1>
+      <p class="privacy__lede">
+        This notice describes how <strong>extendedmatrix.org</strong>
+        handles personal data under the EU General Data Protection
+        Regulation (Regulation (EU) 2016/679 — GDPR). The site is a
+        static, public information service for the Extended Matrix
+        research project; we keep data processing to the minimum
+        compatible with running it.
+      </p>
+
+      <p class="privacy__meta">
+        Last reviewed: <time datetime={lastReviewed}>{lastReviewed}</time>.
+      </p>
+
+      <!-- ── Data controller ─────────────────────────────────── -->
+      <section class="block">
+        <h2>1 · Data controller</h2>
+        <p>
+          The data controller for this website is
+          <strong>Consiglio Nazionale delle Ricerche — Istituto di Scienze del Patrimonio Culturale (CNR-ISPC)</strong>.
+          The site is maintained on behalf of CNR-ISPC by Emanuel Demetrescu,
+          principal investigator of the Extended Matrix project.
+        </p>
+        <p>
+          For questions specific to this site you can contact the
+          maintainer at
+          <a href="mailto:emanuel.demetrescu@cnr.it">emanuel.demetrescu@cnr.it</a>.
+          For formal data-protection enquiries (Art. 15–22 GDPR), the
+          point of contact is the CNR Data Protection Officer:
+          <a href="mailto:rpd@cnr.it">rpd@cnr.it</a>.
+        </p>
+      </section>
+
+      <!-- ── What we collect on this site ────────────────────── -->
+      <section class="block">
+        <h2>2 · What this website collects</h2>
+        <p>
+          The site is statically generated and served via
+          <strong>GitHub Pages</strong>. It does <strong>not</strong> set
+          first-party tracking cookies, does not use analytics
+          (Google Analytics, Plausible, etc.), and does not log visitors
+          beyond what GitHub does on its own infrastructure.
+        </p>
+        <p>
+          GitHub may log technical information such as the IP address
+          of incoming requests and the user-agent string, for the sole
+          purpose of operating its CDN and detecting abuse. This is
+          covered by GitHub's own
+          <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement" target="_blank" rel="noopener">privacy statement</a>.
+        </p>
+      </section>
+
+      <!-- ── Third-party embeds ──────────────────────────────── -->
+      <section class="block">
+        <h2>3 · Third-party content embedded on this site</h2>
+        <p>
+          A small number of pages embed content served by third
+          parties. When you load such a page, your browser establishes
+          a direct connection to those services and they may, in turn,
+          process technical data (IP address, user agent, time of
+          access) under their own privacy policies.
+        </p>
+        <ul class="privacy__list">
+          <li>
+            <strong>YouTube (youtube-nocookie.com)</strong> — used on
+            the <a href={`${B}/events`}>Events</a> pages to embed
+            recordings of EM Conference, EM Bazaar and related talks.
+            We use the <em>privacy-enhanced</em>
+            <code>youtube-nocookie.com</code> domain, which defers the
+            placement of persistent identifiers until you actually
+            press Play. See Google's
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">privacy policy</a>.
+          </li>
+          <li>
+            <strong>Zenodo (zenodo.org)</strong> — when you click a
+            DOI or community link, you leave this site and continue on
+            <code>zenodo.org</code>, operated by CERN. See the
+            <a href="https://about.zenodo.org/policies/" target="_blank" rel="noopener">Zenodo policies</a>.
+          </li>
+          <li>
+            <strong>GitHub (github.com / topics)</strong> — repository
+            and topic pages opened from the navigation, footer, and
+            tools pages.
+          </li>
+          <li>
+            <strong>Telegram (t.me)</strong> — an outbound link to the
+            community chat, no embed; subject to
+            <a href="https://telegram.org/privacy" target="_blank" rel="noopener">Telegram's privacy policy</a>
+            once you join.
+          </li>
+        </ul>
+        <p>
+          We do <strong>not</strong> embed analytics pixels, advertising
+          tags, social-media widgets or fingerprinting scripts.
+        </p>
+      </section>
+
+      <!-- ── Forms / contact ──────────────────────────────── -->
+      <section class="block">
+        <h2>4 · Forms and contact</h2>
+        <p>
+          The site has no contact form. If you choose to write to one
+          of the email addresses listed above, your message and the
+          associated email metadata will be processed by the recipient
+          on the legal basis of <em>consent</em> (Art. 6(1)(a) GDPR)
+          and/or <em>legitimate interest</em> (Art. 6(1)(f) GDPR) for
+          the purpose of replying. Messages are retained no longer than
+          necessary to handle the conversation.
+        </p>
+      </section>
+
+      <!-- ── Legal bases ─────────────────────────────── -->
+      <section class="block">
+        <h2>5 · Legal bases for processing</h2>
+        <p>
+          To the extent any personal data is processed in the context
+          of this website, the legal bases are:
+        </p>
+        <ul class="privacy__list">
+          <li><strong>Art. 6(1)(e) GDPR</strong> — performance of a task carried out in the public interest (research dissemination by a public research body, CNR).</li>
+          <li><strong>Art. 6(1)(f) GDPR</strong> — legitimate interest in operating, securing and analysing the site, where this does not override fundamental rights (e.g. infrastructure logs at the GitHub Pages level).</li>
+          <li><strong>Art. 6(1)(a) GDPR</strong> — explicit consent, e.g. when you press Play on an embedded YouTube video.</li>
+        </ul>
+      </section>
+
+      <!-- ── Your rights ────────────────────────────────── -->
+      <section class="block">
+        <h2>6 · Your rights</h2>
+        <p>
+          Under Articles 15 to 22 of the GDPR, you have the right to
+          access, rectify, erase or restrict processing of your
+          personal data, to object to processing, and to data
+          portability where applicable. You also have the right to
+          lodge a complaint with the
+          <a href="https://www.garanteprivacy.it/" target="_blank" rel="noopener">Italian Data Protection Authority (Garante per la protezione dei dati personali)</a>.
+        </p>
+        <p>
+          To exercise these rights, write to the CNR Data Protection
+          Officer at <a href="mailto:rpd@cnr.it">rpd@cnr.it</a>.
+        </p>
+      </section>
+
+      <!-- ── Changes ─────────────────────────────────── -->
+      <section class="block">
+        <h2>7 · Changes to this notice</h2>
+        <p>
+          We may update this notice when the site changes (new
+          embedded services, new functionality, etc.). The "last
+          reviewed" date at the top of this page reflects the latest
+          substantive update. The full revision history is available
+          in the
+          <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-site/commits/main/src/pages/privacy.astro" target="_blank" rel="noopener">site repository</a>.
+        </p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .privacy { padding: 80px 0 60px; }
+  .privacy h1 { margin: 14px 0 18px; }
+  .privacy__lede {
+    max-width: 760px;
+    color: var(--em-text);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .privacy__meta {
+    color: var(--em-text-muted);
+    font-size: 13px;
+    margin-bottom: 40px;
+  }
+  .privacy .block { margin-bottom: 36px; max-width: 760px; }
+  .privacy h2 { font-size: 19px; margin: 0 0 12px; color: var(--em-navy); }
+  .privacy p { line-height: 1.7; margin-bottom: 12px; }
+  .privacy a { color: var(--em-gold); }
+  .privacy code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--em-navy-tint);
+    color: var(--em-navy);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  .privacy__list {
+    list-style: disc;
+    padding-left: 22px;
+    margin: 8px 0 16px;
+  }
+  .privacy__list li {
+    margin-bottom: 8px;
+    line-height: 1.65;
+  }
+</style>

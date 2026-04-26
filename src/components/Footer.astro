@@ -12,16 +12,23 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="em-footer__author">
         E. Demetrescu — CNR-ISPC, Rome — © {year}
       </p>
+      <p class="em-footer__legal">
+        Site content licensed
+        <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>
+        · Code under GPL-3.0 unless noted ·
+        <a href={`${B}/privacy`}>Privacy</a>
+      </p>
     </div>
     <div class="em-footer__links">
       <a href={`${B}/about`}>About</a>
       <a href={`${B}/team`}>Team</a>
       <a href={`${B}/tools`}>Tools</a>
       <a href={`${B}/versions`}>Versions</a>
+      <a href={`${B}/cite`}>Cite</a>
       <a href={`${B}/news`}>News</a>
       <a href={`${B}/events`}>Events</a>
       <a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Docs</a>
-      <a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/topics/extendedmatrix" target="_blank" rel="noopener">GitHub</a>
       <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Zenodo</a>
       <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Telegram</a>
     </div>
@@ -56,6 +63,21 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 13px;
     margin-top: 4px;
     color: rgba(255, 255, 255, 0.7);
+  }
+  .em-footer__legal {
+    font-size: 12px;
+    margin-top: 6px;
+    color: rgba(255, 255, 255, 0.55);
+    line-height: 1.6;
+  }
+  .em-footer__legal a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.3);
+  }
+  .em-footer__legal a:hover {
+    color: var(--em-gold);
+    text-decoration-color: var(--em-gold);
   }
   .em-footer__links {
     display: flex;

@@ -181,7 +181,24 @@ const versions = defineCollection({
       docsUrl: z.string().url().optional(),
       // Core formal language — the "soul" of the release
       languageFeatures: z.array(z.string()).default([]),
-      languagePaperUrl: z.string().url().optional(),
+      languagePaperUrl: z.string().url().optional(), // legacy single-URL pointer
+      // Flag paper: the canonical scientific reference for THIS release.
+      // Cumulative-citation rule: the foundation paper (1.0) is always cited;
+      // every later release additionally cites its own flag paper. The
+      // /cite page assembles this list from the active version + 1.0.
+      flagPaper: z
+        .object({
+          authors: z.string(),                  // "Demetrescu, E."
+          year: z.number(),                     // 2015
+          title: z.string(),                    // full paper title
+          venue: z.string().optional(),         // journal / conference
+          doi: z.string().optional(),
+          url: z.string().url().optional(),
+          bibtex: z.string().optional(),        // raw BibTeX block
+          note: z.string().optional(),          // contextual note
+          isFoundation: z.boolean().default(false), // true only for 1.0
+        })
+        .optional(),
       summary: z.string().max(400),
       supersededBy: z.string().optional(),  // version slug
       tools: z

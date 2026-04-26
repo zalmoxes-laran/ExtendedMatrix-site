@@ -1,0 +1,326 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const versions = (await getCollection('versions'))
+  .sort((a, b) => (b.data.order ?? 0) - (a.data.order ?? 0));
+
+// Foundation paper = the 1.0 entry's flagPaper
+const foundation = versions.find((v) => v.data.flagPaper?.isFoundation)?.data.flagPaper;
+
+// Per-version flag papers, excluding the foundation
+const versionPapers = versions
+  .filter((v) => v.data.flagPaper && !v.data.flagPaper.isFoundation)
+  .map((v) => ({
+    version: v.data.version,
+    slug: v.id.replace(/\.md$/, ''),
+    status: v.data.status,
+    paper: v.data.flagPaper!,
+  }));
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="How to cite EM"
+  description="Citation guidance for Extended Matrix — the foundation paper plus the flag paper of the version you are using."
+>
+  <section class="cite">
+    <div class="container">
+      <span class="tag">Cite EM</span>
+      <h1>How to cite Extended Matrix.</h1>
+      <p class="cite__lede">
+        Extended Matrix grows version after version, and academic citations
+        should reflect that. The <strong>foundation paper</strong> introduces
+        the language and is always cited; each later release additionally
+        contributes a <strong>flag paper</strong> that you cite when you
+        rely on features it introduced.
+      </p>
+
+      <!-- ── The cumulative rule ────────────────────────────── -->
+      <section class="cite__rule">
+        <h2>The cumulative citation rule</h2>
+        <ol class="cite__steps">
+          <li>
+            <strong>Always cite the foundation paper</strong> — the 2015 paper
+            that introduced the formal language. Without it, the rest of the
+            method is not properly anchored in the literature.
+          </li>
+          <li>
+            <strong>Add the flag paper of the EM version you used</strong>.
+            Each release that comes with a peer-reviewed paper extends the
+            formal language; that paper is the canonical reference for what
+            your project actually leveraged.
+          </li>
+          <li>
+            <strong>Add the relevant tools / Zenodo software DOI</strong>
+            when you used a specific component (EM Tools, Heriverse, 3DSC,
+            s3dgraphy). These are software citations and complement — not
+            replace — the methodological citations above.
+          </li>
+        </ol>
+        <p class="cite__hint">
+          Versions <strong>1.0–1.3</strong> are not separately downloadable
+          today. Their flag papers are still relevant because the features
+          they introduced live on inside the latest EM core — when in doubt,
+          cite the 1.0 foundation plus the latest LTS flag paper (currently 1.4).
+        </p>
+      </section>
+
+      <!-- ── Foundation paper ─────────────────────────────── -->
+      {foundation && (
+        <section class="cite__paper cite__paper--foundation">
+          <header class="cite__paper-head">
+            <span class="cite__paper-tag">1 · Foundation paper (always cite)</span>
+          </header>
+          <p class="cite__paper-cite">
+            <strong>{foundation.authors}</strong> ({foundation.year}).
+            <em>{foundation.title}</em>
+            {foundation.venue && <>. {foundation.venue}</>}.
+          </p>
+          {foundation.doi && (
+            <p class="cite__paper-doi">DOI: <a href={foundation.url ?? `https://doi.org/${foundation.doi}`} target="_blank" rel="noopener">{foundation.doi}</a></p>
+          )}
+          {foundation.bibtex && (
+            <details class="cite__bibtex">
+              <summary>BibTeX</summary>
+              <pre is:raw>{foundation.bibtex}</pre>
+            </details>
+          )}
+        </section>
+      )}
+
+      <!-- ── Per-version flag papers ──────────────────────── -->
+      {versionPapers.length > 0 && (
+        <section class="cite__papers">
+          <h2>2 · Flag papers per EM version</h2>
+          <p class="cite__papers-lede">
+            Cite the entry corresponding to the EM version you used. If you
+            crossed multiple versions, cite the latest you actually relied on.
+          </p>
+          <ul class="cite__papers-list">
+            {versionPapers.map((vp) => (
+              <li class={`cite__paper${vp.status === 'lts' ? ' cite__paper--lts' : ''}`}>
+                <header class="cite__paper-head">
+                  <span class="cite__paper-tag">EM {vp.version}{vp.status === 'lts' && <> · LTS</>}</span>
+                  {vp.paper.doi && <span class="cite__paper-doi">DOI: {vp.paper.doi}</span>}
+                </header>
+                <p class="cite__paper-cite">
+                  <strong>{vp.paper.authors}</strong> ({vp.paper.year}).
+                  <em>{vp.paper.title}</em>
+                  {vp.paper.venue && <>. {vp.paper.venue}</>}.
+                </p>
+                {vp.paper.note && (
+                  <p class="cite__paper-note" set:html={
+                    vp.paper.note.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                  } />
+                )}
+                <div class="cite__paper-actions">
+                  {vp.paper.url && (
+                    <a href={vp.paper.url} target="_blank" rel="noopener">Open paper ↗</a>
+                  )}
+                  <a href={`${B}/versions/${vp.slug}/`}>EM {vp.version} release page →</a>
+                </div>
+                {vp.paper.bibtex && (
+                  <details class="cite__bibtex">
+                    <summary>BibTeX</summary>
+                    <pre is:raw>{vp.paper.bibtex}</pre>
+                  </details>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <!-- ── Software / Zenodo citation ────────────────────── -->
+      <section class="cite__software">
+        <h2>3 · Software citation (Zenodo DOIs)</h2>
+        <p>
+          Cite the software components only when you actually used them
+          (e.g., EM Tools for the Blender pipeline, Heriverse for the web
+          publication). Software citations complement — not replace — the
+          method citations above.
+        </p>
+        <pre class="cite__bib" is:raw>{`@misc{demetrescu_extendedmatrix,
+  title     = {Extended Matrix},
+  author    = {Demetrescu, Emanuel},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.5957132},
+  url       = {https://doi.org/10.5281/zenodo.5957132}
+}`}</pre>
+        <p class="cite__hint">
+          Each component (EM Tools, Heriverse, 3DSC, s3dgraphy) has its own
+          Zenodo DOI on the
+          <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Extended Matrix Zenodo community</a>.
+          Pick the version DOI matching what you actually used.
+        </p>
+      </section>
+
+      <!-- ── See also ─────────────────────────────────────── -->
+      <section class="cite__seealso">
+        <h2>See also</h2>
+        <ul>
+          <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Language documentation</a> — the canonical reference for the formal language, its glossary and the full bibliography.</li>
+          <li><a href={`${B}/versions/`}>EM versions</a> — full release matrix with flag papers per version.</li>
+          <li><a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Zenodo community</a> — software DOIs, datasets, paradata bundles.</li>
+        </ul>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cite { padding: 80px 0 60px; }
+  .cite h1 { margin: 14px 0 18px; }
+  .cite__lede {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+
+  .cite__rule {
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-left: 4px solid var(--em-gold);
+    border-radius: var(--radius-md);
+    padding: 24px 28px;
+    margin-bottom: 48px;
+  }
+  .cite__rule h2 { margin: 0 0 14px; font-size: 22px; }
+  .cite__steps {
+    list-style: none;
+    counter-reset: rule;
+    padding: 0;
+    margin: 0 0 16px;
+    display: grid;
+    gap: 12px;
+  }
+  .cite__steps li {
+    counter-increment: rule;
+    position: relative;
+    padding: 10px 14px 10px 48px;
+    line-height: 1.6;
+    color: var(--em-text);
+  }
+  .cite__steps li::before {
+    content: counter(rule);
+    position: absolute;
+    left: 8px;
+    top: 6px;
+    width: 28px;
+    height: 28px;
+    background: var(--em-navy);
+    color: var(--em-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .cite__hint { color: var(--em-text-muted); font-size: 14px; line-height: 1.6; margin: 0; }
+
+  .cite section { margin-bottom: 48px; }
+  .cite section h2 { font-size: 22px; margin-bottom: 14px; }
+
+  /* Paper block */
+  .cite__paper {
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    border-left: 4px solid var(--em-navy);
+    border-radius: var(--radius-md);
+    padding: 22px 26px;
+    margin-bottom: 16px;
+  }
+  .cite__paper--foundation {
+    border-left-color: var(--em-gold);
+    background: var(--em-gold-tint);
+  }
+  .cite__paper--lts { border-left-color: var(--em-gold); }
+  .cite__paper-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .cite__paper-tag {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-navy);
+  }
+  .cite__paper--foundation .cite__paper-tag,
+  .cite__paper--lts .cite__paper-tag { color: var(--em-gold); }
+  .cite__paper-doi {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em-text-muted);
+  }
+  .cite__paper-cite {
+    font-size: 14px;
+    line-height: 1.65;
+    margin: 0 0 8px;
+    color: var(--em-text);
+  }
+  .cite__paper-doi a { color: var(--em-gold); }
+  .cite__paper-note {
+    color: var(--em-text-muted);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0 0 12px;
+  }
+  .cite__paper-actions {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .cite__paper-actions a { color: var(--em-gold); font-weight: 600; }
+
+  .cite__papers-list { list-style: none; padding: 0; margin: 0; }
+
+  .cite__bibtex { margin-top: 8px; }
+  .cite__bibtex summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--em-text-muted);
+    font-weight: 600;
+  }
+  .cite__bibtex pre,
+  .cite__bib {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    overflow-x: auto;
+    color: var(--em-text);
+    margin-top: 8px;
+    white-space: pre;
+  }
+
+  .cite__papers-lede {
+    color: var(--em-text-muted);
+    margin-bottom: 16px;
+    max-width: 720px;
+  }
+
+  .cite__seealso ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .cite__seealso a { color: var(--em-gold); font-weight: 600; }
+</style>
