@@ -30,12 +30,15 @@ const projects = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      period: z.string(), // e.g. "2018–2021"
+      year: z.number().optional(),  // primary chronological order
+      period: z.string().optional(), // human-readable period if multi-year
       partners: z.array(z.string()).default([]),
-      cover: image(),
-      coverAlt: z.string(),
+      cover: image().optional(),    // local image (preferred)
+      coverUrl: z.string().url().optional(), // remote URL (fallback while images are migrated)
+      coverAlt: z.string().optional(),
       location: z.string().optional(),
-      summary: z.string().max(280),
+      summary: z.string().max(320),
+      website: z.string().url().optional(),
       featured: z.boolean().default(false),
       order: z.number().default(0),
       draft: z.boolean().default(false),
@@ -57,4 +60,99 @@ const team = defineCollection({
     }),
 });
 
-export const collections = { news, projects, team };
+/**
+ * Partners — institutions, projects, companies that USE, CONTRIBUTE TO, or
+ * FUND Extended Matrix. Drives the "Used by" strip on the homepage and the
+ * full grid on /community.
+ *
+ * To add a partner, drop a `<slug>.yaml` file (or .md without body) in
+ * src/content/partners/ with the fields below. Logos go in
+ * src/assets/partners/<slug>.svg (preferred) or .png.
+ */
+const partners = defineCollection({
+  type: 'data',
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),
+      kind: z.enum(['university', 'research-institute', 'company', 'eu-project', 'national-project', 'cultural-institution']),
+      relation: z.enum(['uses', 'contributes', 'funds', 'collaborates']).default('uses'),
+      logo: image().optional(),
+      logoAlt: z.string().optional(),
+      url: z.string().url().optional(),
+      country: z.string().optional(),
+      order: z.number().default(0),
+    }),
+});
+
+/**
+ * EM Hour — the recurring community happy hour. Each session gets a single
+ * markdown file with notes, slides link, video link, and a one-paragraph
+ * summary. Future sessions can be added with `upcoming: true` and a date.
+ */
+const emHour = defineCollection({
+  type: 'content',
+  schema: () =>
+    z.object({
+      title: z.string(),
+      date: z.coerce.date(),
+      duration: z.string().default('60 min'),
+      host: z.string().default('Emanuel Demetrescu'),
+      guests: z.array(z.string()).default([]),
+      videoUrl: z.string().url().optional(),
+      slidesUrl: z.string().url().optional(),
+      meetingUrl: z.string().url().optional(),
+      summary: z.string().max(400),
+      upcoming: z.boolean().default(false),
+      tags: z.array(z.string()).default([]),
+    }),
+});
+
+/**
+ * Development meetings — internal-but-public coordination sessions where the
+ * core devs and active contributors decide directions. Notes-first format,
+ * per blender.org practice. Helps prevent fork-waves by making decisions
+ * visible early.
+ */
+const devMeetings = defineCollection({
+  type: 'content',
+  schema: () =>
+    z.object({
+      title: z.string(),
+      date: z.coerce.date(),
+      attendees: z.array(z.string()).default([]),
+      decisions: z.array(z.string()).default([]),
+      actionItems: z.array(z.string()).default([]),
+      videoUrl: z.string().url().optional(),
+      meetingUrl: z.string().url().optional(),
+      upcoming: z.boolean().default(false),
+    }),
+});
+
+/**
+ * Showcase slides — image + caption pairs used by the homepage hero
+ * slideshow and the /showcase page. Drop a high-res image in
+ * src/assets/showcase/<slug>.jpg and reference it here.
+ */
+const showcase = defineCollection({
+  type: 'content',
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      image: image(),
+      imageAlt: z.string(),
+      caption: z.string().max(160).optional(),
+      project: z.string().optional(), // optional link to a project slug
+      featured: z.boolean().default(false),
+      order: z.number().default(0),
+    }),
+});
+
+export const collections = {
+  news,
+  projects,
+  team,
+  partners,
+  emHour,
+  devMeetings,
+  showcase,
+};

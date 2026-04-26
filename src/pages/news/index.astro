@@ -1,0 +1,102 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const all = (await getCollection('news'))
+  .filter((n) => !n.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+---
+
+<BaseLayout
+  title="News"
+  description="Releases, events and announcements from the Extended Matrix project."
+>
+  <section class="news">
+    <div class="container">
+      <span class="tag">News</span>
+      <h1>Updates from the project.</h1>
+      <p class="news__sub">
+        Releases, events, conferences, and major direction announcements.
+      </p>
+
+      <ul class="list">
+        {all.map((n) => (
+          <li class="item">
+            <a href={`/news/${n.id.replace(/\.md$/, '')}/`}>
+              <div class="item__date">{fmt(n.data.date)}</div>
+              <div>
+                <h2 class="item__title">{n.data.title}</h2>
+                <p class="item__excerpt">{n.data.excerpt}</p>
+                {n.data.tags && n.data.tags.length > 0 && (
+                  <div class="item__tags">
+                    {n.data.tags.map((t) => <span class="item__tag">{t}</span>)}
+                  </div>
+                )}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .news { padding: 80px 0 60px; }
+  .news h1 { margin: 14px 0 16px; }
+  .news__sub {
+    max-width: 620px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 48px;
+  }
+  .list { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+  .item {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
+  }
+  .item:hover { border-color: var(--em-gold); }
+  .item a {
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 24px;
+    padding: 20px 22px;
+    color: inherit;
+  }
+  .item a:hover { text-decoration: none; }
+  .item__date {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em-text-muted);
+    padding-top: 4px;
+  }
+  .item__title {
+    font-size: 18px;
+    margin: 0 0 6px;
+    color: var(--em-navy);
+  }
+  .item__excerpt {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.6;
+    margin: 0 0 10px;
+  }
+  .item__tags { display: flex; gap: 8px; flex-wrap: wrap; }
+  .item__tag {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  @media (max-width: 600px) {
+    .item a { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>

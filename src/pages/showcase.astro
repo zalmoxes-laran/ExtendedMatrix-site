@@ -1,0 +1,168 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const slides = (await getCollection('showcase'))
+  .filter((s) => !s.id.startsWith('_'))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Showcase"
+  description="Real Extended Matrix work — sites, reconstructions, paradata visualisations from across the community."
+>
+  <section class="showcase">
+    <div class="container">
+      <span class="tag">Showcase</span>
+      <h1>Real Extended Matrix work.</h1>
+      <p class="showcase__sub">
+        Screenshots, GIFs and short clips from research projects, theses,
+        and ongoing fieldwork that use EM. Click any image for the full
+        case study.
+      </p>
+
+      {slides.length === 0 ? (
+        <div class="empty">
+          <p><strong>No slides yet.</strong></p>
+          <p>
+            Drop images in <code>src/assets/showcase/</code> and reference
+            them in <code>src/content/showcase/&lt;slug&gt;.md</code>.
+            See <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-site/blob/main/EDITORS_GUIDE.md">EDITORS_GUIDE.md</a>.
+          </p>
+        </div>
+      ) : (
+        <ul class="grid">
+          {slides.map((slide) => (
+            <li class="card">
+              <img src={slide.data.image.src} alt={slide.data.imageAlt} loading="lazy" />
+              <div class="card__body">
+                <h2 class="card__title">{slide.data.title}</h2>
+                {slide.data.caption && <p class="card__caption">{slide.data.caption}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <!-- ── GIF wall placeholder ──────────────────────────────── -->
+      <section class="gifwall">
+        <h2>Tools in action</h2>
+        <p class="gifwall__sub">
+          Animated demos of EM Tools, Heriverse and 3DSC — coming as the
+          recordings land. Each tile will be a short looping GIF showing one
+          panel or one workflow step.
+        </p>
+        <div class="gifwall__grid">
+          <div class="tile">EM Tools — Stratigraphy Manager</div>
+          <div class="tile">EM Tools — Visual Manager · Epochs</div>
+          <div class="tile">Heriverse — paradata pop-ups</div>
+          <div class="tile">3DSC — LOD pipeline</div>
+          <div class="tile">EM Tools — Proxy Box Creator</div>
+          <div class="tile">yEd — drawing an EM</div>
+        </div>
+        <p class="gifwall__foot">
+          Editors: drop GIFs in <code>src/assets/gifs/</code>; we will wire
+          them in once the first batch is ready.
+        </p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .showcase { padding: 80px 0 60px; }
+  .showcase h1 { margin: 14px 0 16px; }
+  .showcase__sub {
+    max-width: 640px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 48px;
+  }
+  .empty {
+    border: 1px dashed var(--em-border);
+    padding: 40px;
+    text-align: center;
+    border-radius: var(--radius-md);
+    color: var(--em-text-muted);
+  }
+  .empty code {
+    font-family: var(--font-mono);
+    background: var(--em-bg-warm);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 13px;
+  }
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .card {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
+  }
+  .card:hover { border-color: var(--em-gold); }
+  .card img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    display: block;
+  }
+  .card__body { padding: 18px 22px; }
+  .card__title { font-size: 17px; margin: 0; }
+  .card__caption {
+    font-size: 14px;
+    color: var(--em-text-muted);
+    margin: 6px 0 0;
+  }
+
+  .gifwall { margin-top: 100px; }
+  .gifwall h2 { font-size: 28px; }
+  .gifwall__sub {
+    max-width: 640px;
+    color: var(--em-text-muted);
+    margin: 8px 0 32px;
+  }
+  .gifwall__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .tile {
+    aspect-ratio: 4/3;
+    background: var(--em-bg-warm);
+    border: 1px dashed var(--em-border);
+    border-radius: var(--radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em-text-muted);
+  }
+  .gifwall__foot {
+    margin-top: 22px;
+    font-size: 13px;
+    color: var(--em-text-muted);
+  }
+  .gifwall__foot code {
+    font-family: var(--font-mono);
+    background: var(--em-bg-warm);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 12px;
+  }
+
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+    .gifwall__grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>

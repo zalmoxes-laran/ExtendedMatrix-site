@@ -1,0 +1,300 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const today = new Date();
+
+const emHour = (await getCollection('emHour'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const upcomingEmHour = emHour.filter((e) => e.data.date >= today || e.data.upcoming);
+const pastEmHour     = emHour.filter((e) => e.data.date <  today && !e.data.upcoming);
+
+const devMeetings = (await getCollection('devMeetings'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const upcomingDev = devMeetings.filter((e) => e.data.date >= today || e.data.upcoming);
+const pastDev     = devMeetings.filter((e) => e.data.date <  today && !e.data.upcoming);
+
+const fmtDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+const fmtTime = (d: Date) =>
+  d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+---
+
+<BaseLayout
+  title="Community"
+  description="EM Hour, development meetings, Telegram and GitHub — where the Extended Matrix community gathers."
+>
+  <section class="comm">
+    <div class="container">
+      <span class="tag">Community</span>
+      <h1>Where Extended Matrix lives.</h1>
+      <p class="comm__sub">
+        Two recurring meetings, two chat channels, one issue tracker.
+        Everything is open — drop in, ask questions, share work.
+      </p>
+
+      <!-- ── Channels strip ─────────────────────────────────────── -->
+      <div class="channels">
+        <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener" class="channel">
+          <div class="channel__name">Telegram</div>
+          <div class="channel__desc">Day-to-day questions, quick polls, screenshots.</div>
+        </a>
+        <a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener" class="channel">
+          <div class="channel__name">GitHub</div>
+          <div class="channel__desc">Issues, PRs, code, releases. Where decisions are recorded.</div>
+        </a>
+        <a href="https://www.youtube.com/extendedmatrix" target="_blank" rel="noopener" class="channel">
+          <div class="channel__name">YouTube</div>
+          <div class="channel__desc">EM Hour recordings, talks, tutorials.</div>
+        </a>
+        <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener" class="channel">
+          <div class="channel__name">Zenodo</div>
+          <div class="channel__desc">Datasets, paradata bundles, case studies, papers — all FAIR.</div>
+        </a>
+      </div>
+
+      <!-- ── EM Hour ────────────────────────────────────────────── -->
+      <section class="block">
+        <header class="block__head">
+          <h2>EM Hour</h2>
+          <p class="block__lede">
+            The Extended Matrix Happy Hour — recurring informal session every
+            Thursday at <strong>17:30 CET</strong>. Open chat, screen
+            shares, demos, "what are you working on this week?".
+          </p>
+        </header>
+
+        {upcomingEmHour.length > 0 && (
+          <div class="upcoming">
+            <h3>Upcoming</h3>
+            <ul class="meet-list">
+              {upcomingEmHour.map((e) => (
+                <li class="meet">
+                  <div class="meet__date">
+                    <div class="meet__date-day">{fmtDate(e.data.date)}</div>
+                    <div class="meet__date-time">{fmtTime(e.data.date)} · {e.data.duration}</div>
+                  </div>
+                  <div>
+                    <h4 class="meet__title">{e.data.title}</h4>
+                    <p class="meet__summary">{e.data.summary}</p>
+                    <div class="meet__links">
+                      <span class="meet__host">Host: {e.data.host}</span>
+                      {e.data.meetingUrl && (
+                        <a href={e.data.meetingUrl} target="_blank" rel="noopener">Join meeting →</a>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {pastEmHour.length > 0 && (
+          <div class="past">
+            <h3>Past sessions</h3>
+            <ul class="meet-list">
+              {pastEmHour.map((e) => (
+                <li class="meet meet--past">
+                  <div class="meet__date">
+                    <div class="meet__date-day">{fmtDate(e.data.date)}</div>
+                  </div>
+                  <div>
+                    <h4 class="meet__title">{e.data.title}</h4>
+                    <p class="meet__summary">{e.data.summary}</p>
+                    <div class="meet__links">
+                      {e.data.videoUrl && <a href={e.data.videoUrl} target="_blank" rel="noopener">Recording</a>}
+                      {e.data.slidesUrl && <a href={e.data.slidesUrl} target="_blank" rel="noopener">Slides</a>}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+
+      <!-- ── Development meetings ──────────────────────────────── -->
+      <section class="block">
+        <header class="block__head">
+          <h2>Development meetings</h2>
+          <p class="block__lede">
+            Monthly public coordination for the codebase. Open by default,
+            notes-first, decisions are recorded so direction stays
+            transparent — especially as more contributors arrive with
+            AI-assisted workflows.
+          </p>
+        </header>
+
+        {upcomingDev.length > 0 && (
+          <div class="upcoming">
+            <h3>Upcoming</h3>
+            <ul class="meet-list">
+              {upcomingDev.map((e) => (
+                <li class="meet">
+                  <div class="meet__date">
+                    <div class="meet__date-day">{fmtDate(e.data.date)}</div>
+                    <div class="meet__date-time">{fmtTime(e.data.date)}</div>
+                  </div>
+                  <div>
+                    <h4 class="meet__title">{e.data.title}</h4>
+                    <div class="meet__links">
+                      {e.data.meetingUrl && (
+                        <a href={e.data.meetingUrl} target="_blank" rel="noopener">Join meeting →</a>
+                      )}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {pastDev.length > 0 && (
+          <div class="past">
+            <h3>Past meetings</h3>
+            <ul class="meet-list">
+              {pastDev.map((e) => (
+                <li class="meet meet--past">
+                  <div class="meet__date">
+                    <div class="meet__date-day">{fmtDate(e.data.date)}</div>
+                  </div>
+                  <div>
+                    <h4 class="meet__title">{e.data.title}</h4>
+                    {e.data.decisions.length > 0 && (
+                      <div class="meet__detail">
+                        <strong>Decisions:</strong>
+                        <ul>
+                          {e.data.decisions.map((d) => <li>{d}</li>)}
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+
+      <p class="comm__foot">
+        Want to host a session, propose a topic, or just listen in?
+        <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Say hello on Telegram →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .comm { padding: 80px 0 60px; }
+  .comm h1 { margin: 14px 0 16px; }
+  .comm__sub {
+    max-width: 640px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 48px;
+  }
+  .channels {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+  @media (max-width: 900px) {
+    .channels { grid-template-columns: repeat(2, 1fr); }
+  }
+  .channel {
+    display: block;
+    padding: 22px 24px;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    color: var(--em-text);
+    transition: border-color 0.2s var(--ease);
+  }
+  .channel:hover {
+    border-color: var(--em-gold);
+    text-decoration: none;
+  }
+  .channel__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--em-navy);
+    margin-bottom: 4px;
+  }
+  .channel__desc {
+    font-size: 13px;
+    color: var(--em-text-muted);
+    line-height: 1.5;
+  }
+
+  .block { margin-top: 56px; }
+  .block__head { margin-bottom: 24px; }
+  .block__head h2 { font-size: 28px; }
+  .block__lede {
+    color: var(--em-text-muted);
+    max-width: 680px;
+    margin-top: 6px;
+  }
+  .block h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--em-gold);
+    margin: 24px 0 14px;
+  }
+
+  .meet-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 14px;
+  }
+  .meet {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 28px;
+    padding: 20px 22px;
+    border: 1px solid var(--em-border);
+    border-left: 3px solid var(--em-gold);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+  }
+  .meet--past { border-left-color: var(--em-border); opacity: 0.92; }
+  .meet__date-day {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--em-navy);
+  }
+  .meet__date-time {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em-text-muted);
+    margin-top: 4px;
+  }
+  .meet__title { font-size: 17px; margin: 0 0 6px; }
+  .meet__summary { font-size: 14px; color: var(--em-text); margin: 0 0 10px; }
+  .meet__links {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--em-text-muted);
+  }
+  .meet__links a { color: var(--em-gold); font-weight: 600; }
+  .meet__host { font-style: italic; }
+  .meet__detail { margin-top: 8px; font-size: 13px; }
+  .meet__detail ul { margin-top: 4px; padding-left: 20px; color: var(--em-text-muted); }
+
+  .comm__foot {
+    text-align: center;
+    margin-top: 64px;
+    color: var(--em-text-muted);
+  }
+  .comm__foot a { font-weight: 600; color: var(--em-gold); }
+
+  @media (max-width: 700px) {
+    .channels { grid-template-columns: 1fr; }
+    .meet { grid-template-columns: 1fr; gap: 8px; }
+  }
+</style>

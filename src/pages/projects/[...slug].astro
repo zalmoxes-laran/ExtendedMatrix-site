@@ -1,0 +1,101 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map((p) => ({
+    params: { slug: p.id.replace(/\.md$/, '') },
+    props: { project: p },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout
+  title={project.data.title}
+  description={project.data.summary}
+>
+  <article class="proj">
+    <div class="container">
+      <a href="/projects/" class="proj__back">← All projects</a>
+      <span class="tag">{project.data.year ?? 'Project'}</span>
+      <h1 class="proj__title">{project.data.title}</h1>
+
+      <div class="proj__meta">
+        {project.data.location && (
+          <div class="proj__meta-item">
+            <span class="proj__meta-label">Location</span>
+            <span class="proj__meta-value">{project.data.location}</span>
+          </div>
+        )}
+        {project.data.partners && project.data.partners.length > 0 && (
+          <div class="proj__meta-item">
+            <span class="proj__meta-label">Partners</span>
+            <span class="proj__meta-value">{project.data.partners.join(' · ')}</span>
+          </div>
+        )}
+        {project.data.website && (
+          <div class="proj__meta-item">
+            <span class="proj__meta-label">Website</span>
+            <a class="proj__meta-value" href={project.data.website} target="_blank" rel="noopener">
+              {project.data.website.replace(/^https?:\/\//, '')}
+            </a>
+          </div>
+        )}
+      </div>
+
+      {project.data.cover && (
+        <figure class="proj__cover">
+          <img src={project.data.cover.src} alt={project.data.coverAlt || project.data.title} />
+        </figure>
+      )}
+
+      <div class="proj__body">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .proj { padding: 60px 0 80px; }
+  .proj__back {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--em-text-muted);
+    margin-bottom: 16px;
+  }
+  .proj__title { margin: 14px 0 24px; }
+  .proj__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px 48px;
+    padding: 20px 0;
+    border-block: 1px solid var(--em-border);
+    margin-bottom: 32px;
+  }
+  .proj__meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .proj__meta-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--em-gold);
+    font-weight: 700;
+  }
+  .proj__meta-value {
+    font-size: 14px;
+    color: var(--em-text);
+  }
+  .proj__cover {
+    margin: 0 0 40px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .proj__cover img { width: 100%; height: auto; display: block; }
+  .proj__body :global(h2) { margin-top: 32px; }
+  .proj__body :global(p) { margin-bottom: 14px; }
+  .proj__body :global(ul) { margin-bottom: 14px; padding-left: 22px; }
+</style>

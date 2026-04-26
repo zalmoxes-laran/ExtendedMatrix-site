@@ -1,0 +1,141 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const all = (await getCollection('projects'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0) || a.data.order - b.data.order);
+
+// group by year
+const byYear = new Map<number | string, typeof all>();
+for (const p of all) {
+  const k = p.data.year ?? '—';
+  if (!byYear.has(k)) byYear.set(k, []);
+  byYear.get(k)!.push(p);
+}
+---
+
+<BaseLayout
+  title="Projects"
+  description="Real-world projects and case studies that use Extended Matrix to document virtual reconstructions."
+>
+  <section class="projects">
+    <div class="container">
+      <span class="tag">Projects</span>
+      <h1>Real-world projects using EM.</h1>
+      <p class="projects__sub">
+        Since 2015, universities, research institutes and independent
+        professionals have been adopting Extended Matrix in their
+        reconstruction projects, theses and PhD work. A (partial) list of
+        the case studies, in chronological order.
+      </p>
+
+      {Array.from(byYear.entries()).map(([year, items]) => (
+        <section class="year">
+          <h2 class="year__head">{year}</h2>
+          <ul class="grid">
+            {items.map((p) => (
+              <li class="card">
+                <a href={`/projects/${p.id.replace(/\.md$/, '')}/`}>
+                  <div class="card__cover">
+                    {p.data.cover ? (
+                      <img src={p.data.cover.src} alt={p.data.coverAlt || p.data.title} loading="lazy" />
+                    ) : p.data.coverUrl ? (
+                      <img src={p.data.coverUrl} alt={p.data.coverAlt || p.data.title} loading="lazy" />
+                    ) : (
+                      <div class="card__placeholder">📐</div>
+                    )}
+                  </div>
+                  <div class="card__body">
+                    <h3 class="card__title">{p.data.title}</h3>
+                    {p.data.location && <div class="card__location">{p.data.location}</div>}
+                    <p class="card__summary">{p.data.summary}</p>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .projects { padding: 80px 0 60px; }
+  .projects h1 { margin: 14px 0 16px; }
+  .projects__sub {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 56px;
+  }
+  .year { margin-bottom: 56px; }
+  .year__head {
+    font-size: 14px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--em-gold);
+    border-bottom: 1px solid var(--em-border);
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+  }
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .card {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .card:hover {
+    border-color: var(--em-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 18px rgba(26, 40, 69, 0.08);
+  }
+  .card a { display: block; color: inherit; }
+  .card a:hover { text-decoration: none; }
+  .card__cover {
+    aspect-ratio: 16/9;
+    background: var(--em-bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .card__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card__placeholder {
+    font-size: 48px;
+    opacity: 0.25;
+  }
+  .card__body { padding: 18px 22px; }
+  .card__title {
+    font-size: 17px;
+    margin: 0 0 4px;
+    color: var(--em-navy);
+  }
+  .card__location {
+    font-size: 12px;
+    color: var(--em-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .card__summary {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.6;
+    margin: 0;
+  }
+  @media (max-width: 700px) {
+    .grid { grid-template-columns: 1fr; }
+  }
+</style>

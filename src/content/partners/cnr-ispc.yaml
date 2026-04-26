@@ -1,0 +1,8 @@
+name: "CNR-ISPC"
+kind: "research-institute"
+relation: "contributes"
+url: "https://www.ispc.cnr.it"
+country: "IT"
+order: 10
+# logo: ../../assets/partners/cnr-ispc.svg
+# logoAlt: "CNR-ISPC logo"

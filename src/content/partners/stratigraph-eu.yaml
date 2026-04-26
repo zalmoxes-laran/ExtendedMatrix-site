@@ -1,0 +1,8 @@
+name: "StratiGraph"
+kind: "eu-project"
+relation: "funds"
+url: "https://stratigraph.eu"
+country: "EU"
+order: 1
+# logo: ../../assets/partners/stratigraph.svg
+# logoAlt: "StratiGraph EU project logo"

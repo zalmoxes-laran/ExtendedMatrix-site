@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#fafaf7"/>
+  <rect x="600" y="350" width="400" height="200" fill="none" stroke="#1a2845" stroke-width="3" stroke-dasharray="12,8" rx="8"/>
+  <text x="800" y="455" text-anchor="middle" font-family="Inter,sans-serif" font-size="32" fill="#1a2845">drop a showcase image here</text>
+  <text x="800" y="495" text-anchor="middle" font-family="Inter,sans-serif" font-size="18" fill="#5a6b7a">src/assets/showcase/&lt;slug&gt;.jpg</text>
+</svg>
