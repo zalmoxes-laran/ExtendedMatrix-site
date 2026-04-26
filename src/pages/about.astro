@@ -1,0 +1,286 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const partners = (await getCollection('partners'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const groupOrder: Record<string, number> = {
+  'eu-project': 1,
+  'national-project': 2,
+  'research-institute': 3,
+  'university': 4,
+  'cultural-institution': 5,
+  'company': 6,
+};
+const grouped: Record<string, typeof partners> = {};
+for (const p of partners) {
+  const k = p.data.kind;
+  (grouped[k] ??= []).push(p);
+}
+const groupKeys = Object.keys(grouped).sort(
+  (a, b) => (groupOrder[a] ?? 99) - (groupOrder[b] ?? 99)
+);
+const groupLabel: Record<string, string> = {
+  'eu-project': 'European projects',
+  'national-project': 'National projects',
+  'research-institute': 'Research institutes',
+  'university': 'Universities',
+  'cultural-institution': 'Cultural institutions',
+  'company': 'Companies',
+};
+---
+
+<BaseLayout
+  title="About"
+  description="Extended Matrix — what it is, where it comes from, who maintains it, and how to cite it."
+>
+  <section class="about">
+    <div class="container">
+      <span class="tag">About</span>
+      <h1>Extended Matrix in one page.</h1>
+
+      <div class="about__grid">
+        <div>
+          <h2>What it is</h2>
+          <p>
+            <strong>Extended Matrix (EM)</strong> is a formal language for
+            documenting stratigraphy and virtual reconstruction processes
+            in cultural heritage. It is a typed, graphical notation —
+            stratigraphic units, sources, paradata, connectors — that
+            archaeologists and heritage specialists can read, write and
+            review by hand, and that machines can process at scale through
+            the <code>s3dgraphy</code> Python library.
+          </p>
+          <p>
+            The project was started in 2015 around the reconstruction of
+            the Great Temple of Sarmizegetusa, has since been adopted in
+            dozens of research and professional projects, and is now part
+            of the <a href="https://www.eccch.eu" target="_blank" rel="noopener">European Collaborative Cloud for Cultural Heritage</a>
+            and the StratiGraph European project.
+          </p>
+
+          <h2>Lead</h2>
+          <p>
+            EM is led by <strong>Emanuel Demetrescu</strong> at
+            <a href="https://www.ispc.cnr.it" target="_blank" rel="noopener">CNR-ISPC</a>
+            (Institute for Heritage Science, National Research Council of Italy,
+            Rome — formerly CNR-ITABC).
+          </p>
+
+          <h2>Citation</h2>
+          <p>To cite Extended Matrix in academic work:</p>
+          <pre class="cite">
+@misc{demetrescu_extendedmatrix,
+  title     = {Extended Matrix},
+  author    = {Demetrescu, Emanuel},
+  publisher = {Zenodo},
+  doi       = {10.5281/zenodo.5957132},
+  url       = {https://doi.org/10.5281/zenodo.5957132}
+}</pre>
+
+          <h2>Licence</h2>
+          <p>
+            The EM formal language and the s3dgraphy library are
+            distributed under open-source licences (see the individual
+            repositories on
+            <a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener">GitHub</a>).
+            Datasets, examples and case studies on the
+            <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Zenodo community</a>
+            carry their own licences, picked by each contributor.
+          </p>
+        </div>
+
+        <aside>
+          <h2>The framework, in one paragraph</h2>
+          <p class="aside__lede">
+            EM is the *language*; <strong>s3dgraphy</strong> is the
+            *library* that makes it computable; <strong>EM Tools</strong>
+            (Blender add-on) is the 3D authoring environment;
+            <strong>Heriverse</strong> is the web platform that publishes
+            EM scenes; <strong>3DSC</strong> is the photogrammetry pipeline
+            upstream. Together they form the <em>EM Framework (EMF)</em>.
+          </p>
+
+          <h2>Quick links</h2>
+          <ul class="links">
+            <li><a href="/start">→ Start here</a></li>
+            <li><a href="/projects">→ Projects</a></li>
+            <li><a href="/community">→ Community &amp; meetings</a></li>
+            <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">→ Language docs</a></li>
+            <li><a href="https://docs.extendedmatrix.org/projects/EM-tools/" target="_blank" rel="noopener">→ EM Tools manual</a></li>
+            <li><a href="https://docs.extendedmatrix.org/projects/heriverse/" target="_blank" rel="noopener">→ Heriverse</a></li>
+            <li><a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener">→ GitHub</a></li>
+            <li><a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">→ Zenodo community</a></li>
+          </ul>
+        </aside>
+      </div>
+
+      <!-- ── Partners section ───────────────────────────────────── -->
+      <section class="partners">
+        <h2>Funding, partners, contributors</h2>
+        <p class="partners__lede">
+          Extended Matrix is developed at CNR-ISPC and is supported by
+          European and national funding programmes, and by an active
+          community of contributors across universities and research
+          institutes.
+        </p>
+
+        {groupKeys.map((k) => (
+          <div class="partner-group">
+            <h3>{groupLabel[k] ?? k}</h3>
+            <ul class="partner-list">
+              {grouped[k].map((p) => (
+                <li class="partner">
+                  {p.data.url ? (
+                    <a href={p.data.url} target="_blank" rel="noopener">
+                      <span class="partner__name">{p.data.name}</span>
+                      {p.data.country && <span class="partner__country">{p.data.country}</span>}
+                    </a>
+                  ) : (
+                    <>
+                      <span class="partner__name">{p.data.name}</span>
+                      {p.data.country && <span class="partner__country">{p.data.country}</span>}
+                    </>
+                  )}
+                  <span class="partner__rel">{p.data.relation}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+
+        <p class="partners__foot">
+          <em>If your institution uses EM and is not listed here, open a
+          PR on
+          <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-site" target="_blank" rel="noopener">ExtendedMatrix-site</a>
+          adding a YAML file in <code>src/content/partners/</code> — see
+          the <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-site/blob/main/EDITORS_GUIDE.md" target="_blank" rel="noopener">EDITORS_GUIDE</a>.</em>
+        </p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about { padding: 80px 0 60px; }
+  .about h1 { margin: 14px 0 36px; }
+  .about__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    margin-bottom: 80px;
+  }
+  .about h2 {
+    font-size: 22px;
+    margin: 28px 0 12px;
+  }
+  .about h2:first-child { margin-top: 0; }
+  .about p { margin-bottom: 14px; }
+  .about code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--em-navy-tint);
+    color: var(--em-navy);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  .cite {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    padding: 16px 18px;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    color: var(--em-text);
+  }
+  aside {
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    padding: 28px 28px 24px;
+    height: max-content;
+    position: sticky;
+    top: 80px;
+  }
+  aside h2 { font-size: 15px !important; text-transform: uppercase; letter-spacing: 0.06em; color: var(--em-gold); margin-top: 22px; }
+  aside h2:first-child { margin-top: 0; }
+  .aside__lede { font-size: 14px; line-height: 1.65; }
+  .links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .links a {
+    display: block;
+    padding: 4px 0;
+    font-size: 14px;
+    color: var(--em-navy);
+  }
+  .links a:hover { color: var(--em-gold); text-decoration: none; }
+
+  .partners { margin-top: 64px; }
+  .partners h2 { font-size: 28px; margin-bottom: 12px; }
+  .partners__lede {
+    color: var(--em-text-muted);
+    max-width: 720px;
+    margin-bottom: 40px;
+  }
+  .partner-group { margin-bottom: 32px; }
+  .partner-group h3 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--em-gold);
+    margin-bottom: 12px;
+  }
+  .partner-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+  .partner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px 14px;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-sm);
+    background: var(--em-bg);
+  }
+  .partner a { color: inherit; flex: 1; }
+  .partner a:hover .partner__name { color: var(--em-gold); }
+  .partner__name { font-weight: 600; color: var(--em-navy); }
+  .partner__country {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em-text-muted);
+    margin-left: 8px;
+  }
+  .partner__rel {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--em-text-muted);
+    background: var(--em-bg-warm);
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  .partners__foot {
+    margin-top: 40px;
+    color: var(--em-text-muted);
+    font-size: 13px;
+  }
+
+  @media (max-width: 800px) {
+    .about__grid { grid-template-columns: 1fr; gap: 32px; }
+    aside { position: static; }
+  }
+</style>
