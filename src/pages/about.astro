@@ -21,6 +21,7 @@ for (const p of partners) {
 const groupKeys = Object.keys(grouped).sort(
   (a, b) => (groupOrder[a] ?? 99) - (groupOrder[b] ?? 99)
 );
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 const groupLabel: Record<string, string> = {
   'eu-project': 'European projects',
   'national-project': 'National projects',
@@ -104,9 +105,9 @@ const groupLabel: Record<string, string> = {
 
           <h2>Quick links</h2>
           <ul class="links">
-            <li><a href="/start">→ Start here</a></li>
-            <li><a href="/projects">→ Projects</a></li>
-            <li><a href="/community">→ Community &amp; meetings</a></li>
+            <li><a href={`${B}/start`}>→ Start here</a></li>
+            <li><a href={`${B}/projects`}>→ Projects</a></li>
+            <li><a href={`${B}/community`}>→ Community &amp; meetings</a></li>
             <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">→ Language docs</a></li>
             <li><a href="https://docs.extendedmatrix.org/projects/EM-tools/" target="_blank" rel="noopener">→ EM Tools manual</a></li>
             <li><a href="https://docs.extendedmatrix.org/projects/heriverse/" target="_blank" rel="noopener">→ Heriverse</a></li>

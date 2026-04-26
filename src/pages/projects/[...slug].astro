@@ -12,6 +12,7 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout
@@ -20,7 +21,7 @@ const { Content } = await render(project);
 >
   <article class="proj">
     <div class="container">
-      <a href="/projects/" class="proj__back">← All projects</a>
+      <a href={`${B}/projects/`} class="proj__back">← All projects</a>
       <span class="tag">{project.data.year ?? 'Project'}</span>
       <h1 class="proj__title">{project.data.title}</h1>
 

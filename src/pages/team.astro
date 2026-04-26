@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const team = (await getCollection('team'))
   .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout
@@ -18,8 +19,8 @@ const team = (await getCollection('team'))
         Extended Matrix is developed by an open community. The core
         maintainers and active contributors are listed below; many more
         people use, teach and extend EM in their own work — see the
-        <a href="/projects">projects gallery</a> and the
-        <a href="/about#partners">partners section</a>.
+        <a href={`${B}/projects`}>projects gallery</a> and the
+        <a href={`${B}/about#partners`}>partners section</a>.
       </p>
 
       <ul class="grid">

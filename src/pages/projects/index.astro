@@ -6,6 +6,8 @@ const all = (await getCollection('projects'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => (b.data.year ?? 0) - (a.data.year ?? 0) || a.data.order - b.data.order);
 
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
 // group by year
 const byYear = new Map<number | string, typeof all>();
 for (const p of all) {
@@ -36,7 +38,7 @@ for (const p of all) {
           <ul class="grid">
             {items.map((p) => (
               <li class="card">
-                <a href={`/projects/${p.id.replace(/\.md$/, '')}/`}>
+                <a href={`${B}/projects/${p.id.replace(/\.md$/, '')}/`}>
                   <div class="card__cover">
                     {p.data.cover ? (
                       <img src={p.data.cover.src} alt={p.data.coverAlt || p.data.title} loading="lazy" />

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import logoMark from '../assets/logo_mark.svg';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout title="Extended Matrix">
@@ -20,7 +21,7 @@ import logoMark from '../assets/logo_mark.svg';
           readable by people, processable by machines.
         </p>
         <div class="hero__actions">
-          <a href="/start" class="btn btn-primary">Start here →</a>
+          <a href={`${B}/start`} class="btn btn-primary">Start here →</a>
           <a href="https://docs.extendedmatrix.org" class="btn btn-ghost" target="_blank" rel="noopener">
             Read the docs
           </a>
@@ -72,7 +73,7 @@ import logoMark from '../assets/logo_mark.svg';
           The property graph already carries CIDOC-CRM mappings, making EM
           data interoperable with the broader cultural heritage ecosystem.
         </p>
-        <a href="/start" class="btn btn-gold" style="margin-top: 8px;">
+        <a href={`${B}/start`} class="btn btn-gold" style="margin-top: 8px;">
           Pick your starting point →
         </a>
       </div>

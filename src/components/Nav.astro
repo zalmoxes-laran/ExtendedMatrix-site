@@ -1,21 +1,22 @@
 ---
 import logoMark from '../assets/logo_mark.svg';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <nav class="em-nav">
   <div class="em-nav__inner">
-    <a href="/" class="em-nav__brand" aria-label="Extended Matrix home">
+    <a href={`${B}/`} class="em-nav__brand" aria-label="Extended Matrix home">
       <img src={logoMark.src} alt="" width="20" height="34" class="em-nav__mark" />
       <span class="em-nav__wordmark">
         Extended<span class="em-nav__wordmark-emph">Matrix</span>
       </span>
     </a>
     <ul class="em-nav__links">
-      <li><a href="/start">Start</a></li>
-      <li><a href="/projects">Projects</a></li>
-      <li><a href="/news">News</a></li>
-      <li><a href="/community">Community</a></li>
-      <li><a href="/about">About</a></li>
+      <li><a href={`${B}/start`}>Start</a></li>
+      <li><a href={`${B}/projects`}>Projects</a></li>
+      <li><a href={`${B}/news`}>News</a></li>
+      <li><a href={`${B}/community`}>Community</a></li>
+      <li><a href={`${B}/about`}>About</a></li>
       <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Docs</a></li>
       <li>
         <a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener" class="em-nav__cta">
