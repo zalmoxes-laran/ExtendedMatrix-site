@@ -147,6 +147,63 @@ const showcase = defineCollection({
     }),
 });
 
+/**
+ * Versions — one entry per major EM release (1.0, 1.2, 1.3, 1.4, 1.5, ...).
+ * Each version page declares its support status, the Blender / yEd
+ * combinations it has been tested with, the addon release URL, and any
+ * LTS commitment.
+ */
+const versions = defineCollection({
+  type: 'content',
+  schema: () =>
+    z.object({
+      version: z.string(),                  // "1.5"
+      title: z.string(),                    // "EM 1.5 — Development snapshot"
+      status: z.enum([
+        'development',
+        'stable',
+        'lts',
+        'legacy',
+        'eol',
+      ]),
+      releaseDate: z.coerce.date().optional(),
+      eolDate: z.coerce.date().optional(),
+      blenderMin: z.string().optional(),    // "4.4"
+      blenderTested: z.array(z.string()).default([]),
+      blenderLts: z.string().optional(),    // "4.3" — only when status==='lts'
+      yedRequirement: z.string().default('yEd 3.21 or later'),
+      paletteUrl: z.string().url().optional(),
+      addonReleaseUrl: z.string().url().optional(),
+      changelogUrl: z.string().url().optional(),
+      docsUrl: z.string().url().optional(),
+      summary: z.string().max(400),
+      supersededBy: z.string().optional(),  // version slug
+      order: z.number().default(0),
+    }),
+});
+
+/**
+ * Tools — one entry per component of the EM Framework (EMF).
+ * Surfaces on /tools and /tools/<slug>; also driven by the homepage
+ * "Framework" grid.
+ */
+const tools = defineCollection({
+  type: 'content',
+  schema: ({ image }) =>
+    z.object({
+      name: z.string(),                    // "EM Tools"
+      role: z.string(),                    // "Blender add-on"
+      summary: z.string().max(280),
+      icon: image().optional(),
+      docsUrl: z.string().url().optional(),
+      repoUrl: z.string().url().optional(),
+      downloadUrl: z.string().url().optional(),
+      licence: z.string().default('GPL-3.0'),
+      status: z.enum(['stable', 'beta', 'alpha', 'planned']).default('stable'),
+      order: z.number().default(0),
+    }),
+});
+
 export const collections = {
   news,
   projects,
@@ -155,4 +212,6 @@ export const collections = {
   emHour,
   devMeetings,
   showcase,
+  versions,
+  tools,
 };

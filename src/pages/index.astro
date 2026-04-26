@@ -340,43 +340,21 @@ g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
 
   <!-- ============ OPEN DATA ============ -->
   <section class="opendata">
-    <div class="container opendata__row">
-      <div>
-        <span class="tag">Open data</span>
-        <h2 class="opendata__title">A FAIR home for EM datasets.</h2>
-        <p>
-          The
-          <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Extended Matrix Zenodo community</a>
-          is the canonical landing place for EM datasets, paradata bundles,
-          training material and case-study GraphML — every deposit gets a
-          DOI, machine-readable metadata, and is preserved for the long term.
-        </p>
-        <p>
-          A custom EM-aware metadata layer (<code>em_metadata.json</code>)
-          travels alongside Zenodo's standard fields, capturing
-          stratigraphic typology coverage, epoch range, paradata-chain
-          statistics and CIDOC-CRM mapping version. EMtools and Heriverse
-          will publish to (and search across) the community directly — see
-          <a href="https://dev.extendedmatrix.org/dev-projects" target="_blank" rel="noopener">DP-57</a>
-          on the development board.
-        </p>
-        <a href="https://zenodo.org/communities/extendedmatrix" class="btn btn-ghost" target="_blank" rel="noopener" style="margin-top: 8px;">
-          Browse the EM Zenodo community →
-        </a>
-      </div>
-      <div class="opendata__visual" aria-hidden="true">
-        <pre class="cv-block">
-<span class="c1"># em_metadata.json (excerpt)</span>
-{'{'}
-  <span class="s">"site_code"</span>: <span class="s">"NORA.A"</span>,
-  <span class="s">"period"</span>: <span class="s">"2nd c. BCE – 5th c. CE"</span>,
-  <span class="s">"em_version"</span>: <span class="s">"1.5.0"</span>,
-  <span class="s">"node_types"</span>: [<span class="s">"US"</span>,<span class="s">"USV"</span>,<span class="s">"USD"</span>,<span class="s">"TSU"</span>],
-  <span class="s">"paradata_coverage"</span>: 0.84,
-  <span class="s">"crm_mapping"</span>: <span class="s">"v1.5.2"</span>,
-  <span class="s">"licence"</span>: <span class="s">"CC-BY-4.0"</span>
-{'}'}</pre>
-      </div>
+    <div class="container">
+      <span class="tag">Open data</span>
+      <h2 class="opendata__title">EM datasets on Zenodo.</h2>
+      <p class="opendata__lede">
+        Reference datasets, training material and case-study GraphML can be
+        deposited on the
+        <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Extended Matrix Zenodo community</a>
+        — every deposit gets a DOI and is preserved for the long term. The
+        first fully downloadable case study (the Great Temple of
+        Sarmizegetusa) is being prepared, alongside a dedicated deposit
+        protocol.
+      </p>
+      <a href="https://zenodo.org/communities/extendedmatrix" class="btn btn-ghost" target="_blank" rel="noopener">
+        Browse the EM Zenodo community →
+      </a>
     </div>
   </section>
 
@@ -742,37 +720,13 @@ g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
 
   /* ── Open data ──────────────────────────────────────────── */
   .opendata { background: var(--em-bg-warm); border-block: 1px solid var(--em-border); }
-  .opendata__row {
-    display: grid;
-    grid-template-columns: 1fr 1.05fr;
-    gap: 64px;
-    align-items: center;
-  }
   .opendata__title { margin: 12px 0 18px; }
-  .opendata__row p { margin-bottom: 12px; }
-  .opendata__row code {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    background: var(--em-navy-tint);
-    color: var(--em-navy);
-    padding: 1px 6px;
-    border-radius: 2px;
-  }
-  .opendata__visual {
-    background: var(--em-bg);
-    border: 1px solid var(--em-border);
-    border-radius: var(--radius-md);
-    padding: 24px 22px;
-  }
-  .opendata__visual .cv-block {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    line-height: 1.7;
+  .opendata__lede {
     color: var(--em-text);
-    margin: 0;
+    max-width: 720px;
+    margin-bottom: 24px;
+    line-height: 1.7;
   }
-  .opendata__visual .c1 { color: var(--em-text-muted); font-style: italic; }
-  .opendata__visual .s  { color: var(--em-gold); }
 
   /* ── Used by ───────────────────────────────────────────── */
   .usedby {
@@ -810,7 +764,6 @@ g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
     .practice__grid { grid-template-columns: 1fr; }
     .code-section__row { grid-template-columns: 1fr; gap: 32px; }
     .standards__grid { grid-template-columns: 1fr; }
-    .opendata__row { grid-template-columns: 1fr; gap: 32px; }
   }
   @media (max-width: 520px) {
     .framework__grid { grid-template-columns: 1fr; }

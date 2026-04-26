@@ -1,0 +1,8 @@
+name: "SSHOC — Social Sciences and Humanities Open Cloud"
+kind: "eu-project"
+relation: "collaborates"
+url: "https://sshoc.eu"
+country: "EU"
+order: 3
+# logo: ../../assets/partners/sshoc.svg
+# logoAlt: "SSHOC logo"

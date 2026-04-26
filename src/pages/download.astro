@@ -1,0 +1,212 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const versions = (await getCollection('versions'))
+  .sort((a, b) => b.data.order - a.data.order);
+
+const development = versions.find((v) => v.data.status === 'development');
+const lts         = versions.find((v) => v.data.status === 'lts');
+const stable      = versions.find((v) => v.data.status === 'stable');
+const recommended = lts ?? stable ?? development;
+
+const tools = (await getCollection('tools'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Download"
+  description="Download Extended Matrix — the formal language palette for yEd, the EM Tools Blender add-on, the s3dgraphy library and the rest of the framework. Pick the version that matches your project."
+>
+  <section class="dl">
+    <div class="container">
+      <span class="tag">Download</span>
+      <h1>Get Extended Matrix.</h1>
+      <p class="dl__sub">
+        Two release lines run in parallel. <strong>LTS</strong> is the
+        stable target for production projects — pinned to a specific
+        Blender LTS, supported for years.
+        <strong>Development</strong> is where new features land.
+      </p>
+
+      <!-- ── Quick chooser ──────────────────────────────────────── -->
+      <div class="chooser">
+        {lts && (
+          <a class="chooser__card chooser__card--lts" href={`${B}/versions/${lts.id.replace(/\.md$/, '')}/`}>
+            <div class="chooser__badge">Recommended · LTS</div>
+            <h2>EM {lts.data.version}</h2>
+            <p>{lts.data.summary}</p>
+            <ul class="chooser__meta">
+              <li><strong>Blender:</strong> {lts.data.blenderLts ?? lts.data.blenderMin} LTS</li>
+              <li><strong>yEd:</strong> {lts.data.yedRequirement}</li>
+              {lts.data.eolDate && <li><strong>Supported until:</strong> {lts.data.eolDate.getFullYear()}</li>}
+            </ul>
+            <span class="chooser__cta">Open the {lts.data.version} page →</span>
+          </a>
+        )}
+
+        {development && (
+          <a class="chooser__card chooser__card--dev" href={`${B}/versions/${development.id.replace(/\.md$/, '')}/`}>
+            <div class="chooser__badge">In development</div>
+            <h2>EM {development.data.version}</h2>
+            <p>{development.data.summary}</p>
+            <ul class="chooser__meta">
+              <li><strong>Blender:</strong> {development.data.blenderMin}+</li>
+              <li><strong>yEd:</strong> {development.data.yedRequirement}</li>
+              <li><strong>Status:</strong> early adopters &amp; testing</li>
+            </ul>
+            <span class="chooser__cta">Open the {development.data.version} page →</span>
+          </a>
+        )}
+      </div>
+
+      <p class="dl__all">
+        Looking for an older release? See <a href={`${B}/versions/`}>all versions →</a>
+      </p>
+
+      <!-- ── Tools strip ────────────────────────────────────────── -->
+      <section class="dltools">
+        <h2>Individual tools</h2>
+        <p class="dltools__sub">
+          The framework is modular — each component has its own repository,
+          docs and download page.
+        </p>
+        <div class="dltools__grid">
+          {tools.map((t) => (
+            <a class="dltools__card" href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}>
+              <div class="dltools__name">{t.data.name}</div>
+              <div class="dltools__role">{t.data.role}</div>
+              <p class="dltools__desc">{t.data.summary}</p>
+              <div class="dltools__foot">
+                <span class="dltools__lic">{t.data.licence}</span>
+                <span class="dltools__open">Open →</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .dl { padding: 80px 0 60px; }
+  .dl h1 { margin: 14px 0 18px; }
+  .dl__sub { color: var(--em-text-muted); max-width: 720px; font-size: 17px; margin-bottom: 48px; }
+
+  .chooser {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .chooser__card {
+    display: block;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    padding: 28px 28px 24px;
+    background: var(--em-bg);
+    color: var(--em-text);
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .chooser__card:hover {
+    border-color: var(--em-gold);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 18px rgba(26,40,69,0.08);
+  }
+  .chooser__card--lts { border-left: 4px solid var(--em-gold); }
+  .chooser__card--dev { border-left: 4px solid var(--em-navy); }
+  .chooser__badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+  }
+  .chooser__card--dev .chooser__badge {
+    color: var(--em-navy);
+    background: var(--em-navy-tint);
+  }
+  .chooser__card h2 { font-size: 28px; margin: 4px 0 8px; }
+  .chooser__card p { color: var(--em-text); margin-bottom: 14px; line-height: 1.6; }
+  .chooser__meta {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: var(--em-text-muted);
+    display: grid;
+    gap: 4px;
+  }
+  .chooser__cta {
+    color: var(--em-gold);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .dl__all {
+    margin: 32px 0 0;
+    color: var(--em-text-muted);
+    font-size: 14px;
+  }
+  .dl__all a { color: var(--em-gold); font-weight: 600; }
+
+  .dltools { margin-top: 80px; }
+  .dltools h2 { font-size: 28px; }
+  .dltools__sub { color: var(--em-text-muted); max-width: 600px; margin: 8px 0 28px; }
+  .dltools__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .dltools__card {
+    display: block;
+    padding: 22px 24px;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    color: var(--em-text);
+    transition: border-color 0.2s var(--ease);
+  }
+  .dltools__card:hover { border-color: var(--em-gold); text-decoration: none; }
+  .dltools__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--em-navy);
+    font-size: 17px;
+  }
+  .dltools__role {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--em-gold);
+    margin: 4px 0 10px;
+  }
+  .dltools__desc {
+    font-size: 13px;
+    color: var(--em-text);
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
+  .dltools__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--em-text-muted);
+  }
+  .dltools__open { color: var(--em-gold); font-weight: 600; }
+
+  @media (max-width: 800px) {
+    .chooser { grid-template-columns: 1fr; }
+    .dltools__grid { grid-template-columns: 1fr; }
+  }
+</style>

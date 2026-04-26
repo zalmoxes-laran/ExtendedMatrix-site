@@ -1,8 +1,9 @@
 name: "CNR-ISPC"
 kind: "research-institute"
-relation: "contributes"
+# CNR-ISPC is the home institution of Extended Matrix — leading rather than contributing.
+relation: "collaborates"
 url: "https://www.ispc.cnr.it"
 country: "IT"
-order: 10
+order: 1
 # logo: ../../assets/partners/cnr-ispc.svg
 # logoAlt: "CNR-ISPC logo"
