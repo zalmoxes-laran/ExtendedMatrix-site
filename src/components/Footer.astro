@@ -1,0 +1,67 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="em-footer">
+  <div class="em-footer__inner">
+    <div>
+      <div class="em-footer__brand">
+        Extended<span class="em-footer__brand-emph">Matrix</span>
+      </div>
+      <p class="em-footer__author">
+        E. Demetrescu — CNR-ISPC, Rome — © {year}
+      </p>
+    </div>
+    <div class="em-footer__links">
+      <a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Language docs</a>
+      <a href="https://docs.extendedmatrix.org/projects/EM-tools/" target="_blank" rel="noopener">EM Tools</a>
+      <a href="https://docs.extendedmatrix.org/projects/strativerse/" target="_blank" rel="noopener">Heriverse</a>
+      <a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Telegram</a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .em-footer {
+    background: var(--em-navy);
+    color: var(--em-bg);
+    padding: 40px 0;
+    margin-top: 80px;
+  }
+  .em-footer__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+  .em-footer__brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    color: var(--em-bg);
+  }
+  .em-footer__brand-emph { color: var(--em-gold); font-weight: 400; }
+  .em-footer__author {
+    font-size: 13px;
+    margin-top: 4px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .em-footer__links {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .em-footer__links a {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+  .em-footer__links a:hover {
+    color: var(--em-gold);
+    text-decoration: none;
+  }
+</style>

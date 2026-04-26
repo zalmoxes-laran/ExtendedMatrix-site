@@ -1,0 +1,732 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import logoMark from '../assets/logo_mark.svg';
+---
+
+<BaseLayout title="Extended Matrix">
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="hero__inner container">
+      <div class="hero__copy">
+        <span class="tag">Archaeological Knowledge Graph</span>
+        <h1 class="hero__title">
+          From evidence<br />
+          to <em>interpretation</em>,<br />
+          transparently.
+        </h1>
+        <p class="hero__sub">
+          Extended Matrix is a formal language for documenting stratigraphic
+          sequences and virtual reconstruction processes — designed to be
+          readable by people, processable by machines.
+        </p>
+        <div class="hero__actions">
+          <a href="/start" class="btn btn-primary">Start here →</a>
+          <a href="https://docs.extendedmatrix.org" class="btn btn-ghost" target="_blank" rel="noopener">
+            Read the docs
+          </a>
+        </div>
+      </div>
+      <div class="hero__visual" aria-hidden="true">
+        <img src={logoMark.src} alt="" class="hero__mark" />
+        <div class="hero__diagram">
+          <p class="hero__diagram-label">EM node vocabulary (excerpt)</p>
+          <div class="diagram-row">
+            <span class="dn dn-us">US 001</span>
+            <span class="diagram-arrow">→</span>
+            <span class="diagram-mono">overlies</span>
+            <span class="diagram-arrow">→</span>
+            <span class="dn dn-us">US 002</span>
+          </div>
+          <div class="diagram-row">
+            <span class="dn dn-doc">DOC photo</span>
+            <span class="diagram-arrow">◀··</span>
+            <span class="dn dn-ext">EXT analysis</span>
+            <span class="diagram-arrow">◀──</span>
+            <span class="dn dn-usv">USV recon.</span>
+          </div>
+          <p class="diagram-note">
+            Every reconstruction node points back to the evidence that justifies it.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CORE IDEA ============ -->
+  <section class="core">
+    <div class="container core__row">
+      <div>
+        <span class="tag">Core idea</span>
+        <h2 class="core__title">EM is the score.<br />s3dgraphy plays it.</h2>
+        <p>
+          Like a musical score versus its MIDI encoding, Extended Matrix is the
+          human-readable notation: it can live on paper, in yEd, or in an
+          AI-extracted spreadsheet. The <strong>s3dgraphy</strong> Python
+          library makes that notation computable — and the rest of the
+          framework brings it into Blender, into the web, into VR.
+        </p>
+        <p>
+          The property graph already carries CIDOC-CRM mappings, making EM
+          data interoperable with the broader cultural heritage ecosystem.
+        </p>
+        <a href="/start" class="btn btn-gold" style="margin-top: 8px;">
+          Pick your starting point →
+        </a>
+      </div>
+      <div class="core__visual" aria-hidden="true">
+        <pre class="cv-block">
+                              <span class="cv-node cv-doc">DOC_001</span>
+                                 <span class="cv-arrow">▲</span>
+                                 <span class="cv-arrow">│ extracted_from</span>
+                              <span class="cv-node cv-ext">EXT_001</span>
+                                 <span class="cv-arrow">▲</span>
+                                 <span class="cv-arrow">│ has_paradata</span>
+<span class="cv-node cv-usv">USV_001</span>  <span class="cv-arrow">─ overlies ─▶</span>  <span class="cv-node cv-us">US_002</span>
+        </pre>
+        <p class="diagram-note">
+          Every reconstruction node points back to the evidence that justifies it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EM FRAMEWORK ============ -->
+  <section class="framework">
+    <div class="container">
+      <span class="tag">EM Framework</span>
+      <h2 class="framework__title">The tools that speak EM</h2>
+      <p class="framework__sub">
+        A growing family of open-source tools built around the s3dgraphy
+        knowledge graph — from field documentation to immersive web
+        publication.
+      </p>
+
+      <div class="framework__grid">
+        <a href="https://docs.extendedmatrix.org/projects/EM-tools/" class="card" target="_blank" rel="noopener">
+          <div class="card__name">EM Tools</div>
+          <div class="card__role">Blender add-on</div>
+          <p class="card__desc">
+            3D visualisation and interactive annotation of stratigraphic units
+            directly inside Blender.
+          </p>
+        </a>
+        <a href="https://github.com/zalmoxes-laran/s3dgraphy" class="card" target="_blank" rel="noopener">
+          <div class="card__name">s3dgraphy</div>
+          <div class="card__role">Python library</div>
+          <p class="card__desc">
+            The graph engine: import, export, validate and query EM knowledge
+            graphs.
+          </p>
+        </a>
+        <a href="https://docs.extendedmatrix.org/projects/strativerse/" class="card" target="_blank" rel="noopener">
+          <div class="card__name">Heriverse</div>
+          <div class="card__role">Web platform</div>
+          <p class="card__desc">
+            Heritage Science Metaverse — paradata pop-ups, epoch switching,
+            collaborative VR for EM-aware scenes.
+          </p>
+        </a>
+        <a href="https://docs.extendedmatrix.org/projects/3D-survey-collection/" class="card" target="_blank" rel="noopener">
+          <div class="card__name">3DSC</div>
+          <div class="card__role">Survey pipeline</div>
+          <p class="card__desc">
+            Photogrammetry and 3D model preparation upstream of EM Tools, on
+            modest hardware.
+          </p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SEE IT IN PRACTICE ============ -->
+  <section class="practice">
+    <div class="container">
+      <span class="tag">See it in practice</span>
+      <h2 class="practice__title">One graph, four ways to look at it.</h2>
+      <p class="practice__sub">
+        The same EM data shows up in the photogrammetric model, in the
+        stratigraphic graph, in the project's data tree, and in the public
+        Heriverse scene — each view is a different reading of the same
+        knowledge.
+      </p>
+
+      <div class="practice__grid">
+        <figure class="screen">
+          <div class="screen__chrome">3D viewport — proxies on photogrammetric model</div>
+          <div class="screen__body screen__body--3d">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+              <!-- ground / mesh hint -->
+              <rect width="200" height="130" fill="#f5f0e6" />
+              <path d="M0,90 Q50,72 100,82 T200,86 L200,130 L0,130 Z" fill="#d6c9a8" />
+              <path d="M0,98 Q60,86 120,92 T200,94 L200,130 L0,130 Z" fill="#b89e75" opacity="0.85" />
+              <!-- semi-transparent proxies -->
+              <rect x="46" y="50" width="36" height="46" fill="#1a2845" fill-opacity="0.28" stroke="#1a2845" stroke-width="1"/>
+              <rect x="92" y="36" width="42" height="60" fill="#b8893a" fill-opacity="0.32" stroke="#b8893a" stroke-width="1"/>
+              <rect x="142" y="56" width="34" height="40" fill="#1a2845" fill-opacity="0.28" stroke="#1a2845" stroke-width="1"/>
+              <text x="64" y="76" text-anchor="middle" font-size="9" fill="#1a2845" font-family="monospace">US.001</text>
+              <text x="113" y="70" text-anchor="middle" font-size="9" fill="#b8893a" font-family="monospace">USV.002</text>
+              <text x="159" y="80" text-anchor="middle" font-size="9" fill="#1a2845" font-family="monospace">US.003</text>
+            </svg>
+          </div>
+        </figure>
+
+        <figure class="screen">
+          <div class="screen__chrome">EM graph — yEd / Graph Editor</div>
+          <div class="screen__body screen__body--graph">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="130" fill="#fafaf7"/>
+              <!-- edges -->
+              <line x1="40" y1="34" x2="100" y2="60" stroke="#5a6b7a" stroke-width="1.2"/>
+              <line x1="100" y1="60" x2="160" y2="36" stroke="#5a6b7a" stroke-width="1.2" stroke-dasharray="3,2"/>
+              <line x1="100" y1="60" x2="40" y2="92" stroke="#5a6b7a" stroke-width="1.2"/>
+              <line x1="100" y1="60" x2="160" y2="92" stroke="#5a6b7a" stroke-width="1.2"/>
+              <line x1="40" y1="92" x2="160" y2="92" stroke="#5a6b7a" stroke-width="1.2"/>
+              <!-- nodes -->
+              <rect x="22" y="22" width="36" height="20" fill="#fff" stroke="#1a2845" stroke-width="1.5" rx="3"/>
+              <text x="40" y="35" text-anchor="middle" font-size="9" fill="#1a2845" font-weight="700">US.001</text>
+              <rect x="142" y="24" width="36" height="20" fill="#fff" stroke="#b8893a" stroke-width="1.5" stroke-dasharray="3,2" rx="3"/>
+              <text x="160" y="37" text-anchor="middle" font-size="9" fill="#b8893a" font-weight="700">USV.002</text>
+              <circle cx="100" cy="60" r="10" fill="#b8893a" stroke="#b8893a"/>
+              <text x="100" y="63" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">PD</text>
+              <rect x="22" y="80" width="36" height="20" fill="#fff" stroke="#1a2845" stroke-width="1.5" rx="3"/>
+              <text x="40" y="93" text-anchor="middle" font-size="9" fill="#1a2845" font-weight="700">DOC</text>
+              <rect x="142" y="80" width="36" height="20" fill="#fff" stroke="#1a2845" stroke-width="1.5" rx="3"/>
+              <text x="160" y="93" text-anchor="middle" font-size="9" fill="#1a2845" font-weight="700">EXT</text>
+            </svg>
+          </div>
+        </figure>
+
+        <figure class="screen">
+          <div class="screen__chrome">Stratigraphy data tree — Blender side panel</div>
+          <div class="screen__body screen__body--tree">
+            <div class="tree">
+              <div class="tree__row"><span class="tree__chev">▾</span><span class="tree__label">site_a / phase 1</span></div>
+              <div class="tree__row tree__row--indent"><span class="tree__chev">▸</span><span class="tree__label">US.001 — wall foundation</span></div>
+              <div class="tree__row tree__row--indent"><span class="tree__chev">▾</span><span class="tree__label">USV.002 — superstructure</span></div>
+              <div class="tree__row tree__row--indent2"><span class="tree__pill tree__pill--doc">DOC</span><span class="tree__label">photographs · 2008</span></div>
+              <div class="tree__row tree__row--indent2"><span class="tree__pill tree__pill--ext">EXT</span><span class="tree__label">tpq from coin</span></div>
+              <div class="tree__row tree__row--indent2"><span class="tree__pill tree__pill--prop">PROP</span><span class="tree__label">dating · 2nd c. CE</span></div>
+              <div class="tree__row tree__row--indent"><span class="tree__chev">▸</span><span class="tree__label">US.003 — collapse layer</span></div>
+            </div>
+          </div>
+        </figure>
+
+        <figure class="screen">
+          <div class="screen__chrome">Heriverse — collaborative web scene</div>
+          <div class="screen__body screen__body--web">
+            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
+              <rect width="200" height="130" fill="#0f1a2e"/>
+              <!-- horizon -->
+              <rect y="80" width="200" height="50" fill="#1a2845"/>
+              <!-- 3D building silhouette -->
+              <polygon points="60,40 60,80 140,80 140,40 100,18" fill="#b8893a" fill-opacity="0.85"/>
+              <rect x="74" y="56" width="10" height="24" fill="#0f1a2e"/>
+              <rect x="116" y="56" width="10" height="24" fill="#0f1a2e"/>
+              <!-- paradata pop-up -->
+              <rect x="138" y="22" width="54" height="24" fill="#fff" stroke="#b8893a" stroke-width="1" rx="2"/>
+              <text x="143" y="32" font-size="7" fill="#1a2845" font-family="monospace">USV.002</text>
+              <text x="143" y="40" font-size="6" fill="#5a6b7a" font-family="monospace">DOC · EXT · PROP</text>
+              <line x1="138" y1="34" x2="120" y2="42" stroke="#b8893a" stroke-width="1"/>
+              <!-- collaborator cursors -->
+              <circle cx="48" cy="100" r="4" fill="#b8893a"/>
+              <circle cx="170" cy="108" r="4" fill="#fff"/>
+              <text x="180" y="120" font-size="7" fill="#fff" font-family="monospace">2 viewers</text>
+            </svg>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CODE-FIRST INTEGRATION ============ -->
+  <section class="code-section">
+    <div class="container code-section__row">
+      <div>
+        <span class="tag">Code-first integration</span>
+        <h2 class="code-section__title">Bring EM into your platform in 20 lines.</h2>
+        <p>
+          The full EM language is implemented in <code>s3dgraphy</code>, a
+          Python library you can <code>pip install</code> into Revit, 3ds Max,
+          Unity, Unreal, a CLI tool, a Jupyter notebook, or your in-house
+          pipeline. The data model is the same everywhere.
+        </p>
+        <p>
+          One library means: one schema, one validator, one CIDOC-CRM mapping,
+          one set of import/export formats. Your platform-specific code is the
+          UI on top — the knowledge graph stays consistent across the whole
+          ecosystem.
+        </p>
+        <a href="https://github.com/zalmoxes-laran/s3dgraphy" class="btn btn-ghost" target="_blank" rel="noopener" style="margin-top: 8px;">
+          s3dgraphy on GitHub →
+        </a>
+      </div>
+      <div class="code-section__code">
+<pre class="code"><span class="c1"># minimal s3dgraphy session</span>
+<span class="kw">from</span> s3dgraphy <span class="kw">import</span> Graph
+<span class="kw">from</span> s3dgraphy.nodes <span class="kw">import</span> StratigraphicNode, DocumentNode
+
+g = Graph(<span class="s">"my_site"</span>)
+
+us001 = StratigraphicNode(<span class="s">"US.001"</span>, node_type=<span class="s">"US"</span>)
+us001.set_attribute(<span class="s">"description"</span>, <span class="s">"Stone wall foundation"</span>)
+g.add_node(us001)
+
+doc = DocumentNode(<span class="s">"DOC.005"</span>, <span class="s">"site_plan_2008.pdf"</span>)
+g.add_node(doc)
+g.add_edge(us001.node_id, doc.node_id, <span class="s">"has_source"</span>)
+
+g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STANDARDS & ALIGNMENT ============ -->
+  <section class="standards">
+    <div class="container">
+      <span class="tag">Built on standards</span>
+      <h2 class="standards__title">Long-term support, real interoperability.</h2>
+      <p class="standards__sub">
+        Extended Matrix is part of the European research infrastructure for
+        cultural heritage. It is committed to long-term standardisation,
+        formal mapping to community ontologies, and integration with the
+        emerging European Collaborative Cloud.
+      </p>
+
+      <div class="standards__grid">
+        <article class="std-card">
+          <div class="std-card__head">CIDOC-CRM alignment</div>
+          <p>
+            Every EM node and arc has a published mapping to the ISO
+            CIDOC-CRM ontology. Your graph is interoperable with the rest
+            of the cultural-heritage data world out of the box.
+          </p>
+        </article>
+        <article class="std-card">
+          <div class="std-card__head">LTS releases</div>
+          <p>
+            From version 1.5, the formal language follows a long-term support
+            cycle: stable releases are maintained for years with backwards
+            compatibility, breaking changes are governed.
+          </p>
+        </article>
+        <article class="std-card">
+          <div class="std-card__head">ECCCH connector</div>
+          <p>
+            EM is one of the building blocks of the
+            <a href="https://www.eccch.eu" target="_blank" rel="noopener">European Collaborative Cloud for Cultural Heritage</a>:
+            EM Tools and Heriverse will publish first-class connectors to
+            the federated data spaces.
+          </p>
+        </article>
+        <article class="std-card">
+          <div class="std-card__head">StratiGraph EU project</div>
+          <p>
+            Funded by the European Commission, StratiGraph hardens EM as a
+            shared infrastructure: governance, versioning, validation suite,
+            and reference triplestore export.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ USED BY ============ -->
+  <section class="usedby">
+    <div class="container">
+      <span class="tag">Used by</span>
+      <h2 class="usedby__title">Universities and research institutions across Europe.</h2>
+      <p class="usedby__sub">
+        EM is adopted in research, teaching, and field projects at —
+      </p>
+      <!--
+        TODO logos: drop monochrome SVG logos in src/assets/partners/ and
+        replace this strip with the image versions. The collection schema
+        is in src/content/config.ts.
+      -->
+      <ul class="usedby__strip">
+        <li>CNR-ISPC</li>
+        <li>Università di Padova</li>
+        <li>Università di Roma Tre</li>
+        <li>Università di Pisa</li>
+        <li>Sapienza Università di Roma</li>
+        <li>e-Archeo network</li>
+        <li>… and counting</li>
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ── Hero ───────────────────────────────────────────────── */
+  .hero {
+    background: var(--em-navy);
+    color: var(--em-bg);
+    padding: 100px 0 80px;
+    overflow: hidden;
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .hero :global(.tag) {
+    color: var(--em-gold);
+    background: rgba(184, 137, 58, 0.15);
+    border: 1px solid rgba(184, 137, 58, 0.4);
+  }
+  .hero__title {
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    margin: 18px 0 22px;
+    color: var(--em-bg);
+  }
+  .hero__title em {
+    font-style: normal;
+    color: var(--em-gold);
+  }
+  .hero__sub {
+    font-size: 17px;
+    color: rgba(255, 255, 255, 0.78);
+    line-height: 1.7;
+    margin-bottom: 32px;
+    max-width: 480px;
+  }
+  .hero__actions { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero__actions :global(.btn-primary) {
+    background: var(--em-gold);
+    color: var(--em-navy);
+  }
+  .hero__actions :global(.btn-primary:hover) {
+    background: var(--em-gold-soft);
+    color: var(--em-navy);
+  }
+  .hero__actions :global(.btn-ghost) {
+    color: var(--em-bg);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .hero__actions :global(.btn-ghost:hover) {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--em-bg);
+    border-color: var(--em-bg);
+  }
+  .hero__visual {
+    position: relative;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: 36px 32px 32px;
+  }
+  .hero__mark {
+    position: absolute;
+    top: -24px;
+    right: -24px;
+    width: 80px;
+    opacity: 0.18;
+    filter: invert(1);
+  }
+  .hero__diagram-label {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 14px;
+  }
+  .diagram-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .dn {
+    padding: 7px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .dn-us  { background: rgba(184, 137, 58, 0.15); color: var(--em-gold); border: 1px solid var(--em-gold); }
+  .dn-usv { background: rgba(184, 137, 58, 0.08); color: var(--em-gold-soft); border: 1px dashed var(--em-gold); }
+  .dn-doc { background: rgba(255, 255, 255, 0.07); color: rgba(255, 255, 255, 0.85); border: 1px solid rgba(255, 255, 255, 0.3); }
+  .dn-ext { background: rgba(255, 255, 255, 0.04); color: rgba(255, 255, 255, 0.7); border: 1px dotted rgba(255, 255, 255, 0.4); }
+  .diagram-arrow { color: rgba(255, 255, 255, 0.5); font-size: 16px; font-family: var(--font-mono); }
+  .diagram-mono { font-family: var(--font-mono); font-size: 11px; color: rgba(255, 255, 255, 0.55); }
+  .diagram-note {
+    margin-top: 14px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+    font-style: italic;
+  }
+
+  /* ── Core idea ──────────────────────────────────────────── */
+  .core {
+    background: var(--em-bg-warm);
+    border-block: 1px solid var(--em-border);
+  }
+  .core__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .core__title { margin: 12px 0 18px; }
+  .core__visual {
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    padding: 28px;
+  }
+  .cv-block {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 2;
+    color: var(--em-text);
+    white-space: pre-wrap;
+    margin: 0;
+  }
+  .core .diagram-note { color: var(--em-text-muted); margin-top: 14px; }
+  .cv-node {
+    padding: 2px 10px;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+  .cv-us  { background: var(--em-gold-tint); color: var(--em-gold); }
+  .cv-usv { background: var(--em-gold-tint); color: var(--em-gold-soft); border: 1px dashed var(--em-gold); }
+  .cv-doc { background: var(--em-navy-tint); color: var(--em-navy); }
+  .cv-ext { background: var(--em-navy-tint); color: var(--em-navy-soft); }
+  .cv-arrow { color: var(--em-text-muted); }
+
+  /* ── Framework ──────────────────────────────────────────── */
+  .framework__title { margin: 12px 0 16px; }
+  .framework__sub {
+    color: var(--em-text-muted);
+    max-width: 600px;
+    margin-bottom: 40px;
+  }
+  .framework__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .card {
+    display: block;
+    padding: 26px 22px;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    color: var(--em-text);
+    transition: all 0.2s var(--ease);
+  }
+  .card:hover {
+    border-color: var(--em-gold);
+    transform: translateY(-2px);
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(26, 40, 69, 0.08);
+  }
+  .card__name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--em-navy);
+    margin-bottom: 4px;
+  }
+  .card__role {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--em-gold);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .card__desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--em-text-muted);
+    margin: 0;
+  }
+
+  /* ── See it in practice ─────────────────────────────────── */
+  .practice {
+    background: var(--em-bg-warm);
+    border-block: 1px solid var(--em-border);
+  }
+  .practice__title { margin: 12px 0 16px; }
+  .practice__sub {
+    color: var(--em-text-muted);
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+  .practice__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .screen {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    overflow: hidden;
+    margin: 0;
+    transition: border-color 0.2s var(--ease);
+  }
+  .screen:hover { border-color: var(--em-gold); }
+  .screen__chrome {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em-text-muted);
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--em-border);
+    background: var(--em-bg-warm);
+    letter-spacing: 0.02em;
+  }
+  .screen__body { padding: 14px; }
+  .screen__body--3d, .screen__body--graph, .screen__body--web { padding: 0; }
+  .screen__body--3d svg, .screen__body--graph svg, .screen__body--web svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .tree {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    line-height: 2;
+    padding: 6px 12px;
+  }
+  .tree__row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--em-text);
+  }
+  .tree__row--indent { padding-left: 18px; }
+  .tree__row--indent2 { padding-left: 36px; }
+  .tree__chev { color: var(--em-text-muted); width: 10px; }
+  .tree__pill {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 2px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .tree__pill--doc  { background: var(--em-navy-tint); color: var(--em-navy); }
+  .tree__pill--ext  { background: var(--em-gold-tint); color: var(--em-gold); }
+  .tree__pill--prop { background: var(--em-navy-tint); color: var(--em-navy-soft); }
+
+  /* ── Code-first ─────────────────────────────────────────── */
+  .code-section__row {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 64px;
+    align-items: center;
+  }
+  .code-section__title { margin: 12px 0 18px; }
+  .code-section__row p { margin-bottom: 12px; }
+  .code-section__row code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--em-navy-tint);
+    color: var(--em-navy);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  .code-section__code {
+    background: var(--em-navy);
+    border-radius: var(--radius-md);
+    padding: 24px 22px;
+    overflow-x: auto;
+  }
+  .code-section__code .code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: #d4dae3;
+    white-space: pre;
+    margin: 0;
+  }
+  .code .c1 { color: #6b7c93; font-style: italic; }
+  .code .kw { color: #b8893a; }
+  .code .s  { color: #c5e3b3; }
+
+  /* ── Standards ──────────────────────────────────────────── */
+  .standards {
+    background: var(--em-bg-warm);
+    border-block: 1px solid var(--em-border);
+  }
+  .standards__title { margin: 12px 0 16px; }
+  .standards__sub {
+    color: var(--em-text-muted);
+    max-width: 680px;
+    margin-bottom: 40px;
+  }
+  .standards__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+  .std-card {
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    border-left: 3px solid var(--em-gold);
+    padding: 24px 26px;
+    border-radius: var(--radius-md);
+  }
+  .std-card__head {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--em-navy);
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .std-card p {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ── Used by ───────────────────────────────────────────── */
+  .usedby {
+    text-align: center;
+  }
+  .usedby__title { margin: 12px 0 16px; }
+  .usedby__sub {
+    color: var(--em-text-muted);
+    margin-bottom: 32px;
+  }
+  .usedby__strip {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px 48px;
+    padding: 0;
+    color: #98a3b1;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+  }
+  .usedby__strip li {
+    border-bottom: 1px dashed transparent;
+    padding-bottom: 2px;
+  }
+
+  /* ── Responsive ─────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .hero__inner { grid-template-columns: 1fr; }
+    .hero__visual { display: none; }
+    .core__row { grid-template-columns: 1fr; gap: 40px; }
+    .framework__grid { grid-template-columns: repeat(2, 1fr); }
+    .practice__grid { grid-template-columns: 1fr; }
+    .code-section__row { grid-template-columns: 1fr; gap: 32px; }
+    .standards__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    .framework__grid { grid-template-columns: 1fr; }
+    .usedby__strip { gap: 16px 24px; font-size: 14px; }
+  }
+</style>

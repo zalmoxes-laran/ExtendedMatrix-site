@@ -1,0 +1,89 @@
+---
+import logoMark from '../assets/logo_mark.svg';
+---
+
+<nav class="em-nav">
+  <div class="em-nav__inner">
+    <a href="/" class="em-nav__brand" aria-label="Extended Matrix home">
+      <img src={logoMark.src} alt="" width="20" height="34" class="em-nav__mark" />
+      <span class="em-nav__wordmark">
+        Extended<span class="em-nav__wordmark-emph">Matrix</span>
+      </span>
+    </a>
+    <ul class="em-nav__links">
+      <li><a href="/start">Start here</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/news">News</a></li>
+      <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Docs</a></li>
+      <li>
+        <a href="https://github.com/zalmoxes-laran" target="_blank" rel="noopener" class="em-nav__cta">
+          GitHub
+        </a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<style>
+  .em-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--em-bg);
+    border-bottom: 1px solid var(--em-border);
+  }
+  .em-nav__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 0 var(--gutter);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .em-nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--em-navy);
+  }
+  .em-nav__brand:hover { color: var(--em-navy); text-decoration: none; }
+  .em-nav__mark { display: block; }
+  .em-nav__wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    color: var(--em-navy);
+  }
+  .em-nav__wordmark-emph {
+    font-weight: 400;
+  }
+  .em-nav__links {
+    display: flex;
+    gap: 28px;
+    list-style: none;
+    align-items: center;
+  }
+  .em-nav__links a {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--em-text-muted);
+  }
+  .em-nav__links a:hover { color: var(--em-navy); text-decoration: none; }
+  .em-nav__cta {
+    background: var(--em-navy);
+    color: var(--em-bg) !important;
+    padding: 6px 14px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+  }
+  .em-nav__cta:hover {
+    background: var(--em-gold);
+    color: var(--em-bg) !important;
+  }
+  @media (max-width: 700px) {
+    .em-nav__links { gap: 18px; }
+    .em-nav__links li:nth-child(3) { display: none; }
+  }
+</style>

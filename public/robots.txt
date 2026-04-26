@@ -1,0 +1,5 @@
+# Block all crawlers while the new site is on the staging URL.
+# When the new site goes live on extendedmatrix.org, replace this file
+# with one that allows indexing (User-agent: *, Allow: /, plus a Sitemap line).
+User-agent: *
+Disallow: /

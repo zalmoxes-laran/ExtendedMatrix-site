@@ -1,0 +1,142 @@
+/* ============================================================
+   Extended Matrix — global styles
+   Palette: official 2022 brand pack (navy + ochre gold on white)
+   ============================================================ */
+
+:root {
+  /* Brand colours */
+  --em-navy:        #1a2845;
+  --em-navy-soft:   #2d3a55;
+  --em-navy-tint:   #e8ebf2;
+  --em-gold:        #b8893a;
+  --em-gold-soft:   #c39b51;
+  --em-gold-tint:   #f5ecd9;
+
+  /* Surfaces */
+  --em-bg:          #ffffff;
+  --em-bg-warm:     #fafaf7;
+  --em-text:        #1a1a1a;
+  --em-text-muted:  #5a6b7a;
+  --em-border:      #e5e2db;
+
+  /* Typography */
+  --font-sans:    'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+                  'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Manrope', var(--font-sans);
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  /* Layout */
+  --max-width:    1100px;
+  --gutter:       32px;
+  --radius-sm:    4px;
+  --radius-md:    8px;
+
+  /* Motion */
+  --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--em-text);
+  background: var(--em-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--em-navy);
+  text-decoration: none;
+  transition: color 0.2s var(--ease);
+}
+a:hover { color: var(--em-gold); }
+
+img, svg { display: block; max-width: 100%; height: auto; }
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--em-navy);
+  line-height: 1.2;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 3rem); }
+h2 { font-size: clamp(1.5rem, 2.5vw, 2rem); }
+h3 { font-size: 1.25rem; }
+
+p { line-height: 1.7; color: var(--em-text); }
+
+/* ── Layout helpers ──────────────────────────────────────── */
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+section { padding: 80px 0; }
+
+/* ── Buttons ─────────────────────────────────────────────── */
+
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s var(--ease);
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--em-navy);
+  color: var(--em-bg);
+}
+.btn-primary:hover {
+  background: var(--em-navy-soft);
+  color: var(--em-bg);
+  text-decoration: none;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--em-navy);
+  border-color: var(--em-navy);
+}
+.btn-ghost:hover {
+  background: var(--em-navy);
+  color: var(--em-bg);
+  text-decoration: none;
+}
+
+.btn-gold {
+  background: var(--em-gold);
+  color: var(--em-bg);
+}
+.btn-gold:hover {
+  background: var(--em-gold-soft);
+  color: var(--em-bg);
+  text-decoration: none;
+}
+
+/* ── Tag / pill ──────────────────────────────────────────── */
+
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--em-gold);
+  background: var(--em-gold-tint);
+  border-radius: 2px;
+}

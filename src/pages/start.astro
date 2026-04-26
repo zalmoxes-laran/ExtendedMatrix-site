@@ -1,0 +1,217 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Start here"
+  description="Three guided entry points into Extended Matrix — pick the one that fits your work."
+>
+  <section class="start">
+    <div class="container">
+      <span class="tag">Start here</span>
+      <h1 class="start__title">Pick your entry point.</h1>
+      <p class="start__sub">
+        Extended Matrix is a method (the formal language), a framework (a
+        family of open-source tools), and a community. Three short paths
+        below — each leads you straight to where the work happens.
+      </p>
+
+      <div class="paths">
+        <article class="path">
+          <header>
+            <span class="path__num">1</span>
+            <h2>Sources, stratigraphy, reconstruction</h2>
+            <p class="path__who">For archaeologists, heritage scholars, students.</p>
+          </header>
+          <p>
+            Begin with the formal language: it is what you will read, write
+            and discuss when reasoning about evidence. Pencil and paper are
+            enough to start.
+          </p>
+          <ol class="path__steps">
+            <li>
+              Read the <a href="https://docs.extendedmatrix.org/en/1.5.0dev/learn_EM.html" target="_blank" rel="noopener">
+                Learn EM</a> guide.
+            </li>
+            <li>
+              Walk through <a href="https://docs.extendedmatrix.org/en/1.5.0dev/stratigraphic_nodes.html" target="_blank" rel="noopener">
+                stratigraphic nodes</a> and <a href="https://docs.extendedmatrix.org/en/1.5.0dev/paradata_nodes.html" target="_blank" rel="noopener">
+                paradata nodes</a>.
+            </li>
+            <li>
+              Hands-on: <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/latest/tutorials/12-install-yed-blender.html" target="_blank" rel="noopener">
+                install yEd with the EM palette</a> and draw your first graph.
+            </li>
+          </ol>
+        </article>
+
+        <article class="path">
+          <header>
+            <span class="path__num">2</span>
+            <h2>3D models annotated with EM data</h2>
+            <p class="path__who">For 3D artists, modellers, technical-archaeologists.</p>
+          </header>
+          <p>
+            Bring an existing graph into Blender, link proxies to stratigraphic
+            units, drive visualisation by epoch and property, export to the
+            web.
+          </p>
+          <ol class="path__steps">
+            <li>
+              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/latest/installation.html" target="_blank" rel="noopener">
+                Install EM Tools</a> (Blender extension).
+            </li>
+            <li>
+              Follow <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/latest/tutorials/13-first-matrix-creation.html" target="_blank" rel="noopener">
+                creating your first matrix</a>, then the
+              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/latest/tutorials/index.html" target="_blank" rel="noopener">
+                intermediate tutorial track</a>.
+            </li>
+            <li>
+              Publish to the web with <a href="https://docs.extendedmatrix.org/projects/strativerse/" target="_blank" rel="noopener">
+                Heriverse</a>.
+            </li>
+          </ol>
+        </article>
+
+        <article class="path">
+          <header>
+            <span class="path__num">3</span>
+            <h2>Extend, integrate, contribute</h2>
+            <p class="path__who">For developers and tool-builders.</p>
+          </header>
+          <p>
+            EM is implemented as a Python knowledge-graph library
+            (<code>s3dgraphy</code>) you can plug into any platform — Revit,
+            3ds Max, Unity, Unreal, custom pipelines.
+          </p>
+          <ol class="path__steps">
+            <li>
+              <code>pip install s3dgraphy</code> and read the
+              <a href="https://github.com/zalmoxes-laran/s3dgraphy" target="_blank" rel="noopener">
+                repository README</a>.
+            </li>
+            <li>
+              For the Blender add-on, see
+              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/latest/development_setup.html" target="_blank" rel="noopener">
+                development setup</a> and
+              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/latest/api_reference.html" target="_blank" rel="noopener">
+                API reference</a>.
+            </li>
+            <li>
+              Open an issue or join the
+              <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Telegram group</a>.
+            </li>
+          </ol>
+        </article>
+      </div>
+
+      <p class="start__foot">
+        Still unsure?
+        <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Ask the community →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .start { padding: 80px 0 60px; }
+  .start__title { margin: 14px 0 18px; }
+  .start__sub {
+    max-width: 640px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 56px;
+  }
+  .paths {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .path {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    padding: 32px 32px 28px;
+    background: var(--em-bg);
+  }
+  .path header {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    column-gap: 20px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+  .path__num {
+    grid-row: span 2;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--em-gold-tint);
+    color: var(--em-gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+  }
+  .path header h2 {
+    font-size: 22px;
+    margin: 0;
+  }
+  .path__who {
+    grid-column: 2;
+    margin: 4px 0 0;
+    color: var(--em-text-muted);
+    font-size: 13px;
+    font-style: italic;
+  }
+  .path > p {
+    margin: 8px 0 16px;
+    color: var(--em-text);
+  }
+  .path__steps {
+    list-style: none;
+    counter-reset: step;
+    padding-left: 0;
+  }
+  .path__steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 8px 0 8px 38px;
+    border-top: 1px dashed var(--em-border);
+    font-size: 14px;
+    color: var(--em-text);
+  }
+  .path__steps li:first-child { border-top: none; }
+  .path__steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 24px;
+    height: 24px;
+    background: var(--em-navy);
+    color: var(--em-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .start__foot {
+    text-align: center;
+    margin-top: 56px;
+    color: var(--em-text-muted);
+  }
+  .start__foot a {
+    font-weight: 600;
+    color: var(--em-gold);
+  }
+
+  @media (min-width: 800px) {
+    .paths { grid-template-columns: repeat(3, 1fr); }
+  }
+</style>

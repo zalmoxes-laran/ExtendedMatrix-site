@@ -1,0 +1,62 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = 'Extended Matrix — a formal language for transparent archaeological reconstruction.',
+  ogImage,
+} = Astro.props;
+
+const fullTitle = title === 'Extended Matrix'
+  ? 'Extended Matrix'
+  : `${title} — Extended Matrix`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={Astro.url.toString()} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+
+    <!--
+      Block search engines while the new site is on a staging URL.
+      Remove this <meta> tag (and the public/robots.txt rule) when you
+      flip the DNS to extendedmatrix.org and want the site indexed.
+    -->
+    <meta name="robots" content="noindex, nofollow" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url.toString()} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@400;600;700;800&display=swap"
+    />
+  </head>
+  <body>
+    <Nav />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
