@@ -134,4 +134,9 @@ The brand identity (palette, logo) lives in `src/styles/global.css` and `src/ass
 
 ## License
 
-Code: MIT. Content: see individual files / project licenses.
+The repository ships under a **dual-licence** scheme:
+
+- **Code** (Astro components, layouts, scripts, build configuration in `src/`, `public/`, and project-root config files): released under **GPL-3.0-or-later**, in line with the rest of the EM Framework. See `LICENSE` (when present) for the full text.
+- **Site content** (text in `src/content/**`, page copy authored in `.astro` files, images and screenshots committed to `src/assets/**`): released under **Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)**. See [`LICENSE-CONTENT.md`](LICENSE-CONTENT.md). Third-party logos in `src/assets/logos/` belong to their respective owners and are used by permission only — they are **not** covered by CC BY-NC.
+
+When you contribute, you agree that text and image contributions are licensed under CC BY-NC 4.0 and code contributions under GPL-3.0-or-later, unless you explicitly mark a file otherwise.
