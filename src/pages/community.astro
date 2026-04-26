@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const today = new Date();
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const emHour = (await getCollection('emHour'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -14,8 +15,22 @@ const devMeetings = (await getCollection('devMeetings'))
 const upcomingDev = devMeetings.filter((e) => e.data.date >= today || e.data.upcoming);
 const pastDev     = devMeetings.filter((e) => e.data.date <  today && !e.data.upcoming);
 
+// Featured events (top 3 most recent) for the preview strip
+const allEvents = (await getCollection('events'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const featuredEvents = allEvents.slice(0, 3);
+
+const kindLabel: Record<string, string> = {
+  conference: 'Conference',
+  bazaar: 'Bazaar',
+  workshop: 'Workshop',
+  talk: 'Talk',
+};
+
 const fmtDate = (d: Date) =>
   d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric' });
+const fmtShort = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 const fmtTime = (d: Date) =>
   d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 ---
@@ -52,6 +67,43 @@ const fmtTime = (d: Date) =>
           <div class="channel__desc">Datasets, paradata bundles, case studies, papers — all FAIR.</div>
         </a>
       </div>
+
+      <!-- ── Events strip (Conferences · Bazaars · Talks) ─────────── -->
+      {featuredEvents.length > 0 && (
+        <section class="block">
+          <header class="block__head block__head--row">
+            <div>
+              <h2>Conferences, bazaars &amp; talks</h2>
+              <p class="block__lede">
+                Yearly gatherings — <strong>EM Conference</strong> for users,
+                <strong>EM Bazaar</strong> for developers — plus talks and
+                workshops at partner venues. Recordings, slides and programmes
+                are kept on each event page.
+              </p>
+            </div>
+            <a href={`${B}/events/`} class="block__more">All events →</a>
+          </header>
+
+          <ul class="ev-strip">
+            {featuredEvents.map((e) => (
+              <li class={`ev-strip-card ev-strip-card--${e.data.kind}`}>
+                <a href={`${B}/events/${e.id.replace(/\.md$/, '')}/`}>
+                  <div class="ev-strip-card__head">
+                    <span class={`ev-strip-card__kind ev-strip-card__kind--${e.data.kind}`}>{kindLabel[e.data.kind]}</span>
+                    <span class="ev-strip-card__date">{fmtShort(e.data.date)}</span>
+                  </div>
+                  <h3 class="ev-strip-card__title">{e.data.title}</h3>
+                  {e.data.location && <div class="ev-strip-card__loc">{e.data.location}</div>}
+                  <p class="ev-strip-card__sum">{e.data.summary}</p>
+                  {(e.data.videoPlaylist || e.data.videos.length > 0) && (
+                    <span class="ev-strip-card__has-video">▶ recordings</span>
+                  )}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <!-- ── EM Hour ────────────────────────────────────────────── -->
       <section class="block">
@@ -230,11 +282,24 @@ const fmtTime = (d: Date) =>
 
   .block { margin-top: 56px; }
   .block__head { margin-bottom: 24px; }
+  .block__head--row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
   .block__head h2 { font-size: 28px; }
   .block__lede {
     color: var(--em-text-muted);
     max-width: 680px;
     margin-top: 6px;
+  }
+  .block__more {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--em-gold);
+    white-space: nowrap;
   }
   .block h3 {
     font-size: 13px;
@@ -242,6 +307,85 @@ const fmtTime = (d: Date) =>
     letter-spacing: 0.08em;
     color: var(--em-gold);
     margin: 24px 0 14px;
+  }
+
+  /* Events strip ----------------------------------------------- */
+  .ev-strip {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 900px) {
+    .ev-strip { grid-template-columns: 1fr; }
+  }
+  .ev-strip-card {
+    border: 1px solid var(--em-border);
+    border-left-width: 4px;
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
+  }
+  .ev-strip-card:hover { border-color: var(--em-gold); }
+  .ev-strip-card--conference { border-left-color: var(--em-gold); }
+  .ev-strip-card--bazaar     { border-left-color: var(--em-navy); }
+  .ev-strip-card--workshop   { border-left-color: #2c5a2c; }
+  .ev-strip-card--talk       { border-left-color: #8a5a14; }
+  .ev-strip-card a {
+    display: block;
+    padding: 18px 20px;
+    color: inherit;
+    height: 100%;
+  }
+  .ev-strip-card a:hover { text-decoration: none; }
+  .ev-strip-card__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .ev-strip-card__kind {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+  }
+  .ev-strip-card__kind--conference { color: var(--em-gold); background: var(--em-gold-tint); }
+  .ev-strip-card__kind--bazaar     { color: var(--em-navy); background: var(--em-navy-tint); }
+  .ev-strip-card__kind--workshop   { color: #2c5a2c; background: #d8ecd8; }
+  .ev-strip-card__kind--talk       { color: #8a5a14; background: #fae6c8; }
+  .ev-strip-card__date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em-text-muted);
+  }
+  .ev-strip-card__title {
+    font-size: 16px;
+    margin: 0 0 4px;
+    color: var(--em-navy);
+    line-height: 1.35;
+  }
+  .ev-strip-card__loc {
+    font-size: 11px;
+    color: var(--em-gold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .ev-strip-card__sum {
+    font-size: 13px;
+    color: var(--em-text);
+    line-height: 1.55;
+    margin: 0 0 10px;
+  }
+  .ev-strip-card__has-video {
+    font-size: 12px;
+    color: var(--em-gold);
+    font-weight: 600;
   }
 
   .meet-list {

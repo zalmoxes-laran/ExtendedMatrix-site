@@ -1,0 +1,8 @@
+name: "Università di Verona"
+kind: "university"
+relation: "collaborates"
+url: "https://www.univr.it"
+country: "IT"
+order: 22
+logo: ../../assets/logos/UniVerona.jpg
+logoAlt: "Università di Verona logo"

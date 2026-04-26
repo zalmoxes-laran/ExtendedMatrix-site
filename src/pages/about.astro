@@ -135,22 +135,34 @@ const groupLabel: Record<string, string> = {
           <div class="partner-group">
             <h3>{groupLabel[k] ?? k}</h3>
             <ul class="partner-list">
-              {grouped[k].map((p) => (
-                <li class="partner">
-                  {p.data.url ? (
-                    <a href={p.data.url} target="_blank" rel="noopener">
+              {grouped[k].map((p) => {
+                const inner = (
+                  <>
+                    {p.data.logo && (
+                      <img
+                        src={p.data.logo.src}
+                        alt={p.data.logoAlt || p.data.name}
+                        class="partner__logo"
+                        loading="lazy"
+                      />
+                    )}
+                    <div class="partner__body">
                       <span class="partner__name">{p.data.name}</span>
                       {p.data.country && <span class="partner__country">{p.data.country}</span>}
-                    </a>
-                  ) : (
-                    <>
-                      <span class="partner__name">{p.data.name}</span>
-                      {p.data.country && <span class="partner__country">{p.data.country}</span>}
-                    </>
-                  )}
-                  <span class="partner__rel">{p.data.relation}</span>
-                </li>
-              ))}
+                      <span class="partner__rel">{p.data.relation}</span>
+                    </div>
+                  </>
+                );
+                return (
+                  <li class={`partner ${p.data.logo ? 'partner--with-logo' : ''}`}>
+                    {p.data.url ? (
+                      <a href={p.data.url} target="_blank" rel="noopener">{inner}</a>
+                    ) : (
+                      <div>{inner}</div>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         ))}
@@ -251,23 +263,36 @@ const groupLabel: Record<string, string> = {
     gap: 10px;
   }
   .partner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    padding: 12px 14px;
     border: 1px solid var(--em-border);
     border-radius: var(--radius-sm);
     background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
   }
-  .partner a { color: inherit; flex: 1; }
-  .partner a:hover .partner__name { color: var(--em-gold); }
-  .partner__name { font-weight: 600; color: var(--em-navy); }
+  .partner:hover { border-color: var(--em-gold); }
+  .partner > a, .partner > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    color: inherit;
+  }
+  .partner > a { text-decoration: none; }
+  .partner > a:hover { text-decoration: none; }
+  .partner > a:hover .partner__name { color: var(--em-gold); }
+  .partner__logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    flex-shrink: 0;
+    background: var(--em-bg);
+    border-radius: 2px;
+  }
+  .partner__body { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; flex: 1; }
+  .partner__name { font-weight: 600; color: var(--em-navy); transition: color 0.2s var(--ease); }
   .partner__country {
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--em-text-muted);
-    margin-left: 8px;
   }
   .partner__rel {
     font-size: 10px;
@@ -277,6 +302,7 @@ const groupLabel: Record<string, string> = {
     background: var(--em-bg-warm);
     padding: 2px 8px;
     border-radius: 2px;
+    margin-left: auto;
   }
   .partners__foot {
     margin-top: 40px;

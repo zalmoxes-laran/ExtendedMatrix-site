@@ -6,7 +6,7 @@ partners: ["DHILab — CNR-ISPC"]
 summary: "Up-to-date virtual reconstruction of the rectangular forum dominated by the Temple of Mars Ultor, with EM tracking the entire process — sources, reasoning, and reconstruction reliability."
 featured: true
 order: 20
-# cover: ../../assets/projects/forum-of-augustus.jpg  # to be added
+cover: ../../assets/projects/2020_augustus.png
 coverAlt: "Proxy models of the Forum of Augustus reconstruction"
 ---
 
@@ -16,9 +16,17 @@ The Forum of Augustus consists of a rectangular square dominated by the **Temple
 
 Recent archaeological discoveries allowed an up-to-date virtual reconstruction of the whole Roman monument, realised by the **DHILab of CNR-ISPC**.
 
+![Proxy models of the reconstruction](../../assets/projects/forum-of-augustus/unnamed.jpg)
+
+*Proxy models of the reconstruction*
+
 ## How EM was used
 
-The Extended Matrix methodology was employed to track and manage the entire process of reconstruction — sources used, interpretive reasoning, and the resulting reliability of every node in the reconstruction graph.
+For this project the Extended Matrix methodology was employed to track and manage the entire process of reconstruction — sources used, interpretive reasoning, and the resulting reliability of every node in the reconstruction graph.
+
+![Proxy models and representation models](../../assets/projects/forum-of-augustus/unnamed-2.jpg)
+
+*Proxy models and representation models*
 
 ## References
 

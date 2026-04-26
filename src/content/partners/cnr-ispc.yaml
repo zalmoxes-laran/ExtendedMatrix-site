@@ -5,5 +5,5 @@ relation: "collaborates"
 url: "https://www.ispc.cnr.it"
 country: "IT"
 order: 1
-# logo: ../../assets/partners/cnr-ispc.svg
-# logoAlt: "CNR-ISPC logo"
+logo: ../../assets/logos/CNRISPC.png
+logoAlt: "CNR-ISPC logo"

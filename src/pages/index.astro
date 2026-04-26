@@ -1,7 +1,15 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import logoMark from '../assets/logo_mark.svg';
+
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Load partners with a logo for the "Used by" strip
+const allPartners = await getCollection('partners');
+const partnerLogos = allPartners
+  .filter((p) => p.data.logo)
+  .sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout title="Extended Matrix">
@@ -342,25 +350,33 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   <!-- ============ USED BY ============ -->
   <section class="usedby">
     <div class="container">
-      <span class="tag">Used by</span>
-      <h2 class="usedby__title">Universities and research institutions across Europe.</h2>
+      <span class="tag">Used by &amp; collaborations</span>
+      <h2 class="usedby__title">Universities, research institutions, European projects.</h2>
       <p class="usedby__sub">
-        EM is adopted in research, teaching, and field projects at —
+        EM is adopted, funded and co-developed by —
       </p>
-      <!--
-        TODO logos: drop monochrome SVG logos in src/assets/partners/ and
-        replace this strip with the image versions. The collection schema
-        is in src/content/config.ts.
-      -->
-      <ul class="usedby__strip">
-        <li>CNR-ISPC</li>
-        <li>Università di Padova</li>
-        <li>Università di Roma Tre</li>
-        <li>Università di Pisa</li>
-        <li>Sapienza Università di Roma</li>
-        <li>e-Archeo network</li>
-        <li>… and counting</li>
-      </ul>
+
+      {partnerLogos.length > 0 ? (
+        <ul class="usedby__strip">
+          {partnerLogos.map((p) => (
+            <li>
+              {p.data.url ? (
+                <a href={p.data.url} target="_blank" rel="noopener" title={p.data.name}>
+                  <img src={p.data.logo!.src} alt={p.data.logoAlt || p.data.name} loading="lazy" />
+                </a>
+              ) : (
+                <img src={p.data.logo!.src} alt={p.data.logoAlt || p.data.name} title={p.data.name} loading="lazy" />
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="usedby__empty">Logos coming soon.</p>
+      )}
+
+      <p class="usedby__more">
+        See the full list on the <a href={`${B}/about#partners`}>about page</a>.
+      </p>
     </div>
   </section>
 </BaseLayout>
@@ -701,18 +717,32 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
     gap: 32px 48px;
     padding: 0;
-    color: #98a3b1;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 16px;
-    letter-spacing: 0.01em;
+    margin: 8px 0 32px;
   }
-  .usedby__strip li {
-    border-bottom: 1px dashed transparent;
-    padding-bottom: 2px;
+  .usedby__strip li { display: inline-flex; }
+  .usedby__strip img {
+    height: 56px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    /* Subtle "neutral logo strip" treatment — colour appears on hover */
+    filter: grayscale(1) opacity(0.65);
+    transition: filter 0.25s var(--ease);
   }
+  .usedby__strip a:hover img,
+  .usedby__strip img:hover {
+    filter: grayscale(0) opacity(1);
+  }
+  .usedby__more {
+    color: var(--em-text-muted);
+    font-size: 14px;
+    margin-top: 16px;
+  }
+  .usedby__more a { color: var(--em-gold); font-weight: 600; }
+  .usedby__empty { color: var(--em-text-muted); font-style: italic; }
 
   /* ── Responsive ─────────────────────────────────────────── */
   @media (max-width: 900px) {

@@ -1,0 +1,8 @@
+name: "Università di Padova"
+kind: "university"
+relation: "collaborates"
+url: "https://www.unipd.it"
+country: "IT"
+order: 21
+logo: ../../assets/logos/Unipadova.jpg
+logoAlt: "Università di Padova logo"

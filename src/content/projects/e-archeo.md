@@ -7,7 +7,7 @@ summary: "Eight Italian archaeological sites — from Desenzano del Garda to Sib
 website: "https://e-archeo.it"
 featured: true
 order: 10
-# cover: ../../assets/projects/e-archeo.jpg  # to be added — see EDITORS_GUIDE
+cover: ../../assets/projects/2022_e-archeo.png
 coverAlt: "Proxy models and representation models from the e-Archeo project"
 ---
 
@@ -27,6 +27,18 @@ Eight archaeological sites distributed across the Italian territory have been se
 - Nora
 
 A [dedicated web site](https://e-archeo.it) collects the information of every site and tells its history. For each site, a specific section presents a description (origins and history), images of the most significant and best-preserved contexts (public and private buildings, necropolises), virtual reconstructions, and other multimedia content.
+
+![Proxy models and representation models](../../assets/projects/e-archeo_1.jpg)
+
+*Proxy models and representation models*
+
+![Proxy models and representation models](../../assets/projects/e-archeo_2.jpg)
+
+*Proxy models and representation models*
+
+![Proxy models and representation models](../../assets/projects/e-archeo_3.jpg)
+
+*Proxy models and representation models*
 
 ## How EM was used
 

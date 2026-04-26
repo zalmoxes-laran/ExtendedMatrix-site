@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Placeholder for the StratiGraph logo.
+  Replace this file with the official PNG from:
+    OneDrive-CNR/0_RACCOLTA_CNR/StratiGraph-grp - Documenti/WP 01 .../
+    Logo/ECHOES + StratiGraph/png/echoes +main logo dark.png
+  (or "off-white" for inverted contexts).
+  Keep the file name `StratiGraph.png` so the YAML reference does not need updating.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 100"
+     font-family="-apple-system, 'Helvetica Neue', Arial, sans-serif">
+  <rect width="300" height="100" fill="#ffffff" stroke="#1a2845" stroke-width="1.5"/>
+  <text x="150" y="44" text-anchor="middle" font-size="22" font-weight="700" fill="#1a2845">StratiGraph</text>
+  <text x="150" y="68" text-anchor="middle" font-size="11" letter-spacing="3" fill="#b8893a">EUROPEAN PROJECT</text>
+  <text x="150" y="86" text-anchor="middle" font-size="9" fill="#5a6b7a" font-style="italic">replace with official PNG</text>
+</svg>

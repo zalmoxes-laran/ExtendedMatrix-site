@@ -4,6 +4,7 @@ year: 2018
 location: "Lazio, Italy"
 summary: "EM applied to the documentation and reconstruction of the Roman villa outside Porta Marina."
 order: 100
+cover: ../../assets/projects/2018_villafuoriportamarina.jpg
 coverAlt: "Villa fuori Porta Marina — virtual reconstruction"
 ---
 

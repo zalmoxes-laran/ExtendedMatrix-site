@@ -1,0 +1,161 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const all = (await getCollection('events'))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const fmt = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const kindLabel: Record<string, string> = {
+  conference: 'Conference',
+  bazaar: 'Bazaar',
+  workshop: 'Workshop',
+  talk: 'Talk',
+};
+---
+
+<BaseLayout
+  title="Events"
+  description="Extended Matrix conferences, bazaars, workshops and talks — and the recordings of past sessions."
+>
+  <section class="ev">
+    <div class="container">
+      <span class="tag">Events</span>
+      <h1>Conferences, bazaars, talks.</h1>
+      <p class="ev__sub">
+        <strong>EM Conference</strong> is the user-facing gathering of the
+        community. <strong>EM Bazaar</strong> is its developer-focused
+        counterpart. <strong>Talks &amp; workshops</strong> happen on top of
+        these — at external conferences, at partner institutions, online.
+      </p>
+
+      <div class="ev__filters" role="tablist">
+        <a href="#" class="filter-chip" data-aud="all" aria-current="true">All</a>
+        <a href="#users" class="filter-chip" data-aud="users">For users</a>
+        <a href="#developers" class="filter-chip" data-aud="developers">For developers</a>
+        <a href="#mixed" class="filter-chip" data-aud="mixed">Mixed</a>
+      </div>
+
+      <ul class="ev__list" id="ev-list">
+        {all.map((e) => (
+          <li class={`ev-card ev-card--${e.data.kind}`} data-aud={e.data.audience}>
+            <a href={`${B}/events/${e.id.replace(/\.md$/, '')}/`}>
+              <div class="ev-card__head">
+                <span class={`ev-card__kind ev-card__kind--${e.data.kind}`}>{kindLabel[e.data.kind]}</span>
+                <span class="ev-card__date">{fmt(e.data.date)}</span>
+              </div>
+              <h2 class="ev-card__title">{e.data.title}</h2>
+              {e.data.location && <div class="ev-card__loc">{e.data.location}</div>}
+              <p class="ev-card__sum">{e.data.summary}</p>
+              <div class="ev-card__foot">
+                <span class={`role-badge role-badge--${e.data.audience === 'users' ? 'archaeologist' : e.data.audience === 'developers' ? 'developer' : 'modeller'}`}>
+                  {e.data.audience}
+                </span>
+                {(e.data.videoPlaylist || e.data.videos.length > 0) && (
+                  <span class="ev-card__has-video">▶ recordings</span>
+                )}
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <p class="ev__empty" hidden>No events match this audience yet.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const chips = Array.from(document.querySelectorAll('.filter-chip'));
+    const cards = Array.from(document.querySelectorAll('#ev-list .ev-card'));
+    const empty = document.querySelector('.ev__empty');
+    function apply(aud) {
+      let shown = 0;
+      cards.forEach((c) => {
+        const ok = aud === 'all' || c.dataset.aud === aud;
+        c.hidden = !ok;
+        if (ok) shown++;
+      });
+      chips.forEach((ch) => ch.setAttribute('aria-current', ch.dataset.aud === aud ? 'true' : 'false'));
+      if (empty) empty.hidden = shown > 0;
+    }
+    function fromHash() {
+      const h = (window.location.hash || '').replace('#', '');
+      apply(['users', 'developers', 'mixed'].includes(h) ? h : 'all');
+    }
+    chips.forEach((ch) => {
+      ch.addEventListener('click', (e) => {
+        e.preventDefault();
+        const aud = ch.dataset.aud;
+        history.replaceState(null, '', aud === 'all' ? window.location.pathname : '#' + aud);
+        apply(aud);
+      });
+    });
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  })();
+</script>
+
+<style>
+  .ev { padding: 80px 0 60px; }
+  .ev h1 { margin: 14px 0 18px; }
+  .ev__sub {
+    max-width: 720px; color: var(--em-text-muted); font-size: 17px; margin-bottom: 28px;
+  }
+  .ev__filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+  .filter-chip {
+    display: inline-block; padding: 6px 14px; font-size: 13px; font-weight: 600;
+    border: 1px solid var(--em-border); border-radius: 20px;
+    color: var(--em-text-muted); background: var(--em-bg);
+    transition: all 0.15s var(--ease);
+  }
+  .filter-chip:hover { color: var(--em-navy); border-color: var(--em-navy); text-decoration: none; }
+  .filter-chip[aria-current="true"] { background: var(--em-navy); color: var(--em-bg); border-color: var(--em-navy); }
+
+  .ev__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+  .ev-card {
+    border: 1px solid var(--em-border);
+    border-left-width: 4px;
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
+  }
+  .ev-card:hover { border-color: var(--em-gold); }
+  .ev-card--conference { border-left-color: var(--em-gold); }
+  .ev-card--bazaar     { border-left-color: var(--em-navy); }
+  .ev-card--workshop   { border-left-color: #2c5a2c; }
+  .ev-card--talk       { border-left-color: #8a5a14; }
+  .ev-card a { display: block; padding: 22px 26px; color: inherit; }
+  .ev-card a:hover { text-decoration: none; }
+  .ev-card__head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .ev-card__kind {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 2px;
+  }
+  .ev-card__kind--conference { color: var(--em-gold); background: var(--em-gold-tint); }
+  .ev-card__kind--bazaar     { color: var(--em-navy); background: var(--em-navy-tint); }
+  .ev-card__kind--workshop   { color: #2c5a2c; background: #d8ecd8; }
+  .ev-card__kind--talk       { color: #8a5a14; background: #fae6c8; }
+  .ev-card__date {
+    font-family: var(--font-mono); font-size: 12px; color: var(--em-text-muted);
+  }
+  .ev-card__title { font-size: 19px; margin: 0 0 4px; color: var(--em-navy); }
+  .ev-card__loc {
+    font-size: 12px; color: var(--em-gold); text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: 10px;
+  }
+  .ev-card__sum { font-size: 14px; color: var(--em-text); line-height: 1.6; margin: 0 0 12px; }
+  .ev-card__foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .ev-card__has-video {
+    font-size: 12px; color: var(--em-gold); font-weight: 600;
+  }
+  .ev__empty { text-align: center; color: var(--em-text-muted); font-style: italic; padding: 40px 0; }
+</style>

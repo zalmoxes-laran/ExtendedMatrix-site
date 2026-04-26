@@ -49,12 +49,36 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="tp__lede">{tool.data.summary}</p>
 
       <!-- ── Quick links ─────────────────────────────────────── -->
-      <div class="tp__links">
-        {tool.data.docsUrl && <a href={tool.data.docsUrl} target="_blank" rel="noopener" class="tp__btn">Manual ↗</a>}
-        {tool.data.repoUrl && <a href={tool.data.repoUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">GitHub ↗</a>}
-        {tool.data.downloadUrl && <a href={tool.data.downloadUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">Download ↗</a>}
-        <span class="tp__lic">Licence: <strong>{tool.data.licence}</strong></span>
-      </div>
+      {(() => {
+        // Build the "Download latest" URL — prefer GitHub /releases/latest
+        // (which redirects to the most recent tagged release), then any
+        // explicit downloadUrl from the frontmatter as a fallback.
+        let latestDownload: string | undefined;
+        if (tool.data.repoUrl && tool.data.repoUrl.includes('github.com')) {
+          latestDownload = tool.data.repoUrl.replace(/\/$/, '') + '/releases/latest';
+        } else if (tool.data.downloadUrl) {
+          latestDownload = tool.data.downloadUrl;
+        }
+        return (
+          <>
+            <div class="tp__links">
+              {latestDownload && (
+                <a href={latestDownload} target="_blank" rel="noopener" class="tp__btn">
+                  ⬇ Download latest
+                </a>
+              )}
+              {tool.data.docsUrl && <a href={tool.data.docsUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">Manual ↗</a>}
+              {tool.data.repoUrl && <a href={tool.data.repoUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">GitHub ↗</a>}
+              <span class="tp__lic">Licence: <strong>{tool.data.licence}</strong></span>
+            </div>
+            {inVersions.length > 0 && (
+              <p class="tp__hint">
+                Or pick a specific EM version below ↓
+              </p>
+            )}
+          </>
+        );
+      })()}
 
       <!-- ── Body ────────────────────────────────────────────── -->
       <section class="tp__body">
@@ -65,9 +89,14 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       {inVersions.length > 0 && (
         <section class="tp__ships">
           <h2>Shipped in EM versions</h2>
+          <p class="tp__ships-lede">
+            One-click download for each combination — or click the EM version
+            number to see its full compatibility matrix.
+          </p>
           <table class="tp__matrix">
             <thead>
               <tr>
+                <th>Download</th>
                 <th>EM version</th>
                 <th>Tool version</th>
                 <th>Status</th>
@@ -77,6 +106,11 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
             <tbody>
               {inVersions.map(({ v, ref }) => (
                 <tr>
+                  <td>
+                    {ref?.downloadUrl
+                      ? <a href={ref.downloadUrl} target="_blank" rel="noopener" class="tp__dlink">⬇ download</a>
+                      : <span class="tp__nodl">—</span>}
+                  </td>
                   <td><a href={`${B}/versions/${v.id.replace(/\.md$/, '')}/`}><strong>EM {v.data.version}</strong></a></td>
                   <td class="tp__ver">{ref?.version ?? '—'}</td>
                   <td>{ref?.status ?? '—'}</td>
@@ -132,6 +166,19 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .tp__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
   .tp__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
   .tp__lic { font-size: 12px; color: var(--em-text-muted); margin-left: auto; }
+  .tp__hint {
+    margin: -28px 0 36px;
+    font-size: 13px;
+    color: var(--em-text-muted);
+    font-style: italic;
+  }
+  .tp__ships-lede { color: var(--em-text-muted); margin: 4px 0 16px; font-size: 14px; }
+  .tp__dlink {
+    color: var(--em-gold) !important;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .tp__nodl { color: var(--em-text-muted); }
 
   .tp__body :global(h2) { margin-top: 32px; font-size: 22px; }
   .tp__body :global(h3) { margin-top: 22px; font-size: 18px; }

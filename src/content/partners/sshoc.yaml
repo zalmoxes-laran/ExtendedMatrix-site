@@ -4,5 +4,5 @@ relation: "collaborates"
 url: "https://sshoc.eu"
 country: "EU"
 order: 3
-# logo: ../../assets/partners/sshoc.svg
-# logoAlt: "SSHOC logo"
+logo: ../../assets/logos/SSHOC_project.png
+logoAlt: "SSHOC EU project logo"

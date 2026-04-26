@@ -1,0 +1,8 @@
+name: "Universidad de Alicante"
+kind: "university"
+relation: "collaborates"
+url: "https://www.ua.es"
+country: "ES"
+order: 20
+logo: ../../assets/logos/Alicante.png
+logoAlt: "Universidad de Alicante logo"

@@ -1,0 +1,190 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map((e) => ({
+    params: { slug: e.id.replace(/\.md$/, '') },
+    props: { event: e },
+  }));
+}
+
+const { event } = Astro.props;
+const { Content } = await render(event);
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const fmtFull = (d: Date) =>
+  d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+const kindLabel: Record<string, string> = {
+  conference: 'Conference',
+  bazaar: 'Bazaar',
+  workshop: 'Workshop',
+  talk: 'Talk',
+};
+
+// Convert YouTube watch URL → embed URL (best effort, no-op for unknown forms)
+const ytEmbed = (url: string): string | null => {
+  const m1 = url.match(/youtube\.com\/watch\?v=([\w-]+)/);
+  if (m1) return `https://www.youtube.com/embed/${m1[1]}`;
+  const m2 = url.match(/youtu\.be\/([\w-]+)/);
+  if (m2) return `https://www.youtube.com/embed/${m2[1]}`;
+  const m3 = url.match(/youtube\.com\/playlist\?list=([\w-]+)/);
+  if (m3) return `https://www.youtube.com/embed/videoseries?list=${m3[1]}`;
+  return null;
+};
+
+const playlistEmbed = event.data.videoPlaylist ? ytEmbed(event.data.videoPlaylist) : null;
+---
+
+<BaseLayout
+  title={event.data.title}
+  description={event.data.summary}
+>
+  <article class="ep">
+    <div class="container">
+      <a href={`${B}/events/`} class="ep__back">← All events</a>
+      <div class="ep__head">
+        <span class={`ep__kind ep__kind--${event.data.kind}`}>{kindLabel[event.data.kind]}</span>
+        <span class={`role-badge role-badge--${event.data.audience === 'users' ? 'archaeologist' : event.data.audience === 'developers' ? 'developer' : 'modeller'}`}>
+          for {event.data.audience}
+        </span>
+      </div>
+      <h1 class="ep__title">{event.data.title}</h1>
+      <div class="ep__meta">
+        <span>{fmtFull(event.data.date)}</span>
+        {event.data.location && <span>· {event.data.location}</span>}
+        {event.data.duration && <span>· {event.data.duration}</span>}
+      </div>
+      <p class="ep__lede">{event.data.summary}</p>
+
+      {event.data.cover && (
+        <figure class="ep__cover">
+          <img src={event.data.cover.src} alt={event.data.coverAlt || event.data.title} />
+        </figure>
+      )}
+
+      <!-- ── Quick links ─────────────────────────────────────── -->
+      <div class="ep__links">
+        {event.data.videoPlaylist && (
+          <a href={event.data.videoPlaylist} target="_blank" rel="noopener" class="ep__btn">▶ Recordings playlist</a>
+        )}
+        {event.data.programmeUrl && (
+          <a href={event.data.programmeUrl} target="_blank" rel="noopener" class="ep__btn ep__btn--ghost">Programme ↗</a>
+        )}
+        {event.data.slidesUrl && (
+          <a href={event.data.slidesUrl} target="_blank" rel="noopener" class="ep__btn ep__btn--ghost">Slides ↗</a>
+        )}
+      </div>
+
+      <!-- ── Embedded playlist ───────────────────────────────── -->
+      {playlistEmbed && (
+        <section class="ep__embed">
+          <iframe
+            src={playlistEmbed}
+            title={`${event.data.title} — playlist`}
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen
+          />
+        </section>
+      )}
+
+      <!-- ── Body ────────────────────────────────────────────── -->
+      <section class="ep__body">
+        <Content />
+      </section>
+
+      <!-- ── Individual talks ────────────────────────────────── -->
+      {event.data.videos.length > 0 && (
+        <section class="ep__talks">
+          <h2>Individual talks</h2>
+          <ul class="ep__talks-list">
+            {event.data.videos.map((v) => (
+              <li class="ep__talk">
+                <a href={v.url} target="_blank" rel="noopener">
+                  <span class="ep__talk-icon">▶</span>
+                  <span class="ep__talk-title">{v.title}</span>
+                  {v.speaker && <span class="ep__talk-speaker">— {v.speaker}</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .ep { padding: 60px 0 80px; }
+  .ep__back { display: inline-block; font-size: 13px; color: var(--em-text-muted); margin-bottom: 16px; }
+  .ep__head { display: flex; gap: 10px; align-items: center; margin-top: 14px; }
+  .ep__kind {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 2px;
+  }
+  .ep__kind--conference { color: var(--em-gold); background: var(--em-gold-tint); }
+  .ep__kind--bazaar     { color: var(--em-navy); background: var(--em-navy-tint); }
+  .ep__kind--workshop   { color: #2c5a2c; background: #d8ecd8; }
+  .ep__kind--talk       { color: #8a5a14; background: #fae6c8; }
+  .ep__title { margin: 12px 0 8px; }
+  .ep__meta {
+    color: var(--em-text-muted); font-size: 14px; margin-bottom: 18px;
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .ep__lede { font-size: 17px; color: var(--em-text); max-width: 720px; line-height: 1.65; margin-bottom: 28px; }
+  .ep__cover { margin: 0 0 32px; border-radius: var(--radius-md); overflow: hidden; }
+  .ep__cover img { width: 100%; height: auto; display: block; }
+  .ep__links { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
+  .ep__btn {
+    background: var(--em-navy); color: var(--em-bg);
+    padding: 10px 18px; border-radius: var(--radius-sm);
+    font-weight: 600; font-size: 14px;
+  }
+  .ep__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
+  .ep__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
+  .ep__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
+
+  .ep__embed {
+    position: relative;
+    aspect-ratio: 16/9;
+    margin: 0 0 32px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--em-bg-warm);
+  }
+  .ep__embed iframe {
+    position: absolute; inset: 0; width: 100%; height: 100%; border: 0;
+  }
+
+  .ep__body :global(h2) { margin-top: 28px; font-size: 22px; }
+  .ep__body :global(p) { margin-bottom: 14px; line-height: 1.7; }
+  .ep__body :global(ul), .ep__body :global(ol) { margin-bottom: 14px; padding-left: 22px; }
+  .ep__body :global(blockquote) {
+    border-left: 3px solid var(--em-gold);
+    padding: 8px 16px;
+    color: var(--em-text-muted);
+    font-style: italic;
+    margin: 16px 0;
+  }
+
+  .ep__talks { margin-top: 48px; }
+  .ep__talks h2 { font-size: 22px; margin-bottom: 16px; }
+  .ep__talks-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+  .ep__talk {
+    border: 1px solid var(--em-border); border-radius: var(--radius-sm); background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
+  }
+  .ep__talk:hover { border-color: var(--em-gold); }
+  .ep__talk a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 16px; color: inherit;
+  }
+  .ep__talk a:hover { text-decoration: none; }
+  .ep__talk-icon { color: var(--em-gold); }
+  .ep__talk-title { font-weight: 600; color: var(--em-navy); flex: 1; }
+  .ep__talk-speaker { font-size: 13px; color: var(--em-text-muted); font-style: italic; }
+</style>

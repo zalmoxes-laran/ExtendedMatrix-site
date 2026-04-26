@@ -4,7 +4,8 @@ year: 2019
 location: "Veneto, Italy"
 summary: "EM applied to the documentation of the ancient forgery at Montebelluna."
 order: 70
-coverAlt: "Forgery of Montebelluna — virtual reconstruction"
+cover: ../../assets/projects/2019_montebelluna.jpg
+coverAlt: "The Forgery of Montebelluna — virtual reconstruction"
 ---
 
 Stub migrated from extendedmatrix.org.

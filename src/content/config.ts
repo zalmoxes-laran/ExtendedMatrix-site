@@ -226,6 +226,40 @@ const tools = defineCollection({
     }),
 });
 
+/**
+ * Events — non-recurring gatherings (EM Conference, EM Bazaar, talks at
+ * external conferences, workshops). Distinct from emHour and devMeetings,
+ * which are recurring meetings.
+ */
+const events = defineCollection({
+  type: 'content',
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      date: z.coerce.date(),
+      kind: z.enum(['conference', 'bazaar', 'workshop', 'talk']),
+      audience: z.enum(['users', 'developers', 'mixed']).default('mixed'),
+      location: z.string().optional(),
+      duration: z.string().optional(),
+      cover: image().optional(),
+      coverAlt: z.string().optional(),
+      summary: z.string().max(360),
+      videoPlaylist: z.string().url().optional(),
+      videos: z
+        .array(
+          z.object({
+            title: z.string(),
+            url: z.string().url(),
+            speaker: z.string().optional(),
+          })
+        )
+        .default([]),
+      slidesUrl: z.string().url().optional(),
+      programmeUrl: z.string().url().optional(),
+      order: z.number().default(0),
+    }),
+});
+
 export const collections = {
   news,
   projects,
@@ -236,4 +270,5 @@ export const collections = {
   showcase,
   versions,
   tools,
+  events,
 };
