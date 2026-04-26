@@ -1,0 +1,93 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const tools = (await getCollection('tools'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Tools"
+  description="The components of the Extended Matrix Framework — language palette, Blender add-on, Python library, web platform, photogrammetry pipeline."
+>
+  <section class="tools">
+    <div class="container">
+      <span class="tag">EM Framework</span>
+      <h1>The tools that speak EM.</h1>
+      <p class="tools__sub">
+        EM is the formal language — pencil and paper would be enough. The
+        <strong>EM Framework (EMF)</strong> is the digital toolset that lets
+        you author, manage and publish EM at scale. Each tool below is an
+        open-source component with its own repository, documentation and
+        release cycle.
+      </p>
+
+      <ul class="grid">
+        {tools.map((t) => (
+          <li class="card">
+            <a href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}>
+              <div class="card__head">
+                <h2 class="card__name">{t.data.name}</h2>
+                <span class={`card__status card__status--${t.data.status}`}>{t.data.status}</span>
+              </div>
+              <div class="card__role">{t.data.role}</div>
+              <p class="card__desc">{t.data.summary}</p>
+              <div class="card__foot">
+                <span class="card__lic">{t.data.licence}</span>
+                <span class="card__open">Open page →</span>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <p class="tools__foot">
+        Looking for a specific Blender / yEd / EM combination?
+        <a href={`${B}/versions/`}>see the version-by-version compatibility matrix →</a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .tools { padding: 80px 0 60px; }
+  .tools h1 { margin: 14px 0 16px; }
+  .tools__sub { max-width: 720px; color: var(--em-text-muted); font-size: 17px; margin-bottom: 48px; }
+  .grid {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;
+  }
+  .card {
+    border: 1px solid var(--em-border); border-radius: var(--radius-md);
+    background: var(--em-bg); transition: border-color 0.2s var(--ease);
+  }
+  .card:hover { border-color: var(--em-gold); }
+  .card a { display: block; padding: 24px 26px; color: inherit; }
+  .card a:hover { text-decoration: none; }
+  .card__head { display: flex; justify-content: space-between; align-items: center; }
+  .card__name { font-family: var(--font-display); font-size: 19px; color: var(--em-navy); margin: 0; }
+  .card__status {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 2px 8px; border-radius: 2px;
+  }
+  .card__status--stable  { color: #2c5a2c; background: #d8ecd8; }
+  .card__status--beta    { color: var(--em-navy); background: var(--em-navy-tint); }
+  .card__status--alpha   { color: #8a5a14; background: #fae6c8; }
+  .card__status--planned { color: #555; background: #eee; }
+  .card__role {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--em-gold); font-weight: 600; margin: 6px 0 10px;
+  }
+  .card__desc { font-size: 14px; line-height: 1.6; color: var(--em-text); margin: 0 0 14px; }
+  .card__foot {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; font-family: var(--font-mono); color: var(--em-text-muted);
+  }
+  .card__open { color: var(--em-gold); font-weight: 600; }
+  .tools__foot { margin-top: 48px; color: var(--em-text-muted); font-size: 14px; }
+  .tools__foot a { color: var(--em-gold); font-weight: 600; }
+
+  @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+</style>

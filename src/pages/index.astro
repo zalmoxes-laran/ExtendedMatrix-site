@@ -246,44 +246,25 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     </div>
   </section>
 
-  <!-- ============ CODE-FIRST INTEGRATION ============ -->
-  <section class="code-section">
-    <div class="container code-section__row">
-      <div>
-        <span class="tag">Code-first integration</span>
-        <h2 class="code-section__title">Bring EM into your platform in 20 lines.</h2>
-        <p>
-          The full EM language is implemented in <code>s3dgraphy</code>, a
-          Python library you can <code>pip install</code> into Revit, 3ds Max,
-          Unity, Unreal, a CLI tool, a Jupyter notebook, or your in-house
-          pipeline. The data model is the same everywhere.
-        </p>
-        <p>
-          One library means: one schema, one validator, one CIDOC-CRM mapping,
-          one set of import/export formats. Your platform-specific code is the
-          UI on top — the knowledge graph stays consistent across the whole
-          ecosystem.
-        </p>
-        <a href="https://github.com/zalmoxes-laran/s3dgraphy" class="btn btn-ghost" target="_blank" rel="noopener" style="margin-top: 8px;">
-          s3dgraphy on GitHub →
-        </a>
-      </div>
-      <div class="code-section__code">
-<pre class="code"><span class="c1"># minimal s3dgraphy session</span>
-<span class="kw">from</span> s3dgraphy <span class="kw">import</span> Graph
-<span class="kw">from</span> s3dgraphy.nodes <span class="kw">import</span> StratigraphicNode, DocumentNode
-
-g = Graph(<span class="s">"my_site"</span>)
-
-us001 = StratigraphicNode(<span class="s">"US.001"</span>, node_type=<span class="s">"US"</span>)
-us001.set_attribute(<span class="s">"description"</span>, <span class="s">"Stone wall foundation"</span>)
-g.add_node(us001)
-
-doc = DocumentNode(<span class="s">"DOC.005"</span>, <span class="s">"site_plan_2008.pdf"</span>)
-g.add_node(doc)
-g.add_edge(us001.node_id, doc.node_id, <span class="s">"has_source"</span>)
-
-g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
+  <!-- ============ MODULAR ============ -->
+  <section class="modular">
+    <div class="container">
+      <span class="tag">Modular by design</span>
+      <h2 class="modular__title">A framework, not a single application.</h2>
+      <p class="modular__lede">
+        The EM Framework is split into focused components — yEd palette,
+        s3dgraphy, EM Tools, 3DSC, Heriverse — each with its own repository,
+        documentation and release cycle. You pick what you need. The shared
+        graph format keeps every piece in sync.
+      </p>
+      <p class="modular__lede">
+        Bringing EM into another platform — Revit, 3ds Max, Unity, Unreal,
+        a CLI batch job — is a <code>pip install s3dgraphy</code> away. The
+        data model is the same everywhere, including its CIDOC-CRM mapping.
+      </p>
+      <div class="modular__cta">
+        <a href={`${B}/tools`} class="btn btn-primary">Browse the tools →</a>
+        <a href={`${B}/download`} class="btn btn-ghost">Download a release</a>
       </div>
     </div>
   </section>
@@ -646,16 +627,10 @@ g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
   .tree__pill--ext  { background: var(--em-gold-tint); color: var(--em-gold); }
   .tree__pill--prop { background: var(--em-navy-tint); color: var(--em-navy-soft); }
 
-  /* ── Code-first ─────────────────────────────────────────── */
-  .code-section__row {
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 64px;
-    align-items: center;
-  }
-  .code-section__title { margin: 12px 0 18px; }
-  .code-section__row p { margin-bottom: 12px; }
-  .code-section__row code {
+  /* ── Modular ───────────────────────────────────────────── */
+  .modular__title { margin: 12px 0 18px; }
+  .modular__lede { color: var(--em-text); max-width: 720px; line-height: 1.7; margin-bottom: 14px; }
+  .modular__lede code {
     font-family: var(--font-mono);
     font-size: 13px;
     background: var(--em-navy-tint);
@@ -663,23 +638,7 @@ g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
     padding: 1px 6px;
     border-radius: 2px;
   }
-  .code-section__code {
-    background: var(--em-navy);
-    border-radius: var(--radius-md);
-    padding: 24px 22px;
-    overflow-x: auto;
-  }
-  .code-section__code .code {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    line-height: 1.7;
-    color: #d4dae3;
-    white-space: pre;
-    margin: 0;
-  }
-  .code .c1 { color: #6b7c93; font-style: italic; }
-  .code .kw { color: #b8893a; }
-  .code .s  { color: #c5e3b3; }
+  .modular__cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 22px; }
 
   /* ── Standards ──────────────────────────────────────────── */
   .standards {
@@ -762,7 +721,6 @@ g.export_graphml(<span class="s">"my_site.graphml"</span>)</pre>
     .core__row { grid-template-columns: 1fr; gap: 40px; }
     .framework__grid { grid-template-columns: repeat(2, 1fr); }
     .practice__grid { grid-template-columns: 1fr; }
-    .code-section__row { grid-template-columns: 1fr; gap: 32px; }
     .standards__grid { grid-template-columns: 1fr; }
   }
   @media (max-width: 520px) {

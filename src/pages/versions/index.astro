@@ -1,0 +1,132 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const all = (await getCollection('versions'))
+  .sort((a, b) => b.data.order - a.data.order);
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const statusLabel: Record<string, string> = {
+  development: 'In development',
+  stable: 'Stable',
+  lts: 'Long-Term Support',
+  legacy: 'Legacy',
+  eol: 'End of life',
+};
+---
+
+<BaseLayout
+  title="Versions"
+  description="All Extended Matrix versions — current, LTS, legacy and end-of-life. Pick the one that matches your project."
+>
+  <section class="versions">
+    <div class="container">
+      <span class="tag">All versions</span>
+      <h1>Every Extended Matrix release.</h1>
+      <p class="versions__sub">
+        Two release lines run in parallel: <strong>LTS</strong> for
+        production stability, <strong>development</strong> for new
+        features. Older releases stay available for projects that need
+        to be reopened.
+      </p>
+
+      <ul class="vlist">
+        {all.map((v) => (
+          <li class={`v v--${v.data.status}`}>
+            <a href={`${B}/versions/${v.id.replace(/\.md$/, '')}/`}>
+              <div class="v__head">
+                <span class="v__num">EM {v.data.version}</span>
+                <span class={`v__status v__status--${v.data.status}`}>{statusLabel[v.data.status]}</span>
+              </div>
+              <h2 class="v__title">{v.data.title}</h2>
+              <p class="v__summary">{v.data.summary}</p>
+              <ul class="v__meta">
+                {v.data.releaseDate && <li>Released {v.data.releaseDate.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</li>}
+                {v.data.blenderMin && <li>Blender {v.data.blenderMin}{v.data.blenderLts ? ' LTS' : '+'}</li>}
+                {v.data.eolDate && <li>EOL {v.data.eolDate.getFullYear()}</li>}
+                {v.data.supersededBy && <li>Superseded by {v.data.supersededBy}</li>}
+              </ul>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .versions { padding: 80px 0 60px; }
+  .versions h1 { margin: 14px 0 18px; }
+  .versions__sub {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 48px;
+  }
+  .vlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 16px;
+  }
+  .v {
+    border: 1px solid var(--em-border);
+    border-left-width: 4px;
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
+  }
+  .v:hover { border-color: var(--em-gold); }
+  .v a { display: block; padding: 22px 26px; color: inherit; }
+  .v a:hover { text-decoration: none; }
+  .v--lts { border-left-color: var(--em-gold); }
+  .v--development { border-left-color: var(--em-navy); }
+  .v--stable { border-left-color: #5a9a5a; }
+  .v--legacy { border-left-color: #aaa; }
+  .v--eol { border-left-color: #c44; opacity: 0.7; }
+  .v__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .v__num {
+    font-family: var(--font-display);
+    font-weight: 800;
+    font-size: 22px;
+    color: var(--em-navy);
+  }
+  .v__status {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .v__status--lts        { color: var(--em-gold); background: var(--em-gold-tint); }
+  .v__status--development{ color: var(--em-navy); background: var(--em-navy-tint); }
+  .v__status--stable     { color: #2c5a2c; background: #d8ecd8; }
+  .v__status--legacy     { color: #555;    background: #eee; }
+  .v__status--eol        { color: #a22;    background: #fae0e0; }
+  .v__title {
+    font-size: 17px;
+    margin: 0 0 6px;
+    color: var(--em-text);
+    font-weight: 600;
+  }
+  .v__summary { color: var(--em-text); font-size: 14px; line-height: 1.6; margin: 0 0 10px; }
+  .v__meta {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 22px;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--em-text-muted);
+  }
+</style>

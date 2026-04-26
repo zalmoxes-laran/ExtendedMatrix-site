@@ -1,0 +1,143 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const tools = await getCollection('tools');
+  return tools.map((t) => ({
+    params: { slug: t.id.replace(/\.md$/, '') },
+    props: { tool: t },
+  }));
+}
+
+const { tool } = Astro.props;
+const { Content } = await render(tool);
+
+// Find which versions ship this tool
+const versions = await getCollection('versions');
+const inVersions = versions
+  .filter((v) => v.data.tools.some((t) => t.slug === tool.id.replace(/\.md$/, '')))
+  .map((v) => {
+    const ref = v.data.tools.find((t) => t.slug === tool.id.replace(/\.md$/, ''));
+    return { v, ref };
+  })
+  .sort((a, b) => b.v.data.order - a.v.data.order);
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title={tool.data.name}
+  description={tool.data.summary}
+>
+  <article class="tp">
+    <div class="container">
+      <a href={`${B}/tools/`} class="tp__back">← All tools</a>
+      <div class="tp__head">
+        <h1 class="tp__title">{tool.data.name}</h1>
+        <span class={`tp__status tp__status--${tool.data.status}`}>{tool.data.status}</span>
+      </div>
+      <div class="tp__role">{tool.data.role}</div>
+      <p class="tp__lede">{tool.data.summary}</p>
+
+      <!-- ── Quick links ─────────────────────────────────────── -->
+      <div class="tp__links">
+        {tool.data.docsUrl && <a href={tool.data.docsUrl} target="_blank" rel="noopener" class="tp__btn">Manual ↗</a>}
+        {tool.data.repoUrl && <a href={tool.data.repoUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">GitHub ↗</a>}
+        {tool.data.downloadUrl && <a href={tool.data.downloadUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">Download ↗</a>}
+        <span class="tp__lic">Licence: <strong>{tool.data.licence}</strong></span>
+      </div>
+
+      <!-- ── Body ────────────────────────────────────────────── -->
+      <section class="tp__body">
+        <Content />
+      </section>
+
+      <!-- ── Shipped in versions ─────────────────────────────── -->
+      {inVersions.length > 0 && (
+        <section class="tp__ships">
+          <h2>Shipped in EM versions</h2>
+          <table class="tp__matrix">
+            <thead>
+              <tr>
+                <th>EM version</th>
+                <th>Tool version</th>
+                <th>Status</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              {inVersions.map(({ v, ref }) => (
+                <tr>
+                  <td><a href={`${B}/versions/${v.id.replace(/\.md$/, '')}/`}><strong>EM {v.data.version}</strong></a></td>
+                  <td class="tp__ver">{ref?.version ?? '—'}</td>
+                  <td>{ref?.status ?? '—'}</td>
+                  <td>{ref?.note ?? ''}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .tp { padding: 60px 0 80px; }
+  .tp__back { display: inline-block; font-size: 13px; color: var(--em-text-muted); margin-bottom: 16px; }
+  .tp__head { display: flex; align-items: baseline; gap: 14px; margin-top: 12px; }
+  .tp__title { margin: 0; }
+  .tp__status {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 3px 10px; border-radius: 2px;
+  }
+  .tp__status--stable  { color: #2c5a2c; background: #d8ecd8; }
+  .tp__status--beta    { color: var(--em-navy); background: var(--em-navy-tint); }
+  .tp__status--alpha   { color: #8a5a14; background: #fae6c8; }
+  .tp__status--planned { color: #555; background: #eee; }
+  .tp__role {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--em-gold); font-weight: 600; margin: 6px 0 16px;
+  }
+  .tp__lede { font-size: 17px; color: var(--em-text); max-width: 720px; line-height: 1.65; margin-bottom: 28px; }
+
+  .tp__links {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+    margin-bottom: 40px;
+  }
+  .tp__btn {
+    background: var(--em-navy); color: var(--em-bg);
+    padding: 10px 18px; border-radius: var(--radius-sm);
+    font-weight: 600; font-size: 14px;
+  }
+  .tp__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
+  .tp__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
+  .tp__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
+  .tp__lic { font-size: 12px; color: var(--em-text-muted); margin-left: auto; }
+
+  .tp__body :global(h2) { margin-top: 32px; font-size: 22px; }
+  .tp__body :global(h3) { margin-top: 22px; font-size: 18px; }
+  .tp__body :global(p) { margin-bottom: 14px; line-height: 1.7; }
+  .tp__body :global(ul), .tp__body :global(ol) { margin-bottom: 14px; padding-left: 22px; }
+  .tp__body :global(pre) {
+    background: var(--em-bg-warm); border: 1px solid var(--em-border);
+    padding: 14px 18px; border-radius: var(--radius-md);
+    overflow-x: auto; font-size: 13px;
+  }
+  .tp__body :global(code) {
+    font-family: var(--font-mono); font-size: 13px;
+    background: var(--em-navy-tint); color: var(--em-navy);
+    padding: 1px 6px; border-radius: 2px;
+  }
+  .tp__body :global(pre code) { background: none; color: inherit; padding: 0; }
+
+  .tp__ships { margin-top: 56px; }
+  .tp__ships h2 { font-size: 22px; margin-bottom: 16px; }
+  .tp__matrix { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .tp__matrix th, .tp__matrix td {
+    text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--em-border);
+  }
+  .tp__matrix th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--em-gold); }
+  .tp__ver { font-family: var(--font-mono); }
+</style>

@@ -178,6 +178,16 @@ const versions = defineCollection({
       docsUrl: z.string().url().optional(),
       summary: z.string().max(400),
       supersededBy: z.string().optional(),  // version slug
+      tools: z
+        .array(
+          z.object({
+            slug: z.string(), // ref to a tools collection entry
+            version: z.string().optional(),
+            status: z.enum(['included', 'optional', 'deprecated', 'removed']).default('included'),
+            note: z.string().optional(),
+          })
+        )
+        .default([]),
       order: z.number().default(0),
     }),
 });
