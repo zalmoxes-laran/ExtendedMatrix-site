@@ -6,6 +6,7 @@ docsUrl: "https://docs.extendedmatrix.org/projects/3D-survey-collection/en/lates
 repoUrl: "https://github.com/zalmoxes-laran/3D-survey-collection"
 licence: "GPL-3.0"
 status: stable
+roles: [modeller]
 order: 50
 ---
 

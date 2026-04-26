@@ -24,9 +24,16 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         release cycle.
       </p>
 
-      <ul class="grid">
+      <div class="tools__filters" role="tablist">
+        <a href="#" class="filter-chip" data-role="all" aria-current="true">All tools</a>
+        <a href="#archaeologist" class="filter-chip" data-role="archaeologist">For archaeologists</a>
+        <a href="#modeller" class="filter-chip" data-role="modeller">For 3D modellers</a>
+        <a href="#developer" class="filter-chip" data-role="developer">For developers</a>
+      </div>
+
+      <ul class="grid" id="tools-grid">
         {tools.map((t) => (
-          <li class="card">
+          <li class="card" data-roles={t.data.roles.join(' ')}>
             <a href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}>
               <div class="card__head">
                 <h2 class="card__name">{t.data.name}</h2>
@@ -34,6 +41,13 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
               </div>
               <div class="card__role">{t.data.role}</div>
               <p class="card__desc">{t.data.summary}</p>
+              {t.data.roles.length > 0 && (
+                <div class="card__roles">
+                  {t.data.roles.map((r) => (
+                    <span class={`role-badge role-badge--${r}`}>{r}</span>
+                  ))}
+                </div>
+              )}
               <div class="card__foot">
                 <span class="card__lic">{t.data.licence}</span>
                 <span class="card__open">Open page →</span>
@@ -43,6 +57,8 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         ))}
       </ul>
 
+      <p class="tools__empty" hidden>No tools match this role yet.</p>
+
       <p class="tools__foot">
         Looking for a specific Blender / yEd / EM combination?
         <a href={`${B}/versions/`}>see the version-by-version compatibility matrix →</a>
@@ -51,10 +67,89 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   </section>
 </BaseLayout>
 
+<script is:inline>
+  // Light role filter — reacts to URL hash and to chip clicks. No deps.
+  (function () {
+    const chips = Array.from(document.querySelectorAll('.filter-chip'));
+    const cards = Array.from(document.querySelectorAll('#tools-grid .card'));
+    const empty = document.querySelector('.tools__empty');
+
+    function apply(role) {
+      let shown = 0;
+      cards.forEach((c) => {
+        const roles = (c.dataset.roles || '').split(' ').filter(Boolean);
+        const match = role === 'all' || roles.includes(role);
+        c.hidden = !match;
+        if (match) shown++;
+      });
+      chips.forEach((ch) => ch.setAttribute('aria-current', ch.dataset.role === role ? 'true' : 'false'));
+      if (empty) empty.hidden = shown > 0;
+    }
+
+    function fromHash() {
+      const h = (window.location.hash || '').replace('#', '');
+      apply(['archaeologist', 'modeller', 'developer'].includes(h) ? h : 'all');
+    }
+
+    chips.forEach((ch) => {
+      ch.addEventListener('click', (e) => {
+        e.preventDefault();
+        const role = ch.dataset.role;
+        if (role === 'all') {
+          history.replaceState(null, '', window.location.pathname);
+        } else {
+          history.replaceState(null, '', '#' + role);
+        }
+        apply(role);
+      });
+    });
+
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  })();
+</script>
+
 <style>
   .tools { padding: 80px 0 60px; }
   .tools h1 { margin: 14px 0 16px; }
-  .tools__sub { max-width: 720px; color: var(--em-text-muted); font-size: 17px; margin-bottom: 48px; }
+  .tools__sub { max-width: 720px; color: var(--em-text-muted); font-size: 17px; margin-bottom: 24px; }
+
+  .tools__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .filter-chip {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--em-border);
+    border-radius: 20px;
+    color: var(--em-text-muted);
+    background: var(--em-bg);
+    transition: all 0.15s var(--ease);
+  }
+  .filter-chip:hover {
+    color: var(--em-navy);
+    border-color: var(--em-navy);
+    text-decoration: none;
+  }
+  .filter-chip[aria-current="true"] {
+    background: var(--em-navy);
+    color: var(--em-bg);
+    border-color: var(--em-navy);
+  }
+
+  .tools__empty {
+    text-align: center;
+    color: var(--em-text-muted);
+    font-style: italic;
+    padding: 40px 0;
+  }
+
+  .card__roles { margin: 0 0 12px; display: flex; flex-wrap: wrap; gap: 4px; }
   .grid {
     list-style: none; padding: 0; margin: 0;
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px;

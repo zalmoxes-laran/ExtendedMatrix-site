@@ -6,6 +6,7 @@ repoUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix"
 downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix"
 licence: "GPL-3.0"
 status: stable
+roles: [archaeologist]
 order: 10
 ---
 

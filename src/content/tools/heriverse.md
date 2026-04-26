@@ -6,6 +6,7 @@ docsUrl: "https://docs.extendedmatrix.org/projects/heriverse/en/latest/"
 repoUrl: "https://github.com/zalmoxes-laran"
 licence: "GPL-3.0"
 status: beta
+roles: [archaeologist, modeller]
 order: 40
 ---
 

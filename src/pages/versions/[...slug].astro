@@ -28,9 +28,12 @@ type ToolRow = {
   slug: string;
   toolName: string;
   toolRole: string;
+  toolRoles: ('archaeologist' | 'modeller' | 'developer')[];
   toolDocs: string | undefined;
+  toolPage: string;
   version: string | undefined;
   status: 'included' | 'optional' | 'deprecated' | 'removed';
+  downloadUrl: string | undefined;
   note: string | undefined;
 };
 
@@ -41,14 +44,17 @@ for (const t of version.data.tools) {
     slug: t.slug,
     toolName: entry?.data.name ?? t.slug,
     toolRole: entry?.data.role ?? '',
+    toolRoles: entry?.data.roles ?? [],
     toolDocs: entry?.data.docsUrl,
+    toolPage: `${B}/tools/${t.slug}/`,
     version: t.version,
     status: t.status,
+    downloadUrl: t.downloadUrl ?? entry?.data.downloadUrl,
     note: t.note,
   });
 }
 
-const statusColours: Record<string, string> = {
+const statusPill: Record<string, string> = {
   included: 'tool-st--in',
   optional: 'tool-st--opt',
   deprecated: 'tool-st--dep',
@@ -110,7 +116,75 @@ const statusColours: Record<string, string> = {
         </dl>
       </section>
 
-      <!-- ── Tools matrix ────────────────────────────────────── -->
+      <!-- ── Prerequisites ───────────────────────────────────── -->
+      <section class="vp__prereq">
+        <h2>Prerequisites</h2>
+        <p class="vp__prereq-lede">
+          You need <strong>Blender</strong> and <strong>yEd</strong> installed
+          before you can run this release. Install them first, then proceed
+          to the EM-specific tools below.
+        </p>
+        <div class="vp__prereq-grid">
+          <a class="prereq" href={version.data.blenderDownloadUrl ?? 'https://www.blender.org/download/'} target="_blank" rel="noopener">
+            <div class="prereq__name">Blender</div>
+            <div class="prereq__ver">
+              {version.data.blenderLts ? `${version.data.blenderLts} LTS` : `${version.data.blenderMin}+`}
+            </div>
+            <div class="prereq__desc">3D authoring environment. Free, GPL-3.</div>
+            <span class="prereq__cta">Download from blender.org ↗</span>
+          </a>
+          <a class="prereq" href={version.data.yedDownloadUrl} target="_blank" rel="noopener">
+            <div class="prereq__name">yEd</div>
+            <div class="prereq__ver">{version.data.yedRequirement}</div>
+            <div class="prereq__desc">Free graph editor used to author the EM `.graphml` file.</div>
+            <span class="prereq__cta">Download from yworks.com ↗</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- ── Core formal language ────────────────────────────── -->
+      <section class="vp__lang">
+        <div class="vp__lang-head">
+          <h2>Core language — EM {version.data.version}</h2>
+          <span class="vp__lang-tag">formal language</span>
+        </div>
+        <p class="vp__lang-lede">
+          The formal language is the heart of the release. Everything else
+          in the framework — tools, exports, web platforms — exists to
+          author, manage and publish what is described below.
+        </p>
+        {version.data.languageFeatures.length > 0 && (
+          <ul class="vp__features">
+            {version.data.languageFeatures.map((f) => (
+              <li>{f}</li>
+            ))}
+          </ul>
+        )}
+        <div class="vp__lang-links">
+          {version.data.docsUrl && (
+            <a href={version.data.docsUrl} target="_blank" rel="noopener" class="vp__btn">
+              Language manual ↗
+            </a>
+          )}
+          {version.data.changelogUrl && (
+            <a href={version.data.changelogUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
+              Changelog ↗
+            </a>
+          )}
+          {version.data.paletteUrl && (
+            <a href={version.data.paletteUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
+              Palette repo ↗
+            </a>
+          )}
+          {version.data.languagePaperUrl && (
+            <a href={version.data.languagePaperUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
+              Reference paper ↗
+            </a>
+          )}
+        </div>
+      </section>
+
+      <!-- ── Tools matrix with inline downloads ──────────────── -->
       {toolRows.length > 0 && (
         <section class="vp__tools">
           <h2>Tools shipping with this version</h2>
@@ -120,6 +194,7 @@ const statusColours: Record<string, string> = {
                 <th>Tool</th>
                 <th>Version</th>
                 <th>Status</th>
+                <th>Download</th>
                 <th>Doc</th>
               </tr>
             </thead>
@@ -127,18 +202,28 @@ const statusColours: Record<string, string> = {
               {toolRows.map((t) => (
                 <tr>
                   <td>
-                    <a href={`${B}/tools/${t.slug}/`}>
-                      <strong>{t.toolName}</strong>
-                    </a>
+                    <a href={t.toolPage}><strong>{t.toolName}</strong></a>
                     <div class="vp__role">{t.toolRole}</div>
+                    {t.toolRoles.length > 0 && (
+                      <div class="vp__rolerow">
+                        {t.toolRoles.map((r) => (
+                          <span class={`role-badge role-badge--${r}`}>{r}</span>
+                        ))}
+                      </div>
+                    )}
                     {t.note && <div class="vp__note">{t.note}</div>}
                   </td>
                   <td class="vp__ver">{t.version ?? '—'}</td>
-                  <td><span class={`vp__pill ${statusColours[t.status]}`}>{t.status}</span></td>
+                  <td><span class={`vp__pill ${statusPill[t.status]}`}>{t.status}</span></td>
                   <td>
-                    {t.toolDocs ? (
-                      <a href={t.toolDocs} target="_blank" rel="noopener">manual ↗</a>
-                    ) : '—'}
+                    {t.downloadUrl
+                      ? <a href={t.downloadUrl} target="_blank" rel="noopener" class="vp__dlink">download ↗</a>
+                      : '—'}
+                  </td>
+                  <td>
+                    {t.toolDocs
+                      ? <a href={t.toolDocs} target="_blank" rel="noopener">manual ↗</a>
+                      : '—'}
                   </td>
                 </tr>
               ))}
@@ -147,28 +232,38 @@ const statusColours: Record<string, string> = {
         </section>
       )}
 
-      <!-- ── Quick downloads ─────────────────────────────────── -->
+      <!-- ── Install steps ───────────────────────────────────── -->
+      {version.data.installSteps.length > 0 && (
+        <section class="vp__install">
+          <h2>Installation</h2>
+          <p class="vp__install-lede">
+            Step-by-step installation of Extended Matrix {version.data.version}.
+          </p>
+          <ol class="vp__steps">
+            {version.data.installSteps.map((s) => (
+              <li set:html={s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\*(.+?)\*/g, '<em>$1</em>').replace(/`(.+?)`/g, '<code>$1</code>')} />
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <!-- ── Quick links ─────────────────────────────────────── -->
       <section class="vp__downloads">
-        <h2>Downloads</h2>
+        <h2>Quick links for this release</h2>
         <div class="vp__dlist">
-          {version.data.addonReleaseUrl && (
-            <a href={version.data.addonReleaseUrl} target="_blank" rel="noopener" class="vp__btn">
-              EM Tools releases ({version.data.version}) ↗
-            </a>
-          )}
-          {version.data.paletteUrl && (
-            <a href={version.data.paletteUrl} target="_blank" rel="noopener" class="vp__btn">
-              yEd palette {version.data.version} ↗
-            </a>
-          )}
           {version.data.docsUrl && (
-            <a href={version.data.docsUrl} target="_blank" rel="noopener" class="vp__btn">
-              Language docs {version.data.version} ↗
+            <a href={version.data.docsUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
+              Language docs ↗
             </a>
           )}
           {version.data.changelogUrl && (
-            <a href={version.data.changelogUrl} target="_blank" rel="noopener" class="vp__btn">
+            <a href={version.data.changelogUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
               Changelog ↗
+            </a>
+          )}
+          {version.data.addonReleaseUrl && (
+            <a href={version.data.addonReleaseUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
+              All EM Tools releases ↗
             </a>
           )}
         </div>
@@ -199,8 +294,49 @@ const statusColours: Record<string, string> = {
   .vp__title { margin: 12px 0 16px; }
   .vp__lede { color: var(--em-text); font-size: 17px; max-width: 720px; margin-bottom: 40px; }
 
-  .vp__compat, .vp__tools, .vp__downloads, .vp__body { margin-top: 48px; }
-  .vp__compat h2, .vp__tools h2, .vp__downloads h2 { font-size: 22px; margin-bottom: 16px; }
+  .vp__compat, .vp__prereq, .vp__lang, .vp__tools, .vp__install, .vp__downloads, .vp__body { margin-top: 56px; }
+  .vp__compat h2, .vp__prereq h2, .vp__lang h2, .vp__tools h2, .vp__install h2, .vp__downloads h2 { font-size: 22px; margin-bottom: 12px; }
+
+  /* Core language */
+  .vp__lang {
+    background: linear-gradient(180deg, var(--em-gold-tint) 0%, var(--em-bg) 100%);
+    border: 1px solid var(--em-gold);
+    border-left-width: 4px;
+    border-radius: var(--radius-md);
+    padding: 28px 30px;
+  }
+  .vp__lang-head { display: flex; align-items: center; gap: 12px; }
+  .vp__lang-head h2 { margin: 0; }
+  .vp__lang-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--em-gold); background: rgba(255,255,255,0.6);
+    padding: 3px 10px; border-radius: 2px; border: 1px solid var(--em-gold);
+  }
+  .vp__lang-lede { color: var(--em-text); margin: 12px 0 16px; max-width: 720px; line-height: 1.7; }
+  .vp__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px;
+    display: grid;
+    gap: 6px;
+  }
+  .vp__features li {
+    position: relative;
+    padding: 6px 0 6px 22px;
+    font-size: 14px;
+    color: var(--em-text);
+    border-bottom: 1px dashed rgba(184, 137, 58, 0.3);
+  }
+  .vp__features li:last-child { border-bottom: none; }
+  .vp__features li::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    color: var(--em-gold);
+    font-size: 11px;
+  }
+  .vp__lang-links { display: flex; gap: 12px; flex-wrap: wrap; }
 
   .vp__dl {
     display: grid;
@@ -215,6 +351,30 @@ const statusColours: Record<string, string> = {
   .vp__dl dd { color: var(--em-text); font-size: 14px; margin: 0; }
   .vp__tested { color: var(--em-text-muted); font-size: 13px; }
 
+  /* Prerequisites */
+  .vp__prereq-lede { color: var(--em-text-muted); margin-bottom: 16px; max-width: 720px; }
+  .vp__prereq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .prereq {
+    display: block;
+    border: 1px solid var(--em-border);
+    border-left: 3px solid var(--em-navy);
+    border-radius: var(--radius-md);
+    padding: 22px 24px;
+    background: var(--em-bg);
+    color: var(--em-text);
+    transition: border-color 0.2s var(--ease);
+  }
+  .prereq:hover { border-color: var(--em-gold); text-decoration: none; }
+  .prereq__name { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--em-navy); }
+  .prereq__ver { font-family: var(--font-mono); font-size: 12px; color: var(--em-gold); margin: 2px 0 8px; }
+  .prereq__desc { font-size: 13px; color: var(--em-text-muted); line-height: 1.5; margin-bottom: 10px; }
+  .prereq__cta { color: var(--em-gold); font-weight: 600; font-size: 13px; }
+
+  /* Tools matrix */
   .vp__matrix {
     width: 100%;
     border-collapse: collapse;
@@ -230,7 +390,8 @@ const statusColours: Record<string, string> = {
   .vp__matrix a { color: var(--em-navy); }
   .vp__matrix a:hover { color: var(--em-gold); }
   .vp__role { font-size: 12px; color: var(--em-text-muted); margin-top: 2px; }
-  .vp__note { font-size: 12px; color: #a22; margin-top: 4px; font-style: italic; }
+  .vp__rolerow { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
+  .vp__note { font-size: 12px; color: #8a5a14; margin-top: 4px; font-style: italic; }
   .vp__ver { font-family: var(--font-mono); font-size: 13px; color: var(--em-text); }
   .vp__pill {
     display: inline-block; padding: 2px 8px; border-radius: 2px;
@@ -240,7 +401,55 @@ const statusColours: Record<string, string> = {
   .tool-st--opt { background: var(--em-navy-tint); color: var(--em-navy); }
   .tool-st--dep { background: #fae6c8; color: #8a5a14; }
   .tool-st--rm  { background: #fae0e0; color: #a22; }
+  .vp__dlink { color: var(--em-gold) !important; font-weight: 600; }
 
+  /* Install steps */
+  .vp__install-lede { color: var(--em-text-muted); margin-bottom: 16px; }
+  .vp__steps {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 6px;
+  }
+  .vp__steps li {
+    counter-increment: step;
+    position: relative;
+    padding: 14px 18px 14px 56px;
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-sm);
+    line-height: 1.55;
+    color: var(--em-text);
+  }
+  .vp__steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 14px;
+    top: 12px;
+    width: 28px;
+    height: 28px;
+    background: var(--em-navy);
+    color: var(--em-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .vp__steps li code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--em-navy-tint);
+    color: var(--em-navy);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  /* Buttons */
   .vp__dlist { display: flex; flex-wrap: wrap; gap: 12px; }
   .vp__btn {
     background: var(--em-navy);
@@ -252,6 +461,8 @@ const statusColours: Record<string, string> = {
     transition: background 0.2s var(--ease);
   }
   .vp__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
+  .vp__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
+  .vp__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
 
   .vp__body :global(h2) { margin-top: 32px; font-size: 22px; }
   .vp__body :global(h3) { margin-top: 24px; font-size: 18px; }
@@ -259,10 +470,18 @@ const statusColours: Record<string, string> = {
   .vp__body :global(ul), .vp__body :global(ol) { margin-bottom: 14px; padding-left: 22px; }
   .vp__body :global(table) { width: 100%; border-collapse: collapse; margin: 12px 0 18px; font-size: 14px; }
   .vp__body :global(th), .vp__body :global(td) { padding: 8px 12px; border-bottom: 1px solid var(--em-border); text-align: left; }
+  .vp__body :global(blockquote) {
+    border-left: 3px solid var(--em-gold);
+    padding: 8px 16px;
+    color: var(--em-text-muted);
+    font-style: italic;
+    margin: 16px 0;
+  }
 
   @media (max-width: 700px) {
     .vp__dl { grid-template-columns: 1fr; gap: 4px 0; }
     .vp__dl dt { margin-top: 8px; }
-    .vp__matrix th:nth-child(4), .vp__matrix td:nth-child(4) { display: none; }
+    .vp__prereq-grid { grid-template-columns: 1fr; }
+    .vp__matrix th:nth-child(5), .vp__matrix td:nth-child(5) { display: none; }
   }
 </style>

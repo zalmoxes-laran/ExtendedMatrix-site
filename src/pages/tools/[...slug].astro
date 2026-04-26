@@ -38,6 +38,14 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         <span class={`tp__status tp__status--${tool.data.status}`}>{tool.data.status}</span>
       </div>
       <div class="tp__role">{tool.data.role}</div>
+      {tool.data.roles.length > 0 && (
+        <div class="tp__roles">
+          For:
+          {tool.data.roles.map((r) => (
+            <span class={`role-badge role-badge--${r}`}>{r}</span>
+          ))}
+        </div>
+      )}
       <p class="tp__lede">{tool.data.summary}</p>
 
       <!-- ── Quick links ─────────────────────────────────────── -->
@@ -98,7 +106,16 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .tp__status--planned { color: #555; background: #eee; }
   .tp__role {
     font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em;
-    color: var(--em-gold); font-weight: 600; margin: 6px 0 16px;
+    color: var(--em-gold); font-weight: 600; margin: 6px 0 8px;
+  }
+  .tp__roles {
+    font-size: 12px;
+    color: var(--em-text-muted);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
   }
   .tp__lede { font-size: 17px; color: var(--em-text); max-width: 720px; line-height: 1.65; margin-bottom: 28px; }
 

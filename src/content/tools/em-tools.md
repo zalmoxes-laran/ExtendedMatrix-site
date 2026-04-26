@@ -7,6 +7,7 @@ repoUrl: "https://github.com/zalmoxes-laran/EM-blender-tools"
 downloadUrl: "https://github.com/zalmoxes-laran/EM-blender-tools/releases"
 licence: "GPL-3.0"
 status: stable
+roles: [archaeologist, modeller]
 order: 20
 ---
 

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout
@@ -43,6 +44,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 install yEd with the EM palette</a> and draw your first graph.
             </li>
           </ol>
+          <p class="path__cross">
+            <a href={`${B}/tools/#archaeologist`}>→ Tools for archaeologists</a>
+          </p>
         </article>
 
         <article class="path">
@@ -72,6 +76,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 Heriverse</a>.
             </li>
           </ol>
+          <p class="path__cross">
+            <a href={`${B}/tools/#modeller`}>→ Tools for 3D modellers</a>
+          </p>
         </article>
 
         <article class="path">
@@ -103,6 +110,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Telegram group</a>.
             </li>
           </ol>
+          <p class="path__cross">
+            <a href={`${B}/tools/#developer`}>→ Tools for developers</a>
+          </p>
         </article>
       </div>
 
@@ -200,6 +210,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 700;
+  }
+  .path__cross {
+    margin: 14px 0 0;
+    padding-top: 12px;
+    border-top: 1px solid var(--em-border);
+    font-size: 13px;
+  }
+  .path__cross a {
+    color: var(--em-gold);
+    font-weight: 600;
   }
   .start__foot {
     text-align: center;

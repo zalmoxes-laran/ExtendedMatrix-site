@@ -4,7 +4,8 @@ role: "Web visualisation (legacy)"
 summary: "Earlier web-based 3D viewer in the EMF, used in the EM 1.4 era. Superseded by Heriverse from EM 1.5 onwards. Kept here for historical reference and to support projects deposited under 1.4."
 status: planned
 licence: "GPL-3.0"
-order: 60
+roles: [archaeologist]
+order: 90
 ---
 
 ## Status

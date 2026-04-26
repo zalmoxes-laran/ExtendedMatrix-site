@@ -6,6 +6,7 @@ docsUrl: "https://docs.extendedmatrix.org/projects/s3dgraphy/"
 repoUrl: "https://github.com/zalmoxes-laran/s3dgraphy"
 licence: "GPL-3.0"
 status: stable
+roles: [developer]
 order: 30
 ---
 

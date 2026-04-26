@@ -172,10 +172,16 @@ const versions = defineCollection({
       blenderTested: z.array(z.string()).default([]),
       blenderLts: z.string().optional(),    // "4.3" — only when status==='lts'
       yedRequirement: z.string().default('yEd 3.21 or later'),
+      // Direct download URLs for the *prerequisites* of this version
+      blenderDownloadUrl: z.string().url().optional(),
+      yedDownloadUrl: z.string().url().default('https://www.yworks.com/products/yed/download'),
       paletteUrl: z.string().url().optional(),
       addonReleaseUrl: z.string().url().optional(),
       changelogUrl: z.string().url().optional(),
       docsUrl: z.string().url().optional(),
+      // Core formal language — the "soul" of the release
+      languageFeatures: z.array(z.string()).default([]),
+      languagePaperUrl: z.string().url().optional(),
       summary: z.string().max(400),
       supersededBy: z.string().optional(),  // version slug
       tools: z
@@ -184,10 +190,13 @@ const versions = defineCollection({
             slug: z.string(), // ref to a tools collection entry
             version: z.string().optional(),
             status: z.enum(['included', 'optional', 'deprecated', 'removed']).default('included'),
+            // Direct download for THIS tool in THIS EM version
+            downloadUrl: z.string().url().optional(),
             note: z.string().optional(),
           })
         )
         .default([]),
+      installSteps: z.array(z.string()).default([]),
       order: z.number().default(0),
     }),
 });
@@ -210,6 +219,9 @@ const tools = defineCollection({
       downloadUrl: z.string().url().optional(),
       licence: z.string().default('GPL-3.0'),
       status: z.enum(['stable', 'beta', 'alpha', 'planned']).default('stable'),
+      // Roles a tool serves — drives badges on the tools page and the
+      // version pages, and the cross-references on /start.
+      roles: z.array(z.enum(['archaeologist', 'modeller', 'developer'])).default([]),
       order: z.number().default(0),
     }),
 });
