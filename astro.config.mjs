@@ -30,9 +30,4 @@ export default defineConfig({
     // Place built assets under /_astro/ — keeps URLs predictable.
     assets: '_astro',
   },
-  vite: {
-    // TEMP-FIX-FOR-SCREENSHOTS: writable cache dir outside the mounted
-    // host folder. Revert this block before committing.
-    cacheDir: process.env.VITE_CACHE_DIR || undefined,
-  },
 });
