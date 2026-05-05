@@ -1,7 +1,9 @@
 name: "CNR-ISPC"
 kind: "research-institute"
-# CNR-ISPC is the home institution of Extended Matrix — leading rather than contributing.
-relation: "collaborates"
+# CNR-ISPC is the home institution of Extended Matrix — it orchestrates
+# the project: governance, scientific direction, hosting of the lead
+# developers, infrastructure for releases.
+relation: "orchestrates"
 url: "https://www.ispc.cnr.it"
 country: "IT"
 order: 1

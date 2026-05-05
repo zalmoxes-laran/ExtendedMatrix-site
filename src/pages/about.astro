@@ -188,10 +188,14 @@ const groupLabel: Record<string, string> = {
                       />
                     )}
                     <div class="partner__body">
-                      <span class="partner__name">{p.data.name}</span>
-                      {p.data.country && <span class="partner__country">{p.data.country}</span>}
-                      <span class="partner__rel">{p.data.relation}</span>
+                      <div class="partner__main">
+                        <span class="partner__name">{p.data.name}</span>
+                        {p.data.country && <span class="partner__country">{p.data.country}</span>}
+                        {p.data.timeline && <span class="partner__timeline">{p.data.timeline}</span>}
+                      </div>
+                      {p.data.note && <div class="partner__note">{p.data.note}</div>}
                     </div>
+                    <span class={`partner__rel partner__rel--${p.data.relation}`}>{p.data.relation}</span>
                   </>
                 );
                 return (
@@ -328,12 +332,28 @@ const groupLabel: Record<string, string> = {
     background: var(--em-bg);
     border-radius: 2px;
   }
-  .partner__body { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; flex: 1; }
+  .partner__body { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 0; }
+  .partner__main { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 10px; }
   .partner__name { font-weight: 600; color: var(--em-navy); transition: color 0.2s var(--ease); }
   .partner__country {
     font-family: var(--font-mono);
     font-size: 11px;
     color: var(--em-text-muted);
+  }
+  .partner__timeline {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    padding: 1px 7px;
+    border-radius: 2px;
+    letter-spacing: 0.02em;
+  }
+  .partner__note {
+    font-size: 12px;
+    color: var(--em-text-muted);
+    line-height: 1.45;
+    font-style: italic;
   }
   .partner__rel {
     font-size: 10px;
@@ -344,6 +364,21 @@ const groupLabel: Record<string, string> = {
     padding: 2px 8px;
     border-radius: 2px;
     margin-left: auto;
+    align-self: flex-start;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  /* Distinctive accents for richer relation kinds. The default styling
+     above stays for `uses`, `contributes` and `collaborates`. */
+  .partner__rel--funds {
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    border: 1px solid var(--em-gold);
+  }
+  .partner__rel--orchestrates {
+    color: var(--em-bg);
+    background: var(--em-navy);
+    border: 1px solid var(--em-navy);
   }
   .partners__foot {
     margin-top: 40px;

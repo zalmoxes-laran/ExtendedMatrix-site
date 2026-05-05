@@ -1,6 +1,8 @@
 name: "SSHOC — Social Sciences and Humanities Open Cloud"
 kind: "eu-project"
-relation: "collaborates"
+relation: "funds"
+timeline: "2019–2022"
+note: "Funded EM development; produced project Deliverables."
 url: "https://sshoc.eu"
 country: "EU"
 order: 3

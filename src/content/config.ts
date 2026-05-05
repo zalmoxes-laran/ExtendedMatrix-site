@@ -75,7 +75,15 @@ const partners = defineCollection({
     z.object({
       name: z.string(),
       kind: z.enum(['university', 'research-institute', 'company', 'eu-project', 'national-project', 'cultural-institution']),
-      relation: z.enum(['uses', 'contributes', 'funds', 'collaborates']).default('uses'),
+      relation: z.enum(['uses', 'contributes', 'funds', 'collaborates', 'orchestrates']).default('uses'),
+      // Optional human-readable activity window for the partner (e.g.
+      // "2019–2022" for a finished EU project, "2025–2029" for an active
+      // one). Surfaces next to the partner name on the about page.
+      timeline: z.string().optional(),
+      // Optional short note shown below the partner name on the about
+      // page. Use it to clarify how the partner relates to EM (e.g.
+      // "Funded EM development; produced project Deliverables.").
+      note: z.string().optional(),
       logo: image().optional(),
       logoAlt: z.string().optional(),
       url: z.string().url().optional(),
