@@ -208,8 +208,9 @@ const partnerLogos = allPartners
           src="https://strativerse-test.ispc.cnr.it/a/heriverse/?scene=scene%3Ae3bdd326-13cb-4489-a062-e035ede2563c"
           title="Heriverse — live Extended Matrix scene"
           loading="lazy"
-          allow="accelerometer; autoplay; gyroscope; xr-spatial-tracking; fullscreen"
+          allow="accelerometer; autoplay; camera; clipboard-read; clipboard-write; encrypted-media; fullscreen; gamepad; geolocation; gyroscope; hid; magnetometer; microphone; midi; payment; picture-in-picture; xr-spatial-tracking"
           allowfullscreen
+          allowvr
           referrerpolicy="no-referrer-when-downgrade"
         ></iframe>
       </div>
@@ -288,7 +289,7 @@ const partnerLogos = allPartners
       </p>
 
       <div class="framework__grid">
-        <a href="https://docs.extendedmatrix.org/projects/EM-tools/" class="card" target="_blank" rel="noopener">
+        <a href={`${B}/tools/em-tools/`} class="card">
           <div class="card__name">EM Tools</div>
           <div class="card__role">Blender add-on</div>
           <p class="card__desc">
@@ -296,7 +297,7 @@ const partnerLogos = allPartners
             directly inside Blender.
           </p>
         </a>
-        <a href="https://github.com/zalmoxes-laran/s3dgraphy" class="card" target="_blank" rel="noopener">
+        <a href={`${B}/tools/s3dgraphy/`} class="card">
           <div class="card__name">s3dgraphy</div>
           <div class="card__role">Python library</div>
           <p class="card__desc">
@@ -304,7 +305,7 @@ const partnerLogos = allPartners
             graphs.
           </p>
         </a>
-        <a href="https://docs.extendedmatrix.org/projects/heriverse/" class="card" target="_blank" rel="noopener">
+        <a href={`${B}/tools/heriverse/`} class="card">
           <div class="card__name">Heriverse</div>
           <div class="card__role">Web platform</div>
           <p class="card__desc">
@@ -312,7 +313,7 @@ const partnerLogos = allPartners
             collaborative VR for EM-aware scenes.
           </p>
         </a>
-        <a href="https://docs.extendedmatrix.org/projects/3D-survey-collection/" class="card" target="_blank" rel="noopener">
+        <a href={`${B}/tools/3dsc/`} class="card">
           <div class="card__name">3DSC</div>
           <div class="card__role">Survey pipeline</div>
           <p class="card__desc">
