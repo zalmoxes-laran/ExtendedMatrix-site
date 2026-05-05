@@ -64,92 +64,29 @@ const partnerLogos = allPartners
     </div>
   </section>
 
-  <!-- ============ CORE IDEA ============ -->
-  <section class="core">
-    <div class="container core__row">
-      <div>
-        <span class="tag">Core idea</span>
-        <h2 class="core__title">EM is the score.<br />s3dgraphy plays it.</h2>
-        <p>
-          Like a musical score versus its MIDI encoding, Extended Matrix is the
-          human-readable notation: it can live on paper, in yEd, or in an
-          AI-extracted spreadsheet. The <strong>s3dgraphy</strong> Python
-          library makes that notation computable — and the rest of the
-          framework brings it into Blender, into the web, into VR.
-        </p>
-        <p>
-          The property graph already carries CIDOC-CRM mappings, making EM
-          data interoperable with the broader cultural heritage ecosystem.
-        </p>
-        <a href={`${B}/start`} class="btn btn-gold" style="margin-top: 8px;">
-          Pick your starting point →
-        </a>
-      </div>
-      <div class="core__visual" aria-hidden="true">
-        <pre class="cv-block">
-                              <span class="cv-node cv-doc">DOC_001</span>
-                                 <span class="cv-arrow">▲</span>
-                                 <span class="cv-arrow">│ extracted_from</span>
-                              <span class="cv-node cv-ext">EXT_001</span>
-                                 <span class="cv-arrow">▲</span>
-                                 <span class="cv-arrow">│ supports</span>
-                              <span class="cv-node cv-prop">PROP_dating</span>
-                                 <span class="cv-arrow">▲</span>
-                                 <span class="cv-arrow">│ has_property</span>
-<span class="cv-node cv-usv">USV_001</span>  <span class="cv-arrow">─ overlies ─▶</span>  <span class="cv-node cv-us">US_002</span>
-        </pre>
-        <p class="diagram-note">
-          Every reconstruction node carries its full provenance chain —
-          property → extraction → source.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ EM FRAMEWORK ============ -->
-  <section class="framework">
-    <div class="container">
-      <span class="tag">EM Framework</span>
-      <h2 class="framework__title">The tools that speak EM</h2>
-      <p class="framework__sub">
-        A growing family of open-source tools built around the s3dgraphy
-        knowledge graph — from field documentation to immersive web
-        publication.
+  <!-- ============ PURPOSE / FOR ARCHAEOLOGISTS ============ -->
+  <section class="purpose">
+    <div class="container purpose__inner">
+      <span class="tag">Why EM exists</span>
+      <h2 class="purpose__title">
+        Make your interpretive choices visible.
+      </h2>
+      <p class="purpose__lede">
+        Most virtual reconstructions look certain even when the evidence
+        beneath them is fragmentary, contested, or simply missing.
+        Extended Matrix lets archaeologists record <em>what was found</em>,
+        <em>how it was read</em>, and <em>where the reconstruction goes
+        beyond the data</em> — so colleagues, reviewers and the public can
+        see the reasoning, not just the result.
       </p>
-
-      <div class="framework__grid">
-        <a href="https://docs.extendedmatrix.org/projects/EM-tools/" class="card" target="_blank" rel="noopener">
-          <div class="card__name">EM Tools</div>
-          <div class="card__role">Blender add-on</div>
-          <p class="card__desc">
-            3D visualisation and interactive annotation of stratigraphic units
-            directly inside Blender.
-          </p>
-        </a>
-        <a href="https://github.com/zalmoxes-laran/s3dgraphy" class="card" target="_blank" rel="noopener">
-          <div class="card__name">s3dgraphy</div>
-          <div class="card__role">Python library</div>
-          <p class="card__desc">
-            The graph engine: import, export, validate and query EM knowledge
-            graphs.
-          </p>
-        </a>
-        <a href="https://docs.extendedmatrix.org/projects/heriverse/" class="card" target="_blank" rel="noopener">
-          <div class="card__name">Heriverse</div>
-          <div class="card__role">Web platform</div>
-          <p class="card__desc">
-            Heritage Science Metaverse — paradata pop-ups, epoch switching,
-            collaborative VR for EM-aware scenes.
-          </p>
-        </a>
-        <a href="https://docs.extendedmatrix.org/projects/3D-survey-collection/" class="card" target="_blank" rel="noopener">
-          <div class="card__name">3DSC</div>
-          <div class="card__role">Survey pipeline</div>
-          <p class="card__desc">
-            Photogrammetry and 3D model preparation upstream of EM Tools, on
-            modest hardware.
-          </p>
-        </a>
+      <p class="purpose__lede">
+        From the stratigraphic sequence on site to the published 3D scene,
+        every interpretive step stays linked to the source that justifies
+        it.
+      </p>
+      <div class="purpose__cta">
+        <a href={`${B}/start`} class="btn btn-primary">Start here →</a>
+        <a href={`${B}/projects`} class="btn btn-ghost">See real projects</a>
       </div>
     </div>
   </section>
@@ -254,6 +191,139 @@ const partnerLogos = allPartners
     </div>
   </section>
 
+  <!-- ============ LIVE HERIVERSE EMBED ============ -->
+  <section class="live">
+    <div class="container">
+      <span class="tag">See it live</span>
+      <h2 class="live__title">Explore a reconstruction in your browser.</h2>
+      <p class="live__lede">
+        Below is a live Heriverse scene — the same EM data you saw above,
+        published as an interactive 3D experience. Walk through the
+        reconstruction, click on a unit, read the paradata that justifies
+        each interpretive choice.
+      </p>
+
+      <div class="live__frame">
+        <iframe
+          src="https://strativerse-test.ispc.cnr.it/a/heriverse/?scene=scene%3Ae3bdd326-13cb-4489-a062-e035ede2563c&vrid=x00-7vl2-x8m"
+          title="Heriverse — live Extended Matrix scene"
+          loading="lazy"
+          allow="accelerometer; autoplay; gyroscope; xr-spatial-tracking; fullscreen"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+      </div>
+
+      <div class="live__meta">
+        <a
+          class="btn btn-ghost"
+          href="https://strativerse-test.ispc.cnr.it/a/heriverse/?scene=scene%3Ae3bdd326-13cb-4489-a062-e035ede2563c&vrid=x00-7vl2-x8m"
+          target="_blank"
+          rel="noopener"
+        >
+          Open the live experience in a new tab →
+        </a>
+        <p class="live__note">
+          <strong>Coming soon:</strong> the underlying open dataset will be
+          released on the
+          <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Extended Matrix Zenodo community</a>
+          (versioned, citable), accompanied by a data paper in
+          <em>Heritage</em> (MDPI).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CORE IDEA ============ -->
+  <section class="core">
+    <div class="container core__row">
+      <div>
+        <span class="tag">Under the hood</span>
+        <h2 class="core__title">EM is the score.<br />s3dgraphy plays it.</h2>
+        <p>
+          Like a musical score versus its MIDI encoding, Extended Matrix is the
+          human-readable notation: it can live on paper, in yEd, or in an
+          AI-extracted spreadsheet. The <strong>s3dgraphy</strong> Python
+          library makes that notation computable — and the rest of the
+          framework brings it into Blender, into the web, into VR.
+        </p>
+        <p>
+          The property graph already carries CIDOC-CRM mappings, making EM
+          data interoperable with the broader cultural heritage ecosystem.
+        </p>
+        <a href={`${B}/start`} class="btn btn-gold" style="margin-top: 8px;">
+          Pick your starting point →
+        </a>
+      </div>
+      <div class="core__visual" aria-hidden="true">
+        <pre class="cv-block">
+                              <span class="cv-node cv-doc">DOC_001</span>
+                                 <span class="cv-arrow">▲</span>
+                                 <span class="cv-arrow">│ extracted_from</span>
+                              <span class="cv-node cv-ext">EXT_001</span>
+                                 <span class="cv-arrow">▲</span>
+                                 <span class="cv-arrow">│ supports</span>
+                              <span class="cv-node cv-prop">PROP_dating</span>
+                                 <span class="cv-arrow">▲</span>
+                                 <span class="cv-arrow">│ has_property</span>
+<span class="cv-node cv-usv">USV_001</span>  <span class="cv-arrow">─ overlies ─▶</span>  <span class="cv-node cv-us">US_002</span>
+        </pre>
+        <p class="diagram-note">
+          Every reconstruction node carries its full provenance chain —
+          property → extraction → source.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EM FRAMEWORK ============ -->
+  <section class="framework">
+    <div class="container">
+      <span class="tag">EM Framework</span>
+      <h2 class="framework__title">The tools that speak EM</h2>
+      <p class="framework__sub">
+        A growing family of open-source tools built around the s3dgraphy
+        knowledge graph — from field documentation to immersive web
+        publication.
+      </p>
+
+      <div class="framework__grid">
+        <a href="https://docs.extendedmatrix.org/projects/EM-tools/" class="card" target="_blank" rel="noopener">
+          <div class="card__name">EM Tools</div>
+          <div class="card__role">Blender add-on</div>
+          <p class="card__desc">
+            3D visualisation and interactive annotation of stratigraphic units
+            directly inside Blender.
+          </p>
+        </a>
+        <a href="https://github.com/zalmoxes-laran/s3dgraphy" class="card" target="_blank" rel="noopener">
+          <div class="card__name">s3dgraphy</div>
+          <div class="card__role">Python library</div>
+          <p class="card__desc">
+            The graph engine: import, export, validate and query EM knowledge
+            graphs.
+          </p>
+        </a>
+        <a href="https://docs.extendedmatrix.org/projects/heriverse/" class="card" target="_blank" rel="noopener">
+          <div class="card__name">Heriverse</div>
+          <div class="card__role">Web platform</div>
+          <p class="card__desc">
+            Heritage Science Metaverse — paradata pop-ups, epoch switching,
+            collaborative VR for EM-aware scenes.
+          </p>
+        </a>
+        <a href="https://docs.extendedmatrix.org/projects/3D-survey-collection/" class="card" target="_blank" rel="noopener">
+          <div class="card__name">3DSC</div>
+          <div class="card__role">Survey pipeline</div>
+          <p class="card__desc">
+            Photogrammetry and 3D model preparation upstream of EM Tools, on
+            modest hardware.
+          </p>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ MODULAR ============ -->
   <section class="modular">
     <div class="container">
@@ -316,11 +386,13 @@ const partnerLogos = allPartners
           </p>
         </article>
         <article class="std-card">
-          <div class="std-card__head">StratiGraph EU project</div>
+          <div class="std-card__head">StratiGraph EU project (2025–2029)</div>
           <p>
-            Funded by the European Commission, StratiGraph hardens EM as a
-            shared infrastructure: governance, versioning, validation suite,
-            and reference triplestore export.
+            Extended Matrix is being developed (2025–2029) within the
+            <strong>StratiGraph</strong> project, funded under the
+            <a href="https://www.eccch.eu" target="_blank" rel="noopener">European Collaborative Cloud for Cultural Heritage (ECCCH)</a>.
+            StratiGraph hardens EM as shared infrastructure: governance,
+            versioning, validation suite, and reference triplestore export.
           </p>
         </article>
       </div>
@@ -364,6 +436,12 @@ const partnerLogos = allPartners
         first fully downloadable case study (the Great Temple of
         Sarmizegetusa) is being prepared, alongside a dedicated deposit
         protocol.
+      </p>
+      <p class="opendata__lede">
+        <strong>Coming soon:</strong> each released case study will be
+        published as a versioned dataset on Zenodo and cited by an
+        accompanying data paper in <em>Heritage</em> (MDPI), so the
+        underlying evidence stays as citable as the reconstruction itself.
       </p>
       <a href="https://zenodo.org/communities/extendedmatrix" class="btn btn-ghost" target="_blank" rel="noopener">
         Browse the EM Zenodo community →
@@ -783,6 +861,106 @@ const partnerLogos = allPartners
   .usedby__more a { color: var(--em-gold); font-weight: 600; }
   .usedby__empty { color: var(--em-text-muted); font-style: italic; }
 
+  /* ── Purpose (For archaeologists) ───────────────────────── */
+  .purpose {
+    background: var(--em-bg);
+    padding: 72px 0;
+    border-bottom: 1px solid var(--em-border);
+  }
+  .purpose__inner {
+    max-width: 780px;
+  }
+  .purpose__title {
+    margin: 12px 0 18px;
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+    line-height: 1.15;
+    color: var(--em-navy);
+  }
+  .purpose__lede {
+    color: var(--em-text);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+  .purpose__lede em {
+    font-style: italic;
+    color: var(--em-navy);
+    font-weight: 600;
+  }
+  .purpose__cta {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+
+  /* ── Live Heriverse embed ──────────────────────────────── */
+  .live {
+    background: var(--em-navy);
+    color: var(--em-bg);
+    padding: 72px 0;
+  }
+  .live :global(.tag) {
+    color: var(--em-gold);
+    background: rgba(184, 137, 58, 0.15);
+    border: 1px solid rgba(184, 137, 58, 0.4);
+  }
+  .live__title {
+    margin: 12px 0 16px;
+    color: var(--em-bg);
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+    line-height: 1.15;
+  }
+  .live__lede {
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 720px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+  .live__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+  }
+  .live__frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+  .live__meta {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .live__meta :global(.btn-ghost) {
+    align-self: flex-start;
+    color: var(--em-bg);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  .live__meta :global(.btn-ghost:hover) {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--em-bg);
+    border-color: var(--em-bg);
+  }
+  .live__note {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+    line-height: 1.65;
+    max-width: 720px;
+    margin: 0;
+  }
+  .live__note a { color: var(--em-gold); font-weight: 600; }
+  .live__note strong { color: var(--em-gold); font-weight: 700; }
+
   /* ── Responsive ─────────────────────────────────────────── */
   @media (max-width: 900px) {
     .hero__inner { grid-template-columns: 1fr; }
@@ -795,5 +973,8 @@ const partnerLogos = allPartners
   @media (max-width: 520px) {
     .framework__grid { grid-template-columns: 1fr; }
     .usedby__strip { gap: 16px 24px; font-size: 14px; }
+    .hero { padding: 64px 0 56px; }
+    .purpose { padding: 56px 0; }
+    .live { padding: 56px 0; }
   }
 </style>

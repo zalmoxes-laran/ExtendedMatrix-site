@@ -11,7 +11,21 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         Extended<span class="em-nav__wordmark-emph">Matrix</span>
       </span>
     </a>
-    <ul class="em-nav__links">
+
+    <button
+      type="button"
+      class="em-nav__burger"
+      aria-label="Open menu"
+      aria-expanded="false"
+      aria-controls="em-nav-menu"
+      data-em-burger
+    >
+      <span class="em-nav__burger-bar"></span>
+      <span class="em-nav__burger-bar"></span>
+      <span class="em-nav__burger-bar"></span>
+    </button>
+
+    <ul id="em-nav-menu" class="em-nav__links" data-em-menu>
       <li><a href={`${B}/start`}>Start</a></li>
       <li><a href={`${B}/download`}>Download</a></li>
       <li><a href={`${B}/projects`}>Projects</a></li>
@@ -26,6 +40,36 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     </ul>
   </div>
 </nav>
+
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('[data-em-burger]');
+  const menu = document.querySelector<HTMLUListElement>('[data-em-menu]');
+  if (burger && menu) {
+    const close = () => {
+      burger.setAttribute('aria-expanded', 'false');
+      menu.classList.remove('is-open');
+      document.body.classList.remove('em-nav-locked');
+    };
+    burger.addEventListener('click', () => {
+      const open = burger.getAttribute('aria-expanded') === 'true';
+      if (open) {
+        close();
+      } else {
+        burger.setAttribute('aria-expanded', 'true');
+        menu.classList.add('is-open');
+        document.body.classList.add('em-nav-locked');
+      }
+    });
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  }
+</script>
+
+<style is:global>
+  body.em-nav-locked { overflow: hidden; }
+</style>
 
 <style>
   .em-nav {
@@ -62,11 +106,46 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .em-nav__wordmark-emph {
     font-weight: 400;
   }
+
+  .em-nav__burger {
+    display: none;
+    background: transparent;
+    border: 0;
+    padding: 10px;
+    margin-right: -10px;
+    cursor: pointer;
+    width: 44px;
+    height: 44px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+  .em-nav__burger-bar {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--em-navy);
+    border-radius: 2px;
+    transition: transform 0.2s var(--ease), opacity 0.2s var(--ease);
+  }
+  .em-nav__burger[aria-expanded="true"] .em-nav__burger-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .em-nav__burger[aria-expanded="true"] .em-nav__burger-bar:nth-child(2) {
+    opacity: 0;
+  }
+  .em-nav__burger[aria-expanded="true"] .em-nav__burger-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
   .em-nav__links {
     display: flex;
     gap: 28px;
     list-style: none;
     align-items: center;
+    margin: 0;
+    padding: 0;
   }
   .em-nav__links a {
     font-size: 14px;
@@ -85,8 +164,49 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     background: var(--em-gold);
     color: var(--em-bg) !important;
   }
-  @media (max-width: 700px) {
-    .em-nav__links { gap: 18px; }
-    .em-nav__links li:nth-child(3) { display: none; }
+
+  @media (max-width: 768px) {
+    .em-nav__burger { display: inline-flex; }
+    .em-nav__links {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--em-navy);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      padding: 8px 0 32px;
+      transform: translateX(100%);
+      transition: transform 0.25s var(--ease);
+      overflow-y: auto;
+    }
+    .em-nav__links.is-open { transform: translateX(0); }
+    .em-nav__links li { width: 100%; }
+    .em-nav__links a {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      font-size: 17px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .em-nav__links a:hover {
+      color: var(--em-gold);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .em-nav__cta {
+      background: transparent;
+      color: var(--em-gold) !important;
+      border: 0;
+      padding: 16px 24px;
+      border-radius: 0;
+    }
+    .em-nav__cta:hover {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--em-gold) !important;
+    }
   }
 </style>
