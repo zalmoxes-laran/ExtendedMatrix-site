@@ -902,6 +902,21 @@ const partnerLogos = allPartners
   }
   .live__note a { color: var(--em-gold); font-weight: 600; }
   .live__note strong { color: var(--em-gold); font-weight: 700; }
+  /* In-prose links inside the navy lede — readable in default state,
+     bloom into gold on hover (same delight as elsewhere). */
+  .live__lede a {
+    color: var(--em-bg);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(184, 137, 58, 0.55);
+    transition: color 0.2s var(--ease), text-decoration-color 0.2s var(--ease);
+  }
+  .live__lede a:hover {
+    color: var(--em-gold);
+    text-decoration-color: var(--em-gold);
+  }
 
   /* ── Responsive ─────────────────────────────────────────── */
   @media (max-width: 900px) {
