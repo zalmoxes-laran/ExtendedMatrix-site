@@ -1,7 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import logoMark from '../assets/logo_mark.svg';
+import home3dViewport from '../assets/home/3d-viewport-proxies.png';
+import homeEmGraph from '../assets/home/em-graph.png';
+import homeStratigraphyTree from '../assets/home/stratigraphy-tree.png';
+import homeHeriverse from '../assets/home/heriverse-collaborative.png';
 
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -106,85 +111,29 @@ const partnerLogos = allPartners
       <div class="practice__grid">
         <figure class="screen">
           <div class="screen__chrome">3D viewport — proxies on photogrammetric model</div>
-          <div class="screen__body screen__body--3d">
-            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-              <!-- ground / mesh hint -->
-              <rect width="200" height="130" fill="#f5f0e6" />
-              <path d="M0,90 Q50,72 100,82 T200,86 L200,130 L0,130 Z" fill="#d6c9a8" />
-              <path d="M0,98 Q60,86 120,92 T200,94 L200,130 L0,130 Z" fill="#b89e75" opacity="0.85" />
-              <!-- semi-transparent proxies -->
-              <rect x="46" y="50" width="36" height="46" fill="#1a2845" fill-opacity="0.28" stroke="#1a2845" stroke-width="1"/>
-              <rect x="92" y="36" width="42" height="60" fill="#b8893a" fill-opacity="0.32" stroke="#b8893a" stroke-width="1"/>
-              <rect x="142" y="56" width="34" height="40" fill="#1a2845" fill-opacity="0.28" stroke="#1a2845" stroke-width="1"/>
-              <text x="64" y="76" text-anchor="middle" font-size="9" fill="#1a2845" font-family="monospace">US.001</text>
-              <text x="113" y="70" text-anchor="middle" font-size="9" fill="#b8893a" font-family="monospace">USV.002</text>
-              <text x="159" y="80" text-anchor="middle" font-size="9" fill="#1a2845" font-family="monospace">US.003</text>
-            </svg>
+          <div class="screen__body screen__body--img">
+            <Image src={home3dViewport} alt="Blender 3D viewport showing semi-transparent proxy boxes overlaid on a photogrammetric model" widths={[480, 800, 1200]} sizes="(min-width: 980px) 50vw, 100vw" />
           </div>
         </figure>
 
         <figure class="screen">
           <div class="screen__chrome">EM graph — yEd / Graph Editor</div>
-          <div class="screen__body screen__body--graph">
-            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-              <rect width="200" height="130" fill="#fafaf7"/>
-              <!-- edges -->
-              <line x1="40" y1="34" x2="100" y2="60" stroke="#5a6b7a" stroke-width="1.2"/>
-              <line x1="100" y1="60" x2="160" y2="36" stroke="#5a6b7a" stroke-width="1.2" stroke-dasharray="3,2"/>
-              <line x1="100" y1="60" x2="40" y2="92" stroke="#5a6b7a" stroke-width="1.2"/>
-              <line x1="100" y1="60" x2="160" y2="92" stroke="#5a6b7a" stroke-width="1.2"/>
-              <line x1="40" y1="92" x2="160" y2="92" stroke="#5a6b7a" stroke-width="1.2"/>
-              <!-- nodes -->
-              <rect x="22" y="22" width="36" height="20" fill="#fff" stroke="#1a2845" stroke-width="1.5" rx="3"/>
-              <text x="40" y="35" text-anchor="middle" font-size="9" fill="#1a2845" font-weight="700">US.001</text>
-              <rect x="142" y="24" width="36" height="20" fill="#fff" stroke="#b8893a" stroke-width="1.5" stroke-dasharray="3,2" rx="3"/>
-              <text x="160" y="37" text-anchor="middle" font-size="9" fill="#b8893a" font-weight="700">USV.002</text>
-              <circle cx="100" cy="60" r="10" fill="#b8893a" stroke="#b8893a"/>
-              <text x="100" y="63" text-anchor="middle" font-size="8" fill="#fff" font-weight="700">PD</text>
-              <rect x="22" y="80" width="36" height="20" fill="#fff" stroke="#1a2845" stroke-width="1.5" rx="3"/>
-              <text x="40" y="93" text-anchor="middle" font-size="9" fill="#1a2845" font-weight="700">DOC</text>
-              <rect x="142" y="80" width="36" height="20" fill="#fff" stroke="#1a2845" stroke-width="1.5" rx="3"/>
-              <text x="160" y="93" text-anchor="middle" font-size="9" fill="#1a2845" font-weight="700">EXT</text>
-            </svg>
+          <div class="screen__body screen__body--img">
+            <Image src={homeEmGraph} alt="Extended Matrix graph in yEd showing stratigraphic units, properties and document nodes connected by typed edges" widths={[480, 800, 1200]} sizes="(min-width: 980px) 50vw, 100vw" />
           </div>
         </figure>
 
         <figure class="screen">
           <div class="screen__chrome">Stratigraphy data tree — Blender side panel</div>
-          <div class="screen__body screen__body--tree">
-            <div class="tree">
-              <div class="tree__row"><span class="tree__chev">▾</span><span class="tree__label">site_a / phase 1</span></div>
-              <div class="tree__row tree__row--indent"><span class="tree__chev">▸</span><span class="tree__label">US.001 — wall foundation</span></div>
-              <div class="tree__row tree__row--indent"><span class="tree__chev">▾</span><span class="tree__label">USV.002 — superstructure</span></div>
-              <div class="tree__row tree__row--indent2"><span class="tree__pill tree__pill--doc">DOC</span><span class="tree__label">photographs · 2008</span></div>
-              <div class="tree__row tree__row--indent2"><span class="tree__pill tree__pill--ext">EXT</span><span class="tree__label">tpq from coin</span></div>
-              <div class="tree__row tree__row--indent2"><span class="tree__pill tree__pill--prop">PROP</span><span class="tree__label">dating · 2nd c. CE</span></div>
-              <div class="tree__row tree__row--indent"><span class="tree__chev">▸</span><span class="tree__label">US.003 — collapse layer</span></div>
-            </div>
+          <div class="screen__body screen__body--img">
+            <Image src={homeStratigraphyTree} alt="EMtools side panel in Blender showing the stratigraphic data tree of US, USV, documents, extractions and properties" widths={[480, 800, 1200]} sizes="(min-width: 980px) 50vw, 100vw" />
           </div>
         </figure>
 
         <figure class="screen">
           <div class="screen__chrome">Heriverse — collaborative web scene</div>
-          <div class="screen__body screen__body--web">
-            <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg">
-              <rect width="200" height="130" fill="#0f1a2e"/>
-              <!-- horizon -->
-              <rect y="80" width="200" height="50" fill="#1a2845"/>
-              <!-- 3D building silhouette -->
-              <polygon points="60,40 60,80 140,80 140,40 100,18" fill="#b8893a" fill-opacity="0.85"/>
-              <rect x="74" y="56" width="10" height="24" fill="#0f1a2e"/>
-              <rect x="116" y="56" width="10" height="24" fill="#0f1a2e"/>
-              <!-- paradata pop-up -->
-              <rect x="138" y="22" width="54" height="24" fill="#fff" stroke="#b8893a" stroke-width="1" rx="2"/>
-              <text x="143" y="32" font-size="7" fill="#1a2845" font-family="monospace">USV.002</text>
-              <text x="143" y="40" font-size="6" fill="#5a6b7a" font-family="monospace">DOC · EXT · PROP</text>
-              <line x1="138" y1="34" x2="120" y2="42" stroke="#b8893a" stroke-width="1"/>
-              <!-- collaborator cursors -->
-              <circle cx="48" cy="100" r="4" fill="#b8893a"/>
-              <circle cx="170" cy="108" r="4" fill="#fff"/>
-              <text x="180" y="120" font-size="7" fill="#fff" font-family="monospace">2 viewers</text>
-            </svg>
+          <div class="screen__body screen__body--img">
+            <Image src={homeHeriverse} alt="Heriverse web scene with a 3D reconstruction, paradata pop-up and collaborator cursors" widths={[480, 800, 1200]} sizes="(min-width: 980px) 50vw, 100vw" />
           </div>
         </figure>
       </div>
@@ -720,39 +669,15 @@ const partnerLogos = allPartners
     background: var(--em-bg-warm);
     letter-spacing: 0.02em;
   }
-  .screen__body { padding: 14px; }
-  .screen__body--3d, .screen__body--graph, .screen__body--web { padding: 0; }
-  .screen__body--3d svg, .screen__body--graph svg, .screen__body--web svg {
+  .screen__body { padding: 0; }
+  .screen__body--img img {
     display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: center;
   }
-  .tree {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    line-height: 2;
-    padding: 6px 12px;
-  }
-  .tree__row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--em-text);
-  }
-  .tree__row--indent { padding-left: 18px; }
-  .tree__row--indent2 { padding-left: 36px; }
-  .tree__chev { color: var(--em-text-muted); width: 10px; }
-  .tree__pill {
-    display: inline-block;
-    padding: 1px 8px;
-    border-radius: 2px;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-  }
-  .tree__pill--doc  { background: var(--em-navy-tint); color: var(--em-navy); }
-  .tree__pill--ext  { background: var(--em-gold-tint); color: var(--em-gold); }
-  .tree__pill--prop { background: var(--em-navy-tint); color: var(--em-navy-soft); }
 
   /* ── Modular ───────────────────────────────────────────── */
   .modular__title { margin: 12px 0 18px; }
