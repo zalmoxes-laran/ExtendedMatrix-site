@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -34,8 +35,19 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     <div class="container">
       <a href={`${B}/tools/`} class="tp__back">← All tools</a>
       <div class="tp__head">
-        <h1 class="tp__title">{tool.data.name}</h1>
-        <span class={`tp__status tp__status--${tool.data.status}`}>{tool.data.status}</span>
+        {tool.data.icon && (
+          <Image
+            src={tool.data.icon}
+            alt={`${tool.data.name} logo`}
+            widths={[96, 192]}
+            sizes="96px"
+            class="tp__icon"
+          />
+        )}
+        <div class="tp__head-text">
+          <h1 class="tp__title">{tool.data.name}</h1>
+          <span class={`tp__status tp__status--${tool.data.status}`}>{tool.data.status}</span>
+        </div>
       </div>
       <div class="tp__role">{tool.data.role}</div>
       {tool.data.roles.length > 0 && (
@@ -128,7 +140,17 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 <style>
   .tp { padding: 60px 0 80px; }
   .tp__back { display: inline-block; font-size: 13px; color: var(--em-text-muted); margin-bottom: 16px; }
-  .tp__head { display: flex; align-items: baseline; gap: 14px; margin-top: 12px; }
+  .tp__head { display: flex; align-items: center; gap: 18px; margin-top: 12px; }
+  .tp__head-text { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+  .tp__icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    flex: 0 0 auto;
+  }
   .tp__title { margin: 0; }
   .tp__status {
     font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;

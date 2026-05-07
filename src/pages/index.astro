@@ -7,6 +7,7 @@ import home3dViewport from '../assets/home/3d-viewport-proxies.png';
 import homeEmGraph from '../assets/home/em-graph.png';
 import homeStratigraphyTree from '../assets/home/stratigraphy-tree.png';
 import homeHeriverse from '../assets/home/heriverse-collaborative.png';
+import heriverseLogo from '../assets/tools/heriverse.png';
 
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -253,13 +254,22 @@ const partnerLogos = allPartners
             graphs.
           </p>
         </a>
-        <a href={`${B}/tools/heriverse/`} class="card">
-          <div class="card__name">Heriverse</div>
-          <div class="card__role">Web platform</div>
-          <p class="card__desc">
-            Heritage Science Metaverse — paradata pop-ups, epoch switching,
-            collaborative VR for EM-aware scenes.
-          </p>
+        <a href={`${B}/tools/heriverse/`} class="card card--with-icon">
+          <Image
+            src={heriverseLogo}
+            alt=""
+            widths={[48, 96]}
+            sizes="40px"
+            class="card__icon"
+          />
+          <div class="card__body">
+            <div class="card__name">Heriverse</div>
+            <div class="card__role">Web platform</div>
+            <p class="card__desc">
+              Heritage Science Metaverse — paradata pop-ups, epoch switching,
+              collaborative VR for EM-aware scenes.
+            </p>
+          </div>
         </a>
         <a href={`${B}/tools/3dsc/`} class="card">
           <div class="card__name">3DSC</div>
@@ -612,6 +622,21 @@ const partnerLogos = allPartners
     transform: translateY(-2px);
     text-decoration: none;
     box-shadow: 0 4px 18px rgba(26, 40, 69, 0.08);
+  }
+  .card--with-icon {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .card--with-icon .card__body { flex: 1 1 auto; min-width: 0; }
+  .card__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    flex: 0 0 auto;
   }
   .card__name {
     font-family: var(--font-display);
