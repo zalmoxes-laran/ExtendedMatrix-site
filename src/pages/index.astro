@@ -16,6 +16,17 @@ const allPartners = await getCollection('partners');
 const partnerLogos = allPartners
   .filter((p) => p.data.logo)
   .sort((a, b) => a.data.order - b.data.order);
+
+// Load the 3 most recent (non-draft) news posts for the homepage strip.
+// Sorted by date DESC; each item is a small card with date, title, excerpt
+// and optional cover.
+const latestNews = (await getCollection('news'))
+  .filter((n) => !n.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 3);
+
+const fmtNewsDate = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
 ---
 
 <BaseLayout title="Extended Matrix">
@@ -282,6 +293,53 @@ const partnerLogos = allPartners
       </div>
     </div>
   </section>
+
+  <!-- ============ LATEST NEWS ============ -->
+  {latestNews.length > 0 && (
+    <section class="newsstrip">
+      <div class="container">
+        <div class="newsstrip__head">
+          <div>
+            <span class="tag">Latest news</span>
+            <h2 class="newsstrip__title">What's happening in the project.</h2>
+          </div>
+          <a href={`${B}/news`} class="newsstrip__all">All news →</a>
+        </div>
+
+        <ul class="newsstrip__grid">
+          {latestNews.map((n) => (
+            <li class="ncard">
+              <a href={`${B}/news/${n.id.replace(/\.md$/, '')}/`} class="ncard__link">
+                {n.data.cover && (
+                  <div class="ncard__cover">
+                    <Image
+                      src={n.data.cover}
+                      alt={n.data.coverAlt || ''}
+                      widths={[320, 480, 640]}
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div class="ncard__body">
+                  <div class="ncard__date">{fmtNewsDate(n.data.date)}</div>
+                  <h3 class="ncard__title">{n.data.title}</h3>
+                  <p class="ncard__excerpt">{n.data.excerpt}</p>
+                  {n.data.tags && n.data.tags.length > 0 && (
+                    <div class="ncard__tags">
+                      {n.data.tags.slice(0, 3).map((t) => (
+                        <span class="ncard__tag">{t}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
 
   <!-- ============ MODULAR ============ -->
   <section class="modular">
@@ -943,6 +1001,102 @@ const partnerLogos = allPartners
     text-decoration-color: var(--em-gold);
   }
 
+  /* ── Latest news strip ─────────────────────────────────── */
+  .newsstrip {
+    background: var(--em-bg-warm);
+    border-block: 1px solid var(--em-border);
+    padding: 72px 0;
+  }
+  .newsstrip__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .newsstrip__title {
+    margin: 12px 0 0;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.2;
+  }
+  .newsstrip__all {
+    color: var(--em-gold);
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .newsstrip__all:hover { text-decoration: underline; }
+  .newsstrip__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .ncard {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    overflow: hidden;
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .ncard:hover {
+    border-color: var(--em-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 18px rgba(26, 40, 69, 0.08);
+  }
+  .ncard__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    color: inherit;
+  }
+  .ncard__link:hover { text-decoration: none; }
+  .ncard__cover {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: var(--em-bg-warm);
+  }
+  .ncard__cover :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .ncard__body { padding: 18px 20px 20px; }
+  .ncard__date {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em-text-muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .ncard__title {
+    font-family: var(--font-display);
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--em-navy);
+    margin: 0 0 8px;
+  }
+  .ncard__excerpt {
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--em-text-muted);
+    margin: 0 0 12px;
+  }
+  .ncard__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .ncard__tag {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    padding: 3px 8px;
+    border-radius: 999px;
+  }
+
   /* ── Responsive ─────────────────────────────────────────── */
   @media (max-width: 900px) {
     .hero__inner { grid-template-columns: 1fr; }
@@ -951,6 +1105,7 @@ const partnerLogos = allPartners
     .framework__grid { grid-template-columns: repeat(2, 1fr); }
     .practice__grid { grid-template-columns: 1fr; }
     .standards__grid { grid-template-columns: 1fr; }
+    .newsstrip__grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 520px) {
     .framework__grid { grid-template-columns: 1fr; }
@@ -958,5 +1113,8 @@ const partnerLogos = allPartners
     .hero { padding: 64px 0 56px; }
     .purpose { padding: 56px 0; }
     .live { padding: 56px 0; }
+    .newsstrip { padding: 56px 0; }
+    .newsstrip__grid { grid-template-columns: 1fr; }
+    .newsstrip__head { flex-direction: column; align-items: flex-start; gap: 8px; }
   }
 </style>
