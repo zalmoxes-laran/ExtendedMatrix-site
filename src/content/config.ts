@@ -242,6 +242,11 @@ const tools = defineCollection({
       docsUrl: z.string().url().optional(),
       repoUrl: z.string().url().optional(),
       downloadUrl: z.string().url().optional(),
+      // Bundled artifact served from /public/templates/ (e.g. an empty XLSX
+      // template). When set, the tool page renders an extra "Download
+      // template" button that resolves to ${BASE_URL}/templates/<file>,
+      // base-aware across dev / GitHub Pages / production domain.
+      templateFile: z.string().optional(),
       licence: z.string().default('GPL-3.0'),
       status: z.enum(['stable', 'beta', 'alpha', 'planned']).default('stable'),
       // Roles a tool serves — drives badges on the tools page and the

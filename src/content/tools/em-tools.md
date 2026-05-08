@@ -4,7 +4,7 @@ role: "Blender add-on"
 summary: "Connect an Extended Matrix graph to 3D content inside Blender. Browse stratigraphic units, link proxies, drive visualisation by epoch and property, export to Heriverse and CSV."
 docsUrl: "https://docs.extendedmatrix.org/projects/EM-tools/en/latest/"
 repoUrl: "https://github.com/zalmoxes-laran/EM-blender-tools"
-downloadUrl: "https://github.com/zalmoxes-laran/EM-blender-tools/releases"
+downloadUrl: "https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest"
 licence: "GPL-3.0"
 status: stable
 roles: [archaeologist, modeller]

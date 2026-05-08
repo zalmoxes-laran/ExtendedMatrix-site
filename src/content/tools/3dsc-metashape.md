@@ -4,7 +4,7 @@ role: "Survey pipeline (Metashape)"
 summary: "Companion to 3DSC that runs the photogrammetric processing inside Agisoft Metashape — chunk management, alignment, mesh generation, texture baking, ready for the LOD step in 3DSC for Blender."
 docsUrl: "https://docs.extendedmatrix.org/projects/3DSC/en/latest/"
 repoUrl: "https://github.com/zalmoxes-laran/3DSC_Metashape"
-downloadUrl: "https://github.com/zalmoxes-laran/3DSC_Metashape/releases"
+downloadUrl: "https://github.com/zalmoxes-laran/3DSC_Metashape/releases/latest"
 licence: "GPL-3.0"
 status: stable
 roles: [modeller]

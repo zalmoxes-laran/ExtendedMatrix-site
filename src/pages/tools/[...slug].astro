@@ -62,21 +62,34 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- ── Quick links ─────────────────────────────────────── -->
       {(() => {
-        // Build the "Download latest" URL — prefer GitHub /releases/latest
-        // (which redirects to the most recent tagged release), then any
-        // explicit downloadUrl from the frontmatter as a fallback.
+        // Build the "Download latest" URL — prefer the explicit downloadUrl
+        // from the frontmatter (e.g. a raw file URL or a /releases/latest
+        // pinned link), then auto-derive /releases/latest from the repoUrl
+        // as a fallback for tools that don't bother setting it.
         let latestDownload: string | undefined;
-        if (tool.data.repoUrl && tool.data.repoUrl.includes('github.com')) {
-          latestDownload = tool.data.repoUrl.replace(/\/$/, '') + '/releases/latest';
-        } else if (tool.data.downloadUrl) {
+        if (tool.data.downloadUrl) {
           latestDownload = tool.data.downloadUrl;
+        } else if (tool.data.repoUrl && tool.data.repoUrl.includes('github.com')) {
+          latestDownload = tool.data.repoUrl.replace(/\/$/, '') + '/releases/latest';
         }
+        // Bundled template artifact (XLSX, etc.) served from /public/templates/.
+        // Use BASE_URL so the link is correct in dev, on GitHub Pages, and in
+        // production — Astro markdown does not auto-prefix root-relative
+        // links, hence resolving the URL here in the layout.
+        const templateHref = tool.data.templateFile
+          ? `${B}/templates/${tool.data.templateFile}`
+          : undefined;
         return (
           <>
             <div class="tp__links">
               {latestDownload && (
                 <a href={latestDownload} target="_blank" rel="noopener" class="tp__btn">
                   ⬇ Download latest
+                </a>
+              )}
+              {templateHref && (
+                <a href={templateHref} class="tp__btn" download>
+                  ⬇ Download template
                 </a>
               )}
               {tool.data.docsUrl && <a href={tool.data.docsUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">Manual ↗</a>}

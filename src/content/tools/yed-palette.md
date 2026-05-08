@@ -3,7 +3,7 @@ name: "EM palette for yEd"
 role: "Graph editor extension"
 summary: "The EM palette adds the Extended Matrix typed nodes to yEd — the free graph editor used to author GraphML files. The starting point for anyone who wants to draw an EM by hand."
 repoUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix"
-downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix"
+downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/raw/main/02_ExtendedMatrix_palette/Extended%20Matrix%20palette%20v.1.5.graphml.zip"
 licence: "GPL-3.0"
 status: stable
 roles: [archaeologist]
