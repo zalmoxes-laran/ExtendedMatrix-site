@@ -4,7 +4,7 @@ role: "Bibliographic & archival source registry"
 summary: "Project-level XLSX template that registers every bibliographic and archival source behind an EM project. Document nodes in the graph cite it via stable D.NN ids. Stable since EM 1.3, valid for EM 1.4/1.5; a revised two-sheet schema is in preparation for EM 1.6 (DP-58)."
 docsUrl: "https://docs.extendedmatrix.org/en/latest/source_node.html#source-list-schema"
 repoUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix"
-downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/raw/main/03_Sources_list/source_list_template_v1.3.xlsx"
+downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/raw/main/03_Sources_list/sources_list%20v.1.3.2.xlsx"
 licence: "GPL-3.0"
 status: stable
 roles: [archaeologist]
@@ -65,13 +65,14 @@ Full column reference and worked example: see
 ## Get the template
 
 Use the **Download latest** button at the top of this page — it
-fetches `source_list_template_v1.3.xlsx` directly from the
+fetches `sources_list v.1.3.2.xlsx` directly from the
 [ExtendedMatrix repository](https://github.com/zalmoxes-laran/ExtendedMatrix/tree/main/03_Sources_list).
-The version suffix tracks the **schema** version, not the EM language
-version: the same 1.3 template is the supported one for EM 1.3, 1.4
-and 1.5 — the schema simply did not change across those releases.
-When EM 1.6 ships its revised two-sheet schema, a separate
-`source_list_template_v1.6.xlsx` will appear alongside (see
+The legacy filename is kept stable so download links across all the
+version-tagged docs and external references keep working: the same
+1.3 template is the supported artefact for EM 1.3, 1.4 and 1.5 — the
+schema simply did not change across those releases. When EM 1.6 ships
+its revised two-sheet schema, a separate file with a cleaner naming
+convention will appear alongside (see
 [DP-58](https://docs.extendedmatrix.org/projects/development-projects/)).
 
 The file is shipped as a **populated template**: 972 real entries from
