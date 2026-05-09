@@ -174,6 +174,14 @@ const versions = defineCollection({
         'legacy',
         'eol',
       ]),
+      // Preference flag — when multiple versions share a stable/LTS status
+      // (e.g. an outgoing LTS still supported alongside the new LTS),
+      // mark the one that should be presented as the default starting point
+      // for new projects. The download chooser and versions index use this
+      // to drive a "Start here" badge / accent. At most one version should
+      // carry `is_preferred: true` at any time. Optional, defaults to false
+      // so existing version files keep building unchanged.
+      is_preferred: z.boolean().default(false),
       releaseDate: z.coerce.date().optional(),
       eolDate: z.coerce.date().optional(),
       blenderMin: z.string().optional(),    // "4.4"

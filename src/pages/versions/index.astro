@@ -32,24 +32,37 @@ const statusLabel: Record<string, string> = {
       </p>
 
       <ul class="vlist">
-        {all.map((v) => (
-          <li class={`v v--${v.data.status}`}>
-            <a href={`${B}/versions/${v.id.replace(/\.md$/, '')}/`}>
-              <div class="v__head">
-                <span class="v__num">EM {v.data.version}</span>
-                <span class={`v__status v__status--${v.data.status}`}>{statusLabel[v.data.status]}</span>
-              </div>
-              <h2 class="v__title">{v.data.title}</h2>
-              <p class="v__summary">{v.data.summary}</p>
-              <ul class="v__meta">
-                {v.data.releaseDate && <li>Released {v.data.releaseDate.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</li>}
-                {v.data.blenderMin && <li>Blender {v.data.blenderMin}{v.data.blenderLts ? ' LTS' : '+'}</li>}
-                {v.data.eolDate && <li>EOL {v.data.eolDate.getFullYear()}</li>}
-                {v.data.supersededBy && <li>Superseded by {v.data.supersededBy}</li>}
-              </ul>
-            </a>
-          </li>
-        ))}
+        {all.map((v) => {
+          // A non-preferred LTS is still LTS for support purposes, but
+          // for new projects the preferred line is the right entry
+          // point. Surface that distinction in the status pill.
+          const isPreferred = v.data.is_preferred === true;
+          const statusText =
+            v.data.status === 'lts' && !isPreferred
+              ? 'Legacy LTS'
+              : statusLabel[v.data.status];
+          return (
+            <li class={`v v--${v.data.status}${isPreferred ? ' v--preferred' : ''}`}>
+              <a href={`${B}/versions/${v.id.replace(/\.md$/, '')}/`}>
+                <div class="v__head">
+                  <span class="v__num">EM {v.data.version}</span>
+                  <span class={`v__status v__status--${v.data.status}`}>{statusText}</span>
+                  {isPreferred && (
+                    <span class="v__starthere">Start here</span>
+                  )}
+                </div>
+                <h2 class="v__title">{v.data.title}</h2>
+                <p class="v__summary">{v.data.summary}</p>
+                <ul class="v__meta">
+                  {v.data.releaseDate && <li>Released {v.data.releaseDate.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</li>}
+                  {v.data.blenderMin && <li>Blender {v.data.blenderMin}{v.data.blenderLts ? ' LTS' : '+'}</li>}
+                  {v.data.eolDate && <li>EOL {v.data.eolDate.getFullYear()}</li>}
+                  {v.data.supersededBy && <li>Superseded by {v.data.supersededBy}</li>}
+                </ul>
+              </a>
+            </li>
+          );
+        })}
       </ul>
     </div>
   </section>
@@ -86,6 +99,12 @@ const statusLabel: Record<string, string> = {
   .v--stable { border-left-color: #5a9a5a; }
   .v--legacy { border-left-color: #aaa; }
   .v--eol { border-left-color: #c44; opacity: 0.7; }
+  /* Preferred — subtle gold inset so the recommended starting point
+     is unambiguous without overpowering the others. */
+  .v--preferred {
+    box-shadow: 0 0 0 1px var(--em-gold-tint) inset;
+    background: linear-gradient(90deg, var(--em-gold-tint) 0%, var(--em-bg) 28%);
+  }
   .v__head {
     display: flex;
     align-items: center;
@@ -111,6 +130,24 @@ const statusLabel: Record<string, string> = {
   .v__status--stable     { color: #2c5a2c; background: #d8ecd8; }
   .v__status--legacy     { color: #555;    background: #eee; }
   .v__status--eol        { color: #a22;    background: #fae0e0; }
+  /* Non-preferred LTS gets a calmer pill — same shape as the legacy
+     pill so the visual hierarchy reads "preferred LTS > legacy LTS". */
+  .v--lts:not(.v--preferred) .v__status--lts {
+    color: #6b6b6b;
+    background: #efefef;
+  }
+  .v__starthere {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--em-bg);
+    background: var(--em-gold);
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
   .v__title {
     font-size: 17px;
     margin: 0 0 6px;

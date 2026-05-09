@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+/**
+ * Ecosystem — third-party tools that consume s3dgraphy.
+ *
+ * This is the consumer-facing surface for *external* software that
+ * has chosen to ground its archaeological data on the EM data model.
+ * It is intentionally distinct from /tools/, which lists the
+ * first-party components of the EM Framework (yEd palette, EM Tools
+ * for Blender, 3DSC, Heriverse, s3dgraphy itself).
+ *
+ * To add a new integration, append an entry to the `integrations`
+ * array below. Keep the description to one line, link the maintainer
+ * to a real GitHub profile or org, and quote the s3dgraphy version
+ * actually consumed (not the latest one).
+ */
+const integrations = [
+  {
+    slug: 'pyarchinit',
+    name: 'PyArchInit',
+    role: 'QGIS plugin',
+    summary:
+      'A single environment for stratigraphic, alphanumeric, multimedia and topographical archaeological data inside QGIS — used by research groups and field operators since 2005.',
+    detail:
+      'PyArchInit consumes s3dgraphy to bridge QGIS-side stratigraphic recording with the Extended Matrix data model: stratigraphic units, relationships and selected paradata authored in PyArchInit can be projected onto a s3dgraphy graph and exchanged with the rest of the Extended Matrix Framework.',
+    s3dgraphyVersion: '0.1.41',
+    s3dgraphyVendoring: 'vendored under ext_libs/s3dgraphy',
+    docsUrl: 'https://pyarchinit-api.readthedocs.io/en/latest/',
+    docsLabel: 'pyarchinit-api.readthedocs.io',
+    repoUrl: 'https://github.com/pyarchinit/pyarchinit',
+    licence: 'GPL-2.0',
+    maintainers: [
+      { name: 'Luca Mandolesi', url: 'https://github.com/pyarchinit' },
+      { name: 'Enzo Cocca', url: 'https://github.com/enzococca', note: 's3dgraphy integration' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="Ecosystem"
+  description="Third-party tools that consume s3dgraphy and the Extended Matrix data model — distinct from the first-party EM Framework components."
+>
+  <section class="eco">
+    <div class="container">
+      <span class="tag">Ecosystem</span>
+      <h1>Tools that consume s3dgraphy.</h1>
+      <p class="eco__sub">
+        Beyond the first-party components of the
+        <a href={`${B}/tools/`}>Extended Matrix Framework</a>, a growing
+        number of <strong>third-party tools</strong> have chosen to
+        ground their archaeological data on the EM data model. This
+        page lists those external integrations — projects whose code
+        and release cycle live outside the EM organisation but whose
+        users benefit from a graph that travels across the framework.
+      </p>
+
+      <p class="eco__audience">
+        The list serves two audiences: researchers evaluating which of
+        their existing tools already speaks EM, and developers
+        considering a similar integration in their own codebase.
+        For the first-party components, see <a href={`${B}/tools/`}>Tools</a>.
+      </p>
+
+      <div class="eco__criteria">
+        <h2>Inclusion criteria</h2>
+        <ul>
+          <li><strong>Public, active repository</strong> under an OSI-approved licence, with maintenance signal in the last twelve months.</li>
+          <li><strong>Non-trivial s3dgraphy usage</strong> — a projector, a roundtrip story, or a sustained consumer of the API rather than a one-off import script.</li>
+          <li><strong>Declared maintenance</strong> with a named maintainer or organisation and a documented integration entry point.</li>
+        </ul>
+      </div>
+
+      <h2 class="eco__listing-h">Listed integrations</h2>
+      <ul class="eco-grid">
+        {integrations.map((it) => (
+          <li class="eco-card">
+            <div class="eco-card__head">
+              <h3 class="eco-card__name">{it.name}</h3>
+              <span class="eco-card__role">{it.role}</span>
+            </div>
+            <p class="eco-card__summary">{it.summary}</p>
+            <p class="eco-card__detail">{it.detail}</p>
+
+            <dl class="eco-card__meta">
+              <div>
+                <dt>Maintained by</dt>
+                <dd>
+                  {it.maintainers.map((m, i) => (
+                    <>
+                      <a href={m.url} target="_blank" rel="noopener">{m.name}</a>{m.note && <span class="eco-card__note"> ({m.note})</span>}{i < it.maintainers.length - 1 && <span> &middot; </span>}
+                    </>
+                  ))}
+                </dd>
+              </div>
+              <div>
+                <dt>s3dgraphy support</dt>
+                <dd><code>{it.s3dgraphyVersion}</code> &middot; {it.s3dgraphyVendoring}</dd>
+              </div>
+              <div>
+                <dt>Integration docs</dt>
+                <dd><a href={it.docsUrl} target="_blank" rel="noopener">{it.docsLabel}</a></dd>
+              </div>
+              <div>
+                <dt>Repository</dt>
+                <dd><a href={it.repoUrl} target="_blank" rel="noopener">{it.repoUrl.replace('https://github.com/', 'github.com/')}</a></dd>
+              </div>
+              <div>
+                <dt>Licence</dt>
+                <dd><code>{it.licence}</code></dd>
+              </div>
+            </dl>
+          </li>
+        ))}
+      </ul>
+
+      <section class="eco__howto">
+        <h2>How to be listed</h2>
+        <p>
+          Maintainers of consumer tools that want to be added to this
+          page are invited to open an issue on the
+          <a href="https://github.com/zalmoxes-laran/s3dgraphy/issues" target="_blank" rel="noopener">s3dgraphy issue tracker</a>
+          with a short <em>integration story</em> covering: tool name,
+          repository URL and licence; a one-line description; the
+          version of s3dgraphy currently consumed and the vendoring or
+          dependency strategy; a pointer to integration documentation;
+          and the maintainer name and contact.
+        </p>
+        <p>
+          The s3dgraphy maintainers will review the request, confirm
+          the soft inclusion criteria, and add the entry on this page
+          and on the corresponding
+          <a href="https://docs.extendedmatrix.org/en/latest/ecosystem.html" target="_blank" rel="noopener">manual page</a>
+          in a subsequent release.
+        </p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .eco { padding: 80px 0 80px; }
+  .eco h1 { margin: 14px 0 16px; }
+  .eco__sub { max-width: 760px; color: var(--em-text); font-size: 17px; margin-bottom: 18px; }
+  .eco__audience { max-width: 760px; color: var(--em-text-muted); font-size: 15px; margin-bottom: 36px; }
+  .eco__audience a { color: var(--em-gold); font-weight: 600; }
+  .eco__sub a { color: var(--em-gold); font-weight: 600; }
+
+  .eco__criteria {
+    background: var(--em-navy-tint);
+    border-left: 3px solid var(--em-navy);
+    padding: 18px 22px;
+    border-radius: var(--radius-md);
+    margin: 0 0 48px;
+    max-width: 760px;
+  }
+  .eco__criteria h2 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--em-navy);
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+  }
+  .eco__criteria ul { margin: 0; padding-left: 18px; color: var(--em-text); font-size: 14px; line-height: 1.65; }
+  .eco__criteria li { margin: 4px 0; }
+  .eco__criteria strong { color: var(--em-navy); }
+
+  .eco__listing-h {
+    font-size: 22px;
+    color: var(--em-navy);
+    margin: 0 0 18px;
+    font-family: var(--font-display);
+  }
+
+  .eco-grid {
+    list-style: none; padding: 0; margin: 0 0 60px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .eco-card {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    padding: 28px 30px;
+    transition: border-color 0.2s var(--ease);
+  }
+  .eco-card:hover { border-color: var(--em-gold); }
+
+  .eco-card__head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 14px;
+  }
+  .eco-card__name {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--em-navy);
+    margin: 0;
+  }
+  .eco-card__role {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--em-gold); font-weight: 700;
+  }
+  .eco-card__summary { font-size: 15px; line-height: 1.6; color: var(--em-text); margin: 0 0 12px; }
+  .eco-card__detail { font-size: 14px; line-height: 1.6; color: var(--em-text-muted); margin: 0 0 18px; }
+
+  .eco-card__meta {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin: 0;
+    padding: 16px 0 0;
+    border-top: 1px solid var(--em-border);
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+  .eco-card__meta > div {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 10px;
+  }
+  .eco-card__meta dt {
+    color: var(--em-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 11px;
+    padding-top: 2px;
+    font-family: var(--font-mono);
+  }
+  .eco-card__meta dd { margin: 0; color: var(--em-text); word-break: break-word; }
+  .eco-card__meta a { color: var(--em-gold); font-weight: 600; }
+  .eco-card__meta code {
+    font-size: 12px;
+    background: var(--em-bg-warm);
+    padding: 1px 6px;
+    border-radius: 3px;
+    border: 1px solid var(--em-border);
+  }
+  .eco-card__note { color: var(--em-text-muted); }
+
+  .eco__howto {
+    margin-top: 24px;
+    max-width: 760px;
+    border-top: 1px solid var(--em-border);
+    padding-top: 28px;
+  }
+  .eco__howto h2 {
+    font-size: 18px;
+    color: var(--em-navy);
+    font-family: var(--font-display);
+    margin: 0 0 12px;
+  }
+  .eco__howto p { font-size: 15px; line-height: 1.65; color: var(--em-text); margin: 0 0 12px; }
+  .eco__howto a { color: var(--em-gold); font-weight: 600; }
+
+  @media (min-width: 800px) {
+    .eco-card__meta > div { grid-template-columns: 200px 1fr; }
+  }
+</style>

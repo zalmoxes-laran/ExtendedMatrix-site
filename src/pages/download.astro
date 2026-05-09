@@ -5,10 +5,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const versions = (await getCollection('versions'))
   .sort((a, b) => b.data.order - a.data.order);
 
+// Preferred — the version we want new projects to start from. Driven by
+// the `is_preferred: true` flag in the version frontmatter, with a
+// graceful fallback to the most recent LTS / stable.
+const preferred = versions.find((v) => v.data.is_preferred)
+  ?? versions.find((v) => v.data.status === 'lts')
+  ?? versions.find((v) => v.data.status === 'stable');
+
+// Legacy LTS — a still-supported LTS line that is no longer preferred
+// for new projects (e.g. 1.4 once 1.5 takes over). May be undefined if
+// only a single LTS line exists.
+const legacyLts = versions.find(
+  (v) => v.data.status === 'lts' && v.id !== preferred?.id,
+);
+
+// Active development line — the next iteration after the preferred LTS.
 const development = versions.find((v) => v.data.status === 'development');
-const lts         = versions.find((v) => v.data.status === 'lts');
-const stable      = versions.find((v) => v.data.status === 'stable');
-const recommended = lts ?? stable ?? development;
 
 const tools = (await getCollection('tools'))
   .sort((a, b) => a.data.order - b.data.order);
@@ -25,42 +37,94 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       <span class="tag">Download</span>
       <h1>Get Extended Matrix.</h1>
       <p class="dl__sub">
-        Two release lines run in parallel. <strong>LTS</strong> is the
-        stable target for production projects — pinned to a specific
-        Blender LTS, supported for years.
-        <strong>Development</strong> is where new features land.
+        Two LTS lines run in parallel — the <strong>preferred</strong>
+        line for new projects, and an outgoing LTS that stays supported
+        so legacy projects can finish on their original combination of
+        Blender + EM. The <strong>development</strong> line is where the
+        next iteration is taking shape.
       </p>
 
       <!-- ── Quick chooser ──────────────────────────────────────── -->
       <div class="chooser">
-        {lts && (
-          <a class="chooser__card chooser__card--lts" href={`${B}/versions/${lts.id.replace(/\.md$/, '')}/`}>
-            <div class="chooser__badge">Recommended · LTS</div>
-            <h2>EM {lts.data.version}</h2>
-            <p>{lts.data.summary}</p>
+        {preferred && (
+          <a class="chooser__card chooser__card--preferred" href={`${B}/versions/${preferred.id.replace(/\.md$/, '')}/`}>
+            <div class="chooser__badge chooser__badge--preferred">Start here · LTS</div>
+            <h2>EM {preferred.data.version}</h2>
+            <p>{preferred.data.summary}</p>
             <ul class="chooser__meta">
-              <li><strong>Blender:</strong> {lts.data.blenderLts ?? lts.data.blenderMin} LTS</li>
-              <li><strong>yEd:</strong> {lts.data.yedRequirement}</li>
-              {lts.data.eolDate && <li><strong>Supported until:</strong> {lts.data.eolDate.getFullYear()}</li>}
+              <li><strong>Blender:</strong> {preferred.data.blenderLts ?? preferred.data.blenderMin}{preferred.data.blenderLts ? ' LTS' : '+'}</li>
+              <li><strong>yEd:</strong> {preferred.data.yedRequirement}</li>
+              {preferred.data.eolDate && <li><strong>Supported until:</strong> {preferred.data.eolDate.getFullYear()}</li>}
             </ul>
-            <span class="chooser__cta">Open the {lts.data.version} page →</span>
+            <span class="chooser__cta">Open the {preferred.data.version} page →</span>
           </a>
         )}
 
-        {development && (
-          <a class="chooser__card chooser__card--dev" href={`${B}/versions/${development.id.replace(/\.md$/, '')}/`}>
-            <div class="chooser__badge">In development</div>
-            <h2>EM {development.data.version}</h2>
-            <p>{development.data.summary}</p>
+        {legacyLts && (
+          <a class="chooser__card chooser__card--legacy" href={`${B}/versions/${legacyLts.id.replace(/\.md$/, '')}/`}>
+            <div class="chooser__badge chooser__badge--legacy">Legacy · LTS</div>
+            <h2>EM {legacyLts.data.version}</h2>
+            <p>{legacyLts.data.summary}</p>
             <ul class="chooser__meta">
-              <li><strong>Blender:</strong> {development.data.blenderMin}+</li>
-              <li><strong>yEd:</strong> {development.data.yedRequirement}</li>
-              <li><strong>Status:</strong> early adopters &amp; testing</li>
+              <li><strong>Blender:</strong> {legacyLts.data.blenderLts ?? legacyLts.data.blenderMin} LTS</li>
+              <li><strong>yEd:</strong> {legacyLts.data.yedRequirement}</li>
+              {legacyLts.data.eolDate && <li><strong>Supported until:</strong> {legacyLts.data.eolDate.getFullYear()}</li>}
             </ul>
-            <span class="chooser__cta">Open the {development.data.version} page →</span>
+            <span class="chooser__cta">Open the {legacyLts.data.version} page →</span>
           </a>
         )}
       </div>
+
+      {/*
+        ── Look-ahead strip ──────────────────────────────────────
+        Compact card for the active development line (1.6+). Visually
+        distinct from the two LTS cards above: smaller, horizontal,
+        with a "rocket leaving the EM hourglass" mark to signal
+        leading-edge work. Links out to the dev tracker for details.
+      */}
+      {development && (
+        <a
+          class="dev-strip"
+          href={development.data.docsUrl ?? `${B}/versions/${development.id.replace(/\.md$/, '')}/`}
+          target={development.data.docsUrl ? '_blank' : undefined}
+          rel={development.data.docsUrl ? 'noopener noreferrer' : undefined}
+        >
+          {/* SVG: a small rocket lifting diagonally out of the EM
+              hourglass mark. Composed in EM palette (navy + gold).
+              Inspired by the EM logo (src/assets/logo_mark.svg) —
+              the hourglass silhouette is rendered faintly as a
+              backdrop and the rocket exits its top funnel. */}
+          <svg class="dev-strip__rocket" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g class="dev-strip__hg" opacity="0.22">
+              <rect x="22" y="40" width="20" height="2.2" fill="var(--em-navy)" />
+              <path d="M 24 42 L 40 42 L 32 56 Z" fill="var(--em-navy)" />
+              <path d="M 32 56 L 24 70 L 40 70 Z" fill="var(--em-navy)" />
+              <rect x="22" y="69.8" width="20" height="2.2" fill="var(--em-navy)" />
+            </g>
+            <g class="dev-strip__r" transform="translate(35 50) rotate(-40)">
+              <circle cx="-4" cy="0" r="2" fill="var(--em-gold)" opacity="0.55" />
+              <circle cx="-10" cy="0" r="1.6" fill="var(--em-gold)" opacity="0.38" />
+              <circle cx="-16" cy="0" r="1.2" fill="var(--em-gold)" opacity="0.22" />
+              <circle cx="-22" cy="0" r="0.8" fill="var(--em-gold)" opacity="0.12" />
+              <path d="M 4 -5 L 0 -9 L 0 -1 Z" fill="var(--em-navy)" />
+              <path d="M 4 5 L 0 9 L 0 1 Z" fill="var(--em-navy)" />
+              <rect x="4" y="-5" width="22" height="10" rx="2" fill="var(--em-navy)" />
+              <circle cx="13" cy="0" r="2.5" fill="var(--em-gold-tint)" stroke="var(--em-gold)" stroke-width="1" />
+              <path d="M 26 -5 L 36 0 L 26 5 Z" fill="var(--em-gold)" />
+            </g>
+          </svg>
+          <div class="dev-strip__body">
+            <div class="dev-strip__head">
+              <span class="dev-strip__title">EM {development.data.version} · in development</span>
+              <span class="dev-strip__arrow">→</span>
+            </div>
+            <p class="dev-strip__sub">
+              Look ahead at upcoming features on the EM development
+              tracker.
+            </p>
+          </div>
+        </a>
+      )}
 
       <p class="dl__all">
         Looking for an older release? See <a href={`${B}/versions/`}>all versions →</a>
@@ -116,23 +180,36 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     transform: translateY(-2px);
     box-shadow: 0 4px 18px rgba(26,40,69,0.08);
   }
-  .chooser__card--lts { border-left: 4px solid var(--em-gold); }
-  .chooser__card--dev { border-left: 4px solid var(--em-navy); }
+  .chooser__card--preferred {
+    border-left: 4px solid var(--em-gold);
+    /* Subtle gold accent so the preferred line is unambiguous without
+       overpowering the legacy card. */
+    box-shadow: 0 0 0 1px var(--em-gold-tint) inset;
+  }
+  .chooser__card--preferred:hover {
+    /* Compose the inset accent with the regular hover lift. */
+    box-shadow:
+      0 0 0 1px var(--em-gold-tint) inset,
+      0 4px 18px rgba(26,40,69,0.08);
+  }
+  .chooser__card--legacy { border-left: 4px solid #aaa; }
   .chooser__badge {
     display: inline-block;
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--em-gold);
-    background: var(--em-gold-tint);
     padding: 3px 10px;
     border-radius: 2px;
     margin-bottom: 12px;
   }
-  .chooser__card--dev .chooser__badge {
-    color: var(--em-navy);
-    background: var(--em-navy-tint);
+  .chooser__badge--preferred {
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+  }
+  .chooser__badge--legacy {
+    color: #555;
+    background: #eee;
   }
   .chooser__card h2 { font-size: 28px; margin: 4px 0 8px; }
   .chooser__card p { color: var(--em-text); margin-bottom: 14px; line-height: 1.6; }
@@ -149,6 +226,71 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--em-gold);
     font-weight: 600;
     font-size: 14px;
+  }
+
+  /* ── Look-ahead strip (1.6 dev) ───────────────────────────── */
+  .dev-strip {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-top: 22px;
+    padding: 14px 22px 14px 16px;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    /* Aerial gradient — navy hint on the left fading to a warm gold
+       wash on the right, kept light so the card reads as "preview"
+       rather than a peer of the LTS cards above. */
+    background:
+      linear-gradient(
+        90deg,
+        var(--em-navy-tint) 0%,
+        var(--em-bg) 45%,
+        var(--em-gold-tint) 100%
+      );
+    color: var(--em-text);
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .dev-strip:hover {
+    border-color: var(--em-gold);
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(26,40,69,0.08);
+  }
+  .dev-strip__rocket {
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
+    transition: transform 0.35s var(--ease);
+  }
+  /* On hover, the rocket lifts diagonally — the takeoff micro-animation. */
+  .dev-strip:hover .dev-strip__rocket {
+    transform: translate(4px, -4px);
+  }
+  .dev-strip__body { flex: 1 1 auto; min-width: 0; }
+  .dev-strip__head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .dev-strip__title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--em-navy);
+    font-size: 17px;
+  }
+  .dev-strip__arrow {
+    color: var(--em-gold);
+    font-weight: 700;
+    transition: transform 0.2s var(--ease);
+  }
+  .dev-strip:hover .dev-strip__arrow {
+    transform: translateX(3px);
+  }
+  .dev-strip__sub {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--em-text-muted);
+    line-height: 1.5;
   }
 
   .dl__all {
@@ -208,5 +350,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   @media (max-width: 800px) {
     .chooser { grid-template-columns: 1fr; }
     .dltools__grid { grid-template-columns: 1fr; }
+    .dev-strip { padding: 12px 16px 12px 12px; }
+    .dev-strip__rocket { width: 52px; height: 52px; }
   }
 </style>
