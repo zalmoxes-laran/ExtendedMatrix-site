@@ -85,9 +85,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       {development && (
         <a
           class="dev-strip"
-          href={development.data.docsUrl ?? `${B}/versions/${development.id.replace(/\.md$/, '')}/`}
-          target={development.data.docsUrl ? '_blank' : undefined}
-          rel={development.data.docsUrl ? 'noopener noreferrer' : undefined}
+          href={`${B}/versions/${development.id.replace(/\.md$/, '')}/`}
         >
           {/* SVG: a small rocket lifting diagonally out of the EM
               hourglass mark. Composed in EM palette (navy + gold).
