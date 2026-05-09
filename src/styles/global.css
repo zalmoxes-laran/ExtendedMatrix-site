@@ -3,6 +3,11 @@
    Palette: official 2022 brand pack (navy + ochre gold on white)
    ============================================================ */
 
+/* @font-face declarations for Inter + Manrope are emitted inline
+   from src/layouts/BaseLayout.astro so they can resolve the
+   GitHub Pages BASE_URL correctly (/ExtendedMatrix-site/fonts/...).
+   Files live in public/fonts/. */
+
 :root {
   /* Brand colours */
   --em-navy:        #1a2845;

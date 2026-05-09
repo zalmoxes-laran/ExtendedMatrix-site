@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Last review of this notice. Bump when the substance changes.
-const lastReviewed = '2026-04-27';
+const lastReviewed = '2026-05-10';
 ---
 
 <BaseLayout
@@ -32,17 +32,24 @@ const lastReviewed = '2026-04-27';
         <h2>1 · Data controller</h2>
         <p>
           The data controller for this website is
-          <strong>Consiglio Nazionale delle Ricerche — Istituto di Scienze del Patrimonio Culturale (CNR-ISPC)</strong>.
-          The site is maintained on behalf of CNR-ISPC by Emanuel Demetrescu,
-          principal investigator of the Extended Matrix project.
+          <strong>Emanuel Demetrescu</strong> (personal capacity).
+          Contact:
+          <a href="mailto:emanuel.demetrescu@cnr.it">emanuel.demetrescu@cnr.it</a>.
+        </p>
+        <p class="privacy__note">
+          <em>Affiliation: Consiglio Nazionale delle Ricerche, Istituto di
+          Scienze del Patrimonio Culturale (CNR-ISPC). The institutional
+          affiliation is provided for context; this site is operated in
+          personal research capacity, not as an institutional CNR-ISPC
+          service.</em>
         </p>
         <p>
-          For questions specific to this site you can contact the
-          maintainer at
-          <a href="mailto:emanuel.demetrescu@cnr.it">emanuel.demetrescu@cnr.it</a>.
-          For formal data-protection enquiries (Art. 15–22 GDPR), the
-          point of contact is the CNR Data Protection Officer:
-          <a href="mailto:rpd@cnr.it">rpd@cnr.it</a>.
+          The Heriverse 3D viewer embedded on the home page (see §3) is
+          served from a CNR-ISPC server (<code>strativerse-test.ispc.cnr.it</code>).
+          Any processing performed through that embed sits under
+          CNR-ISPC's responsibility, with the CNR Data Protection Officer
+          (<a href="mailto:rpd@cnr.it">rpd@cnr.it</a>) as the point of
+          contact for that service.
         </p>
       </section>
 
@@ -52,9 +59,15 @@ const lastReviewed = '2026-04-27';
         <p>
           The site is statically generated and served via
           <strong>GitHub Pages</strong>. It does <strong>not</strong> set
-          first-party tracking cookies, does not use analytics
-          (Google Analytics, Plausible, etc.), and does not log visitors
-          beyond what GitHub does on its own infrastructure.
+          first-party cookies, does <strong>not</strong> use any
+          client-side storage (<code>localStorage</code>, <code>sessionStorage</code>),
+          and does not log visitors beyond what GitHub does on its own
+          infrastructure.
+        </p>
+        <p>
+          Aggregate, cookieless visit measurement is provided by
+          <strong>GoatCounter</strong> — see §4 for the details and
+          the legal basis.
         </p>
         <p>
           GitHub may log technical information such as the IP address
@@ -70,12 +83,27 @@ const lastReviewed = '2026-04-27';
         <h2>3 · Third-party content embedded on this site</h2>
         <p>
           A small number of pages embed content served by third
-          parties. When you load such a page, your browser establishes
-          a direct connection to those services and they may, in turn,
-          process technical data (IP address, user agent, time of
-          access) under their own privacy policies.
+          parties. When you load such a page (and, for the Heriverse
+          embed, when you explicitly click to load it), your browser
+          establishes a direct connection to those services and they
+          may, in turn, process technical data (IP address, user agent,
+          time of access) under their own privacy policies.
         </p>
         <ul class="privacy__list">
+          <li>
+            <strong>Heriverse (strativerse-test.ispc.cnr.it)</strong>
+            — the home page features an interactive 3D viewer
+            (<a href={`${B}/tools/heriverse/`}>Heriverse</a>) hosted
+            on a CNR-ISPC server. To respect your privacy, this iframe
+            <strong>does not load until you explicitly click "Load
+            Heriverse"</strong> on the page. When you click, a
+            connection is opened to
+            <code>strativerse-test.ispc.cnr.it</code> and a session
+            cookie (<code>connect.sid</code>, HttpOnly, no cross-site
+            tracking) may be set on that domain. The processing of any
+            data through that iframe is governed by CNR-ISPC's privacy
+            policy.
+          </li>
           <li>
             <strong>YouTube (youtube-nocookie.com)</strong> — used on
             the <a href={`${B}/events`}>Events</a> pages to embed
@@ -105,42 +133,105 @@ const lastReviewed = '2026-04-27';
           </li>
         </ul>
         <p>
-          We do <strong>not</strong> embed analytics pixels, advertising
-          tags, social-media widgets or fingerprinting scripts.
+          We do <strong>not</strong> embed advertising tags,
+          social-media widgets or fingerprinting scripts.
+        </p>
+      </section>
+
+      <!-- ── Analytics ───────────────────────────────────────── -->
+      <section class="block">
+        <h2>4 · Analytics</h2>
+        <p>
+          This site uses <strong>GoatCounter</strong> (operated by
+          Martin Tournoij, EU-hosted in the Netherlands) to measure
+          aggregate visits, page views and download counts. GoatCounter
+          is <strong>cookieless and privacy-friendly</strong>: it does
+          <strong>not</strong> set persistent cookies, does not track
+          users across sites, and does not collect personal data.
+        </p>
+        <p>
+          The visit measurement is based on a daily-rotating, anonymous
+          hash derived from a salted combination of IP address and user
+          agent. By design, this identifier is reset every 24 hours,
+          making cross-day or cross-visit tracking impossible.
+        </p>
+        <p>
+          Aggregated data (monthly visits, top pages, download counts)
+          is retained as long as the analytics service operates; no
+          per-visit raw data with identifying information is stored.
+        </p>
+        <p>
+          <strong>Legal basis:</strong> legitimate interest
+          (Art. 6(1)(f) GDPR — research project audience measurement
+          and dissemination metrics). No consent banner is required
+          because no personal data is processed. See the
+          <a href="https://www.goatcounter.com/help/privacy" target="_blank" rel="noopener">GoatCounter privacy policy</a>
+          for technical details.
+        </p>
+      </section>
+
+      <!-- ── Web fonts ───────────────────────────────────────── -->
+      <section class="block">
+        <h2>5 · Web fonts</h2>
+        <p>
+          Web fonts (Inter, Manrope) are <strong>self-hosted</strong>
+          on this site — they are served directly from the same domain
+          as the rest of the content. <strong>No data is transferred to
+          third-party font services</strong> (Google Fonts, etc.) when
+          you visit any page.
+        </p>
+      </section>
+
+      <!-- ── Cookies ─────────────────────────────────────────── -->
+      <section class="block" id="cookies">
+        <h2>6 · Cookies</h2>
+        <p>
+          This site does not set any first-party cookies on its own.
+        </p>
+        <p>
+          The Heriverse iframe (<code>strativerse-test.ispc.cnr.it</code>),
+          if you choose to load it, may set a session cookie called
+          <code>connect.sid</code> on the CNR-ISPC domain. This cookie
+          is technical (session management for the 3D viewer), is
+          <code>HttpOnly</code>, does not perform cross-site tracking,
+          and is automatically discarded when you close the browser.
+          We have no access to or control over this cookie.
+        </p>
+        <p>
+          GoatCounter is cookieless and does not set any cookies.
         </p>
       </section>
 
       <!-- ── Forms / contact ──────────────────────────────── -->
       <section class="block">
-        <h2>4 · Forms and contact</h2>
+        <h2>7 · Forms and contact</h2>
         <p>
-          The site has no contact form. If you choose to write to one
-          of the email addresses listed above, your message and the
-          associated email metadata will be processed by the recipient
-          on the legal basis of <em>consent</em> (Art. 6(1)(a) GDPR)
-          and/or <em>legitimate interest</em> (Art. 6(1)(f) GDPR) for
-          the purpose of replying. Messages are retained no longer than
-          necessary to handle the conversation.
+          The site has no contact form. If you choose to write to the
+          email address listed above, your message and the associated
+          email metadata will be processed on the legal basis of
+          <em>consent</em> (Art. 6(1)(a) GDPR) and/or <em>legitimate
+          interest</em> (Art. 6(1)(f) GDPR) for the purpose of
+          replying. Messages are retained no longer than necessary to
+          handle the conversation.
         </p>
       </section>
 
       <!-- ── Legal bases ─────────────────────────────── -->
       <section class="block">
-        <h2>5 · Legal bases for processing</h2>
+        <h2>8 · Legal bases for processing</h2>
         <p>
           To the extent any personal data is processed in the context
           of this website, the legal bases are:
         </p>
         <ul class="privacy__list">
-          <li><strong>Art. 6(1)(e) GDPR</strong> — performance of a task carried out in the public interest (research dissemination by a public research body, CNR).</li>
-          <li><strong>Art. 6(1)(f) GDPR</strong> — legitimate interest in operating, securing and analysing the site, where this does not override fundamental rights (e.g. infrastructure logs at the GitHub Pages level).</li>
-          <li><strong>Art. 6(1)(a) GDPR</strong> — explicit consent, e.g. when you press Play on an embedded YouTube video.</li>
+          <li><strong>Art. 6(1)(f) GDPR</strong> — legitimate interest in operating, securing and analysing the site (infrastructure logs at the GitHub Pages level; aggregate, cookieless audience measurement via GoatCounter).</li>
+          <li><strong>Art. 6(1)(a) GDPR</strong> — explicit consent: when you click "Load Heriverse" to load the third-party 3D viewer, or when you press Play on an embedded YouTube video.</li>
         </ul>
       </section>
 
       <!-- ── Your rights ────────────────────────────────── -->
       <section class="block">
-        <h2>6 · Your rights</h2>
+        <h2>9 · Your rights</h2>
         <p>
           Under Articles 15 to 22 of the GDPR, you have the right to
           access, rectify, erase or restrict processing of your
@@ -150,16 +241,20 @@ const lastReviewed = '2026-04-27';
           <a href="https://www.garanteprivacy.it/" target="_blank" rel="noopener">Italian Data Protection Authority (Garante per la protezione dei dati personali)</a>.
         </p>
         <p>
-          To exercise these rights, write to the CNR Data Protection
-          Officer at <a href="mailto:rpd@cnr.it">rpd@cnr.it</a>.
+          To exercise these rights with respect to this website, write
+          to <a href="mailto:emanuel.demetrescu@cnr.it">emanuel.demetrescu@cnr.it</a>.
+          For matters specific to the Heriverse embed served from
+          <code>strativerse-test.ispc.cnr.it</code>, the CNR Data
+          Protection Officer is the point of contact:
+          <a href="mailto:rpd@cnr.it">rpd@cnr.it</a>.
         </p>
       </section>
 
       <!-- ── Changes ─────────────────────────────────── -->
       <section class="block">
-        <h2>7 · Changes to this notice</h2>
+        <h2>10 · Changes to this notice</h2>
         <p>
-          We may update this notice when the site changes (new
+          This notice may be updated when the site changes (new
           embedded services, new functionality, etc.). The "last
           reviewed" date at the top of this page reflects the latest
           substantive update. The full revision history is available
@@ -185,6 +280,13 @@ const lastReviewed = '2026-04-27';
     color: var(--em-text-muted);
     font-size: 13px;
     margin-bottom: 40px;
+  }
+  .privacy__note {
+    font-size: 14px;
+    color: var(--em-text-muted);
+    border-left: 2px solid var(--em-gold);
+    padding-left: 12px;
+    margin: 8px 0 16px;
   }
   .privacy .block { margin-bottom: 36px; max-width: 760px; }
   .privacy h2 { font-size: 19px; margin: 0 0 12px; color: var(--em-navy); }

@@ -15,6 +15,9 @@ const { Content } = await render(version);
 
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
+// Stable id used for GoatCounter event-ids (e.g. "1-5").
+const versionSlug = version.id.replace(/\.md$/, '');
+
 const statusLabel: Record<string, string> = {
   development: 'In development',
   stable: 'Stable',
@@ -125,7 +128,8 @@ const statusPill: Record<string, string> = {
           to the EM-specific tools below.
         </p>
         <div class="vp__prereq-grid">
-          <a class="prereq" href={version.data.blenderDownloadUrl ?? 'https://www.blender.org/download/'} target="_blank" rel="noopener">
+          <a class="prereq" href={version.data.blenderDownloadUrl ?? 'https://www.blender.org/download/'} target="_blank" rel="noopener"
+             data-goatcounter-click={`dl-blender-${versionSlug}`}>
             <div class="prereq__name">Blender</div>
             <div class="prereq__ver">
               {version.data.blenderLts ? `${version.data.blenderLts} LTS` : `${version.data.blenderMin}+`}
@@ -133,7 +137,8 @@ const statusPill: Record<string, string> = {
             <div class="prereq__desc">3D authoring environment. Free, GPL-3.</div>
             <span class="prereq__cta">Download from blender.org ↗</span>
           </a>
-          <a class="prereq" href={version.data.yedDownloadUrl} target="_blank" rel="noopener">
+          <a class="prereq" href={version.data.yedDownloadUrl} target="_blank" rel="noopener"
+             data-goatcounter-click={`dl-yed-${versionSlug}`}>
             <div class="prereq__name">yEd</div>
             <div class="prereq__ver">{version.data.yedRequirement}</div>
             <div class="prereq__desc">Free graph editor used to author the EM `.graphml` file.</div>
@@ -250,7 +255,8 @@ const statusPill: Record<string, string> = {
                   <td><span class={`vp__pill ${statusPill[t.status]}`}>{t.status}</span></td>
                   <td>
                     {t.downloadUrl
-                      ? <a href={t.downloadUrl} target="_blank" rel="noopener" class="vp__dlink">download ↗</a>
+                      ? <a href={t.downloadUrl} target="_blank" rel="noopener" class="vp__dlink"
+                           data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download ↗</a>
                       : '—'}
                   </td>
                   <td>
@@ -295,7 +301,8 @@ const statusPill: Record<string, string> = {
             </a>
           )}
           {version.data.addonReleaseUrl && (
-            <a href={version.data.addonReleaseUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost">
+            <a href={version.data.addonReleaseUrl} target="_blank" rel="noopener" class="vp__btn vp__btn--ghost"
+               data-goatcounter-click={`repo-em-tools-releases-${versionSlug}`}>
               All EM Tools releases ↗
             </a>
           )}

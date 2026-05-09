@@ -164,15 +164,29 @@ const fmtNewsDate = (d: Date) =>
         each interpretive choice.
       </p>
 
-      <div class="live__frame">
-        <iframe
-          src="https://strativerse-test.ispc.cnr.it/a/heriverse/?scene=scene%3Ae3bdd326-13cb-4489-a062-e035ede2563c"
-          title="Heriverse — live Extended Matrix scene"
-          loading="lazy"
-          allow="autoplay; fullscreen; xr-spatial-tracking; execution-while-out-of-viewport; execution-while-not-rendered; web-share"
-          allowfullscreen
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
+      {/*
+        GDPR click-to-load: the Heriverse iframe (strativerse-test.ispc.cnr.it,
+        operated by CNR-ISPC) opens a connection to a third-party domain and
+        may set a session cookie there. We do NOT load it on page open — the
+        user has to press the button. The fallback "open in new tab" link is
+        always available below.
+      */}
+      <div class="live__frame heriverse-placeholder" id="heriverse-placeholder" role="region" aria-label="Heriverse 3D embed (click to load)">
+        <Image src={heriverseLogo} alt="" class="heriverse-placeholder__logo" widths={[96, 192]} sizes="96px" />
+        <div class="heriverse-placeholder__body">
+          <p class="heriverse-placeholder__eyebrow">Live reconstruction example</p>
+          <h3 class="heriverse-placeholder__title">Load the Heriverse 3D viewer</h3>
+          <p class="heriverse-placeholder__text">
+            This will load <a href="https://heriverse.dev" target="_blank" rel="noopener">Heriverse</a>
+            from <code>strativerse-test.ispc.cnr.it</code> (CNR-ISPC).
+            Loading the embed opens a connection to that domain and may set a
+            session cookie there. See our
+            <a href={`${B}/privacy`}>privacy notice</a> for details.
+          </p>
+          <button type="button" id="heriverse-load-btn" class="btn btn-gold heriverse-placeholder__btn">
+            Load Heriverse →
+          </button>
+        </div>
       </div>
 
       <div class="live__meta">
@@ -180,9 +194,9 @@ const fmtNewsDate = (d: Date) =>
           class="btn btn-ghost"
           href="https://strativerse-test.ispc.cnr.it/a/heriverse/?scene=scene%3Ae3bdd326-13cb-4489-a062-e035ede2563c"
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
         >
-          Open the live experience in a new tab →
+          Or open the live experience in a new tab →
         </a>
         <p class="live__note">
           <strong>Coming soon:</strong> the underlying open dataset will be
@@ -507,6 +521,35 @@ const fmtNewsDate = (d: Date) =>
       </p>
     </div>
   </section>
+
+  {/*
+    Click-to-load handler for the Heriverse iframe. Until the user presses
+    the button, no connection is made to strativerse-test.ispc.cnr.it.
+  */}
+  <script is:inline>
+    (function () {
+      var btn = document.getElementById('heriverse-load-btn');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var placeholder = document.getElementById('heriverse-placeholder');
+        if (!placeholder) return;
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://strativerse-test.ispc.cnr.it/a/heriverse/?scene=scene%3Ae3bdd326-13cb-4489-a062-e035ede2563c';
+        iframe.title = 'Heriverse — live Extended Matrix scene';
+        iframe.setAttribute('allow', 'autoplay; fullscreen; xr-spatial-tracking; execution-while-out-of-viewport; execution-while-not-rendered; web-share');
+        iframe.setAttribute('allowfullscreen', '');
+        iframe.setAttribute('loading', 'lazy');
+        iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+        // Replace the placeholder while keeping the .live__frame box intact:
+        // we clear its contents and append the iframe so the 16:9 aspect ratio
+        // stays driven by the existing CSS rule.
+        placeholder.classList.remove('heriverse-placeholder');
+        placeholder.classList.add('heriverse-placeholder--loaded');
+        placeholder.innerHTML = '';
+        placeholder.appendChild(iframe);
+      });
+    })();
+  </script>
 </BaseLayout>
 
 <style>
@@ -959,6 +1002,83 @@ const fmtNewsDate = (d: Date) =>
     height: 100%;
     border: 0;
     display: block;
+  }
+  /* ── Heriverse click-to-load placeholder ─────────────────
+     Sits inside .live__frame so the 16:9 aspect ratio is
+     preserved. Replaced in place by the iframe on click. */
+  .heriverse-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 18px;
+    padding: 32px;
+    /* Soft navy gradient + faint gold accent — sits well on the navy
+       .live section background. */
+    background:
+      radial-gradient(circle at 50% 32%, rgba(184, 137, 58, 0.18), transparent 60%),
+      linear-gradient(180deg, #1f3055 0%, #142037 100%);
+    color: var(--em-bg);
+  }
+  .heriverse-placeholder :global(.heriverse-placeholder__logo) {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    padding: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    object-fit: contain;
+    flex: 0 0 auto;
+  }
+  .heriverse-placeholder__body {
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .heriverse-placeholder__eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-gold);
+    margin: 0;
+  }
+  .heriverse-placeholder__title {
+    margin: 0;
+    color: var(--em-bg);
+    font-size: clamp(1.2rem, 2.4vw, 1.5rem);
+    line-height: 1.25;
+  }
+  .heriverse-placeholder__text {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  .heriverse-placeholder__text a {
+    color: var(--em-gold);
+    font-weight: 600;
+  }
+  .heriverse-placeholder__text a:hover {
+    color: var(--em-gold-soft);
+  }
+  .heriverse-placeholder__text code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.92);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  .heriverse-placeholder__btn {
+    margin-top: 6px;
+  }
+  @media (max-width: 520px) {
+    .heriverse-placeholder { padding: 22px 18px; gap: 14px; }
+    .heriverse-placeholder :global(.heriverse-placeholder__logo) { width: 72px; height: 72px; }
   }
   .live__meta {
     margin-top: 22px;
