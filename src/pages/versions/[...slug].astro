@@ -561,6 +561,162 @@ const statusPill: Record<string, string> = {
     margin: 16px 0;
   }
 
+  /* ── Inline figure / image-ready placeholder ───────────────
+     Used by version body markdown via:
+       <figure class="emfig" data-slot="...">
+         <img src="..." alt="..." /><figcaption>...</figcaption>
+       </figure>
+     and
+       <figure class="emfig emfig--placeholder" data-slot="..."
+               data-aspect="16x9|4x3|hero">
+         <div class="emfig__box">
+           <span class="emfig__label">image to add</span>
+           <span class="emfig__alt">…alt text…</span>
+         </div>
+         <figcaption>…caption…</figcaption>
+       </figure>
+     The placeholder is meant to be visible in the rendered page so
+     editors can spot the slots that still need real images. */
+  .vp__body :global(.emfig) {
+    margin: 24px 0;
+    display: block;
+  }
+  .vp__body :global(.emfig img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--em-border);
+  }
+  .vp__body :global(.emfig figcaption) {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--em-text-muted);
+    font-style: italic;
+  }
+  .vp__body :global(.emfig--placeholder .emfig__box) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    padding: 18px;
+    background:
+      repeating-linear-gradient(
+        135deg,
+        rgba(184, 137, 58, 0.05) 0,
+        rgba(184, 137, 58, 0.05) 12px,
+        rgba(184, 137, 58, 0.10) 12px,
+        rgba(184, 137, 58, 0.10) 24px
+      ),
+      var(--em-gold-tint);
+    border: 2px dashed var(--em-gold);
+    border-radius: var(--radius-md);
+    color: var(--em-navy);
+    text-align: center;
+    box-sizing: border-box;
+  }
+  .vp__body :global(.emfig--placeholder[data-aspect="4x3"] .emfig__box) {
+    aspect-ratio: 4 / 3;
+  }
+  .vp__body :global(.emfig--placeholder[data-aspect="hero"] .emfig__box) {
+    aspect-ratio: 21 / 9;
+  }
+  .vp__body :global(.emfig--placeholder .emfig__label) {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--em-gold);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid var(--em-gold);
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+  .vp__body :global(.emfig--placeholder .emfig__alt) {
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--em-navy);
+    max-width: 520px;
+    font-style: italic;
+    opacity: 0.85;
+  }
+  .vp__body :global(.emfig--placeholder .emfig__slot) {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--em-text-muted);
+    opacity: 0.7;
+    letter-spacing: 0.05em;
+  }
+  .vp__body :global(.emfig--placeholder figcaption::before) {
+    content: '↳ caption preview · ';
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--em-gold);
+    font-style: normal;
+    margin-right: 4px;
+  }
+
+  /* "What's new" axis sub-cards — used by the per-tool blocks */
+  .vp__body :global(.wn-card) {
+    margin: 18px 0 22px;
+    padding: 18px 22px;
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-left: 3px solid var(--em-navy);
+    border-radius: var(--radius-sm);
+  }
+  .vp__body :global(.wn-card h4) {
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--em-navy);
+  }
+  .vp__body :global(.wn-card p) {
+    margin: 0 0 10px;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .vp__body :global(.wn-card .emfig) { margin-top: 12px; }
+
+  /* Section axis label (Language / Tools / Methodology) */
+  .vp__body :global(.wn-axis-tag) {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    border: 1px solid var(--em-gold);
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* Template-marker note (used on the 1.6 placeholder template) */
+  .vp__body :global(.wn-template-note) {
+    margin: 16px 0;
+    padding: 12px 16px;
+    background: var(--em-navy-tint);
+    border-left: 3px solid var(--em-navy);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: var(--em-navy);
+  }
+
   @media (max-width: 700px) {
     .vp__dl { grid-template-columns: 1fr; gap: 4px 0; }
     .vp__dl dt { margin-top: 8px; }

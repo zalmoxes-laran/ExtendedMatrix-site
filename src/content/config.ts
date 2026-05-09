@@ -230,6 +230,26 @@ const versions = defineCollection({
         )
         .default([]),
       installSteps: z.array(z.string()).default([]),
+      // Image-ready media slot index — editor-facing metadata listing
+      // the figure placeholders used inside the body of this version
+      // page. The body itself uses inline `<figure class="emfig
+      // emfig--placeholder" data-slot="...">` markers (rendered as
+      // dashed cards by the [...slug].astro page styles). When real
+      // images are ready, the editor populates `src` here and replaces
+      // the inline placeholder with `<figure class="emfig">…</figure>`.
+      // Slot names should be unique within a version page. The page
+      // template does not auto-render this array — it is metadata only.
+      media: z
+        .array(
+          z.object({
+            slot: z.string(),                       // unique slot id, e.g. "overture"
+            alt: z.string(),                        // mandatory alt text
+            caption: z.string().optional(),         // figcaption
+            src: z.string().default(''),            // empty until image is ready
+            credit: z.string().optional(),          // optional photo / render credit
+          })
+        )
+        .default([]),
       order: z.number().default(0),
     }),
 });
