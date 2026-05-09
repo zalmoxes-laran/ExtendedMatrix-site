@@ -73,6 +73,48 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         Looking for a specific Blender / yEd / EM combination?
         <a href={`${B}/versions/`}>see the version-by-version compatibility matrix →</a>
       </p>
+
+      <section class="third-party" aria-labelledby="third-party-h">
+        <hr class="third-party__divider" />
+        <h2 id="third-party-h" class="third-party__h">Third-party integrations</h2>
+        <p class="third-party__intro">
+          These tools consume Extended Matrix and s3dgraphy in their own
+          workflow. They are maintained independently from the EM team.
+        </p>
+
+        <ul class="grid grid--third-party">
+          <li class="card card--third-party">
+            <div class="card--third-party__inner">
+              <div class="card__head">
+                <h3 class="card__name">PyArchInit</h3>
+                <span class="card__badge">Third-party</span>
+              </div>
+              <div class="card__role">QGIS plugin</div>
+              <p class="card__desc">
+                A QGIS plugin for stratigraphic, alphanumeric, multimedia
+                and topographical archaeological data — bridges field
+                recording with the EM data model via s3dgraphy.
+              </p>
+              <div class="card__links">
+                <a
+                  href="https://github.com/pyarchinit/pyarchinit"
+                  target="_blank"
+                  rel="noopener"
+                >Official repository →</a>
+                <a
+                  href="https://pyarchinit-api.readthedocs.io/en/latest/"
+                  target="_blank"
+                  rel="noopener"
+                >Integration docs →</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+
+        <p class="third-party__more">
+          <a href={`${B}/ecosystem/`}>See all third-party integrations →</a>
+        </p>
+      </section>
     </div>
   </section>
 </BaseLayout>
@@ -204,4 +246,73 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .tools__foot a { color: var(--em-gold); font-weight: 600; }
 
   @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
+
+  /* Third-party integrations sub-section
+     Visually distinct from first-party tools: dashed borders + badge,
+     mirroring the yEd group-folder dashed convention used elsewhere
+     in the framework to mark "external" content. */
+  .third-party { margin-top: 56px; }
+  .third-party__divider {
+    border: 0;
+    border-top: 1px solid var(--em-border);
+    margin: 0 0 36px;
+  }
+  .third-party__h {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--em-navy);
+    margin: 0 0 8px;
+  }
+  .third-party__intro {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 15px;
+    margin: 0 0 24px;
+  }
+
+  .grid--third-party { margin-bottom: 20px; }
+
+  /* Distinctive treatment: dashed border + softer background */
+  .card--third-party {
+    border: 1px dashed var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease);
+  }
+  .card--third-party:hover { border-color: var(--em-gold); }
+  .card--third-party__inner { padding: 24px 26px; }
+
+  .card__badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 2px;
+    color: var(--em-text-muted);
+    background: var(--em-bg-warm, #f4f1ea);
+    border: 1px solid var(--em-border);
+  }
+
+  .card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-top: 10px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+  }
+  .card__links a {
+    color: var(--em-gold);
+    font-weight: 600;
+  }
+
+  .third-party__more {
+    margin: 8px 0 0;
+    font-size: 14px;
+  }
+  .third-party__more a {
+    color: var(--em-gold);
+    font-weight: 600;
+  }
 </style>

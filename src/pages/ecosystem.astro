@@ -46,6 +46,10 @@ const integrations = [
 >
   <section class="eco">
     <div class="container">
+      <p class="eco__breadcrumb">
+        <a href={`${B}/tools/`}>← Back to Tools</a>
+        <span class="eco__breadcrumb-note">— full list of third-party integrations of the EM Framework.</span>
+      </p>
       <span class="tag">Ecosystem</span>
       <h1>Tools that consume s3dgraphy.</h1>
       <p class="eco__sub">
@@ -143,6 +147,17 @@ const integrations = [
 
 <style>
   .eco { padding: 80px 0 80px; }
+  .eco__breadcrumb {
+    margin: 0 0 18px;
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--em-text-muted);
+  }
+  .eco__breadcrumb a {
+    color: var(--em-gold);
+    font-weight: 600;
+  }
+  .eco__breadcrumb-note { margin-left: 6px; }
   .eco h1 { margin: 14px 0 16px; }
   .eco__sub { max-width: 760px; color: var(--em-text); font-size: 17px; margin-bottom: 18px; }
   .eco__audience { max-width: 760px; color: var(--em-text-muted); font-size: 15px; margin-bottom: 36px; }
