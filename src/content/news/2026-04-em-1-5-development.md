@@ -31,4 +31,4 @@ manual EM construction, EM-to-2D/3D linking, sources & metadata
 discipline, and a complete end-to-end case study.
 
 Track progress in real time on
-[dev.extendedmatrix.org](http://dev.extendedmatrix.org/dev-projects).
+[dev.extendedmatrix.org](https://dev.extendedmatrix.org/).

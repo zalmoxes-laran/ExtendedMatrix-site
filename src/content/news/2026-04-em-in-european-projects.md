@@ -58,7 +58,7 @@ available from EM Tools and Heriverse without extra work.
 ## Where to follow progress
 
 - The StratiGraph workstream tracker (link forthcoming).
-- The [EM development projects board](http://dev.extendedmatrix.org/dev-projects).
+- The [EM development projects board](https://dev.extendedmatrix.org/).
 - Release notes for the EM language itself, on
   [docs.extendedmatrix.org](https://docs.extendedmatrix.org).
 
