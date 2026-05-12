@@ -1099,7 +1099,7 @@ const blockCatalog = {
     title: 'Prepare photogrammetric model',
     microcopy: 'Generate the textured 3D model from your photos in Metashape, using 3DSC4Metashape Python scripts. Guarantees a consistent texel density across the surface.',
     tool: '3DSC4Metashape',
-    learnLink: { url: 'https://docs.extendedmatrix.org/projects/3dsc/en/latest/metashape.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: 'https://github.com/zalmoxes-laran/3DSC_Metashape', label: 'Get 3DSC4Metashape →' },
     status: 'stable',
@@ -1110,8 +1110,8 @@ const blockCatalog = {
     title: 'Optimize survey for Blender',
     microcopy: 'Bring the processed model into Blender via 3DSC and create LODs for proxy modeling.',
     tool: '3DSC',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/3dsc.html', label: 'Learn the concept →' },
-    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/3dsc/import-howto.html', label: 'How to do it →' },
+    learnLink: { url: 'https://docs.extendedmatrix.org/projects/3DSC/en/latest/', label: 'Learn the concept →' },
+    howToLink: null,
     getLink:   { url: 'https://github.com/zalmoxes-laran/3D-survey-collection', label: 'Get 3DSC (Blender) →' },
     status: 'stable',
     triggers: { materials: ['3d-survey'] }
@@ -1121,7 +1121,7 @@ const blockCatalog = {
     title: 'Place drawings as 3D references',
     microcopy: 'Instantiate sections, elevations and plans as 2D backdrops for over-modelling proxies.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/drawings.html', label: 'Learn the concept →' },
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/source_node.html', label: 'Learn the concept →' },
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1132,8 +1132,8 @@ const blockCatalog = {
     title: 'Link photos as auxiliary files',
     microcopy: 'Attach photos to graph nodes as evidence — non-blocking, can be done at any moment.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/aux-files.html', label: 'Learn the concept →' },
-    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/aux-files-howto.html', label: 'How to do it →' },
+    learnLink: null,
+    howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     triggers: { materials: ['photos'], goals: ['build-knowledge-base'] }
@@ -1143,7 +1143,7 @@ const blockCatalog = {
     title: 'Import GIS layers (BlenderGIS)',
     microcopy: 'Use the well-known BlenderGIS addon (install if not present) — integrates automatically with the EM Tools ecosystem.',
     tool: 'BlenderGIS',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/blendergis.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: 'https://github.com/domlysz/BlenderGIS', label: 'Get BlenderGIS ↗' },
     status: 'stable',
@@ -1154,7 +1154,7 @@ const blockCatalog = {
     title: 'Process remote-sensing data',
     microcopy: 'Satellite imagery, multispectral, lidar-from-air and geomatic surfaces become 2.5D references — pair with BlenderGIS for georef.',
     tool: '3DSC + BlenderGIS',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/remote-sensing.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
     status: 'stable',
@@ -1165,7 +1165,7 @@ const blockCatalog = {
     title: 'Import CAD files',
     microcopy: 'Use DXF format — works with georeferenced files. ⚠ Ensure the same EPSG between your DXF and your 3D scene.',
     tool: 'Blender CAD import',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/cad.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1196,12 +1196,12 @@ const blockCatalog = {
   'populate-dosco': {
     phase: 1,
     crossPhase: [1, 2],
-    title: 'Populate DosCO',
-    microcopy: 'Collect your evidence into the canonical <em>source_list.xlsx</em> template, import into the graph via EMdb. Sources, documents, authors, licenses — all structured.',
-    advancedNote: 'Existing database? Build a custom s3dgraphy mapper.',
-    tool: 'EM Tools (EMdb)',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco.html', label: 'Learn the concept →' },
-    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco-howto.html', label: 'How to do it →' },
+    title: 'Collect sources & populate DosCO',
+    microcopy: 'Collect your evidence into the canonical <em>source_list.xlsx</em> template and import it into the graph via EMdb in EM Tools. These two steps are inseparable — <code>source_list.xlsx</code> is the structured ingestion format, DosCO is the queryable graph layer. Sources, documents, authors, licenses — all structured.',
+    advancedNote: 'Existing database? Build a custom s3dgraphy mapper — see PyArchInit integration as a reference.',
+    tool: 'EM Tools (EMdb) + source_list.xlsx',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/source_node.html', label: 'Learn the concept →' },
+    howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     advancedLink: { url: 'https://github.com/pyarchinit/pyarchinit', label: 'PyArchInit s3dgraphy reference ↗' },
     status: 'stable',
@@ -1215,7 +1215,7 @@ const blockCatalog = {
     title: 'Open & convert existing EM graph',
     microcopy: 'Open old EM graph in EM Tools — the utility converter in <code>utils/</code> handles version migrations automatically.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/legacy-graphs.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1226,9 +1226,9 @@ const blockCatalog = {
     title: 'Draw the Extended Matrix',
     microcopy: 'The stratigraphic matrix can be drawn at any moment — yEd with the EM palette.',
     tool: 'yEd + EM palette',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-palette/index.html', label: 'Learn the concept →' },
-    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-palette/howto.html', label: 'How to do it →' },
-    getLink:   { url: '/tools/em-palette/', label: 'Get EM palette →' },
+    learnLink: null,
+    howToLink: null,
+    getLink:   { url: '/tools/yed-palette/', label: 'Get EM palette →' },
     status: 'stable',
     isSpine: true,
     triggers: { always: true, goals: ['build-knowledge-base'] }
@@ -1238,7 +1238,7 @@ const blockCatalog = {
     title: 'Iteratively enrich DosCO',
     microcopy: 'Curate the source dossier as new evidence emerges — loop back from any later step.',
     tool: 'EM Tools (EMdb)',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco-iterate.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1251,8 +1251,8 @@ const blockCatalog = {
     title: 'Model the proxies',
     microcopy: 'Build the stratigraphic proxies — from survey, drawings, CAD, GIS or written sources.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/proxies.html', label: 'Learn the concept →' },
-    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/proxies-howto.html', label: 'How to do it →' },
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/stratigraphic_nodes.html', label: 'Learn the concept →' },
+    howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     isSpine: true,
@@ -1263,7 +1263,7 @@ const blockCatalog = {
     title: 'Connect graph and proxies',
     microcopy: 'Iteratively bind each proxy to its graph node — the paradata chain becomes navigable.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/connect.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1274,7 +1274,7 @@ const blockCatalog = {
     title: 'Compose epoch scenes',
     microcopy: 'Assemble epoch-specific reconstructions from proxies + connected graph.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/epochs.html', label: 'Learn the concept →' },
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/canvas.html', label: 'Learn the concept →' },
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1285,7 +1285,7 @@ const blockCatalog = {
     title: 'Anastylosis assembly',
     microcopy: 'Align scanned or drawn pieces into anastylosis assemblies via EM Tools.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/anastylosis.html', label: 'Learn the concept →' },
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/stratigraphic_nodes.html', label: 'Learn the concept →' },
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1309,7 +1309,7 @@ const blockCatalog = {
     title: 'Add representation models',
     microcopy: 'Layer polished visual models over proxies for high-fidelity rendering — proxies keep the evidence link.',
     tool: 'EM Tools',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/representation-models.html', label: 'Learn the concept →' },
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/project_organization.html', label: 'Learn the concept →' },
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1322,8 +1322,8 @@ const blockCatalog = {
     title: 'Publish via Heriverse',
     microcopy: 'Choose what to share: documentation only (graph + paradata) or full reconstruction (epochs + 3D scene). Same tool, single tab in Heriverse, different payload extents.',
     tool: 'Heriverse',
-    learnLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/concepts.html', label: 'Learn the concept →' },
-    howToLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/publish.html', label: 'How to do it →' },
+    learnLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/introduction.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/editor_mode.html', label: 'How to do it →' },
     getLink:   { url: '/tools/heriverse/', label: 'Get Heriverse →' },
     payloadTabs: [
       { label: 'Documentation only', desc: 'Graph + paradata. For stratigraphy publication.' },
@@ -1337,7 +1337,7 @@ const blockCatalog = {
     title: 'Publish on Zenodo (DOI)',
     microcopy: 'Mint a DOI on Zenodo, version the dataset, link to a data paper. Best practice for citable archival of EM-based research outputs.',
     tool: 'Zenodo',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/zenodo.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: 'https://zenodo.org/', label: 'Open Zenodo ↗' },
     status: 'stable',
@@ -1348,7 +1348,7 @@ const blockCatalog = {
     title: 'Export DosCO as data',
     microcopy: 'A populated DosCO is itself shareable — export the structured evidence base for archive or downstream use.',
     tool: 'EM Tools (EMdb)',
-    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco-export.html', label: 'Learn the concept →' },
+    learnLink: null,
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
@@ -1582,18 +1582,21 @@ function renderBackbone() {
 
 function buildPopLinks(block, id) {
   const parts = [];
+  const isInDev = block.status === 'in-development';
   if (block.learnLink) {
     parts.push(`<a href="${withBase(block.learnLink.url)}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_manual_${id}">${block.learnLink.label}</a>`);
-  } else if (block.status === 'in-development') {
+  } else if (!isInDev) {
     parts.push(`<span class="tutorial-coming">Documentation coming</span>`);
   }
   if (block.howToLink) {
     parts.push(`<a href="${withBase(block.howToLink.url)}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_manual_${id}_howto">${block.howToLink.label}</a>`);
-  } else if (block.status !== 'in-development') {
+  } else if (!isInDev) {
     parts.push(`<span class="tutorial-coming">Tutorial coming</span>`);
   }
   if (block.getLink) {
     parts.push(`<a href="${withBase(block.getLink.url)}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_tool_${id}">${block.getLink.label}</a>`);
+  } else if (!isInDev) {
+    parts.push(`<span class="tutorial-coming">Tool info coming</span>`);
   }
   return parts.join('');
 }
