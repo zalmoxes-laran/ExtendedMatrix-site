@@ -72,7 +72,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
                 intermediate tutorial track</a>.
             </li>
             <li>
-              Publish to the web with <a href="https://docs.extendedmatrix.org/projects/heriverse/" target="_blank" rel="noopener">
+              Publish to the web with <a href="https://docs.extendedmatrix.org/projects/heriverse/en/latest/" target="_blank" rel="noopener">
                 Heriverse</a>.
             </li>
           </ol>
@@ -115,6 +115,15 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
           </p>
         </article>
       </div>
+
+      <section class="cta-find-path" aria-labelledby="cta-find-path-title">
+        <h2 id="cta-find-path-title">Ready to begin your own project?</h2>
+        <p>
+          Tell us what you have and what you want, and we'll show you the
+          tools and steps you need.
+        </p>
+        <a href={`${B}/find-your-path/`} class="btn btn-gold">Find your path →</a>
+      </section>
 
       <p class="start__foot">
         Still unsure?
@@ -231,7 +240,39 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--em-gold);
   }
 
+  /* CTA band — bridge to /find-your-path/ */
+  .cta-find-path {
+    margin: 64px -32px 0;
+    padding: 48px 32px;
+    background:
+      radial-gradient(120% 200% at 100% 0%, rgba(184,137,58,0.22) 0%, transparent 55%),
+      linear-gradient(135deg, var(--em-navy) 0%, var(--em-navy-soft) 100%);
+    color: var(--em-bg);
+    border-radius: var(--radius-md);
+    text-align: center;
+    box-shadow: 0 12px 32px rgba(26,40,69,0.18);
+  }
+  .cta-find-path h2 {
+    color: var(--em-bg);
+    margin: 0 0 12px;
+    font-size: clamp(1.4rem, 2.4vw, 1.8rem);
+  }
+  .cta-find-path p {
+    max-width: 560px;
+    margin: 0 auto 22px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.55;
+  }
+  .cta-find-path .btn-gold:hover {
+    background: var(--em-bg);
+    color: var(--em-navy);
+  }
+
   @media (min-width: 800px) {
     .paths { grid-template-columns: repeat(3, 1fr); }
+    .cta-find-path { margin: 64px 0 0; }
+  }
+  @media (max-width: 480px) {
+    .cta-find-path { margin: 56px -16px 0; padding: 36px 20px; }
   }
 </style>

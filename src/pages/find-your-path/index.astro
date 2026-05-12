@@ -1,0 +1,1763 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Find your path"
+  description="Pick the materials you have (drawings, photos, 3D survey, GIS, written sources) and the outcome you want (publication, anastylosis, data curation). The picker maps your project to the Extended Matrix workflow."
+>
+  <section class="find-your-path">
+    <div class="fyp-container">
+
+      <a class="fyp-breadcrumb" href={`${B}/start`}>← Back to overview</a>
+
+      <header class="fyp-hero">
+        <span class="tag">Find your path</span>
+        <h1 class="fyp-hero__title">Find your path.</h1>
+        <p class="fyp-hero__sub">
+          Pick what you have and what you want — we'll show you the path
+          through the Extended Matrix ecosystem.
+        </p>
+      </header>
+
+      <!-- Progress -->
+      <div class="progress" id="progress">
+        <div class="progress__dot progress__dot--active" id="dot1">1</div>
+        <div class="progress__bar" id="bar1"></div>
+        <div class="progress__dot" id="dot2">2</div>
+        <div class="progress__bar" id="bar2"></div>
+        <div class="progress__dot" id="dot3">3</div>
+        <span class="progress__label" id="progressLabel">Step 1 of 3 · What you have</span>
+      </div>
+
+      <!-- ============ STEP 1: MATERIALS ============ -->
+      <section class="step" id="step1">
+        <div class="step__head">
+          <span class="step__num">Step 1</span>
+          <h2 class="step__title">What materials do you already have?</h2>
+        </div>
+        <p class="step__hint">Pick all that apply. Each one unlocks different ingestion blocks in the backbone.</p>
+
+        <div class="step1-disclaimer">
+          <strong>EM works even with a single type of material.</strong>
+          Pick everything you have — no need to wait until your evidence base is complete.
+        </div>
+
+        <div class="materials-group">
+          <div class="materials-group__head">
+            <span class="materials-group__label">Available now</span>
+            <span class="materials-group__note">Fully supported in the EM workflow</span>
+          </div>
+          <div class="cards" id="materialsGridStable"></div>
+        </div>
+
+        <div class="materials-group">
+          <div class="materials-group__head">
+            <span class="materials-group__label">In development</span>
+            <span class="materials-group__note">You can still pick these to see where they will plug in</span>
+          </div>
+          <div class="cards" id="materialsGridInDev"></div>
+        </div>
+
+        <div class="actions">
+          <span class="selection-count" id="materialsCount">0 selected</span>
+          <button class="btn-fyp btn-fyp--primary" id="toStep2" disabled>Next: pick goals →</button>
+        </div>
+      </section>
+
+      <!-- ============ STEP 2: GOALS ============ -->
+      <section class="step step--hidden" id="step2">
+        <div class="step__head">
+          <span class="step__num">Step 2</span>
+          <h2 class="step__title">What do you want to do with them?</h2>
+        </div>
+        <p class="step__hint">One or more goals. The 5-step backbone in Step 3 will highlight the route to each.</p>
+
+        <div class="cards" id="goalsGrid"></div>
+
+        <div class="actions">
+          <button class="btn-fyp btn-fyp--ghost" id="backTo1">← Back</button>
+          <span class="selection-count" id="goalsCount">0 selected</span>
+          <button class="btn-fyp btn-fyp--primary" id="toStep3" disabled data-goatcounter-click="picker_show_path">See your path →</button>
+        </div>
+      </section>
+
+      <!-- ============ STEP 3: 5-STEP BACKBONE ============ -->
+      <section class="step step--hidden" id="step3">
+
+        <div class="step3-head-row">
+          <div class="step__head" style="margin-bottom:0;">
+            <span class="step__num">Step 3</span>
+            <h2 class="step__title">Your path on the 5-step backbone</h2>
+          </div>
+          <label class="toggle" id="modeToggle">
+            <span class="toggle__label">Show full ecosystem</span>
+            <input type="checkbox" id="modeToggleInput" />
+            <span class="toggle__switch"></span>
+            <span class="toggle__state" id="modeToggleState">focus mode</span>
+          </label>
+        </div>
+
+        <div class="schema-summary" id="schemaSummary"></div>
+
+        <p class="didactic-note">
+          Based on the 5-step reconstructive process (Demetrescu &amp; Ferdani, 2021).
+          The backbone supports both reconstruction workflows and broader knowledge-graph applications:
+          any step can lead to publication or to a representation model, depending on your goals.
+        </p>
+
+        <!-- 5-column backbone header -->
+        <div class="backbone" id="backboneHeader">
+          <div class="phase-col"><div class="phase-head"><span class="phase-head__num">1</span><span class="phase-head__title">Data Collection</span></div></div>
+          <div class="phase-col"><div class="phase-head"><span class="phase-head__num">2</span><span class="phase-head__title">Data Management &amp; Analysis</span></div></div>
+          <div class="phase-col"><div class="phase-head"><span class="phase-head__num">3</span><span class="phase-head__title">Implementation &amp; Virtual Reconstruction</span></div></div>
+          <div class="phase-col"><div class="phase-head"><span class="phase-head__num">4</span><span class="phase-head__title">Representation Model</span></div></div>
+          <div class="phase-col"><div class="phase-head"><span class="phase-head__num">5</span><span class="phase-head__title">Publication &amp; Dissemination</span></div></div>
+        </div>
+        <div class="phase-arrow-row" id="phaseArrowRow" aria-hidden="true">
+          <span></span>
+          <span class="arrow">→</span>
+          <span class="arrow">→</span>
+          <span class="arrow">→</span>
+          <span class="arrow">→</span>
+        </div>
+
+        <!-- 5-column block tracks -->
+        <div class="backbone" id="backboneTracks"></div>
+
+        <div class="legend">
+          <span class="legend__item"><span class="legend__swatch legend__swatch--spine"></span> Spine — always part of EM</span>
+          <span class="legend__item"><span class="legend__swatch legend__swatch--active"></span> Active for your path</span>
+          <span class="legend__item"><span class="legend__swatch legend__swatch--inactive"></span> Other EM options (ecosystem view)</span>
+          <span class="legend__item"><span class="legend__swatch legend__swatch--coming"></span> Coming (in development)</span>
+        </div>
+
+        <div class="step3-actions">
+          <button class="btn-fyp btn-fyp--ghost" id="backTo2">← Edit goals</button>
+          <button class="btn-fyp btn-fyp--ghost" id="copyLink" data-goatcounter-click="picker_share">🔗 Copy link to this configuration</button>
+          <button class="btn-fyp btn-fyp--link" id="restart" data-goatcounter-click="picker_restart">Start over</button>
+        </div>
+        <span class="copy-feedback" id="copyFeedback" aria-live="polite"></span>
+
+        <div class="footnote">
+          <strong>A note on the manual links.</strong>
+          Manual links point at the EM documentation site and some are still placeholders pending the docs
+          restructure. Blocks marked "coming" are roadmap items, visible so you know where the ecosystem is heading.
+        </div>
+      </section>
+
+      <!-- ============ MINI-FAQ ============ -->
+      <section class="fyp-faq">
+        <h2 class="fyp-faq__title">Mini-FAQ</h2>
+
+        <details class="fyp-faq__item">
+          <summary>What if I have nothing yet?</summary>
+          <p>
+            Pick nothing in Step 1 and just choose a goal — the picker highlights
+            the three spine blocks (DosCO, proxies, matrix) you'd need regardless.
+            They're always part of EM.
+          </p>
+        </details>
+
+        <details class="fyp-faq__item">
+          <summary>My tool isn't listed under materials — why?</summary>
+          <p>
+            The picker only surfaces materials EM currently has a documented
+            ingestion path for. Geophysics, for example, is on the roadmap and
+            appears in the schema dimmed with a "coming" label. If you have a use
+            case for something else, tell us in the
+            <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">community channel</a>.
+          </p>
+        </details>
+
+        <details class="fyp-faq__item">
+          <summary>Can I share this configuration with a colleague?</summary>
+          <p>
+            Yes — use the <em>"Copy link to this configuration"</em> button under
+            Step 3. The link encodes your selections and reopens to the same view.
+          </p>
+        </details>
+
+        <details class="fyp-faq__item">
+          <summary>How is this different from the <a href={`${B}/start`}>Start page</a>?</summary>
+          <p>
+            The Start page answers <em>"who are you?"</em> (archaeologist,
+            modeller, developer). This page answers <em>"what's on your desk and
+            what do you want to publish?"</em> — pick both and the workflow
+            assembles itself.
+          </p>
+        </details>
+      </section>
+
+      <!-- ============ BOTTOM CTA ============ -->
+      <div class="fyp-bottom-cta">
+        <a class="fyp-breadcrumb" href={`${B}/start`}>← Back to overview</a>
+        <a
+          class="btn-fyp btn-fyp--primary"
+          href="https://docs.extendedmatrix.org/"
+          target="_blank"
+          rel="noopener"
+          data-goatcounter-click="picker_outbound_manual"
+        >
+          Read the full manual →
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+<style is:global>
+  /* ============================================================
+     Find Your Path — scoped picker styles
+     The prototype's CSS variables are mapped onto the EM globals
+     where they exist, so the picker inherits the site theme.
+     ============================================================ */
+  .find-your-path {
+    /* --- Picker palette aliases mapped onto EM globals --- */
+    --navy:        var(--em-navy);
+    --navy-soft:   var(--em-navy-soft);
+    --navy-tint:   var(--em-navy-tint);
+    --navy-deep:   #0a1429;
+    --gold:        var(--em-gold);
+    --gold-soft:   var(--em-gold-soft);
+    --gold-tint:   var(--em-gold-tint);
+    --fyp-bg:      var(--em-bg);
+    --fyp-bg-warm: var(--em-bg-warm);
+    --fyp-text:    var(--em-text);
+    --fyp-text-muted: var(--em-text-muted);
+    --fyp-text-faint: #97a3b0;
+    --fyp-border:  var(--em-border);
+    --fyp-border-strong: #cdc9bf;
+    --fyp-warn:    #b4530b;
+    --fyp-warn-tint: #fff3e0;
+    --fyp-shadow-sm: 0 1px 2px rgba(26,40,69,0.04), 0 1px 1px rgba(26,40,69,0.03);
+    --fyp-shadow-md: 0 4px 16px rgba(26,40,69,0.08), 0 2px 4px rgba(26,40,69,0.05);
+    --fyp-shadow-lg: 0 10px 28px rgba(26,40,69,0.12), 0 4px 8px rgba(26,40,69,0.06);
+    --fyp-ease:    cubic-bezier(0.4, 0, 0.2, 1);
+    --fyp-radius:  10px;
+    --fyp-radius-sm: 6px;
+
+    padding: 40px 0 96px;
+  }
+
+  .fyp-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* --- Breadcrumb --- */
+  .fyp-breadcrumb {
+    display: inline-block;
+    font-size: 14px;
+    color: var(--fyp-text-muted);
+    margin-bottom: 24px;
+    text-decoration: none;
+  }
+  .fyp-breadcrumb:hover { color: var(--gold); }
+
+  /* --- Hero --- */
+  .fyp-hero { margin-bottom: 32px; }
+  .fyp-hero__title {
+    margin: 14px 0 12px;
+    color: var(--navy);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+  .fyp-hero__sub {
+    color: var(--fyp-text-muted);
+    max-width: 760px;
+    font-size: 1.05rem;
+    line-height: 1.55;
+  }
+
+  /* --- Progress dots --- */
+  .find-your-path .progress {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 28px 0 24px;
+  }
+  .find-your-path .progress__dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--fyp-bg);
+    border: 1.5px solid var(--fyp-border-strong);
+    color: var(--fyp-text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all .25s var(--fyp-ease);
+  }
+  .find-your-path .progress__dot--active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .find-your-path .progress__dot--done   { background: var(--gold); color: #fff; border-color: var(--gold); }
+  .find-your-path .progress__bar {
+    flex: 0 0 24px;
+    height: 2px;
+    background: var(--fyp-border-strong);
+  }
+  .find-your-path .progress__bar--done { background: var(--gold); }
+  .find-your-path .progress__label {
+    margin-left: 12px;
+    color: var(--fyp-text-muted);
+    font-size: 13px;
+  }
+
+  /* --- Step panel --- */
+  .find-your-path .step {
+    background: var(--fyp-bg);
+    border: 1px solid var(--fyp-border);
+    border-radius: var(--fyp-radius);
+    padding: 32px;
+    box-shadow: var(--fyp-shadow-md);
+    margin-bottom: 24px;
+    animation: fypSlideIn .35s var(--fyp-ease);
+  }
+  @keyframes fypSlideIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .find-your-path .step--hidden { display: none; }
+  .find-your-path .step__head {
+    margin-bottom: 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .find-your-path .step__num {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .find-your-path .step__title {
+    color: var(--navy);
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.25;
+  }
+  .find-your-path .step__hint {
+    color: var(--fyp-text-muted);
+    font-size: 14px;
+    margin-top: 4px;
+    margin-bottom: 16px;
+  }
+
+  /* --- Step 1 disclaimer --- */
+  .find-your-path .step1-disclaimer {
+    background: var(--gold-tint);
+    border-left: 3px solid var(--gold);
+    padding: 14px 18px;
+    margin: 0 0 24px;
+    border-radius: var(--fyp-radius-sm);
+    font-size: 14.5px;
+    color: var(--navy-deep);
+    line-height: 1.55;
+  }
+  .find-your-path .step1-disclaimer strong { color: var(--navy); font-weight: 700; }
+
+  /* --- Materials grouping --- */
+  .find-your-path .materials-group__head {
+    margin: 22px 0 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .find-your-path .materials-group:first-child .materials-group__head { margin-top: 0; }
+  .find-your-path .materials-group__label {
+    color: var(--gold);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .find-your-path .materials-group__note {
+    color: var(--fyp-text-muted);
+    font-size: 12.5px;
+    font-style: italic;
+  }
+
+  /* --- Card grid (Step 1 / 2) --- */
+  .find-your-path .cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 600px) { .find-your-path .cards { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 880px) { .find-your-path .cards { grid-template-columns: repeat(3, 1fr); gap: 14px; } }
+
+  .find-your-path .card {
+    appearance: none;
+    background: var(--fyp-bg);
+    border: 1.5px solid var(--fyp-border-strong);
+    border-radius: var(--fyp-radius-sm);
+    padding: 18px 18px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all .18s var(--fyp-ease);
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--fyp-text);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    min-height: 116px;
+  }
+  .find-your-path .card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--fyp-shadow-md);
+    border-color: var(--gold);
+  }
+  .find-your-path .card:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .find-your-path .card__icon {
+    font-size: 22px;
+    line-height: 1;
+    margin-bottom: 4px;
+    color: var(--navy);
+    display: inline-flex;
+    align-items: center;
+    height: 26px;
+  }
+  .find-your-path .card__icon svg { width: 26px; height: 26px; }
+  .find-your-path .card__title { color: var(--navy); font-weight: 600; font-size: 15px; line-height: 1.3; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .find-your-path .card__desc  { color: var(--fyp-text-muted); font-size: 13px; line-height: 1.45; }
+  .find-your-path .card[aria-pressed="true"] {
+    background: var(--navy);
+    border-color: var(--navy);
+    box-shadow: var(--fyp-shadow-md);
+  }
+  .find-your-path .card[aria-pressed="true"] .card__title,
+  .find-your-path .card[aria-pressed="true"] .card__icon { color: #fff; }
+  .find-your-path .card[aria-pressed="true"] .card__desc  { color: rgba(255,255,255,0.78); }
+  .find-your-path .card[aria-pressed="true"]::after {
+    content: "✓";
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+  }
+
+  /* In-development card */
+  .find-your-path .card--in-dev {
+    border-style: dashed;
+    background: repeating-linear-gradient(
+      45deg,
+      var(--fyp-bg-warm),
+      var(--fyp-bg-warm) 6px,
+      #f3f1ea 6px,
+      #f3f1ea 12px
+    );
+  }
+  .find-your-path .card--in-dev:hover { border-color: var(--fyp-warn); }
+  .find-your-path .card--in-dev .card__title { color: var(--navy-soft); }
+  .find-your-path .card--in-dev[aria-pressed="true"] { background: var(--navy); border-style: solid; }
+  .find-your-path .badge-coming {
+    display: inline-block;
+    padding: 1px 7px;
+    background: var(--fyp-warn-tint);
+    color: var(--fyp-warn);
+    border: 1px solid var(--fyp-warn);
+    border-radius: 100px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .find-your-path .card[aria-pressed="true"] .badge-coming {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+  }
+
+  /* --- Buttons --- */
+  .find-your-path .actions {
+    margin-top: 24px;
+    display: flex;
+    gap: 12px;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .find-your-path .btn-fyp {
+    appearance: none;
+    border: 0;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 22px;
+    border-radius: var(--fyp-radius-sm);
+    cursor: pointer;
+    transition: all .18s var(--fyp-ease);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .find-your-path .btn-fyp--primary { background: var(--navy); color: #fff; }
+  .find-your-path .btn-fyp--primary:hover:not(:disabled) {
+    background: var(--navy-soft);
+    transform: translateY(-1px);
+    box-shadow: var(--fyp-shadow-md);
+    color: #fff;
+  }
+  .find-your-path .btn-fyp--primary:disabled {
+    background: var(--fyp-border-strong);
+    color: var(--fyp-text-muted);
+    cursor: not-allowed;
+  }
+  .find-your-path .btn-fyp--ghost {
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--fyp-border-strong);
+  }
+  .find-your-path .btn-fyp--ghost:hover { border-color: var(--gold); color: var(--gold); }
+  .find-your-path .btn-fyp--link {
+    background: transparent;
+    color: var(--fyp-text-muted);
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+  .find-your-path .btn-fyp--link:hover { color: var(--gold); }
+  .find-your-path .btn-fyp:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .find-your-path .selection-count { color: var(--fyp-text-muted); font-size: 13px; }
+
+  /* --- Step 3 layout --- */
+  .find-your-path .step3-head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .find-your-path .step3-head-row .step__head { margin-bottom: 0; }
+
+  /* iOS-style toggle */
+  .find-your-path .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13.5px;
+    color: var(--fyp-text-muted);
+    cursor: pointer;
+    user-select: none;
+  }
+  .find-your-path .toggle__switch {
+    position: relative;
+    width: 42px;
+    height: 24px;
+    background: var(--fyp-border-strong);
+    border-radius: 100px;
+    transition: background .2s var(--fyp-ease);
+    flex-shrink: 0;
+  }
+  .find-your-path .toggle__switch::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform .2s var(--fyp-ease);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+  }
+  .find-your-path .toggle input { position: absolute; opacity: 0; pointer-events: none; }
+  .find-your-path .toggle input:checked + .toggle__switch { background: var(--gold); }
+  .find-your-path .toggle input:checked + .toggle__switch::after { transform: translateX(18px); }
+  .find-your-path .toggle input:focus-visible + .toggle__switch { outline: 3px solid var(--gold-soft); outline-offset: 2px; }
+  .find-your-path .toggle__label { font-weight: 500; }
+  .find-your-path .toggle__state {
+    color: var(--fyp-text-faint);
+    font-size: 12px;
+    font-style: italic;
+  }
+
+  .find-your-path .schema-summary {
+    background: var(--navy-tint);
+    border-left: 3px solid var(--navy);
+    padding: 14px 18px;
+    margin: 0 0 14px;
+    border-radius: var(--fyp-radius-sm);
+    font-size: 14px;
+    color: var(--navy);
+  }
+  .find-your-path .schema-summary strong { font-weight: 600; }
+  .find-your-path .schema-summary__chips {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-left: 4px;
+  }
+  .find-your-path .chip {
+    display: inline-block;
+    padding: 2px 9px;
+    background: #fff;
+    color: var(--navy);
+    border: 1px solid var(--navy-tint);
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .find-your-path .chip--goal { background: var(--gold-tint); color: var(--gold); border-color: var(--gold-tint); }
+  .find-your-path .chip--in-dev {
+    background: var(--fyp-warn-tint);
+    color: var(--fyp-warn);
+    border: 1px dashed var(--fyp-warn);
+  }
+
+  /* Didactic note */
+  .find-your-path .didactic-note {
+    color: var(--fyp-text-muted);
+    font-size: 12.5px;
+    font-style: italic;
+    line-height: 1.55;
+    margin: 12px 0 18px;
+    padding: 0 4px;
+    border-left: 2px solid var(--gold);
+    padding-left: 12px;
+  }
+
+  /* --- 5-column backbone --- */
+  .find-your-path .backbone {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin-top: 10px;
+  }
+  @media (max-width: 1100px) {
+    .find-your-path .backbone { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .find-your-path .backbone { grid-template-columns: 1fr; }
+  }
+
+  .find-your-path .phase-col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+  .find-your-path .phase-head {
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-soft) 100%);
+    color: #fff;
+    padding: 10px 12px;
+    border-radius: var(--fyp-radius-sm);
+    text-align: center;
+    box-shadow: var(--fyp-shadow-sm);
+  }
+  .find-your-path .phase-head__num {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--navy-deep);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 22px;
+    margin-bottom: 4px;
+  }
+  .find-your-path .phase-head__title {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+  }
+
+  .find-your-path .phase-arrow-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+    margin: 2px 0 8px;
+    color: var(--gold);
+    font-size: 14px;
+    text-align: center;
+  }
+  @media (max-width: 1100px) { .find-your-path .phase-arrow-row { display: none; } }
+  .find-your-path .phase-arrow-row .arrow {
+    height: 14px;
+    line-height: 14px;
+    color: var(--fyp-border-strong);
+  }
+  .find-your-path .phase-arrow-row .arrow--active { color: var(--gold); }
+
+  .find-your-path .phase-col__inner {
+    background: var(--fyp-bg-warm);
+    border: 1px solid var(--fyp-border);
+    border-radius: var(--fyp-radius-sm);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-height: 80px;
+  }
+  .find-your-path .phase-col__inner--empty {
+    align-items: center;
+    justify-content: center;
+    color: var(--fyp-text-faint);
+    font-size: 11.5px;
+    font-style: italic;
+    text-align: center;
+  }
+
+  /* --- Block tiles --- */
+  .find-your-path .block {
+    background: var(--fyp-bg);
+    border: 1.5px solid var(--fyp-border);
+    border-radius: var(--fyp-radius-sm);
+    padding: 10px 12px 12px;
+    cursor: pointer;
+    transition: all .25s var(--fyp-ease);
+    text-align: left;
+    appearance: none;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    position: relative;
+    min-height: 76px;
+  }
+  .find-your-path .block:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--fyp-shadow-sm);
+  }
+  .find-your-path .block:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .find-your-path .block__title {
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 12.5px;
+    line-height: 1.3;
+  }
+  .find-your-path .block__tool {
+    color: var(--fyp-text-muted);
+    font-size: 11px;
+    font-style: italic;
+  }
+
+  /* Active state */
+  .find-your-path .block.is-active {
+    border-color: var(--navy);
+    background: var(--navy-tint);
+    box-shadow: 0 2px 8px rgba(26,40,69,0.07);
+  }
+  .find-your-path .block.is-active .block__title { color: var(--navy); }
+  .find-your-path .block.is-active .block__tool { color: var(--navy-soft); }
+
+  /* Inactive state (ecosystem view only) */
+  .find-your-path .block.is-inactive {
+    opacity: 0.3;
+    filter: saturate(0.4);
+  }
+
+  /* Spine / always-on EM core */
+  .find-your-path .block.is-spine {
+    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    border-color: var(--gold);
+    border-width: 2px;
+    box-shadow: 0 4px 16px rgba(26,40,69,0.18);
+    margin-top: 12px;
+  }
+  .find-your-path .block.is-spine .block__title { color: #fff; }
+  .find-your-path .block.is-spine .block__tool { color: var(--gold-soft); font-style: normal; font-weight: 500; }
+  .find-your-path .block.is-spine::before {
+    content: "★ ALWAYS PART OF EM";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--navy-deep);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  /* In-development state */
+  .find-your-path .block.is-in-dev {
+    border-style: dashed;
+    border-color: var(--fyp-border-strong);
+    background: transparent;
+  }
+  .find-your-path .block.is-in-dev .block__title { color: var(--navy-soft); }
+  .find-your-path .block.is-in-dev::after {
+    content: "coming";
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    color: var(--fyp-warn);
+    font-size: 10px;
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  /* Block popover */
+  .find-your-path .block .block__pop {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--navy-deep);
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: var(--fyp-radius-sm);
+    box-shadow: var(--fyp-shadow-lg);
+    width: 280px;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .15s var(--fyp-ease), transform .15s var(--fyp-ease);
+    font-size: 12px;
+    line-height: 1.5;
+    font-style: normal;
+    text-align: left;
+  }
+  .find-your-path .block .block__pop::after {
+    content: "";
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: var(--navy-deep);
+    border-bottom: 0;
+  }
+  .find-your-path .block:hover .block__pop,
+  .find-your-path .block:focus-within .block__pop {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+  }
+  .find-your-path .block__pop strong { color: #fff; }
+  .find-your-path .block__pop p { margin: 0 0 8px; color: rgba(255,255,255,0.92); }
+  .find-your-path .block__pop .pop-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+  }
+  .find-your-path .block__pop a {
+    color: var(--gold-soft);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 11.5px;
+    padding: 2px 0;
+  }
+  .find-your-path .block__pop a:hover { color: #fff; text-decoration: underline; }
+  .find-your-path .block__pop .tutorial-coming {
+    color: var(--fyp-warn-tint);
+    font-size: 11px;
+    font-style: italic;
+    background: rgba(180,83,11,0.25);
+    padding: 2px 8px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,200,100,0.3);
+    align-self: flex-start;
+  }
+  .find-your-path .block__pop .pop-payload {
+    margin-top: 6px;
+    padding: 6px 8px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 4px;
+  }
+  .find-your-path .block__pop .pop-payload strong { font-size: 10.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-soft); }
+  .find-your-path .block__pop .pop-payload-item {
+    margin-top: 4px;
+    font-size: 11px;
+  }
+  .find-your-path .block__pop .pop-payload-item .pi-label {
+    font-weight: 600;
+    color: #fff;
+  }
+  .find-your-path .block__pop .pop-payload-item .pi-desc {
+    color: rgba(255,255,255,0.7);
+  }
+
+  /* Right-edge popover alignment for the rightmost columns */
+  .find-your-path .phase-col:nth-child(n+4) .block .block__pop {
+    left: auto;
+    right: 0;
+    transform: translateY(4px);
+  }
+  .find-your-path .phase-col:nth-child(n+4) .block .block__pop::after {
+    left: auto;
+    right: 24px;
+    transform: none;
+  }
+  .find-your-path .phase-col:nth-child(n+4) .block:hover .block__pop,
+  .find-your-path .phase-col:nth-child(n+4) .block:focus-within .block__pop {
+    transform: translateY(0);
+  }
+
+  /* Hide inactive in focus mode */
+  .find-your-path.focus-mode .block.is-inactive {
+    display: none;
+  }
+
+  /* Legend */
+  .find-your-path .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin: 18px 0 6px;
+    padding: 10px 14px;
+    background: var(--fyp-bg-warm);
+    border: 1px solid var(--fyp-border);
+    border-radius: var(--fyp-radius-sm);
+    font-size: 12px;
+    color: var(--fyp-text-muted);
+  }
+  .find-your-path .legend__item { display: inline-flex; align-items: center; gap: 6px; }
+  .find-your-path .legend__swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    border: 1.5px solid var(--fyp-border);
+  }
+  .find-your-path .legend__swatch--spine { background: var(--navy); border-color: var(--gold); border-width: 2px; }
+  .find-your-path .legend__swatch--active { background: var(--navy-tint); border-color: var(--navy); }
+  .find-your-path .legend__swatch--inactive { background: var(--fyp-bg); border-color: var(--fyp-border-strong); opacity: 0.4; }
+  .find-your-path .legend__swatch--coming { background: transparent; border-style: dashed; border-color: var(--fyp-border-strong); }
+
+  /* Restart button row */
+  .find-your-path .step3-actions {
+    margin-top: 26px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .find-your-path .copy-feedback {
+    display: inline-block;
+    margin-top: 6px;
+    color: var(--gold);
+    font-size: 13px;
+    font-weight: 500;
+    min-height: 18px;
+  }
+
+  /* Footer note */
+  .find-your-path .footnote {
+    margin-top: 36px;
+    padding: 14px 18px;
+    background: var(--fyp-warn-tint);
+    border-left: 3px solid var(--fyp-warn);
+    border-radius: var(--fyp-radius-sm);
+    color: var(--fyp-text-muted);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .find-your-path .footnote strong { color: var(--fyp-warn); }
+
+  /* --- Mini-FAQ --- */
+  .fyp-faq {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--em-border);
+  }
+  .fyp-faq__title {
+    color: var(--em-navy);
+    font-size: 1.4rem;
+    margin-bottom: 16px;
+  }
+  .fyp-faq__item {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--em-border);
+  }
+  .fyp-faq__item summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--em-navy);
+    list-style: none;
+    position: relative;
+    padding-right: 28px;
+  }
+  .fyp-faq__item summary::-webkit-details-marker { display: none; }
+  .fyp-faq__item summary::after {
+    content: "+";
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: var(--em-gold);
+    font-weight: 700;
+    font-size: 18px;
+    transition: transform .2s var(--ease);
+  }
+  .fyp-faq__item[open] summary::after { content: "−"; }
+  .fyp-faq__item p {
+    margin-top: 10px;
+    color: var(--em-text-muted);
+    font-size: 14.5px;
+  }
+  .fyp-faq__item a {
+    color: var(--em-gold);
+    font-weight: 500;
+  }
+
+  /* --- Bottom CTA --- */
+  .fyp-bottom-cta {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--em-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .fyp-bottom-cta .fyp-breadcrumb { margin-bottom: 0; }
+</style>
+
+<script is:inline define:vars={{ EM_BASE: B }}>
+"use strict";
+
+/* =====================================================================
+   INLINE SVG ICONS
+===================================================================== */
+const ICONS = {
+  emLogo: `<svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+    <line x1="6" y1="4.5" x2="26" y2="4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <line x1="6" y1="27.5" x2="26" y2="27.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    <path d="M8 5 C 8 12, 16 14, 16 16 C 16 18, 8 20, 8 27" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M24 5 C 24 12, 16 14, 16 16 C 16 18, 24 20, 24 27" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+    <path d="M8 5 C 12 12, 20 18, 24 27" stroke="#bd8e00" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  </svg>`
+};
+
+/* Helper: prefix a tools-page URL with the site BASE_URL.
+   Leaves http(s) absolute URLs untouched. */
+function withBase(url) {
+  if (!url) return url;
+  if (/^https?:/i.test(url)) return url;
+  return EM_BASE + url;
+}
+
+/* =====================================================================
+   MATERIALS (Step 1) — 12 entries
+===================================================================== */
+const materials = [
+  { id: 'written-sources',    icon: '📜', title: 'Written sources',     desc: 'Publications, grey literature, archive documents.',         status: 'stable' },
+  { id: 'drawings',           icon: '📐', title: 'Drawings',            desc: 'Sections, elevations, plans.',                              status: 'stable' },
+  { id: 'photos',             icon: '📷', title: 'Photos',              desc: 'Historical or fieldwork imagery.',                          status: 'stable' },
+  { id: '3d-survey',          icon: '🛰️', title: '3D survey',           desc: 'Photogrammetry, laser scan, drone capturing.',              status: 'stable' },
+  { id: 'tabular',            icon: '📊', title: 'Tabular data',        desc: 'xlsx, csv, databases.',                                     status: 'stable' },
+  { id: 'remote-sensing',     icon: '🌍', title: 'Remote sensing',      desc: 'Satellite imagery, multispectral, lidar-from-air, geomatic surfaces.', status: 'stable' },
+  { id: 'gis',                icon: '🗺️', title: 'GIS data',            desc: 'Shapefile, territorial layers.',                            status: 'stable' },
+  { id: 'existing-em-graph',  iconSvg: 'emLogo', title: 'Existing EM graph', desc: 'Inherit a graph to extend, correct, or migrate.',     status: 'stable' },
+  { id: 'cad',                icon: '✏️', title: 'CAD files',           desc: 'dwg, dxf, technical drawings (DXF supports georef).',      status: 'stable' },
+  { id: 'geophysics-data',    icon: '📡', title: 'Geophysics data',     desc: 'Georadar, magnetometry, geoelectric surveys.',              status: 'in-development' },
+  { id: 'surface-degradation',icon: '🪨', title: 'Surface degradation', desc: 'Analytics on material decay, pathology mapping.',           status: 'in-development' },
+  { id: 'imaging-data',       icon: '🩻', title: 'Imaging data',        desc: 'X-ray, multispectral imaging, tomographies.',               status: 'in-development' }
+];
+
+/* =====================================================================
+   GOALS (Step 2)
+===================================================================== */
+const goals = [
+  { id: 'manage-data',           icon: '🗂️', title: 'Manage data of a cultural heritage site or dig', desc: 'Structure your evidence base and source dossier.' },
+  { id: 'document-stratigraphy', icon: '📚', title: 'Document stratigraphy of my site',                desc: 'Build and publish the matrix of your site.' },
+  { id: 'publish-reconstruction',icon: '🌐', title: 'Publish a reconstruction online',                 desc: 'Share an interactive 3D model online.' },
+  { id: 'beautiful-viz',         icon: '🎨', title: 'Create polished visualizations',                  desc: 'High-fidelity rendering with paradata chain.' },
+  { id: 'anastylosis',           icon: '🧩', title: 'Reassemble re-used elements (anastylosis)',       desc: 'Align scanned or drawn pieces into assemblies.' },
+  { id: 'publish-zenodo',        icon: '🆔', title: 'Publish dataset with DOI on Zenodo',              desc: 'Make your DosCO + graph + reconstructive dataset citable and archived. Versioned releases with persistent identifiers.' }
+];
+
+/* =====================================================================
+   BLOCK CATALOG — phase 1..5 backbone
+===================================================================== */
+const blockCatalog = {
+
+  /* ========== PHASE 1: Data Collection ========== */
+  'prepare-survey-metashape': {
+    phase: 1,
+    title: 'Prepare photogrammetric model',
+    microcopy: 'Generate the textured 3D model from your photos in Metashape, using 3DSC4Metashape Python scripts. Guarantees a consistent texel density across the surface.',
+    tool: '3DSC4Metashape',
+    learnLink: { url: 'https://docs.extendedmatrix.org/projects/3dsc/en/latest/metashape.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: 'https://github.com/zalmoxes-laran/3DSC_Metashape', label: 'Get 3DSC4Metashape →' },
+    status: 'stable',
+    triggers: { materials: ['3d-survey'] }
+  },
+  'import-3d-survey': {
+    phase: 1,
+    title: 'Optimize survey for Blender',
+    microcopy: 'Bring the processed model into Blender via 3DSC and create LODs for proxy modeling.',
+    tool: '3DSC',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/3dsc.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/3dsc/import-howto.html', label: 'How to do it →' },
+    getLink:   { url: 'https://github.com/zalmoxes-laran/3D-survey-collection', label: 'Get 3DSC (Blender) →' },
+    status: 'stable',
+    triggers: { materials: ['3d-survey'] }
+  },
+  'place-drawings-as-refs': {
+    phase: 1,
+    title: 'Place drawings as 3D references',
+    microcopy: 'Instantiate sections, elevations and plans as 2D backdrops for over-modelling proxies.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/drawings.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { materials: ['drawings'] }
+  },
+  'link-photos-aux': {
+    phase: 1,
+    title: 'Link photos as auxiliary files',
+    microcopy: 'Attach photos to graph nodes as evidence — non-blocking, can be done at any moment.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/aux-files.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/aux-files-howto.html', label: 'How to do it →' },
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { materials: ['photos'] }
+  },
+  'import-gis-blendergis': {
+    phase: 1,
+    title: 'Import GIS layers (BlenderGIS)',
+    microcopy: 'Use the well-known BlenderGIS addon (install if not present) — integrates automatically with the EM Tools ecosystem.',
+    tool: 'BlenderGIS',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/blendergis.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: 'https://github.com/domlysz/BlenderGIS', label: 'Get BlenderGIS ↗' },
+    status: 'stable',
+    triggers: { materials: ['gis'] }
+  },
+  'import-remote-sensing': {
+    phase: 1,
+    title: 'Process remote-sensing data',
+    microcopy: 'Satellite imagery, multispectral, lidar-from-air and geomatic surfaces become 2.5D references — pair with BlenderGIS for georef.',
+    tool: '3DSC + BlenderGIS',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/remote-sensing.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
+    status: 'stable',
+    triggers: { materials: ['remote-sensing'] }
+  },
+  'import-cad': {
+    phase: 1,
+    title: 'Import CAD files',
+    microcopy: 'Use DXF format — works with georeferenced files. ⚠ Ensure the same EPSG between your DXF and your 3D scene.',
+    tool: 'Blender CAD import',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/cad.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { materials: ['cad'] }
+  },
+  'integrate-geophysics': {
+    phase: 1,
+    title: 'Integrate geophysics surveys',
+    microcopy: 'Bring georadar, magnetometry and geoelectric surveys into the EM workflow.',
+    tool: '(in development)',
+    learnLink: null,
+    howToLink: null,
+    getLink: null,
+    status: 'in-development',
+    triggers: { materials: ['geophysics-data'] }
+  },
+  'process-imaging-data': {
+    phase: 1,
+    title: 'Process imaging data',
+    microcopy: 'X-ray, multispectral imaging and tomographies as evidence layers.',
+    tool: '(in development)',
+    learnLink: null,
+    howToLink: null,
+    getLink: null,
+    status: 'in-development',
+    triggers: { materials: ['imaging-data'] }
+  },
+  'populate-dosco': {
+    phase: 1,
+    crossPhase: [1, 2],
+    title: 'Populate DosCO',
+    microcopy: 'Collect your evidence into the canonical <em>source_list.xlsx</em> template, import into the graph via EMdb. Sources, documents, authors, licenses — all structured.',
+    advancedNote: 'Existing database? Build a custom s3dgraphy mapper.',
+    tool: 'EM Tools (EMdb)',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco-howto.html', label: 'How to do it →' },
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    advancedLink: { url: 'https://github.com/pyarchinit/pyarchinit', label: 'PyArchInit s3dgraphy reference ↗' },
+    status: 'stable',
+    isSpine: true,
+    triggers: { always: true }
+  },
+
+  /* ========== PHASE 2: Data Management & Analysis ========== */
+  'convert-legacy-em-graph': {
+    phase: 2,
+    title: 'Open & convert existing EM graph',
+    microcopy: 'Open old EM graph in EM Tools — the utility converter in <code>utils/</code> handles version migrations automatically.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/legacy-graphs.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { materials: ['existing-em-graph'] }
+  },
+  'draw-matrix': {
+    phase: 2,
+    title: 'Draw the Extended Matrix',
+    microcopy: 'The stratigraphic matrix can be drawn at any moment — yEd with the EM palette.',
+    tool: 'yEd + EM palette',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-palette/index.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-palette/howto.html', label: 'How to do it →' },
+    getLink:   { url: '/tools/em-palette/', label: 'Get EM palette →' },
+    status: 'stable',
+    isSpine: true,
+    triggers: { always: true }
+  },
+  'enrich-dosco-iterative': {
+    phase: 2,
+    title: 'Iteratively enrich DosCO',
+    microcopy: 'Curate the source dossier as new evidence emerges — loop back from any later step.',
+    tool: 'EM Tools (EMdb)',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco-iterate.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { goals: ['manage-data'] }
+  },
+
+  /* ========== PHASE 3: Implementation & Virtual Reconstruction ========== */
+  'build-proxies': {
+    phase: 3,
+    title: 'Model the proxies',
+    microcopy: 'Build the stratigraphic proxies — from survey, drawings, CAD, GIS or written sources.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/proxies.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/proxies-howto.html', label: 'How to do it →' },
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    isSpine: true,
+    triggers: { always: true }
+  },
+  'link-graph-proxies': {
+    phase: 3,
+    title: 'Connect graph and proxies',
+    microcopy: 'Iteratively bind each proxy to its graph node — the paradata chain becomes navigable.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/connect.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { goals: ['document-stratigraphy', 'publish-reconstruction', 'beautiful-viz', 'anastylosis'] }
+  },
+  'assemble-epochs': {
+    phase: 3,
+    title: 'Compose epoch scenes',
+    microcopy: 'Assemble epoch-specific reconstructions from proxies + connected graph.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/epochs.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { goals: ['publish-reconstruction', 'beautiful-viz'] }
+  },
+  'do-anastylosis': {
+    phase: 3,
+    title: 'Anastylosis assembly',
+    microcopy: 'Align scanned or drawn pieces into anastylosis assemblies via EM Tools.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/anastylosis.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { goals: ['anastylosis'] }
+  },
+  'analyse-surface-degradation': {
+    phase: 3,
+    title: 'Surface degradation analytics',
+    microcopy: 'Pathology mapping and decay analytics layered on proxies.',
+    tool: '(in development)',
+    learnLink: null,
+    howToLink: null,
+    getLink: null,
+    status: 'in-development',
+    triggers: { materials: ['surface-degradation'] }
+  },
+
+  /* ========== PHASE 4: Representation Model ========== */
+  'add-representation-models': {
+    phase: 4,
+    title: 'Add representation models',
+    microcopy: 'Layer polished visual models over proxies for high-fidelity rendering — proxies keep the evidence link.',
+    tool: 'EM Tools',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/representation-models.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { goals: ['beautiful-viz'] }
+  },
+
+  /* ========== PHASE 5: Publication & Dissemination ========== */
+  'publish-via-heriverse': {
+    phase: 5,
+    title: 'Publish via Heriverse',
+    microcopy: 'Choose what to share: documentation only (graph + paradata) or full reconstruction (epochs + 3D scene). Same tool, single tab in Heriverse, different payload extents.',
+    tool: 'Heriverse',
+    learnLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/concepts.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/publish.html', label: 'How to do it →' },
+    getLink:   { url: '/tools/heriverse/', label: 'Get Heriverse →' },
+    payloadTabs: [
+      { label: 'Documentation only', desc: 'Graph + paradata. For stratigraphy publication.' },
+      { label: 'Full reconstruction', desc: 'Epochs + 3D scene + paradata. For polished public output.' }
+    ],
+    status: 'stable',
+    triggers: { goals: ['document-stratigraphy', 'publish-reconstruction', 'beautiful-viz'] }
+  },
+  'publish-zenodo': {
+    phase: 5,
+    title: 'Publish on Zenodo (DOI)',
+    microcopy: 'Mint a DOI on Zenodo, version the dataset, link to a data paper. Best practice for citable archival of EM-based research outputs.',
+    tool: 'Zenodo',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/zenodo.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: 'https://zenodo.org/', label: 'Open Zenodo ↗' },
+    status: 'stable',
+    triggers: { goals: ['publish-zenodo'] }
+  },
+  'export-dosco-data': {
+    phase: 5,
+    title: 'Export DosCO as data',
+    microcopy: 'A populated DosCO is itself shareable — export the structured evidence base for archive or downstream use.',
+    tool: 'EM Tools (EMdb)',
+    learnLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/dosco-export.html', label: 'Learn the concept →' },
+    howToLink: null,
+    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    status: 'stable',
+    triggers: { goals: ['manage-data'] }
+  }
+};
+
+/* Phase metadata */
+const phases = [
+  { num: 1, title: 'Data Collection' },
+  { num: 2, title: 'Data Management & Analysis' },
+  { num: 3, title: 'Implementation & Virtual Reconstruction' },
+  { num: 4, title: 'Representation Model' },
+  { num: 5, title: 'Publication & Dissemination' }
+];
+
+/* =====================================================================
+   STATE
+===================================================================== */
+const state = {
+  step: 1,
+  materials: new Set(),
+  goals: new Set(),
+  ecosystemMode: false
+};
+
+/* Root element where the focus-mode class lives. */
+const rootEl = document.querySelector('.find-your-path');
+
+/* =====================================================================
+   COMPOSITION LOGIC
+===================================================================== */
+function activeBlocks(materialsSet, goalsSet) {
+  const active = new Set();
+  for (const [id, block] of Object.entries(blockCatalog)) {
+    if (block.triggers && block.triggers.always) { active.add(id); continue; }
+    const triggers = block.triggers || {};
+    if (triggers.materials && triggers.materials.some(m => materialsSet.has(m))) {
+      active.add(id);
+      continue;
+    }
+    if (triggers.goals && triggers.goals.some(g => goalsSet.has(g))) {
+      active.add(id);
+      continue;
+    }
+  }
+  return active;
+}
+
+/* =====================================================================
+   STEP 1 / 2 RENDERERS
+===================================================================== */
+function renderSelectableGrid(container, items, selectedSet, onChange, kind) {
+  container.innerHTML = '';
+  items.forEach(item => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'card' + (item.status === 'in-development' ? ' card--in-dev' : '');
+    btn.setAttribute('aria-pressed', selectedSet.has(item.id) ? 'true' : 'false');
+    btn.dataset.id = item.id;
+    /* GoatCounter annotation */
+    btn.setAttribute('data-goatcounter-click', 'picker_' + kind + '_' + item.id);
+    if (item.status === 'in-development') {
+      btn.title = 'Coming soon — currently in development';
+    }
+    const iconHtml = item.iconSvg
+      ? ICONS[item.iconSvg]
+      : (item.icon || '•');
+    const comingBadge = item.status === 'in-development'
+      ? ` <span class="badge-coming">in dev</span>`
+      : '';
+    btn.innerHTML = `
+      <span class="card__icon">${iconHtml}</span>
+      <span class="card__title">${item.title}${comingBadge}</span>
+      <span class="card__desc">${item.desc}</span>
+    `;
+    btn.addEventListener('click', () => {
+      if (selectedSet.has(item.id)) selectedSet.delete(item.id);
+      else selectedSet.add(item.id);
+      btn.setAttribute('aria-pressed', selectedSet.has(item.id) ? 'true' : 'false');
+      onChange();
+    });
+    container.appendChild(btn);
+  });
+}
+
+function updateStep1Controls() {
+  const count = state.materials.size;
+  const el = document.getElementById('materialsCount');
+  if (el) el.textContent = count === 0 ? 'Pick at least one' : `${count} selected`;
+  const btn = document.getElementById('toStep2');
+  if (btn) btn.disabled = count === 0;
+}
+
+function updateStep2Controls() {
+  const count = state.goals.size;
+  const el = document.getElementById('goalsCount');
+  if (el) el.textContent = count === 0 ? 'Pick at least one' : `${count} selected`;
+  const btn = document.getElementById('toStep3');
+  if (btn) btn.disabled = count === 0;
+}
+
+/* =====================================================================
+   STEP 3 RENDERER — 5-step backbone
+===================================================================== */
+function renderBackbone() {
+  const active = activeBlocks(state.materials, state.goals);
+
+  /* Summary chips */
+  const sum = document.getElementById('schemaSummary');
+  const matChips = [...state.materials].map(id => {
+    const m = materials.find(x => x.id === id);
+    if (!m) return '';
+    const inDev = m.status === 'in-development';
+    return `<span class="chip${inDev ? ' chip--in-dev' : ''}">${m.title}${inDev ? ' (in dev)' : ''}</span>`;
+  }).join('');
+  const goalChips = [...state.goals].map(id => {
+    const g = goals.find(x => x.id === id);
+    return g ? `<span class="chip chip--goal">${g.title}</span>` : '';
+  }).join('');
+  sum.innerHTML = `
+    <strong>Your inputs:</strong>
+    <span class="schema-summary__chips">${matChips || '<span class="chip">(none)</span>'}</span>
+    &nbsp;·&nbsp;
+    <strong>Goals:</strong>
+    <span class="schema-summary__chips">${goalChips || '<span class="chip">(none)</span>'}</span>
+  `;
+
+  /* Phase tracks */
+  const tracks = document.getElementById('backboneTracks');
+  tracks.innerHTML = '';
+
+  /* Inter-phase arrows: gold if at least one active stable block on either side */
+  const arrowRow = document.getElementById('phaseArrowRow');
+  if (arrowRow) {
+    const arrows = arrowRow.querySelectorAll('.arrow');
+    arrows.forEach((arr, i) => {
+      const fromPhase = i + 1;
+      const toPhase = i + 2;
+      const hasActive = Object.entries(blockCatalog).some(([id, b]) =>
+        (b.phase === fromPhase || b.phase === toPhase) &&
+        active.has(id) && b.status !== 'in-development'
+      );
+      arr.classList.toggle('arrow--active', hasActive);
+    });
+  }
+
+  phases.forEach(phase => {
+    const col = document.createElement('div');
+    col.className = 'phase-col';
+    const inner = document.createElement('div');
+    inner.className = 'phase-col__inner';
+
+    const phaseBlocks = Object.entries(blockCatalog).filter(([, b]) => b.phase === phase.num);
+
+    /* Sort: spine first, then active, then inactive, then in-dev */
+    phaseBlocks.sort((a, b) => {
+      const ba = a[1], bb = b[1];
+      const score = (block, id) => {
+        if (block.isSpine) return 0;
+        if (active.has(id) && block.status !== 'in-development') return 1;
+        if (block.status === 'in-development' && active.has(id)) return 2;
+        if (block.status === 'in-development') return 4;
+        return 3;
+      };
+      return score(ba, a[0]) - score(bb, b[0]);
+    });
+
+    let visibleCount = 0;
+
+    phaseBlocks.forEach(([id, block]) => {
+      const isActive = active.has(id);
+      const isSpine = !!block.isSpine;
+      const isInDev = block.status === 'in-development';
+
+      const blockEl = document.createElement('button');
+      blockEl.type = 'button';
+      blockEl.className = 'block';
+      blockEl.dataset.id = id;
+
+      if (isSpine) blockEl.classList.add('is-spine');
+      else if (isActive) blockEl.classList.add('is-active');
+      else blockEl.classList.add('is-inactive');
+
+      if (isInDev) blockEl.classList.add('is-in-dev');
+
+      const hiddenInFocus = !isSpine && !isActive;
+      if (!hiddenInFocus || state.ecosystemMode) visibleCount++;
+
+      const linksHtml = buildPopLinks(block, id);
+      const payloadHtml = block.payloadTabs
+        ? `<div class="pop-payload">
+            <strong>Payload options</strong>
+            ${block.payloadTabs.map(t => `
+              <div class="pop-payload-item">
+                <span class="pi-label">${t.label}.</span>
+                <span class="pi-desc">${t.desc}</span>
+              </div>
+            `).join('')}
+          </div>`
+        : '';
+      const advancedHtml = block.advancedNote
+        ? `<p><em>Advanced:</em> ${block.advancedNote}${
+            block.advancedLink ? ` <a href="${block.advancedLink.url}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_manual_${id}_advanced">${block.advancedLink.label}</a>` : ''
+          }</p>`
+        : '';
+
+      blockEl.innerHTML = `
+        <span class="block__title">${block.title}</span>
+        <span class="block__tool">${block.tool}</span>
+        <div class="block__pop">
+          <strong>${block.title}</strong>
+          <p>${block.microcopy}</p>
+          ${advancedHtml}
+          ${payloadHtml}
+          <div class="pop-links">${linksHtml}</div>
+        </div>
+      `;
+      inner.appendChild(blockEl);
+    });
+
+    if (phaseBlocks.length === 0 || (visibleCount === 0 && !state.ecosystemMode)) {
+      inner.classList.add('phase-col__inner--empty');
+      inner.innerHTML = `<span>(nothing in your path here — toggle the ecosystem view to see options)</span>`;
+    }
+
+    col.appendChild(inner);
+    tracks.appendChild(col);
+  });
+}
+
+function buildPopLinks(block, id) {
+  const parts = [];
+  if (block.learnLink) {
+    parts.push(`<a href="${withBase(block.learnLink.url)}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_manual_${id}">${block.learnLink.label}</a>`);
+  } else if (block.status === 'in-development') {
+    parts.push(`<span class="tutorial-coming">Documentation coming</span>`);
+  }
+  if (block.howToLink) {
+    parts.push(`<a href="${withBase(block.howToLink.url)}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_manual_${id}_howto">${block.howToLink.label}</a>`);
+  } else if (block.status !== 'in-development') {
+    parts.push(`<span class="tutorial-coming">Tutorial coming</span>`);
+  }
+  if (block.getLink) {
+    parts.push(`<a href="${withBase(block.getLink.url)}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_tool_${id}">${block.getLink.label}</a>`);
+  }
+  return parts.join('');
+}
+
+/* =====================================================================
+   FOCUS / ECOSYSTEM TOGGLE
+===================================================================== */
+function applyMode() {
+  if (rootEl) rootEl.classList.toggle('focus-mode', !state.ecosystemMode);
+  const stateLabel = document.getElementById('modeToggleState');
+  if (stateLabel) {
+    stateLabel.textContent = state.ecosystemMode ? 'ecosystem view' : 'focus mode';
+  }
+  if (state.step === 3) renderBackbone();
+}
+
+/* =====================================================================
+   STEP NAVIGATION
+===================================================================== */
+function goToStep(n) {
+  state.step = n;
+
+  ['step1', 'step2', 'step3'].forEach((id, idx) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('step--hidden', (idx + 1) !== n);
+  });
+
+  const dots = [document.getElementById('dot1'), document.getElementById('dot2'), document.getElementById('dot3')];
+  const bars = [document.getElementById('bar1'), document.getElementById('bar2')];
+  const label = document.getElementById('progressLabel');
+
+  dots.forEach(d => d && d.classList.remove('progress__dot--active', 'progress__dot--done'));
+  bars.forEach(b => b && b.classList.remove('progress__bar--done'));
+
+  if (n >= 1 && dots[0]) dots[0].classList.add(n > 1 ? 'progress__dot--done' : 'progress__dot--active');
+  if (n >= 2) { if (dots[1]) dots[1].classList.add(n > 2 ? 'progress__dot--done' : 'progress__dot--active'); if (bars[0]) bars[0].classList.add('progress__bar--done'); }
+  if (n >= 3) { if (dots[2]) dots[2].classList.add('progress__dot--active'); if (bars[1]) bars[1].classList.add('progress__bar--done'); }
+
+  if (label) label.textContent = ['Step 1 of 3 · What you have', 'Step 2 of 3 · What you want', 'Step 3 of 3 · Your path'][n - 1];
+
+  if (n === 3) renderBackbone();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* =====================================================================
+   URL PARAM HANDLING
+===================================================================== */
+function loadFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const validMaterialIds = new Set(materials.map(m => m.id));
+  const validGoalIds = new Set(goals.map(g => g.id));
+
+  const matStr = params.get('materials');
+  if (matStr) {
+    matStr.split(',').map(s => s.trim()).forEach(id => {
+      if (validMaterialIds.has(id)) state.materials.add(id);
+    });
+  }
+  const goalStr = params.get('goals');
+  if (goalStr) {
+    goalStr.split(',').map(s => s.trim()).forEach(id => {
+      if (validGoalIds.has(id)) state.goals.add(id);
+    });
+  }
+
+  /* If both groups have at least one valid entry, jump to Step 3.
+     If only materials, jump to Step 2.
+     Otherwise stay on Step 1. */
+  if (state.materials.size > 0 && state.goals.size > 0) return 3;
+  if (state.materials.size > 0) return 2;
+  return 1;
+}
+
+function buildShareUrl() {
+  const url = new URL(window.location.href);
+  url.search = '';
+  if (state.materials.size > 0) url.searchParams.set('materials', [...state.materials].join(','));
+  if (state.goals.size > 0) url.searchParams.set('goals', [...state.goals].join(','));
+  return url.toString();
+}
+
+function copyShareLink() {
+  const url = buildShareUrl();
+  const feedback = document.getElementById('copyFeedback');
+  const finish = (msg) => {
+    if (feedback) {
+      feedback.textContent = msg;
+      setTimeout(() => { feedback.textContent = ''; }, 2400);
+    }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(
+      () => finish('Link copied to clipboard ✓'),
+      () => fallbackCopy(url, finish)
+    );
+  } else {
+    fallbackCopy(url, finish);
+  }
+}
+
+function fallbackCopy(text, finish) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    finish('Link copied to clipboard ✓');
+  } catch (e) {
+    finish('Could not copy. URL: ' + text);
+  }
+}
+
+/* =====================================================================
+   BOOT
+===================================================================== */
+function boot() {
+  const stableMaterials = materials.filter(m => m.status !== 'in-development');
+  const inDevMaterials  = materials.filter(m => m.status === 'in-development');
+
+  renderSelectableGrid(document.getElementById('materialsGridStable'), stableMaterials, state.materials, updateStep1Controls, 'material');
+  renderSelectableGrid(document.getElementById('materialsGridInDev'),  inDevMaterials,  state.materials, updateStep1Controls, 'material');
+  renderSelectableGrid(document.getElementById('goalsGrid'),           goals,           state.goals,     updateStep2Controls, 'goal');
+  updateStep1Controls();
+  updateStep2Controls();
+
+  const t2 = document.getElementById('toStep2'); if (t2) t2.addEventListener('click', () => goToStep(2));
+  const t3 = document.getElementById('toStep3'); if (t3) t3.addEventListener('click', () => goToStep(3));
+  const b1 = document.getElementById('backTo1'); if (b1) b1.addEventListener('click', () => goToStep(1));
+  const b2 = document.getElementById('backTo2'); if (b2) b2.addEventListener('click', () => goToStep(2));
+  const cl = document.getElementById('copyLink'); if (cl) cl.addEventListener('click', copyShareLink);
+  const rs = document.getElementById('restart'); if (rs) rs.addEventListener('click', () => {
+    state.materials.clear();
+    state.goals.clear();
+    /* Clear URL params too */
+    const url = new URL(window.location.href);
+    url.search = '';
+    window.history.replaceState({}, '', url.toString());
+    boot();
+    goToStep(1);
+  });
+
+  const toggleInput = document.getElementById('modeToggleInput');
+  if (toggleInput) {
+    toggleInput.checked = state.ecosystemMode;
+    toggleInput.addEventListener('change', (e) => {
+      state.ecosystemMode = !!e.target.checked;
+      applyMode();
+    });
+  }
+
+  applyMode();
+
+  /* Apply URL params on first boot */
+  if (!boot._initialised) {
+    boot._initialised = true;
+    const startStep = loadFromUrl();
+    if (startStep > 1) goToStep(startStep);
+  }
+}
+
+boot();
+</script>
+</BaseLayout>

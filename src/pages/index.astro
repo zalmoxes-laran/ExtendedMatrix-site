@@ -195,6 +195,17 @@ const fmtNewsDate = (d: Date) =>
     </div>
   </section>
 
+  <!-- ============ BANNER: FIND YOUR PATH ============ -->
+  <section class="banner-find-path">
+    <div class="container banner-find-path__inner">
+      <p class="banner-find-path__text">
+        <strong>What do you have? What do you want?</strong>
+        Find your path through the EM workflow with our interactive picker.
+      </p>
+      <a href={`${B}/find-your-path/`} class="btn btn-ghost">Find your path →</a>
+    </div>
+  </section>
+
   <!-- ============ CORE IDEA ============ -->
   <section class="core">
     <div class="container core__row">
@@ -1117,5 +1128,40 @@ const fmtNewsDate = (d: Date) =>
     .newsstrip { padding: 56px 0; }
     .newsstrip__grid { grid-template-columns: 1fr; }
     .newsstrip__head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  }
+
+  /* ── Banner: Find your path (between Live embed and Core idea) ── */
+  .banner-find-path {
+    padding: 28px 0;
+    background: var(--em-bg-warm);
+    border-top: 1px solid var(--em-border);
+    border-bottom: 1px solid var(--em-border);
+    border-left: 3px solid var(--em-gold);
+  }
+  .banner-find-path__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .banner-find-path__text {
+    margin: 0;
+    color: var(--em-text-muted);
+    font-size: 15.5px;
+    line-height: 1.55;
+    max-width: 660px;
+  }
+  .banner-find-path__text strong {
+    color: var(--em-navy);
+    font-weight: 700;
+    margin-right: 6px;
+  }
+  .banner-find-path .btn-ghost {
+    flex-shrink: 0;
+  }
+  @media (max-width: 640px) {
+    .banner-find-path { padding: 22px 0; }
+    .banner-find-path__inner { gap: 14px; }
   }
 </style>
