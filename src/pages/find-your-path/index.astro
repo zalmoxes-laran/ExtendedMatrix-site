@@ -1080,12 +1080,12 @@ const materials = [
    GOALS (Step 2)
 ===================================================================== */
 const goals = [
-  { id: 'manage-data',           icon: '🗂️', title: 'Manage data of a cultural heritage site or dig', desc: 'Structure your evidence base and source dossier.' },
-  { id: 'document-stratigraphy', icon: '📚', title: 'Document stratigraphy of my site',                desc: 'Build and publish the matrix of your site.' },
-  { id: 'publish-reconstruction',icon: '🌐', title: 'Publish a reconstruction online',                 desc: 'Share an interactive 3D model online.' },
-  { id: 'beautiful-viz',         icon: '🎨', title: 'Create polished visualizations',                  desc: 'High-fidelity rendering with paradata chain.' },
-  { id: 'anastylosis',           icon: '🧩', title: 'Reassemble re-used elements (anastylosis)',       desc: 'Align scanned or drawn pieces into assemblies.' },
-  { id: 'publish-zenodo',        icon: '🆔', title: 'Publish dataset with DOI on Zenodo',              desc: 'Make your DosCO + graph + reconstructive dataset citable and archived. Versioned releases with persistent identifiers.' }
+  { id: 'build-knowledge-base',      icon: '🗂️', title: 'Build the knowledge base of my excavation or monument', desc: 'Structure your sources, paradata, and stratigraphic record into a queryable graph. Whether you\'re excavating now or re-analyzing previous data, this is the foundation.' },
+  { id: 'anastylosis',               icon: '🧩', title: 'Reassemble re-used elements (anastylosis)',             desc: 'Align scanned or drawn pieces into anastylosis assemblies.' },
+  { id: 'documented-reconstruction', icon: '🏛️', title: 'Create a documented virtual reconstruction',            desc: 'Build a proxy-based reconstruction with full evidence chain — for internal use, academic publication, or further refinement. Not necessarily live online.' },
+  { id: 'polished-viz',              icon: '🎨', title: 'Create polished visualizations',                        desc: 'Layer high-quality rendering and representation models over your documented reconstruction. Polished imagery for outreach and publication.' },
+  { id: 'publish-zenodo',            icon: '🆔', title: 'Publish dataset with DOI on Zenodo',                    desc: 'Make your DosCO + graph + reconstructive dataset citable and archived. Versioned releases with persistent identifiers.' },
+  { id: 'publish-online',            icon: '🌐', title: 'Publish a reconstruction online',                       desc: 'Share an interactive 3D reconstruction with full paradata chain via Heriverse.' }
 ];
 
 /* =====================================================================
@@ -1136,7 +1136,7 @@ const blockCatalog = {
     howToLink: { url: 'https://docs.extendedmatrix.org/en/latest/em-tools/aux-files-howto.html', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
-    triggers: { materials: ['photos'] }
+    triggers: { materials: ['photos'], goals: ['build-knowledge-base'] }
   },
   'import-gis-blendergis': {
     phase: 1,
@@ -1206,7 +1206,7 @@ const blockCatalog = {
     advancedLink: { url: 'https://github.com/pyarchinit/pyarchinit', label: 'PyArchInit s3dgraphy reference ↗' },
     status: 'stable',
     isSpine: true,
-    triggers: { always: true }
+    triggers: { always: true, goals: ['build-knowledge-base'] }
   },
 
   /* ========== PHASE 2: Data Management & Analysis ========== */
@@ -1231,7 +1231,7 @@ const blockCatalog = {
     getLink:   { url: '/tools/em-palette/', label: 'Get EM palette →' },
     status: 'stable',
     isSpine: true,
-    triggers: { always: true }
+    triggers: { always: true, goals: ['build-knowledge-base'] }
   },
   'enrich-dosco-iterative': {
     phase: 2,
@@ -1242,7 +1242,7 @@ const blockCatalog = {
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
-    triggers: { goals: ['manage-data'] }
+    triggers: { goals: ['build-knowledge-base'] }
   },
 
   /* ========== PHASE 3: Implementation & Virtual Reconstruction ========== */
@@ -1256,7 +1256,7 @@ const blockCatalog = {
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     isSpine: true,
-    triggers: { always: true }
+    triggers: { always: true, goals: ['documented-reconstruction', 'anastylosis', 'polished-viz'] }
   },
   'link-graph-proxies': {
     phase: 3,
@@ -1267,7 +1267,7 @@ const blockCatalog = {
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
-    triggers: { goals: ['document-stratigraphy', 'publish-reconstruction', 'beautiful-viz', 'anastylosis'] }
+    triggers: { goals: ['build-knowledge-base', 'anastylosis', 'documented-reconstruction', 'polished-viz', 'publish-online'] }
   },
   'assemble-epochs': {
     phase: 3,
@@ -1278,7 +1278,7 @@ const blockCatalog = {
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
-    triggers: { goals: ['publish-reconstruction', 'beautiful-viz'] }
+    triggers: { goals: ['documented-reconstruction', 'polished-viz', 'publish-online'] }
   },
   'do-anastylosis': {
     phase: 3,
@@ -1313,7 +1313,7 @@ const blockCatalog = {
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
-    triggers: { goals: ['beautiful-viz'] }
+    triggers: { goals: ['polished-viz'] }
   },
 
   /* ========== PHASE 5: Publication & Dissemination ========== */
@@ -1330,7 +1330,7 @@ const blockCatalog = {
       { label: 'Full reconstruction', desc: 'Epochs + 3D scene + paradata. For polished public output.' }
     ],
     status: 'stable',
-    triggers: { goals: ['document-stratigraphy', 'publish-reconstruction', 'beautiful-viz'] }
+    triggers: { goals: ['publish-online'] }
   },
   'publish-zenodo': {
     phase: 5,
@@ -1352,7 +1352,7 @@ const blockCatalog = {
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
-    triggers: { goals: ['manage-data'] }
+    triggers: { goals: ['build-knowledge-base'] }
   }
 };
 
