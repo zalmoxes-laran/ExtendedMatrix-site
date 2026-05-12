@@ -4,7 +4,7 @@ role: "Web platform"
 summary: "Heritage Science Metaverse — the web-based publication endpoint of the framework. Opens any EM-aware scene in a browser with paradata pop-ups, epoch switching and collaborative VR."
 icon: ../../assets/tools/heriverse.png
 docsUrl: "https://docs.extendedmatrix.org/projects/heriverse/en/latest/"
-repoUrl: "https://github.com/zalmoxes-laran"
+repoUrl: "https://github.com/StratiGraph-ECCCH/Heriverse"
 licence: "GPL-3.0"
 status: beta
 roles: [archaeologist, modeller]
