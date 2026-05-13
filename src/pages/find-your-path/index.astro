@@ -1108,12 +1108,12 @@ const blockCatalog = {
   'import-point-data': {
     phase: 1,
     title: 'Import point data (total station / GPS)',
-    microcopy: 'Point data from total station or dual-frequency / double-differential GPS — imported in 3DSC via <code>Import Coordinates</code>, consuming the project <code>SHIFT.txt</code> for consistent georeferencing.',
+    microcopy: 'Point data from total station or dual-frequency / double-differential GPS — imported in 3DSC via <code>Import Coordinates</code>, consuming the project <code>SHIFT.txt</code> for consistent georeferencing. Includes a step-by-step recipe for georeferencing total station data onto GPS points.',
     tool: '3DSC (Import Coordinates)',
     learnLink: { url: 'https://docs.extendedmatrix.org/projects/3DSC/en/latest/', label: 'Learn the concept →' },
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/3D-survey-collection/en/latest/import_points.html#import-point-data', label: 'How to do it →' },
     getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
-    status: 'in-development',
+    status: 'stable',
     triggers: { materials: ['3d-survey'] }
   },
   'import-batch-obj': {
