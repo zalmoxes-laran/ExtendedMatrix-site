@@ -1105,14 +1105,25 @@ const blockCatalog = {
     status: 'stable',
     triggers: { materials: ['3d-survey'] }
   },
-  'import-3d-survey': {
+  'import-point-data': {
     phase: 1,
-    title: 'Optimize survey for Blender',
-    microcopy: 'Bring the processed model into Blender via 3DSC and create LODs for proxy modeling.',
-    tool: '3DSC',
+    title: 'Import point data (total station / GPS)',
+    microcopy: 'Point data from total station or dual-frequency / double-differential GPS — imported in 3DSC via <code>Import Coordinates</code>, consuming the project <code>SHIFT.txt</code> for consistent georeferencing.',
+    tool: '3DSC (Import Coordinates)',
     learnLink: { url: 'https://docs.extendedmatrix.org/projects/3DSC/en/latest/', label: 'Learn the concept →' },
     howToLink: null,
-    getLink:   { url: 'https://github.com/zalmoxes-laran/3D-survey-collection', label: 'Get 3DSC (Blender) →' },
+    getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
+    status: 'in-development',
+    triggers: { materials: ['3d-survey'] }
+  },
+  'import-batch-obj': {
+    phase: 1,
+    title: 'Import photogrammetric models (batch OBJ)',
+    microcopy: 'Bring multiple processed photogrammetric models into Blender via 3DSC in a single batch — keeps naming, transforms and shifts consistent across the scene.',
+    tool: '3DSC (Batch OBJ import)',
+    learnLink: { url: 'https://docs.extendedmatrix.org/projects/3DSC/en/latest/', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/3D-survey-collection/en/latest/batch_obj_import.html#import-batch-obj', label: 'How to do it →' },
+    getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
     status: 'stable',
     triggers: { materials: ['3d-survey'] }
   },
@@ -1140,25 +1151,14 @@ const blockCatalog = {
   },
   'import-gis-blendergis': {
     phase: 1,
-    title: 'Import GIS layers (BlenderGIS)',
-    microcopy: 'Use the well-known BlenderGIS addon (install if not present) — integrates automatically with the EM Tools ecosystem.',
+    title: 'Import GIS data (BlenderGIS)',
+    microcopy: 'Use the well-known BlenderGIS addon (install if not present) for GIS layers, satellite imagery, DEMs and georeferenced remote-sensing data — integrates automatically with the EM Tools ecosystem.',
     tool: 'BlenderGIS',
     learnLink: null,
-    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/georeferencing.html#import-gis-blendergis', label: 'How to do it →' },
+    howToLink: { url: 'https://github.com/domlysz/BlenderGIS/wiki', label: 'How to do it (BlenderGIS wiki) ↗' },
     getLink:   { url: 'https://github.com/domlysz/BlenderGIS', label: 'Get BlenderGIS ↗' },
     status: 'stable',
-    triggers: { materials: ['gis'] }
-  },
-  'import-remote-sensing': {
-    phase: 1,
-    title: 'Process remote-sensing data',
-    microcopy: 'Satellite imagery, multispectral, lidar-from-air and geomatic surfaces become 2.5D references — pair with BlenderGIS for georef.',
-    tool: '3DSC + BlenderGIS',
-    learnLink: null,
-    howToLink: null,
-    getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
-    status: 'stable',
-    triggers: { materials: ['remote-sensing'] }
+    triggers: { materials: ['gis', 'remote-sensing'] }
   },
   'import-cad': {
     phase: 1,
@@ -1343,17 +1343,6 @@ const blockCatalog = {
     status: 'stable',
     triggers: { goals: ['publish-zenodo'] }
   },
-  'export-dosco-data': {
-    phase: 5,
-    title: 'Export DosCO as data',
-    microcopy: 'A populated DosCO is itself shareable — export the structured evidence base for archive or downstream use.',
-    tool: 'EM Tools (EMdb)',
-    learnLink: null,
-    howToLink: null,
-    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
-    status: 'stable',
-    triggers: { goals: ['build-knowledge-base'] }
-  }
 };
 
 /* Phase metadata */
