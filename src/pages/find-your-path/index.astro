@@ -1100,7 +1100,7 @@ const blockCatalog = {
     microcopy: 'Generate the textured 3D model from your photos in Metashape, using 3DSC4Metashape Python scripts. Guarantees a consistent texel density across the surface.',
     tool: '3DSC4Metashape',
     learnLink: null,
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/3D-survey-collection/en/latest/3DSC4Metashape.html#prepare-survey-metashape', label: 'How to do it →' },
     getLink:   { url: 'https://github.com/zalmoxes-laran/3DSC_Metashape', label: 'Get 3DSC4Metashape →' },
     status: 'stable',
     triggers: { materials: ['3d-survey'] }
@@ -1144,7 +1144,7 @@ const blockCatalog = {
     microcopy: 'Use the well-known BlenderGIS addon (install if not present) — integrates automatically with the EM Tools ecosystem.',
     tool: 'BlenderGIS',
     learnLink: null,
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/georeferencing.html#import-gis-blendergis', label: 'How to do it →' },
     getLink:   { url: 'https://github.com/domlysz/BlenderGIS', label: 'Get BlenderGIS ↗' },
     status: 'stable',
     triggers: { materials: ['gis'] }
@@ -1164,10 +1164,10 @@ const blockCatalog = {
     phase: 1,
     title: 'Import CAD files',
     microcopy: 'Use DXF format — works with georeferenced files. ⚠ Ensure the same EPSG between your DXF and your 3D scene.',
-    tool: 'Blender CAD import',
+    tool: '3DSC (Blender CAD import)',
     learnLink: null,
-    howToLink: null,
-    getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/3D-survey-collection/en/latest/cad_import.html#import-cad', label: 'How to do it →' },
+    getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
     status: 'stable',
     triggers: { materials: ['cad'] }
   },
@@ -1198,12 +1198,12 @@ const blockCatalog = {
     crossPhase: [1, 2],
     title: 'Collect sources & populate DosCO',
     microcopy: 'Collect your evidence into the canonical <em>source_list.xlsx</em> template and import it into the graph via EMdb in EM Tools. These two steps are inseparable — <code>source_list.xlsx</code> is the structured ingestion format, DosCO is the queryable graph layer. Sources, documents, authors, licenses — all structured.',
-    advancedNote: 'Existing database? Build a custom s3dgraphy mapper — see PyArchInit integration as a reference.',
+    advancedNote: 'Existing database? Build a custom s3dgraphy mapper — see the PyArchInit cookbook for a reference integration.',
     tool: 'EM Tools (EMdb) + source_list.xlsx',
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/em_workspace_preparation.html', label: 'Learn the concept →' },
     howToLink: null,
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
-    advancedLink: { url: 'https://github.com/pyarchinit/pyarchinit', label: 'PyArchInit s3dgraphy reference ↗' },
+    advancedLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/cookbook/pyarchinit_integration.html', label: 'PyArchInit integration cookbook →' },
     status: 'stable',
     isSpine: true,
     triggers: { always: true, goals: ['build-knowledge-base'] }
@@ -1213,10 +1213,10 @@ const blockCatalog = {
   'convert-legacy-em-graph': {
     phase: 2,
     title: 'Open & convert existing EM graph',
-    microcopy: 'Open old EM graph in EM Tools — the utility converter in <code>utils/</code> handles version migrations automatically.',
-    tool: 'EM Tools',
+    microcopy: 'In EM Tools, open the EM Data Tree → <strong>Utils</strong> sub-panel and click <code>Convert 1.x->1.5</code> to normalise an older GraphML to the 1.5 palette. A full single-call <code>convert_legacy_em_graph</code> wrapper (palette + paradata cleanup in one step) is on the s3dgraphy roadmap.',
+    tool: 'EM Tools (EM Data Tree → Utils) + s3dgraphy',
     learnLink: null,
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/em_setup.html#convert-legacy-em-graph', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     triggers: { materials: ['existing-em-graph'] }
@@ -1239,7 +1239,7 @@ const blockCatalog = {
     microcopy: 'Curate the source dossier as new evidence emerges — loop back from any later step.',
     tool: 'EM Tools (EMdb)',
     learnLink: null,
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/em_workspace_preparation.html#enrich-dosco-iterative', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     triggers: { goals: ['build-knowledge-base'] }
@@ -1264,7 +1264,7 @@ const blockCatalog = {
     microcopy: 'Iteratively bind each proxy to its graph node — the paradata chain becomes navigable.',
     tool: 'EM Tools',
     learnLink: null,
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/stratigraphy_manager.html#link-graph-to-proxies', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     triggers: { goals: ['build-knowledge-base', 'anastylosis', 'documented-reconstruction', 'polished-viz', 'publish-online'] }
@@ -1275,7 +1275,7 @@ const blockCatalog = {
     microcopy: 'Assemble epoch-specific reconstructions from proxies + connected graph.',
     tool: 'EM Tools',
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/canvas.html', label: 'Learn the concept →' },
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/epochs_manager.html#assemble-epochs', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     triggers: { goals: ['documented-reconstruction', 'polished-viz', 'publish-online'] }
@@ -1286,7 +1286,7 @@ const blockCatalog = {
     microcopy: 'Align scanned or drawn pieces into anastylosis assemblies via EM Tools.',
     tool: 'EM Tools',
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/stratigraphic_nodes.html', label: 'Learn the concept →' },
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/anastylosis_manager.html#do-anastylosis', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     triggers: { goals: ['anastylosis'] }
@@ -1310,7 +1310,7 @@ const blockCatalog = {
     microcopy: 'Layer polished visual models over proxies for high-fidelity rendering — proxies keep the evidence link.',
     tool: 'EM Tools',
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/project_organization.html', label: 'Learn the concept →' },
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/rm_manager.html#add-representation-models', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
     status: 'stable',
     triggers: { goals: ['polished-viz'] }
@@ -1323,7 +1323,7 @@ const blockCatalog = {
     microcopy: 'Choose what to share: documentation only (graph + paradata) or full reconstruction (epochs + 3D scene). Same tool, single tab in Heriverse, different payload extents.',
     tool: 'Heriverse',
     learnLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/introduction.html', label: 'Learn the concept →' },
-    howToLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/editor_mode.html', label: 'How to do it →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/heriverse/en/latest/user_dashboard.html#publish-via-heriverse', label: 'How to do it →' },
     getLink:   { url: '/tools/heriverse/', label: 'Get Heriverse →' },
     payloadTabs: [
       { label: 'Documentation only', desc: 'Graph + paradata. For stratigraphy publication.' },
@@ -1338,7 +1338,7 @@ const blockCatalog = {
     microcopy: 'Mint a DOI on Zenodo, version the dataset, link to a data paper. Best practice for citable archival of EM-based research outputs.',
     tool: 'Zenodo',
     learnLink: null,
-    howToLink: null,
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/cookbook/publish_zenodo.html#publish-zenodo', label: 'How to do it →' },
     getLink:   { url: 'https://zenodo.org/', label: 'Open Zenodo ↗' },
     status: 'stable',
     triggers: { goals: ['publish-zenodo'] }
