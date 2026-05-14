@@ -1127,6 +1127,17 @@ const blockCatalog = {
     status: 'stable',
     triggers: { materials: ['3d-survey'] }
   },
+  'optimize-survey-lod': {
+    phase: 1,
+    title: 'Optimize 3D survey (LOD)',
+    microcopy: 'Create clean low-poly versions of dense scans so they remain proxy-ready and editable. Pipeline: dense mesh → decimation → cleanup → texture transfer.',
+    tool: '3DSC (LOD)',
+    learnLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/tutorials/03-3dsc-lod-concept.html', label: 'Learn the concept →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/latest/tutorials/03-3dsc-lod-concept.html', label: 'How to do it →' },
+    getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
+    status: 'stable',
+    triggers: { materials: ['3d-survey'] }
+  },
   'place-drawings-as-refs': {
     phase: 1,
     title: 'Place drawings as 3D references',
