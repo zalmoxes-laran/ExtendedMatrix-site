@@ -2,7 +2,7 @@
 name: "3DSC for Metashape"
 role: "Survey pipeline (Metashape)"
 summary: "Companion to 3DSC that runs the photogrammetric processing inside Agisoft Metashape — chunk management, alignment, mesh generation, texture baking, ready for the LOD step in 3DSC for Blender."
-docsUrl: "https://docs.extendedmatrix.org/projects/3DSC/en/latest/"
+docsUrl: "https://docs.extendedmatrix.org/projects/3DSC/en/latest/how-to/photogrammetry/prepare-with-metashape.html"
 repoUrl: "https://github.com/zalmoxes-laran/3DSC_Metashape"
 downloadUrl: "https://github.com/zalmoxes-laran/3DSC_Metashape/releases/latest"
 licence: "GPL-3.0"
@@ -35,7 +35,7 @@ them all the way to a clean textured mesh.
 
 Drop the script into Metashape's *scripts* folder and reload. Detailed
 installation steps are in the
-[3DSC documentation](https://docs.extendedmatrix.org/projects/3DSC/en/latest/).
+[3DSC documentation](https://docs.extendedmatrix.org/projects/3DSC/en/latest/how-to/photogrammetry/prepare-with-metashape.html).
 
 > **Editors:** confirm the script-folder path and add a precise
 > Metashape version requirement when available.

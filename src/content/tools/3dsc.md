@@ -2,7 +2,7 @@
 name: "3DSC"
 role: "Survey pipeline (Blender)"
 summary: "3D Survey Collection — photogrammetry workflow management, level-of-detail handling, metadata propagation. The upstream pipeline that produces high-quality 3D models for EM Tools to annotate."
-docsUrl: "https://docs.extendedmatrix.org/projects/3D-survey-collection/en/latest/"
+docsUrl: "https://docs.extendedmatrix.org/projects/3DSC/en/latest/"
 repoUrl: "https://github.com/zalmoxes-laran/3D-survey-collection"
 licence: "GPL-3.0"
 status: stable
@@ -29,5 +29,5 @@ EM Tools.
 - Metadata propagation across LOD levels.
 - Direct integration with EM Tools.
 
-See the [3DSC documentation](https://docs.extendedmatrix.org/projects/3D-survey-collection/en/latest/)
+See the [3DSC documentation](https://docs.extendedmatrix.org/projects/3DSC/en/latest/)
 for the full reference.
