@@ -1171,6 +1171,17 @@ const blockCatalog = {
     status: 'stable',
     triggers: { materials: ['gis', 'remote-sensing'] }
   },
+  'enter-em-from-pyarchinit': {
+    phase: 1,
+    title: 'Enter EM with an existing PyArchInit project',
+    microcopy: 'Bring an existing PyArchInit project (a QGIS plugin with strong 2D GIS visualization of stratigraphic data) into the Extended Matrix workflow via <a href="/tools/s3dgraphy/">s3dgraphy</a>. Keep your stratigraphic database, reference it as an auxiliary source, and optionally bake records into the EM graph. The natural entry-point when fieldwork already runs on PyArchInit.',
+    tool: 'PyArchInit + s3dgraphy',
+    learnLink: { url: '/tools/pyarchinit/', label: 'Learn about PyArchInit →' },
+    howToLink: { url: 'https://docs.extendedmatrix.org/en/1.5.0/cookbook/pyarchinit_integration.html', label: 'How to do it →' },
+    getLink:   { url: 'https://github.com/pyarchinit/pyarchinit', label: 'Get PyArchInit ↗' },
+    status: 'stable',
+    triggers: { materials: ['tabular', 'gis'] }
+  },
   'import-cad': {
     phase: 1,
     title: 'Import CAD files',
