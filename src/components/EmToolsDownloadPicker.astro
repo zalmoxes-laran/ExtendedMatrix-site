@@ -1,0 +1,287 @@
+---
+/**
+ * EmToolsDownloadPicker — Blender × OS download picker for EM Tools.
+ *
+ * Replaces the previous single "Download latest" link on /tools/em-tools/.
+ * Hardcoded against the EM Tools v1.5.0 GitHub release assets (3 OS × 2
+ * Blender versions = 6 zips). When 1.6 ships with its own multi-build set,
+ * extend `downloads` below — see release page for asset names:
+ *   https://github.com/zalmoxes-laran/EM-blender-tools/releases
+ *
+ * Pure HTML + CSS Grid, no client JS. Mobile-degrades to a single column
+ * with per-button "Blender 5.0 / 5.1+" badges so context is never lost.
+ *
+ * GoatCounter event-ids follow the existing `dl-em-tools-*` convention so
+ * the new picker keeps appearing in the same analytics bucket as the old
+ * single button.
+ */
+
+interface BuildRow {
+  os: string;            // user-facing OS name
+  arch: string;          // user-facing arch tag
+  goatOs: string;        // short id for goatcounter event-ids
+  b50: string;           // Blender 5.0 zip URL
+  b51: string;           // Blender 5.1+ zip URL
+  b50File: string;       // filename, for tooltip
+  b51File: string;
+}
+
+const RELEASE_BASE =
+  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/download/v1.5.0';
+const VERSION_TAG_URL =
+  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/tag/v1.5.0';
+
+const downloads: BuildRow[] = [
+  {
+    os: 'Linux',
+    arch: 'x64',
+    goatOs: 'linux-x64',
+    b50: `${RELEASE_BASE}/em_tools-v1.5.0-linux-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.0-linux-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.0-linux-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.0-linux-x64-blender51.zip',
+  },
+  {
+    os: 'macOS',
+    arch: 'Apple Silicon (arm64)',
+    goatOs: 'macos-arm64',
+    b50: `${RELEASE_BASE}/em_tools-v1.5.0-macosx-arm64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.0-macosx-arm64-blender51.zip`,
+    b50File: 'em_tools-v1.5.0-macosx-arm64-blender50.zip',
+    b51File: 'em_tools-v1.5.0-macosx-arm64-blender51.zip',
+  },
+  {
+    os: 'Windows',
+    arch: 'x64',
+    goatOs: 'windows-x64',
+    b50: `${RELEASE_BASE}/em_tools-v1.5.0-windows-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.0-windows-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.0-windows-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.0-windows-x64-blender51.zip',
+  },
+];
+
+const version = '1.5.0';
+---
+
+<section class="em-picker" id="download" aria-labelledby="em-picker-title">
+  <div class="em-picker__head">
+    <h2 class="em-picker__title" id="em-picker-title">
+      Download EM Tools <span class="em-picker__ver">v{version}</span>
+    </h2>
+    <p class="em-picker__note">
+      Pick the build matching your operating system and your installed Blender.
+      <strong>Blender 5.0 (LTS)</strong> is the safe long-term choice;
+      <strong>Blender 5.1+</strong> uses Python 3.13 and ships the current
+      stable features. If unsure, pick the column matching the Blender already
+      installed on your machine.
+    </p>
+  </div>
+
+  <div class="em-picker__grid" role="table" aria-label={`EM Tools ${version} downloads`}>
+    <!-- desktop column headers (hidden on mobile) -->
+    <div class="em-picker__hcell em-picker__hcell--corner" aria-hidden="true"></div>
+    <div class="em-picker__hcell" role="columnheader">
+      <span class="em-picker__bv">Blender 5.0</span>
+      <span class="em-picker__bvsub">LTS</span>
+    </div>
+    <div class="em-picker__hcell" role="columnheader">
+      <span class="em-picker__bv">Blender 5.1+</span>
+      <span class="em-picker__bvsub">Python 3.13</span>
+    </div>
+
+    {downloads.map((row) => (
+      <>
+        <div class="em-picker__os" role="rowheader">
+          <span class="em-picker__os-name">{row.os}</span>
+          <span class="em-picker__os-arch">{row.arch}</span>
+        </div>
+
+        <div class="em-picker__cell">
+          <a
+            href={row.b50}
+            class="em-picker__btn"
+            title={row.b50File}
+            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 5.0`}
+            data-goatcounter-click={`dl-em-tools-v${version}-${row.goatOs}-blender50`}
+          >
+            <span class="em-picker__arrow" aria-hidden="true">⬇</span>
+            <span class="em-picker__btn-label">
+              <span class="em-picker__btn-main">
+                Download <span class="em-picker__btn-bver">· Blender 5.0</span>
+              </span>
+              <span class="em-picker__btn-file">{row.b50File}</span>
+            </span>
+          </a>
+        </div>
+
+        <div class="em-picker__cell">
+          <a
+            href={row.b51}
+            class="em-picker__btn"
+            title={row.b51File}
+            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 5.1+`}
+            data-goatcounter-click={`dl-em-tools-v${version}-${row.goatOs}-blender51`}
+          >
+            <span class="em-picker__arrow" aria-hidden="true">⬇</span>
+            <span class="em-picker__btn-label">
+              <span class="em-picker__btn-main">
+                Download <span class="em-picker__btn-bver">· Blender 5.1+</span>
+              </span>
+              <span class="em-picker__btn-file">{row.b51File}</span>
+            </span>
+          </a>
+        </div>
+      </>
+    ))}
+  </div>
+
+  <p class="em-picker__foot">
+    Looking for older builds, checksums or release notes?
+    <a href={VERSION_TAG_URL} target="_blank" rel="noopener"
+       data-goatcounter-click={`repo-em-tools-release-v${version}`}>
+      Browse the v{version} release on GitHub ↗
+    </a>
+  </p>
+</section>
+
+<style>
+  .em-picker {
+    margin: 8px 0 36px;
+    padding: 22px 24px 20px;
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+  }
+  .em-picker__head { margin-bottom: 18px; }
+  .em-picker__title {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: var(--em-navy);
+    font-weight: 700;
+  }
+  .em-picker__ver {
+    font-family: var(--font-mono, monospace);
+    font-size: 14px;
+    color: var(--em-gold);
+    margin-left: 6px;
+  }
+  .em-picker__note {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--em-text-muted);
+    max-width: 720px;
+  }
+
+  /* ── Desktop grid: 3 rows (OS) × 2 columns (Blender ver) ── */
+  .em-picker__grid {
+    display: grid;
+    grid-template-columns: minmax(140px, 0.85fr) 1fr 1fr;
+    gap: 8px 12px;
+    margin-top: 16px;
+    align-items: stretch;
+  }
+  .em-picker__hcell {
+    padding: 4px 4px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    text-align: center;
+    border-bottom: 1px solid var(--em-border);
+  }
+  .em-picker__hcell--corner { border-bottom-color: transparent; }
+  .em-picker__bv { font-size: 14px; font-weight: 700; color: var(--em-navy); }
+  .em-picker__bvsub {
+    font-size: 10px;
+    color: var(--em-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 2px;
+  }
+
+  .em-picker__os {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 6px 12px 6px 4px;
+    border-right: 1px solid var(--em-border);
+  }
+  .em-picker__os-name { font-weight: 700; color: var(--em-navy); font-size: 15px; }
+  .em-picker__os-arch { font-size: 11px; color: var(--em-text-muted); margin-top: 2px; }
+
+  .em-picker__cell { display: flex; }
+
+  .em-picker__btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    background: var(--em-navy);
+    color: var(--em-bg);
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.25;
+    transition: background 0.12s ease, transform 0.12s ease;
+  }
+  .em-picker__btn:hover,
+  .em-picker__btn:focus-visible {
+    background: var(--em-gold);
+    color: var(--em-bg);
+    text-decoration: none;
+    outline: none;
+  }
+  .em-picker__btn:focus-visible {
+    box-shadow: 0 0 0 3px var(--em-gold-tint);
+  }
+  .em-picker__arrow { font-size: 15px; line-height: 1; flex: 0 0 auto; }
+  .em-picker__btn-label { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+  .em-picker__btn-main { font-weight: 600; }
+  /* Blender-version badge inside the button — hidden on desktop
+     (column header carries the info), shown on mobile when columns
+     collapse. */
+  .em-picker__btn-bver { display: none; font-weight: 500; opacity: 0.92; }
+  .em-picker__btn-file {
+    font-family: var(--font-mono, monospace);
+    font-size: 10px;
+    font-weight: 400;
+    opacity: 0.82;
+    margin-top: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .em-picker__foot {
+    margin: 16px 0 0;
+    font-size: 12px;
+    color: var(--em-text-muted);
+  }
+  .em-picker__foot a { font-weight: 600; }
+
+  /* ── Mobile: collapse to a single readable column ────────── */
+  @media (max-width: 640px) {
+    .em-picker { padding: 18px 16px; }
+    .em-picker__grid {
+      display: block;
+    }
+    .em-picker__hcell,
+    .em-picker__hcell--corner {
+      display: none;
+    }
+    .em-picker__os {
+      border-right: none;
+      border-top: 1px solid var(--em-border);
+      padding: 14px 0 8px;
+    }
+    .em-picker__cell {
+      padding: 0 0 8px;
+    }
+    /* Surface the Blender-version label inside the button on mobile */
+    .em-picker__btn-bver { display: inline; }
+  }
+</style>
