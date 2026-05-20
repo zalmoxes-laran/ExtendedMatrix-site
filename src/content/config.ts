@@ -223,8 +223,20 @@ const versions = defineCollection({
             slug: z.string(), // ref to a tools collection entry
             version: z.string().optional(),
             status: z.enum(['included', 'optional', 'deprecated', 'removed']).default('included'),
-            // Direct download for THIS tool in THIS EM version
-            downloadUrl: z.string().url().optional(),
+            // Direct download for THIS tool in THIS EM version.
+            // Accepts either an absolute URL (https://…) or a root-relative
+            // path (e.g. "/tools/em-tools/#download") that points to an
+            // on-site picker/landing page. Root-relative values are
+            // base-prefixed at render time so they work under the
+            // /ExtendedMatrix-site/ preview path as well as on the bare
+            // production domain.
+            downloadUrl: z
+              .string()
+              .refine(
+                (v) => /^(https?:|mailto:|tel:)/i.test(v) || v.startsWith('/'),
+                { message: 'downloadUrl must be an absolute URL (https://…) or a root-relative path (/…)' }
+              )
+              .optional(),
             note: z.string().optional(),
           })
         )

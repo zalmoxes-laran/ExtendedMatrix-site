@@ -37,12 +37,24 @@ type ToolRow = {
   version: string | undefined;
   status: 'included' | 'optional' | 'deprecated' | 'removed';
   downloadUrl: string | undefined;
+  downloadHref: string | undefined;     // base-prefixed for internal paths
+  downloadIsExternal: boolean;
   note: string | undefined;
 };
 
 const toolRows: ToolRow[] = [];
 for (const t of version.data.tools) {
   const entry = await getEntry('tools', t.slug);
+  const rawDl = t.downloadUrl ?? entry?.data.downloadUrl;
+  // Root-relative paths (e.g. "/tools/em-tools/#download") point at on-site
+  // landing pages — prefix the base so the link resolves under the
+  // /ExtendedMatrix-site/ preview path AND on the bare production domain.
+  const isExternal = !!rawDl && /^(https?:|mailto:|tel:)/i.test(rawDl);
+  const downloadHref = !rawDl
+    ? undefined
+    : isExternal
+      ? rawDl
+      : `${B}${rawDl}`;
   toolRows.push({
     slug: t.slug,
     toolName: entry?.data.name ?? t.slug,
@@ -52,7 +64,9 @@ for (const t of version.data.tools) {
     toolPage: `${B}/tools/${t.slug}/`,
     version: t.version,
     status: t.status,
-    downloadUrl: t.downloadUrl ?? entry?.data.downloadUrl,
+    downloadUrl: rawDl,
+    downloadHref,
+    downloadIsExternal: isExternal,
     note: t.note,
   });
 }
@@ -254,9 +268,12 @@ const statusPill: Record<string, string> = {
                   <td class="vp__ver">{t.version ?? '—'}</td>
                   <td><span class={`vp__pill ${statusPill[t.status]}`}>{t.status}</span></td>
                   <td>
-                    {t.downloadUrl
-                      ? <a href={t.downloadUrl} target="_blank" rel="noopener" class="vp__dlink"
-                           data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download ↗</a>
+                    {t.downloadHref
+                      ? (t.downloadIsExternal
+                          ? <a href={t.downloadHref} target="_blank" rel="noopener" class="vp__dlink"
+                               data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download ↗</a>
+                          : <a href={t.downloadHref} class="vp__dlink"
+                               data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download</a>)
                       : '—'}
                   </td>
                   <td>
