@@ -4,7 +4,7 @@ date: 2026-05-15T15:00:00+02:00
 attendees: []
 decisions: []
 actionItems: []
-upcoming: true
+upcoming: false
 meetingUrl: "https://meet.example.org/em-dev"
 ---
 
