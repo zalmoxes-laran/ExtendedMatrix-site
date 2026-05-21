@@ -21,9 +21,9 @@ can step through time across sites at once.
 documenting *states* and *transformations* of a built object — decay,
 restoration, thematic surveys — without forcing those readings into the
 standard stratigraphic vocabulary. The full reference is in the
-[language docs](https://docs.extendedmatrix.org/en/1.5.0/stratigraphic_nodes.html#transformation-stratigraphic-unit-transformationstratigraphicunit)
+[language docs](https://docs.extendedmatrix.org/en/1.5/stratigraphic_nodes.html#transformation-stratigraphic-unit-transformationstratigraphicunit)
 and the operational guide in the
-[EM Tools Conservation Workflow page](https://docs.extendedmatrix.org/projects/EM-tools/en/latest/panels/conservation_workflow.html).
+[EM Tools Conservation Workflow page](https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/panels/conservation_workflow.html).
 
 The EM Tools manual itself has been reorganised around a new five-step
 workflow diagram and a fresh **intermediate tutorial track** that covers

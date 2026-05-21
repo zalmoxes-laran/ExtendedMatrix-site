@@ -2,7 +2,7 @@
 name: "source_list.xlsx"
 role: "Bibliographic & archival source registry"
 summary: "Project-level XLSX template that registers every bibliographic and archival source behind an EM project. Document nodes in the graph cite it via stable D.NN ids. Stable since EM 1.3, valid for EM 1.4/1.5; a revised two-sheet schema is in preparation for EM 1.6 (DP-58)."
-docsUrl: "https://docs.extendedmatrix.org/en/latest/source_node.html#source-list-schema"
+docsUrl: "https://docs.extendedmatrix.org/en/1.5/source_node.html#source-list-schema"
 repoUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix"
 downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/raw/main/03_Sources_list/sources_list%20v.1.3.2.xlsx"
 licence: "GPL-3.0"
@@ -42,7 +42,7 @@ and hover the column headers for per-column help.
 ![A populated source_list.xlsx — six rows from a real project (Castrum di Segni). Columns: Name, Description, Url, Property that can validate, original id., Type, Preview.](../../assets/tools/source-list-example.png)
 
 Full column reference and worked example: see
-[the EM manual — Source List schema](https://docs.extendedmatrix.org/en/latest/source_node.html#source-list-schema).
+[the EM manual — Source List schema](https://docs.extendedmatrix.org/en/1.5/source_node.html#source-list-schema).
 
 ## When to use it
 
@@ -147,7 +147,7 @@ and uncomment the figure block below.
 
 ## Manual & roadmap
 
-- [Source List schema (EM 1.5 manual)](https://docs.extendedmatrix.org/en/latest/source_node.html#source-list-schema)
+- [Source List schema (EM 1.5 manual)](https://docs.extendedmatrix.org/en/1.5/source_node.html#source-list-schema)
   — column reference and worked example.
 - [DP-58 — Bibliographic & Archival Sources Template](https://docs.extendedmatrix.org/projects/development-projects/)
   — design status of the 1.6 revision (two-sheet split, closed Type
