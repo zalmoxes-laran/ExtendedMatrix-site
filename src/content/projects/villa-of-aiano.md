@@ -9,6 +9,9 @@ featured: true
 order: 30
 cover: ../../assets/projects/2020_Aiano.png
 coverAlt: "EM graph and proxy models of the Roman Villa of Aiano"
+homepageImages:
+  - "villa-of-aiano/unnamed.jpg"
+  - "villa-of-aiano/unnamed-2.jpg"
 ---
 
 The archaeological site of Aiano, located in **Val d'Elsa (Tuscany, IT)**, was first identified at the beginning of the 20th century. In the 1960s, structural remains of an ancient building were brought back to light by the *Associazione Archeologica Sangimignanese* and the *Soprintendenza Archeologica della Toscana*.

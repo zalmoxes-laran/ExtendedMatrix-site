@@ -8,6 +8,9 @@ featured: true
 order: 20
 cover: ../../assets/projects/2020_augustus.png
 coverAlt: "Proxy models of the Forum of Augustus reconstruction"
+homepageImages:
+  - "forum-of-augustus/unnamed.jpg"
+  - "forum-of-augustus/unnamed-2.jpg"
 ---
 
 The Forum of Augustus was built by the Emperor Augustus between the end of the 1st century B.C. and the beginning of the 1st century A.D. in a key position within the centre of Rome, near the Forum of Caesar and the Roman Forum.

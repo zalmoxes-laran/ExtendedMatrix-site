@@ -8,6 +8,9 @@ featured: true
 order: 15
 cover: ../../assets/projects/2022_nora.jpg
 coverAlt: "The Roman Forum of Nora — virtual reconstruction"
+homepageImages:
+  - "forum-of-nora/unnamed-2.jpg"
+  - "forum-of-nora/unnamed.jpg"
 ---
 
 The archaeological site of Nora is located on the promontory of Capo di Pula, on the south coast of Sardinia, about 30 km south-west of Cagliari.

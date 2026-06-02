@@ -42,6 +42,15 @@ const projects = defineCollection({
       featured: z.boolean().default(false),
       order: z.number().default(0),
       draft: z.boolean().default(false),
+      // homepageImages — editor-curated list of gallery images surfaced in
+      // the homepage carousel (the "EM in practice" strip under the
+      // vocabulary diagram). Each entry is a path RELATIVE TO
+      // `src/assets/projects/` — e.g. `"villa-of-aiano/unnamed.jpg"`
+      // resolves to `src/assets/projects/villa-of-aiano/unnamed.jpg`. If
+      // omitted or empty the project's `cover` is used as a single fallback
+      // tile. See `src/content/projects/README.md` for guidance on picking
+      // good carousel images.
+      homepageImages: z.array(z.string()).default([]),
     }),
 });
 

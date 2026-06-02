@@ -8,6 +8,9 @@ featured: true
 order: 15
 cover: ../../assets/projects/2026_EM_music.png
 coverAlt: "EM music"
+homepageImages:
+  - "EM-music/EM_music01.png"
+  - "EM-music/EM_music02.png"
 ---
 
 In this experiment EM has been applied to Musicology to map and represent reconstruction processes within the critical edition of two incomplete musical works:
