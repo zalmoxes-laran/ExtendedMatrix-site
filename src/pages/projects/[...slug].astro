@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
@@ -50,7 +51,13 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       {project.data.cover && (
         <figure class="proj__cover">
-          <img src={project.data.cover.src} alt={project.data.coverAlt || project.data.title} />
+          <Image
+            src={project.data.cover}
+            alt={project.data.coverAlt || project.data.title}
+            widths={[480, 768, 1100]}
+            sizes="(max-width: 768px) 100vw, min(1100px, 100vw)"
+            loading="eager"
+          />
         </figure>
       )}
 
@@ -91,11 +98,21 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--em-text);
   }
   .proj__cover {
-    margin: 0 0 40px;
+    margin: 0 auto 40px;
     border-radius: var(--radius-md);
     overflow: hidden;
+    text-align: center;
+    /* Cap visual width at the source image's intrinsic size so small
+       covers don't get upscaled to the 1100px container width. */
+    max-width: 100%;
   }
-  .proj__cover img { width: 100%; height: auto; display: block; }
+  .proj__cover img {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
   .proj__body :global(h2) { margin-top: 32px; }
   .proj__body :global(p) { margin-bottom: 14px; }
   .proj__body :global(ul) { margin-bottom: 14px; padding-left: 22px; }
