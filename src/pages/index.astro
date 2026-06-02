@@ -393,19 +393,28 @@ const fmtNewsDate = (d: Date) =>
 
       <div class="standards__grid">
         <article class="std-card">
-          <div class="std-card__head">CIDOC-CRM alignment</div>
+          <div class="std-card__head">Built on community standards</div>
           <p>
-            Every EM node and arc has a published mapping to the ISO
-            CIDOC-CRM ontology. Your graph is interoperable with the rest
-            of the cultural-heritage data world out of the box.
+            EM 1.6 ships an alignment to the ISO
+            <a href="https://www.cidoc-crm.org/" target="_blank" rel="noopener noreferrer">CIDOC-CRM</a>
+            ontology — stable from the StratiGraph release cycle —
+            together with a dedicated <strong>EM extension to CIDOC-CRM</strong>
+            for archaeology-specific concepts. EM 1.6 also aligns to the
+            <strong>Heritage Digital Twin Ontology (HDTO)</strong> developed in
+            <a href="https://www.echoes-eccch.eu/" target="_blank" rel="noopener noreferrer">ECHOES</a>
+            for the ECCCH ecosystem. Your data plugs into the broader
+            cultural-heritage standards layer.
           </p>
         </article>
         <article class="std-card">
-          <div class="std-card__head">LTS releases</div>
+          <div class="std-card__head">Long-term support, by design</div>
           <p>
-            From version 1.5, the formal language follows a long-term support
-            cycle: stable releases are maintained for years with backwards
-            compatibility, breaking changes are governed.
+            From version 1.4, the formal language follows a long-term support
+            cycle: a stable release is maintained for years so research projects
+            — which often span multiple years — can build on a fixed target
+            without churn. <strong>Backward compatibility is structural to EM</strong>:
+            at any point you can move forward to the latest version and gain
+            new language features and tooling without losing your work.
           </p>
           <p class="std-card__cta">
             <a href="https://dev.extendedmatrix.org/" target="_blank" rel="noopener noreferrer">
@@ -414,22 +423,17 @@ const fmtNewsDate = (d: Date) =>
           </p>
         </article>
         <article class="std-card">
-          <div class="std-card__head">ECCCH connector</div>
+          <div class="std-card__head">StratiGraph → ECCCH (2025–2029)</div>
           <p>
-            EM is one of the building blocks of the
-            <a href="https://www.eccch.eu" target="_blank" rel="noopener">European Collaborative Cloud for Cultural Heritage</a>:
-            <a href={`${B}/tools/em-tools/`}>EM Tools</a> and <a href={`${B}/tools/heriverse/`}>Heriverse</a> will publish first-class connectors to
-            the federated nodes.
-          </p>
-        </article>
-        <article class="std-card">
-          <div class="std-card__head">StratiGraph EU project (2025–2029)</div>
-          <p>
-            Extended Matrix is being developed (2025–2029) within the
+            Extended Matrix is being matured (2025–2029) within the
             <strong>StratiGraph</strong> project, funded under the
-            <a href="https://www.eccch.eu" target="_blank" rel="noopener">European Collaborative Cloud for Cultural Heritage (ECCCH)</a>.
+            <a href="https://www.eccch.eu" target="_blank" rel="noopener noreferrer">European Collaborative Cloud for Cultural Heritage (ECCCH)</a>.
             StratiGraph hardens EM as shared infrastructure: governance,
-            versioning, validation suite, and reference triplestore export.
+            versioning, validation suite, CIDOC-CRM/HDTO mapping, reference
+            triplestore export. The outcome reaches users through first-class
+            <a href={`${B}/tools/em-tools/`}>EM Tools</a> and
+            <a href={`${B}/tools/heriverse/`}>Heriverse</a> connectors to the
+            federated ECCCH nodes.
           </p>
         </article>
       </div>
