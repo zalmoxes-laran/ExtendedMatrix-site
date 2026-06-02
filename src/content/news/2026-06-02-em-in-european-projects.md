@@ -1,6 +1,6 @@
 ---
 title: "Extended Matrix at the heart of European projects"
-date: 2026-04-26
+date: 2026-06-02
 excerpt: "EM is now a building block of the StratiGraph European project — funded by the European Commission and contributing to the European Collaborative Cloud for Cultural Heritage (ECCCH)."
 tags: [european-projects, stratigraph, eccch, standards]
 author: "Extended Matrix team"

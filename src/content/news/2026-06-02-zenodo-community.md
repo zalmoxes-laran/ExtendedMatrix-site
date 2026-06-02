@@ -1,6 +1,6 @@
 ---
 title: "[draft, do not publish] Zenodo community"
-date: 2026-04-26
+date: 2026-06-02
 excerpt: "Removed from publication — the dataset deposit story is not mature yet (as of April 2026, only the Great Temple of Sarmizegetusa will be fully downloadable in the short term). Keep this file as a stub; rewrite when the Bucciero & Demetrescu deposit protocol is published."
 draft: true
 tags: [draft]
