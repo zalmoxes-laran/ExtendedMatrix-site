@@ -14,7 +14,7 @@ import sitemap from '@astrojs/sitemap';
 //   2. restore public/CNAME with `www.extendedmatrix.org`
 //   3. set the Custom domain in GitHub Settings → Pages
 // =============================================================
-const GO_LIVE = false;
+const GO_LIVE = true;
 
 export default defineConfig({
   site: GO_LIVE
