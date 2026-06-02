@@ -41,9 +41,9 @@ for (const p of all) {
                 <a href={`${B}/projects/${p.id.replace(/\.md$/, '')}/`}>
                   <div class="card__cover">
                     {p.data.cover ? (
-                      <img src={p.data.cover.src} alt={p.data.coverAlt || p.data.title} loading="lazy" />
+                      <img src={p.data.cover.src} alt={p.data.coverAlt || p.data.title} loading="lazy" width="330" height="330" />
                     ) : p.data.coverUrl ? (
-                      <img src={p.data.coverUrl} alt={p.data.coverAlt || p.data.title} loading="lazy" />
+                      <img src={p.data.coverUrl} alt={p.data.coverAlt || p.data.title} loading="lazy" width="330" height="330" />
                     ) : (
                       <div class="card__placeholder">📐</div>
                     )}
@@ -88,7 +88,10 @@ for (const p of all) {
     padding: 0;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    /* Cards sized to match the actual resolution of the source cover images
+       (most are ~500–900px square). 3 columns on desktop → ~330px per card,
+       which avoids upscaling the median source while staying retina-friendly. */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 22px;
   }
   .card {
@@ -106,7 +109,9 @@ for (const p of all) {
   .card a { display: block; color: inherit; }
   .card a:hover { text-decoration: none; }
   .card__cover {
-    aspect-ratio: 16/9;
+    /* Source cover images are all square (1:1) — keep the frame square so
+       object-fit: cover doesn't crop and the image isn't stretched. */
+    aspect-ratio: 1/1;
     background: var(--em-bg-warm);
     display: flex;
     align-items: center;
@@ -137,7 +142,10 @@ for (const p of all) {
     line-height: 1.6;
     margin: 0;
   }
-  @media (max-width: 700px) {
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 520px) {
     .grid { grid-template-columns: 1fr; }
   }
 </style>
