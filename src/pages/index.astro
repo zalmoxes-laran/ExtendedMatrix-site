@@ -340,22 +340,85 @@ const carouselLoop = [...carouselTiles, ...carouselTiles];
           Pick your starting point →
         </a>
       </div>
-      <div class="core__visual" aria-hidden="true">
-        <pre class="cv-block">
-                              <span class="cv-node cv-doc">DOC_001</span>
-                                 <span class="cv-arrow">│ extracted_from</span>
-                                 <span class="cv-arrow">▼</span>
-                              <span class="cv-node cv-ext">EXT_001</span>
-                                 <span class="cv-arrow">│ supports</span>
-                                 <span class="cv-arrow">▼</span>
-                              <span class="cv-node cv-prop">PROP_dating</span>
-                                 <span class="cv-arrow">│ has_property</span>
-                                 <span class="cv-arrow">▼</span>
-<span class="cv-node cv-usv">USV_001</span>  <span class="cv-arrow">─ overlies ─▶</span>  <span class="cv-node cv-us">US_002</span>
-        </pre>
+      <div class="core__visual">
+        <svg
+          class="core__hub"
+          viewBox="0 0 700 480"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="s3dgraphy as a bridge between EM notation inputs (yEd GraphML, XLSX from StratiMiner, PyArchInit DB) and consumer outputs (Blender EM Tools, Web Heriverse, VR/AR runtime, CIDOC-CRM RDF)"
+        >
+          <defs>
+            <marker
+              id="hub-arrow"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M0,0 L10,5 L0,10 Z" fill="currentColor" />
+            </marker>
+          </defs>
+
+          <text x="110" y="32" class="core__hub-col-label" text-anchor="middle">INPUTS</text>
+          <text x="550" y="32" class="core__hub-col-label" text-anchor="middle">OUTPUTS</text>
+
+          <g class="core__hub-input">
+            <rect x="20" y="110" width="180" height="64" rx="8" />
+            <text x="110" y="147" text-anchor="middle">yEd GraphML</text>
+          </g>
+          <g class="core__hub-input">
+            <rect x="20" y="202" width="180" height="64" rx="8" />
+            <text x="110" y="230" text-anchor="middle">XLSX</text>
+            <text x="110" y="250" text-anchor="middle" class="sub">(StratiMiner)</text>
+          </g>
+          <g class="core__hub-input">
+            <rect x="20" y="294" width="180" height="64" rx="8" />
+            <text x="110" y="331" text-anchor="middle">PyArchInit DB</text>
+          </g>
+
+          <g class="core__hub-arrow">
+            <line x1="200" y1="142" x2="266" y2="205" marker-end="url(#hub-arrow)" />
+            <line x1="200" y1="234" x2="266" y2="234" marker-end="url(#hub-arrow)" />
+            <line x1="200" y1="326" x2="266" y2="265" marker-end="url(#hub-arrow)" />
+          </g>
+
+          <g class="core__hub-center">
+            <rect class="core__hub-center-fill" x="270" y="185" width="160" height="110" rx="14" />
+            <rect class="core__hub-center-ring" x="276" y="191" width="148" height="98" rx="10" />
+            <text x="350" y="234" text-anchor="middle" class="title">s3dgraphy</text>
+            <text x="350" y="258" text-anchor="middle" class="subtitle">Python library</text>
+          </g>
+
+          <g class="core__hub-arrow">
+            <line x1="434" y1="205" x2="438" y2="132" marker-end="url(#hub-arrow)" />
+            <line x1="434" y1="224" x2="438" y2="204" marker-end="url(#hub-arrow)" />
+            <line x1="434" y1="246" x2="438" y2="276" marker-end="url(#hub-arrow)" />
+            <line x1="434" y1="265" x2="438" y2="348" marker-end="url(#hub-arrow)" />
+          </g>
+
+          <g class="core__hub-output">
+            <rect x="440" y="104" width="220" height="56" rx="8" />
+            <text x="550" y="137" text-anchor="middle">Blender (EM Tools)</text>
+          </g>
+          <g class="core__hub-output">
+            <rect x="440" y="176" width="220" height="56" rx="8" />
+            <text x="550" y="209" text-anchor="middle">Web (Heriverse)</text>
+          </g>
+          <g class="core__hub-output">
+            <rect x="440" y="248" width="220" height="56" rx="8" />
+            <text x="550" y="281" text-anchor="middle">VR / AR runtime</text>
+          </g>
+          <g class="core__hub-output">
+            <rect x="440" y="320" width="220" height="56" rx="8" />
+            <text x="550" y="353" text-anchor="middle">CIDOC-CRM RDF</text>
+          </g>
+        </svg>
         <p class="diagram-note">
-          Every reconstruction node carries its full provenance chain —
-          property → extraction → source.
+          One graph, many surfaces. <strong>s3dgraphy</strong> ingests EM from
+          any notation and serves it to any consumer.
         </p>
       </div>
     </div>
@@ -898,28 +961,76 @@ const carouselLoop = [...carouselTiles, ...carouselTiles];
     background: var(--em-bg);
     border: 1px solid var(--em-border);
     border-radius: var(--radius-md);
-    padding: 28px;
-  }
-  .cv-block {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    line-height: 2;
-    color: var(--em-text);
-    white-space: pre-wrap;
-    margin: 0;
+    padding: 24px;
   }
   .core .diagram-note { color: var(--em-text-muted); margin-top: 14px; }
-  .cv-node {
-    padding: 2px 10px;
-    border-radius: 2px;
-    font-weight: 700;
+
+  /* Hub diagram (s3dgraphy as the bridge between EM notations and consumers) */
+  .core__hub {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 460px;
   }
-  .cv-us  { background: var(--em-gold-tint); color: var(--em-gold); }
-  .cv-usv { background: var(--em-gold-tint); color: var(--em-gold-soft); border: 1px dashed var(--em-gold); }
-  .cv-doc  { background: var(--em-navy-tint); color: var(--em-navy); }
-  .cv-ext  { background: var(--em-navy-tint); color: var(--em-navy-soft); }
-  .cv-prop { background: var(--em-gold-tint); color: var(--em-gold); }
-  .cv-arrow { color: var(--em-text-muted); }
+  .core__hub-col-label {
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    fill: var(--em-text-muted);
+  }
+  .core__hub-input rect,
+  .core__hub-output rect {
+    fill: var(--em-bg);
+    stroke: var(--em-border);
+    stroke-width: 1.5;
+  }
+  .core__hub-input text,
+  .core__hub-output text {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    fill: var(--em-navy);
+  }
+  .core__hub-input text.sub,
+  .core__hub-output text.sub {
+    font-size: 12px;
+    font-weight: 400;
+    fill: var(--em-text-muted);
+  }
+  .core__hub-center-fill {
+    fill: var(--em-navy);
+    stroke: var(--em-gold);
+    stroke-width: 1.5;
+  }
+  .core__hub-center-ring {
+    fill: none;
+    stroke: var(--em-gold);
+    stroke-width: 1;
+    opacity: 0.45;
+  }
+  .core__hub-center .title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    fill: var(--em-bg);
+    letter-spacing: 0.01em;
+  }
+  .core__hub-center .subtitle {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 500;
+    fill: var(--em-gold-tint);
+    letter-spacing: 0.06em;
+  }
+  .core__hub-arrow {
+    color: var(--em-text-muted);
+  }
+  .core__hub-arrow line {
+    stroke: var(--em-text-muted);
+    stroke-width: 1.5;
+    opacity: 0.55;
+  }
 
   /* ── Framework ──────────────────────────────────────────── */
   .framework__title { margin: 12px 0 16px; }
