@@ -50,7 +50,7 @@ The PyArchInit integration drove the design of the `LocationNodeGroup`
 in s3dgraphy 0.1.41 (insight from
 [issue #5](https://github.com/zalmoxes-laran/s3Dgraphy/issues/5) by Enzo
 Cocca). Use the [PyArchInit tool page](/tools/pyarchinit/) and the
-[Extended Matrix manual cookbook](https://docs.extendedmatrix.org/en/latest/cookbook/pyarchinit_integration.html)
+[Extended Matrix manual cookbook](https://docs.extendedmatrix.org/en/1.5/cookbook/pyarchinit_integration.html)
 as a worked example of how an independent tool bridges into Extended
 Matrix through s3dgraphy.
 
@@ -61,4 +61,4 @@ s3dgraphy is designed to be consumed by other independent tools.
 similar domain-specific tools are natural candidates for similar
 bridges. If you maintain such a project and want to explore an
 integration, look at PyArchInit as a worked example or
-[open a discussion on GitHub](https://github.com/zalmoxes-laran/s3Dgraphy/discussions).
+[open an issue on GitHub](https://github.com/zalmoxes-laran/s3Dgraphy/issues).

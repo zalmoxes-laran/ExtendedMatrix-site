@@ -60,7 +60,7 @@ Full column reference and worked example: see
 | 1.3 | Original target — formalised as the *source list for data collection* |
 | 1.4 | Fully valid — keep using this template |
 | 1.5 | **Fully valid** — the single-sheet 8-column schema is the supported one |
-| 1.6 | Revised schema in preparation: two-sheet split (Analytical / Comparative) + closed `Type` vocabulary aligned with the DocumentNode three-axis classification — tracked as [DP-58](https://docs.extendedmatrix.org/projects/development-projects/) |
+| 1.6 | Revised schema in preparation: two-sheet split (Analytical / Comparative) + closed `Type` vocabulary aligned with the DocumentNode three-axis classification — tracked as [DP-58](https://docs.extendedmatrix.org/projects/development-projects/) <!-- TODO: this link was 404 as of 2026-05-28, needs replacement (development-projects RTD slug not published) --> |
 
 ## Get the template
 
@@ -74,6 +74,7 @@ schema simply did not change across those releases. When EM 1.6 ships
 its revised two-sheet schema, a separate file with a cleaner naming
 convention will appear alongside (see
 [DP-58](https://docs.extendedmatrix.org/projects/development-projects/)).
+<!-- TODO: this link was 404 as of 2026-05-28, needs replacement (development-projects RTD slug not published) -->
 
 The file is shipped as a **populated template**: 972 real entries from
 the Castrum di Segni / St. Peter's Church project, kept in place so
@@ -150,5 +151,6 @@ and uncomment the figure block below.
 - [Source List schema (EM 1.5 manual)](https://docs.extendedmatrix.org/en/1.5/source_node.html#source-list-schema)
   — column reference and worked example.
 - [DP-58 — Bibliographic & Archival Sources Template](https://docs.extendedmatrix.org/projects/development-projects/)
+  <!-- TODO: this link was 404 as of 2026-05-28, needs replacement (development-projects RTD slug not published) -->
   — design status of the 1.6 revision (two-sheet split, closed Type
   vocabulary, integration into `em_data.xlsx`).

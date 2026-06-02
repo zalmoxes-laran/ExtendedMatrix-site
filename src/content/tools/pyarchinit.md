@@ -45,7 +45,7 @@ natural candidates for similar bridges.
 
 - **API docs** — [pyarchinit-api.readthedocs.io](https://pyarchinit-api.readthedocs.io/en/latest/)
 - **Source** — [github.com/pyarchinit/pyarchinit](https://github.com/pyarchinit/pyarchinit)
-- **EM integration cookbook** — [`cookbook/pyarchinit_integration`](https://docs.extendedmatrix.org/en/latest/cookbook/pyarchinit_integration.html) in the Extended Matrix manual
+- **EM integration cookbook** — [`cookbook/pyarchinit_integration`](https://docs.extendedmatrix.org/en/1.5/cookbook/pyarchinit_integration.html) in the Extended Matrix manual
 
 ## Maintainers
 
