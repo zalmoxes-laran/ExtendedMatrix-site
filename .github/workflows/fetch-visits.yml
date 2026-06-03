@@ -42,6 +42,16 @@ jobs:
             exit 1
           fi
 
+          # Diagnostic: token length (never the value). A valid GoatCounter
+          # token is 45 chars; anything materially different points to a
+          # truncated paste or stray whitespace in the secret.
+          GC_TOKEN_TRIMMED="$(printf '%s' "${GC_TOKEN}" | tr -d '[:space:]')"
+          echo "Token length (untrimmed): ${#GC_TOKEN}"
+          echo "Token length (trimmed):   ${#GC_TOKEN_TRIMMED}"
+          if [ "${#GC_TOKEN_TRIMMED}" -lt 30 ]; then
+            echo "::warning::Token appears short (${#GC_TOKEN_TRIMMED} chars). Expected ~45. Check the GOATCOUNTER_TOKEN secret."
+          fi
+
           START="2026-06-02"
           END=$(date -u +%Y-%m-%d)
           BASE="https://emanueldemetrescu.goatcounter.com/api/v0"
@@ -49,19 +59,35 @@ jobs:
           tmp_loc=$(mktemp)
           tmp_tot=$(mktemp)
 
+          # Helper that captures HTTP status + body so failures print the
+          # GoatCounter error message instead of a curl exit code.
+          fetch() {
+            local url="$1" outfile="$2" label="$3"
+            local status
+            status=$(curl -sS \
+              -H "Authorization: Bearer ${GC_TOKEN_TRIMMED}" \
+              -H "Content-Type: application/json" \
+              -o "${outfile}" \
+              -w "%{http_code}" \
+              "${url}")
+            echo "→ ${label}: HTTP ${status}"
+            if [ "${status}" != "200" ]; then
+              echo "::error::${label} returned HTTP ${status}. Response body (first 500 chars):"
+              head -c 500 "${outfile}" || true
+              echo ""
+              echo "::error::Request URL was: ${url}"
+              return 1
+            fi
+            return 0
+          }
+
           # Location stats — country breakdown.
-          curl -sS --fail \
-            -H "Authorization: Bearer ${GC_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -o "${tmp_loc}" \
-            "${BASE}/stats/locations?start=${START}&end=${END}"
+          fetch "${BASE}/stats/locations?start=${START}&end=${END}" \
+                "${tmp_loc}" "stats/locations"
 
           # Total counts — overall visits & events.
-          curl -sS --fail \
-            -H "Authorization: Bearer ${GC_TOKEN}" \
-            -H "Content-Type: application/json" \
-            -o "${tmp_tot}" \
-            "${BASE}/stats/total?start=${START}&end=${END}"
+          fetch "${BASE}/stats/total?start=${START}&end=${END}" \
+                "${tmp_tot}" "stats/total"
 
           mkdir -p public/data
 
