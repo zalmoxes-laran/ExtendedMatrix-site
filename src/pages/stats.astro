@@ -143,7 +143,16 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       // Empty the loading placeholder before mounting.
       container.innerHTML = '';
 
+      // Read container box up front so the globe canvas is sized
+      // deterministically — relying on globe.gl's auto-detection at
+      // init time can yield off-centre rendering when the parent
+      // grid finishes layout after the init call.
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+
       const globe = window.Globe()(container)
+        .width(w)
+        .height(h)
         .globeImageUrl('https://unpkg.com/three-globe@2.31.0/example/img/earth-night.jpg')
         .bumpImageUrl('https://unpkg.com/three-globe@2.31.0/example/img/earth-topology.png')
         .backgroundColor('rgba(0,0,0,0)')
@@ -160,6 +169,16 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
           </div>
         `);
 
+      // Initial point of view — looking at the average longitude of
+      // the active data so the sphere doesn't open on an empty
+      // Pacific. Falls back to (30, 10) which already keeps Europe
+      // and Africa in frame.
+      const lngs = points.map((d) => d.lng);
+      const meanLng = lngs.length
+        ? lngs.reduce((a, b) => a + b, 0) / lngs.length
+        : 10;
+      globe.pointOfView({ lat: 30, lng: meanLng, altitude: 2.2 }, 0);
+
       // Auto-rotate, paused on hover.
       const controls = globe.controls();
       controls.autoRotate = true;
@@ -173,6 +192,14 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         controls.autoRotate = false;
       }
+
+      // Keep the canvas in sync with container size on viewport resize
+      // (e.g. mobile orientation change, browser-zoom, devtools toggle).
+      const handleResize = () => {
+        globe.width(container.clientWidth);
+        globe.height(container.clientHeight);
+      };
+      window.addEventListener('resize', handleResize, { passive: true });
     }
 
     function buildPanel(data) {
@@ -240,6 +267,23 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     overflow: hidden;
     border: 1px solid var(--em-border);
     margin-bottom: 24px;
+    /* Centre the globe.gl-injected canvas. The library appends a
+       child <div class="scene-container"> + <canvas> that does not
+       always self-centre when its computed width does not match the
+       container's. Flex centring guarantees the sphere sits in the
+       middle even if globe.gl miscalculates by a few pixels. */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stats__globe :global(canvas) {
+    display: block;
+    margin: 0 auto;
+  }
+  .stats__globe :global(.scene-container) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .stats__globe-loading {
     position: absolute; inset: 0;
