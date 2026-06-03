@@ -1716,6 +1716,11 @@ function fallbackCopy(text, finish) {
     ta.style.opacity = '0';
     document.body.appendChild(ta);
     ta.select();
+    // @ts-expect-error — execCommand is deprecated but kept as the
+    // only available clipboard mechanism on browsers that lack the
+    // modern navigator.clipboard.writeText() API (mostly old iOS Safari
+    // and some embedded webviews). The primary path uses the modern
+    // API; this branch is the documented fallback.
     document.execCommand('copy');
     document.body.removeChild(ta);
     finish('Link copied to clipboard ✓');
