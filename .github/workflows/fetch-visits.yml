@@ -15,6 +15,9 @@ on:
 
 permissions:
   contents: write   # need to commit the updated JSON back to main
+  actions:  write   # need to dispatch the "Build site" workflow after commit
+                    # (GITHUB_TOKEN-driven pushes do not auto-trigger other
+                    # workflows; see workflow_dispatch step at the end)
 
 concurrency:
   group: fetch-visits
@@ -128,6 +131,7 @@ jobs:
           head -30 public/data/visits.json
 
       - name: Commit + push if changed
+        id: commit
         run: |
           set -euo pipefail
           git config user.name  "github-actions[bot]"
@@ -135,9 +139,23 @@ jobs:
 
           if git diff --quiet -- public/data/visits.json; then
             echo "No change to public/data/visits.json — nothing to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
           git add public/data/visits.json
-          git commit -m "chore(stats): refresh visits.json from GoatCounter [skip ci]"
+          git commit -m "chore(stats): refresh visits.json from GoatCounter"
           git push origin main
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger Build site workflow
+        # Commits pushed with the default GITHUB_TOKEN don't auto-trigger
+        # other workflows (anti-loop protection). We have to fan out
+        # explicitly via workflow_dispatch so Astro rebuilds with the
+        # fresh visits.json. Skipped when no data change happened.
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh workflow run build.yml --ref main
+          echo "Dispatched Build site workflow."
