@@ -1,0 +1,117 @@
+name: Fetch GoatCounter visits
+
+# Refreshes public/data/visits.json from GoatCounter once a day (and on demand
+# via "Run workflow"). The committed file is then served as a static asset by
+# the Astro build; the /stats page fetches it client-side to render the globe.
+#
+# The token comes from repository secret GOATCOUNTER_TOKEN (Read statistics
+# permission only). It never appears in logs or in the committed JSON.
+
+on:
+  schedule:
+    # 06:00 UTC = 08:00 Europe/Rome in summer / 07:00 in winter.
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write   # need to commit the updated JSON back to main
+
+concurrency:
+  group: fetch-visits
+  cancel-in-progress: true
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          # Use the default GITHUB_TOKEN to push back; sufficient for same-repo
+          # commits as long as the workflow has contents: write permission.
+
+      - name: Fetch + assemble visits.json
+        env:
+          GC_TOKEN: ${{ secrets.GOATCOUNTER_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GC_TOKEN:-}" ]; then
+            echo "::error::GOATCOUNTER_TOKEN secret is empty or unset. Set it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+
+          START="2026-06-02"
+          END=$(date -u +%Y-%m-%d)
+          BASE="https://emanueldemetrescu.goatcounter.com/api/v0"
+
+          tmp_loc=$(mktemp)
+          tmp_tot=$(mktemp)
+
+          # Location stats — country breakdown.
+          curl -sS --fail \
+            -H "Authorization: Bearer ${GC_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -o "${tmp_loc}" \
+            "${BASE}/stats/locations?start=${START}&end=${END}"
+
+          # Total counts — overall visits & events.
+          curl -sS --fail \
+            -H "Authorization: Bearer ${GC_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -o "${tmp_tot}" \
+            "${BASE}/stats/total?start=${START}&end=${END}"
+
+          mkdir -p public/data
+
+          python3 - "${tmp_loc}" "${tmp_tot}" "${START}" "${END}" > public/data/visits.json <<'PY'
+          import json, sys, datetime, os
+
+          loc_path, tot_path, start, end = sys.argv[1:5]
+          with open(loc_path) as f:
+              loc = json.load(f)
+          with open(tot_path) as f:
+              tot = json.load(f)
+
+          # Locations endpoint: {"stats": [{"id": "IT", "name": "Italy", "count": 51}, ...], "more": false}
+          stats = loc.get("stats", [])
+          # Stable sort: highest count first; ties resolve alphabetically by country name.
+          stats.sort(key=lambda r: (-int(r.get("count", 0)), r.get("name", "")))
+
+          out = {
+              "schema": 1,
+              "fetched_at": datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z",
+              "range": {"start": start, "end": end},
+              "total": int(tot.get("total", 0)),
+              "total_events": int(tot.get("total_events", 0)),
+              "countries": [
+                  {
+                      "code": r.get("id"),
+                      "name": r.get("name"),
+                      "count": int(r.get("count", 0)),
+                  }
+                  for r in stats
+              ],
+          }
+          json.dump(out, sys.stdout, ensure_ascii=False, indent=2)
+          sys.stdout.write("\n")
+          PY
+
+          echo "── public/data/visits.json (preview) ──"
+          head -30 public/data/visits.json
+
+      - name: Commit + push if changed
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          if git diff --quiet -- public/data/visits.json; then
+            echo "No change to public/data/visits.json — nothing to commit."
+            exit 0
+          fi
+
+          git add public/data/visits.json
+          git commit -m "chore(stats): refresh visits.json from GoatCounter [skip ci]"
+          git push origin main
