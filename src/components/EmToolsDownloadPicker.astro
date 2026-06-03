@@ -3,7 +3,7 @@
  * EmToolsDownloadPicker — Blender × OS download picker for EM Tools.
  *
  * Replaces the previous single "Download latest" link on /tools/em-tools/.
- * Hardcoded against the EM Tools v1.5.1 GitHub release assets (3 OS × 2
+ * Hardcoded against the EM Tools v1.5.2 GitHub release assets (3 OS × 2
  * Blender versions = 6 zips). When 1.6 ships with its own multi-build set,
  * extend `downloads` below — see release page for asset names:
  *   https://github.com/zalmoxes-laran/EM-blender-tools/releases
@@ -27,41 +27,41 @@ interface BuildRow {
 }
 
 const RELEASE_BASE =
-  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/download/v1.5.1';
+  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/download/v1.5.2';
 const VERSION_TAG_URL =
-  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/tag/v1.5.1';
+  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/tag/v1.5.2';
 
 const downloads: BuildRow[] = [
   {
     os: 'Linux',
     arch: 'x64',
     goatOs: 'linux-x64',
-    b50: `${RELEASE_BASE}/em_tools-v1.5.1-linux-x64-blender50.zip`,
-    b51: `${RELEASE_BASE}/em_tools-v1.5.1-linux-x64-blender51.zip`,
-    b50File: 'em_tools-v1.5.1-linux-x64-blender50.zip',
-    b51File: 'em_tools-v1.5.1-linux-x64-blender51.zip',
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-linux-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-linux-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-linux-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-linux-x64-blender51.zip',
   },
   {
     os: 'macOS',
     arch: 'Apple Silicon (arm64)',
     goatOs: 'macos-arm64',
-    b50: `${RELEASE_BASE}/em_tools-v1.5.1-macosx-arm64-blender50.zip`,
-    b51: `${RELEASE_BASE}/em_tools-v1.5.1-macosx-arm64-blender51.zip`,
-    b50File: 'em_tools-v1.5.1-macosx-arm64-blender50.zip',
-    b51File: 'em_tools-v1.5.1-macosx-arm64-blender51.zip',
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-arm64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-arm64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-macosx-arm64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-macosx-arm64-blender51.zip',
   },
   {
     os: 'Windows',
     arch: 'x64',
     goatOs: 'windows-x64',
-    b50: `${RELEASE_BASE}/em_tools-v1.5.1-windows-x64-blender50.zip`,
-    b51: `${RELEASE_BASE}/em_tools-v1.5.1-windows-x64-blender51.zip`,
-    b50File: 'em_tools-v1.5.1-windows-x64-blender50.zip',
-    b51File: 'em_tools-v1.5.1-windows-x64-blender51.zip',
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-windows-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-windows-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-windows-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-windows-x64-blender51.zip',
   },
 ];
 
-const version = '1.5.1';
+const version = '1.5.2';
 ---
 
 <section class="em-picker" id="download" aria-labelledby="em-picker-title">
