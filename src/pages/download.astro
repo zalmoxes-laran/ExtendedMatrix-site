@@ -47,7 +47,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       <!-- ── Quick chooser ──────────────────────────────────────── -->
       <div class="chooser">
         {preferred && (
-          <a class="chooser__card chooser__card--preferred" href={`${B}/versions/${preferred.id.replace(/\.md$/, '')}/`}>
+          <a class="chooser__card chooser__card--preferred"
+             href={`${B}/versions/${preferred.id.replace(/\.md$/, '')}/`}
+             data-goatcounter-click={`chooser-preferred-${preferred.id.replace(/\.md$/, '')}`}>
             <div class="chooser__badge chooser__badge--preferred">Start here · LTS</div>
             <h2>EM {preferred.data.version}</h2>
             <p>{preferred.data.summary}</p>
@@ -61,7 +63,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         )}
 
         {legacyLts && (
-          <a class="chooser__card chooser__card--legacy" href={`${B}/versions/${legacyLts.id.replace(/\.md$/, '')}/`}>
+          <a class="chooser__card chooser__card--legacy"
+             href={`${B}/versions/${legacyLts.id.replace(/\.md$/, '')}/`}
+             data-goatcounter-click={`chooser-legacy-${legacyLts.id.replace(/\.md$/, '')}`}>
             <div class="chooser__badge chooser__badge--legacy">Legacy · LTS</div>
             <h2>EM {legacyLts.data.version}</h2>
             <p>{legacyLts.data.summary}</p>
@@ -86,6 +90,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         <a
           class="dev-strip"
           href={`${B}/versions/${development.id.replace(/\.md$/, '')}/`}
+          data-goatcounter-click={`chooser-development-${development.id.replace(/\.md$/, '')}`}
         >
           {/* SVG: a small rocket lifting diagonally out of the EM
               hourglass mark. Composed in EM palette (navy + gold).
@@ -137,7 +142,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         </p>
         <div class="dltools__grid">
           {tools.map((t) => (
-            <a class="dltools__card" href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}>
+            <a class="dltools__card"
+               href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}
+               data-goatcounter-click={`dltools-${t.id.replace(/\.md$/, '')}`}>
               <div class="dltools__name">{t.data.name}</div>
               <div class="dltools__role">{t.data.role}</div>
               <p class="dltools__desc">{t.data.summary}</p>
