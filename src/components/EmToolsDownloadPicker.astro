@@ -2,28 +2,41 @@
 /**
  * EmToolsDownloadPicker — Blender × OS download picker for EM Tools.
  *
- * Replaces the previous single "Download latest" link on /tools/em-tools/.
- * Hardcoded against the EM Tools v1.5.2 GitHub release assets (3 OS × 2
- * Blender versions = 6 zips). When 1.6 ships with its own multi-build set,
+ * Hardcoded against the EM Tools v1.5.2 GitHub release assets (4 OS × 2
+ * Python ABIs = 8 zips). When 1.6 ships with its own multi-build set,
  * extend `downloads` below — see release page for asset names:
  *   https://github.com/zalmoxes-laran/EM-blender-tools/releases
  *
- * Pure HTML + CSS Grid, no client JS. Mobile-degrades to a single column
- * with per-button "Blender 5.0 / 5.1+" badges so context is never lost.
+ * Blender compatibility per ABI column (NB: the "blender50" / "blender51"
+ * suffix in filenames refers to the bundled Python wheels, not to the
+ * minimum Blender):
+ *   - "blender50" zip → Python 3.11 wheels → works on Blender 4.4 LTS
+ *                       and Blender 5.0
+ *   - "blender51" zip → Python 3.13 wheels → works on Blender 4.5 LTS
+ *                       and Blender 5.1
  *
- * GoatCounter event-ids follow the existing `dl-em-tools-*` convention so
- * the new picker keeps appearing in the same analytics bucket as the old
- * single button.
+ * Mac Intel (pre-2020): Blender 5.x has no Intel build, so Intel users
+ * must pair the `macosx-x64` zip with Blender 4.4 LTS or 4.5 LTS. The
+ * picker calls this out inline on the macOS Intel row.
+ *
+ * Pure HTML + CSS Grid, no client JS. Mobile-degrades to a single
+ * column with per-button "Blender 4.4 / 5.0" badges so context is
+ * never lost.
+ *
+ * GoatCounter event-ids follow the existing `dl-em-tools-*` convention
+ * so the new picker keeps appearing in the same analytics bucket as
+ * the old single button.
  */
 
 interface BuildRow {
   os: string;            // user-facing OS name
   arch: string;          // user-facing arch tag
   goatOs: string;        // short id for goatcounter event-ids
-  b50: string;           // Blender 5.0 zip URL
-  b51: string;           // Blender 5.1+ zip URL
+  b50: string;           // Python 3.11 ABI zip URL (Blender 4.4 LTS / 5.0)
+  b51: string;           // Python 3.13 ABI zip URL (Blender 4.5 LTS / 5.1)
   b50File: string;       // filename, for tooltip
   b51File: string;
+  note?: string;         // optional caveat shown under the OS label
 }
 
 const RELEASE_BASE =
@@ -51,6 +64,16 @@ const downloads: BuildRow[] = [
     b51File: 'em_tools-v1.5.2-macosx-arm64-blender51.zip',
   },
   {
+    os: 'macOS',
+    arch: 'Intel (x86_64, pre-2020 Macs)',
+    goatOs: 'macos-x64',
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-macosx-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-macosx-x64-blender51.zip',
+    note: 'Pair with Blender 4.4 or 4.5 LTS — Blender 5.x has no Intel build',
+  },
+  {
     os: 'Windows',
     arch: 'x64',
     goatOs: 'windows-x64',
@@ -70,11 +93,14 @@ const version = '1.5.2';
       Download EM Tools <span class="em-picker__ver">v{version}</span>
     </h2>
     <p class="em-picker__note">
-      Pick the build matching your operating system and your installed Blender.
-      <strong>Blender 5.0 (LTS)</strong> is the safe long-term choice;
-      <strong>Blender 5.1+</strong> uses Python 3.13 and ships the current
-      stable features. If unsure, pick the column matching the Blender already
-      installed on your machine.
+      Pick the build matching your operating system and your installed
+      Blender. EM Tools 1.5.x works on <strong>Blender 4.4 LTS and later</strong>
+      — the two columns differ only in the bundled Python ABI:
+      <strong>Blender 4.4 LTS or 5.0</strong> share Python 3.11;
+      <strong>Blender 4.5 LTS or 5.1</strong> share Python 3.13. Pick the
+      column whose Blender pair matches what's already on your machine.
+      Mac Intel users (pre-2020 Macs) need Blender 4.4 LTS or 4.5 LTS, since
+      Blender 5.x ships no Intel build.
     </p>
   </div>
 
@@ -82,12 +108,12 @@ const version = '1.5.2';
     <!-- desktop column headers (hidden on mobile) -->
     <div class="em-picker__hcell em-picker__hcell--corner" aria-hidden="true"></div>
     <div class="em-picker__hcell" role="columnheader">
-      <span class="em-picker__bv">Blender 5.0</span>
-      <span class="em-picker__bvsub">LTS</span>
+      <span class="em-picker__bv">Blender 4.4 LTS / 5.0</span>
+      <span class="em-picker__bvsub">Python 3.11 ABI</span>
     </div>
     <div class="em-picker__hcell" role="columnheader">
-      <span class="em-picker__bv">Blender 5.1+</span>
-      <span class="em-picker__bvsub">Python 3.13</span>
+      <span class="em-picker__bv">Blender 4.5 LTS / 5.1</span>
+      <span class="em-picker__bvsub">Python 3.13 ABI</span>
     </div>
 
     {downloads.map((row) => (
@@ -95,6 +121,7 @@ const version = '1.5.2';
         <div class="em-picker__os" role="rowheader">
           <span class="em-picker__os-name">{row.os}</span>
           <span class="em-picker__os-arch">{row.arch}</span>
+          {row.note && <span class="em-picker__os-note">{row.note}</span>}
         </div>
 
         <div class="em-picker__cell">
@@ -102,13 +129,13 @@ const version = '1.5.2';
             href={row.b50}
             class="em-picker__btn"
             title={row.b50File}
-            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 5.0`}
+            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 4.4 LTS or 5.0`}
             data-goatcounter-click={`dl-em-tools-v${version}-${row.goatOs}-blender50`}
           >
             <span class="em-picker__arrow" aria-hidden="true">⬇</span>
             <span class="em-picker__btn-label">
               <span class="em-picker__btn-main">
-                Download <span class="em-picker__btn-bver">· Blender 5.0</span>
+                Download <span class="em-picker__btn-bver">· Blender 4.4 / 5.0</span>
               </span>
               <span class="em-picker__btn-file">{row.b50File}</span>
             </span>
@@ -120,13 +147,13 @@ const version = '1.5.2';
             href={row.b51}
             class="em-picker__btn"
             title={row.b51File}
-            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 5.1+`}
+            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 4.5 LTS or 5.1`}
             data-goatcounter-click={`dl-em-tools-v${version}-${row.goatOs}-blender51`}
           >
             <span class="em-picker__arrow" aria-hidden="true">⬇</span>
             <span class="em-picker__btn-label">
               <span class="em-picker__btn-main">
-                Download <span class="em-picker__btn-bver">· Blender 5.1+</span>
+                Download <span class="em-picker__btn-bver">· Blender 4.5 / 5.1</span>
               </span>
               <span class="em-picker__btn-file">{row.b51File}</span>
             </span>
@@ -210,6 +237,13 @@ const version = '1.5.2';
   }
   .em-picker__os-name { font-weight: 700; color: var(--em-navy); font-size: 15px; }
   .em-picker__os-arch { font-size: 11px; color: var(--em-text-muted); margin-top: 2px; }
+  .em-picker__os-note {
+    font-size: 10px;
+    color: var(--em-gold);
+    margin-top: 4px;
+    font-style: italic;
+    line-height: 1.35;
+  }
 
   .em-picker__cell { display: flex; }
 
