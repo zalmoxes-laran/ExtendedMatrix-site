@@ -33,6 +33,7 @@ type ToolRow = {
   toolRole: string;
   toolRoles: ('archaeologist' | 'modeller' | 'developer')[];
   toolDocs: string | undefined;
+  toolRepo: string | undefined;          // ← GitHub link from tool collection entry
   toolPage: string;
   version: string | undefined;
   status: 'included' | 'optional' | 'deprecated' | 'removed';
@@ -61,6 +62,7 @@ for (const t of version.data.tools) {
     toolRole: entry?.data.role ?? '',
     toolRoles: entry?.data.roles ?? [],
     toolDocs: entry?.data.docsUrl,
+    toolRepo: entry?.data.repoUrl,
     toolPage: `${B}/tools/${t.slug}/`,
     version: t.version,
     status: t.status,
@@ -248,6 +250,7 @@ const statusPill: Record<string, string> = {
                 <th>Status</th>
                 <th>Download</th>
                 <th>Doc</th>
+                <th>Code</th>
               </tr>
             </thead>
             <tbody>
@@ -279,6 +282,27 @@ const statusPill: Record<string, string> = {
                   <td>
                     {t.toolDocs
                       ? <a href={t.toolDocs} target="_blank" rel="noopener">manual ↗</a>
+                      : '—'}
+                  </td>
+                  <td class="vp__repo">
+                    {t.toolRepo
+                      ? (
+                          <a href={t.toolRepo} target="_blank" rel="noopener"
+                             class="vp__repolink"
+                             aria-label={`${t.toolName} source code on GitHub`}
+                             title="Source code on GitHub"
+                             data-goatcounter-click={`repo-${t.slug}-${versionSlug}`}>
+                            <!--
+                              GitHub mark — inline SVG so it follows
+                              currentColor on hover and doesn't need an
+                              external icon font.
+                            -->
+                            <svg viewBox="0 0 24 24" width="18" height="18"
+                                 fill="currentColor" aria-hidden="true">
+                              <path d="M12 .5C5.4.5 0 5.9 0 12.5c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 3 .1 3.3.8.9 1.3 2 1.3 3.2 0 4.6-2.7 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.2 8.2-11.4C24 5.9 18.6.5 12 .5z"/>
+                            </svg>
+                          </a>
+                        )
                       : '—'}
                   </td>
                 </tr>
@@ -509,6 +533,29 @@ const statusPill: Record<string, string> = {
   .tool-st--dep { background: #fae6c8; color: #8a5a14; }
   .tool-st--rm  { background: #fae0e0; color: #a22; }
   .vp__dlink { color: var(--em-gold) !important; font-weight: 600; }
+  /*
+   * Source-code GitHub link in the tool matrix — icon-only, sized to
+   * match the surrounding text. Hovers gold to mirror the download
+   * and doc links visually; aria-label + title carry the
+   * "Source code on GitHub" context for screen readers + tooltips.
+   */
+  .vp__repo { text-align: center; }
+  .vp__repolink {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--em-text-muted);
+    width: 22px;
+    height: 22px;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s var(--ease), background 0.15s var(--ease);
+  }
+  .vp__repolink:hover {
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    text-decoration: none;
+  }
+  .vp__repolink svg { display: block; }
 
   /* Install steps */
   .vp__install-lede { color: var(--em-text-muted); margin-bottom: 16px; }
