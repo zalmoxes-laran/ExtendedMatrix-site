@@ -1,7 +1,7 @@
 ---
 title: "Two community meetings in June: EM Hour (11th) and Dev Meeting (23rd)"
 date: 2026-06-04T11:30:00+02:00
-excerpt: "After the EM 1.5 LTS release and the new site, June reopens the recurring meetings calendar. EM Hour on the 11th (community happy hour), Developer Meeting on the 23rd (public coordination for contributors). Both on Teams in the browser — no Microsoft account required, you'll be asked for a display name when you join (please use your real name)."
+excerpt: "Recurring meetings calendar reopens after EM 1.5 LTS: EM Hour on the 11th (community happy hour) and Dev Meeting on the 23rd (public coordination). Both on Teams in the browser — no Microsoft account needed; please use your real name when joining."
 tags:
   - community
   - em-hour
