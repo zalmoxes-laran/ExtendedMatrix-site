@@ -27,17 +27,37 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
     <ul id="em-nav-menu" class="em-nav__links" data-em-menu>
       <li><a href={`${B}/start`}>Start</a></li>
-      <li><a href={`${B}/find-your-path`}>Find your path</a></li>
       <li><a href={`${B}/download`}>Download</a></li>
       <li><a href={`${B}/projects`}>Projects</a></li>
-      <li><a href={`${B}/news`}>News</a></li>
+      <li><a href={`${B}/publications`}>Publications</a></li>
       <li><a href={`${B}/events`}>Events</a></li>
       <li><a href={`${B}/community`}>Community</a></li>
       <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Docs</a></li>
       <li><a href="https://dev.extendedmatrix.org/" target="_blank" rel="noopener noreferrer">Developers</a></li>
-      <li>
-        <a href="https://github.com/topics/extended-matrix" target="_blank" rel="noopener" class="em-nav__cta">
-          GitHub
+      <li class="em-nav__icons">
+        <a href="https://github.com/topics/extended-matrix"
+           target="_blank" rel="noopener"
+           class="em-nav__icon"
+           aria-label="Extended Matrix on GitHub"
+           title="GitHub">
+          <!--
+            GitHub mark. Inline SVG so we don't ship an icon font and so
+            the colour follows currentColor (hovers cleanly to gold).
+          -->
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M12 .5C5.4.5 0 5.9 0 12.5c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 3 .1 3.3.8.9 1.3 2 1.3 3.2 0 4.6-2.7 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.2 8.2-11.4C24 5.9 18.6.5 12 .5z"/>
+          </svg>
+          <span class="em-nav__icon-label">GitHub</span>
+        </a>
+        <a href="https://t.me/UserGroupEM"
+           target="_blank" rel="noopener"
+           class="em-nav__icon"
+           aria-label="Extended Matrix on Telegram"
+           title="Telegram">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path d="M9.04 15.32 8.86 18c.3 0 .43-.13.58-.28l1.39-1.33 2.88 2.1c.53.29.91.14 1.05-.49l1.9-8.92c.17-.78-.28-1.09-.79-.9L4.86 11.34c-.76.3-.74.72-.13.91l2.7.84 6.27-3.95c.3-.2.57-.09.35.11L9.04 15.32z"/>
+          </svg>
+          <span class="em-nav__icon-label">Telegram</span>
         </a>
       </li>
     </ul>
@@ -156,16 +176,47 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--em-text-muted);
   }
   .em-nav__links a:hover { color: var(--em-navy); text-decoration: none; }
-  .em-nav__cta {
-    background: var(--em-navy);
-    color: var(--em-bg) !important;
-    padding: 6px 14px;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
+  /*
+   * Icon group at the end of the nav — GitHub + Telegram. On desktop
+   * these render as 32×32 icon buttons with the visible text hidden
+   * (the label is preserved for screen-readers and shown inline on
+   * mobile so the burger menu still reads naturally).
+   */
+  .em-nav__icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 4px;
   }
-  .em-nav__cta:hover {
-    background: var(--em-gold);
-    color: var(--em-bg) !important;
+  .em-nav__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    color: var(--em-text-muted);
+    transition: color 0.15s var(--ease), background 0.15s var(--ease);
+  }
+  .em-nav__icon:hover {
+    color: var(--em-gold);
+    background: var(--em-gold-tint);
+    text-decoration: none;
+  }
+  .em-nav__icon svg { display: block; }
+  .em-nav__icon-label {
+    /*
+     * Visually hidden on desktop. Screen readers still announce it,
+     * and the mobile burger menu overrides this to show the labels
+     * inline next to the icons (see media query below).
+     */
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   @media (max-width: 768px) {
@@ -200,16 +251,42 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       color: var(--em-gold);
       background: rgba(255, 255, 255, 0.04);
     }
-    .em-nav__cta {
-      background: transparent;
-      color: var(--em-gold) !important;
-      border: 0;
+    /*
+     * Mobile burger: the icon group becomes a row of full-width text
+     * links again (icon + label side-by-side) so it reads naturally
+     * inside the slide-in menu.
+     */
+    .em-nav__icons {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      width: 100%;
+      margin-left: 0;
+    }
+    .em-nav__icon {
+      width: 100%;
+      height: auto;
+      justify-content: flex-start;
+      gap: 12px;
       padding: 16px 24px;
       border-radius: 0;
+      font-size: 17px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .em-nav__cta:hover {
+    .em-nav__icon:hover {
       background: rgba(255, 255, 255, 0.04);
-      color: var(--em-gold) !important;
+      color: var(--em-gold);
+    }
+    .em-nav__icon-label {
+      /* unhide on mobile — show inline as a normal label */
+      position: static;
+      width: auto; height: auto;
+      padding: 0; margin: 0;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
     }
   }
 </style>

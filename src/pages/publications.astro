@@ -1,0 +1,333 @@
+---
+/**
+ * Publications — the bibliographic record of the EM ecosystem.
+ *
+ * Two sections:
+ *   1. Foundational — papers that define EM (kind: foundational)
+ *   2. Applications — community papers using EM (kind: application)
+ *
+ * Followed by a "Did you publish using EM?" call-to-share banner.
+ *
+ * Drafts are filtered out. Entries with `featured: true` come first
+ * inside their section, then year DESC, then `order` ASC, then title.
+ */
+
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const all = (await getCollection('publications', (p) => !p.data.draft));
+
+type Pub = (typeof all)[number];
+
+const sortPubs = (a: Pub, b: Pub) => {
+  // featured first
+  if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
+  // year descending
+  if (a.data.year !== b.data.year) return b.data.year - a.data.year;
+  // order ascending within a year
+  if (a.data.order !== b.data.order) return a.data.order - b.data.order;
+  // title ascending
+  return a.data.title.localeCompare(b.data.title);
+};
+
+const foundational = all.filter((p) => p.data.kind === 'foundational').sort(sortPubs);
+const applications = all.filter((p) => p.data.kind === 'application').sort(sortPubs);
+
+// Render each entry's body. We don't actually render the body inline on
+// the card — but the body's first paragraph is shown as the abstract,
+// so we pre-extract it for the cheaper case. (We could call render()
+// but a hand-rolled first-paragraph extractor keeps the card light.)
+const firstParagraph = (raw: string): string | null => {
+  const stripped = raw
+    .replace(/^---[\s\S]*?---\s*/m, '')   // strip frontmatter just in case
+    .trim();
+  if (!stripped) return null;
+  const para = stripped.split(/\n\s*\n/)[0]?.trim();
+  return para || null;
+};
+
+const cardFor = (p: Pub) => ({
+  id: p.id.replace(/\.md$/, ''),
+  ...p.data,
+  // Prefer explicit tagline; fall back to first body paragraph if any.
+  blurb: p.data.tagline || firstParagraph(p.body) || null,
+});
+
+const foundationalCards = foundational.map(cardFor);
+const applicationCards = applications.map(cardFor);
+---
+
+<BaseLayout
+  title="Publications"
+  description="Foundational and community publications around Extended Matrix — the formal language, the framework, and the case studies that use them."
+>
+  <section class="pubs">
+    <div class="container">
+      <span class="tag">Publications</span>
+      <h1 class="pubs__h1">Publications around Extended Matrix.</h1>
+      <p class="pubs__lede">
+        The papers below define Extended Matrix — and the case studies that
+        use it. The <strong>foundational</strong> publications introduce the
+        formal language and the framework; the <strong>applications</strong>
+        are community papers that put EM to work on specific reconstructions.
+        For citation guidance when you use EM in your own work, see the
+        <a href={`${B}/cite`}>Citing EM</a> page.
+      </p>
+
+      <!-- ── Foundational ───────────────────────────────────── -->
+      <section class="pubs__section">
+        <header class="pubs__section-head">
+          <h2>Foundational</h2>
+          <p class="pubs__section-sub">
+            Papers that define the Extended Matrix method and framework.
+          </p>
+        </header>
+        {foundationalCards.length === 0 && (
+          <p class="pubs__empty">No foundational publications listed yet.</p>
+        )}
+        <ul class="pubs__list">
+          {foundationalCards.map((p) => (
+            <li class={`pub ${p.featured ? 'pub--featured' : ''}`} id={p.id}>
+              <div class="pub__head">
+                <span class="pub__year">{p.year}</span>
+                {p.emVersion && <span class="pub__chip">EM {p.emVersion}</span>}
+                {p.featured && <span class="pub__chip pub__chip--featured">Foundation paper</span>}
+              </div>
+              <h3 class="pub__title">
+                {(p.doi || p.url) ? (
+                  <a href={p.doi ? `https://doi.org/${p.doi}` : p.url} target="_blank" rel="noopener">{p.title}</a>
+                ) : (
+                  <span>{p.title}</span>
+                )}
+              </h3>
+              <p class="pub__authors">{p.authors}</p>
+              {p.venue && <p class="pub__venue">{p.venue}</p>}
+              {p.blurb && <p class="pub__blurb">{p.blurb}</p>}
+              <div class="pub__links">
+                {p.doi && (
+                  <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener" class="pub__link">DOI</a>
+                )}
+                {p.url && !p.doi && (
+                  <a href={p.url} target="_blank" rel="noopener" class="pub__link">Open</a>
+                )}
+                {p.pdfUrl && (
+                  <a href={p.pdfUrl} target="_blank" rel="noopener" class="pub__link">PDF</a>
+                )}
+                {p.bibtex && (
+                  <details class="pub__bibtex">
+                    <summary>BibTeX</summary>
+                    <pre><code>{p.bibtex.trim()}</code></pre>
+                  </details>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ── Applications ───────────────────────────────────── -->
+      <section class="pubs__section">
+        <header class="pubs__section-head">
+          <h2>Applications</h2>
+          <p class="pubs__section-sub">
+            Case studies and reconstructions published by the EM community.
+          </p>
+        </header>
+        {applicationCards.length === 0 && (
+          <p class="pubs__empty">
+            No application papers listed yet — if your paper uses EM and you
+            don't see it here, the share form below is for you.
+          </p>
+        )}
+        <ul class="pubs__list">
+          {applicationCards.map((p) => (
+            <li class="pub" id={p.id}>
+              <div class="pub__head">
+                <span class="pub__year">{p.year}</span>
+                {p.emVersion && <span class="pub__chip">EM {p.emVersion}</span>}
+                {p.project && <span class="pub__chip pub__chip--project">Project: {p.project}</span>}
+              </div>
+              <h3 class="pub__title">
+                {(p.doi || p.url) ? (
+                  <a href={p.doi ? `https://doi.org/${p.doi}` : p.url} target="_blank" rel="noopener">{p.title}</a>
+                ) : (
+                  <span>{p.title}</span>
+                )}
+              </h3>
+              <p class="pub__authors">{p.authors}</p>
+              {p.venue && <p class="pub__venue">{p.venue}</p>}
+              {p.blurb && <p class="pub__blurb">{p.blurb}</p>}
+              <div class="pub__links">
+                {p.doi && (
+                  <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener" class="pub__link">DOI</a>
+                )}
+                {p.url && !p.doi && (
+                  <a href={p.url} target="_blank" rel="noopener" class="pub__link">Open</a>
+                )}
+                {p.pdfUrl && (
+                  <a href={p.pdfUrl} target="_blank" rel="noopener" class="pub__link">PDF</a>
+                )}
+                {p.bibtex && (
+                  <details class="pub__bibtex">
+                    <summary>BibTeX</summary>
+                    <pre><code>{p.bibtex.trim()}</code></pre>
+                  </details>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ── Share-your-paper banner ────────────────────────── -->
+      <aside class="pubs__share">
+        <div>
+          <h3>Published a paper using Extended Matrix?</h3>
+          <p>
+            We track community publications here so the method's footprint
+            stays visible to everyone — funders, students, future
+            collaborators. Send us the DOI (or just the citation) and we'll
+            add it under <em>Applications</em>.
+          </p>
+        </div>
+        <div class="pubs__share-cta">
+          <a class="pubs__share-btn" href="mailto:emanuel.demetrescu@cnr.it?subject=EM%20application%20paper">
+            Email the maintainer
+          </a>
+          <a class="pubs__share-btn pubs__share-btn--ghost" href="https://t.me/UserGroupEM" target="_blank" rel="noopener">
+            Or via Telegram
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .pubs { padding: 60px 0 80px; }
+  .tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--em-gold); background: var(--em-gold-tint);
+    padding: 4px 10px; border-radius: 2px;
+  }
+  .pubs__h1 { margin: 12px 0 8px; font-size: 38px; letter-spacing: -0.01em; }
+  .pubs__lede {
+    font-size: 17px; color: var(--em-text); max-width: 760px; line-height: 1.65;
+    margin-bottom: 48px;
+  }
+
+  .pubs__section { margin-bottom: 56px; }
+  .pubs__section-head { margin-bottom: 24px; border-bottom: 1px solid var(--em-border); padding-bottom: 12px; }
+  .pubs__section-head h2 { font-size: 26px; margin: 0 0 4px; color: var(--em-navy); }
+  .pubs__section-sub { color: var(--em-text-muted); font-size: 14px; margin: 0; }
+  .pubs__empty { color: var(--em-text-muted); font-size: 14px; font-style: italic; }
+
+  .pubs__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 20px; }
+  .pub {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    padding: 20px 22px;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .pub:hover { border-color: var(--em-gold); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .pub--featured {
+    border-color: var(--em-gold);
+    background: linear-gradient(0deg, var(--em-bg) 0%, var(--em-gold-tint) 200%);
+  }
+  .pub__head {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    margin-bottom: 6px;
+  }
+  .pub__year {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--em-text-muted);
+    letter-spacing: 0.04em;
+  }
+  .pub__chip {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.04em;
+    padding: 2px 8px; border-radius: 999px;
+    background: var(--em-navy-tint); color: var(--em-navy);
+  }
+  .pub__chip--featured { background: var(--em-gold-tint); color: var(--em-gold); }
+  .pub__chip--project { background: #ecf3ff; color: #1a4380; }
+  .pub__title {
+    font-size: 18px;
+    line-height: 1.4;
+    margin: 4px 0 6px;
+    color: var(--em-navy);
+  }
+  .pub__title a { color: inherit; }
+  .pub__title a:hover { color: var(--em-gold); }
+  .pub__authors { font-size: 14px; color: var(--em-text); margin: 0 0 4px; }
+  .pub__venue { font-size: 13px; color: var(--em-text-muted); font-style: italic; margin: 0 0 10px; }
+  .pub__blurb { font-size: 14px; color: var(--em-text); line-height: 1.6; margin: 0 0 12px; }
+  .pub__links { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .pub__link {
+    font-size: 13px; font-weight: 600; color: var(--em-navy);
+    border: 1px solid var(--em-border);
+    padding: 4px 10px; border-radius: var(--radius-sm);
+  }
+  .pub__link:hover { background: var(--em-navy); color: var(--em-bg); text-decoration: none; }
+  .pub__bibtex { font-size: 13px; }
+  .pub__bibtex summary {
+    cursor: pointer; font-weight: 600; color: var(--em-text-muted);
+    padding: 4px 0;
+  }
+  .pub__bibtex summary:hover { color: var(--em-navy); }
+  .pub__bibtex pre {
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-sm);
+    padding: 12px;
+    overflow-x: auto;
+    font-size: 12px;
+    margin: 8px 0 0;
+  }
+
+  .pubs__share {
+    margin-top: 24px;
+    padding: 28px;
+    background: var(--em-navy);
+    color: var(--em-bg);
+    border-radius: var(--radius-md);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 24px;
+  }
+  .pubs__share h3 { color: var(--em-bg); font-size: 20px; margin: 0 0 6px; }
+  .pubs__share p { color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6; margin: 0; max-width: 60ch; }
+  .pubs__share em { color: var(--em-gold); font-style: normal; font-weight: 600; }
+  .pubs__share-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pubs__share-btn {
+    background: var(--em-gold);
+    color: var(--em-navy);
+    padding: 10px 16px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  .pubs__share-btn:hover { background: var(--em-bg); color: var(--em-navy); text-decoration: none; }
+  .pubs__share-btn--ghost {
+    background: transparent;
+    color: var(--em-bg);
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+  .pubs__share-btn--ghost:hover {
+    background: rgba(255,255,255,0.08);
+    color: var(--em-bg);
+    border-color: var(--em-gold);
+  }
+
+  @media (max-width: 720px) {
+    .pubs__share { grid-template-columns: 1fr; }
+    .pubs__h1 { font-size: 28px; }
+  }
+</style>
