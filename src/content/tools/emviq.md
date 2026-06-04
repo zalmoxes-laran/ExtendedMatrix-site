@@ -1,28 +1,43 @@
 ---
 name: "EMviq"
-role: "Web visualisation (legacy)"
-summary: "Earlier web-based 3D viewer in the EMF, used in the EM 1.4 era. Superseded by Heriverse from EM 1.5 onwards. Kept here for historical reference and to support projects deposited under 1.4."
+role: "Web visualisation"
+summary: "Web-based 3D viewer in the EMF. The reference web viewer for EM 1.4 (paired version 1.4). From EM 1.5 onwards the project moves toward Heriverse, but EMviq remains the right choice for EM 1.4 deposits and for any project that wants a lighter-weight, single-purpose viewer."
 status: stable
 licence: "GPL-3.0"
 roles: [archaeologist]
 order: 90
+docsUrl: "https://osiris.itabc.cnr.it/scenebaker/index.php/projects/emviq/"
+repoUrl: "https://github.com/phoenixbf/emviq"
+downloadUrl: "https://github.com/phoenixbf/emviq"
 ---
 
 ## Status
 
-**EMviq is a legacy component of the EMF.** It was the web-visualisation
-counterpart of EM Tools through the 1.4 release line, and is replaced
-by **[Heriverse](../heriverse/)** from EM 1.5 onwards.
+**EMviq is the reference web-visualisation viewer for EM 1.4.** It is
+the web-side counterpart of EM Tools in that release line and remains
+maintained for that role.
 
-If you are starting a new project, use Heriverse. If you are reopening
-a 1.4-era deposit, EMviq is documented here for compatibility.
+From **EM 1.5 onwards**, the project introduces
+**[Heriverse](../heriverse/)** as the visualisation track of choice —
+deeper rewrite, collaborative VR, paradata pop-ups, StratiVerse data
+model, European Collaborative Cloud for Cultural Heritage integration.
+That does not retire EMviq; it gives 1.5+ projects an alternative aimed
+at a richer feature set, while EMviq continues to serve 1.4 deposits
+and projects that prefer a lighter, single-purpose viewer.
 
-## Why it was retired
+## Where it lives
 
-Heriverse is a deeper rewrite that brings: collaborative VR, paradata
-pop-ups, the StratiVerse data model, integration with the European
-Collaborative Cloud for Cultural Heritage. Maintaining two viewers in
-parallel was not sustainable, so EMviq's role is now archival.
+- **Project page** —
+  [osiris.itabc.cnr.it/scenebaker/projects/emviq](https://osiris.itabc.cnr.it/scenebaker/index.php/projects/emviq/)
+- **Source code** —
+  [github.com/phoenixbf/emviq](https://github.com/phoenixbf/emviq)
+- **Pair with** — EM 1.4 (current paired version 1.4) and the EM Tools
+  1.4 release line. For 1.5+ projects, see
+  [Heriverse](../heriverse/) as the recommended visualisation path
+  going forward.
 
-> **Editors:** add the EMviq legacy archive URL or repository link
-> when retrieved from the old extendedmatrix.org site.
+## Citation
+
+If you publish work that uses EMviq, the canonical citation follows the
+EMviq project page above; project authorship credits are listed there.
+EM-side citation guidance lives at [Cite EM](../../cite/).
