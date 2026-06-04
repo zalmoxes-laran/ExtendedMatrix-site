@@ -84,6 +84,43 @@ jobs:
             return 0
           }
 
+          # Pre-flight: hit /me to confirm the token resolves to a user
+          # and to log its actual permission bitmask + site scope. When
+          # the /stats calls 404, comparing /me's response against a
+          # known-good run isolates whether the issue is the token's
+          # permissions (different bitmask), its scope (sites != [-1]),
+          # or something else entirely on the GoatCounter side.
+          tmp_me=$(mktemp)
+          me_status=$(curl -sS \
+            -H "Authorization: Bearer ${GC_TOKEN_TRIMMED}" \
+            -H "Content-Type: application/json" \
+            -o "${tmp_me}" \
+            -w "%{http_code}" \
+            "${BASE}/me")
+          echo "→ pre-flight /me: HTTP ${me_status}"
+          if [ "${me_status}" != "200" ]; then
+            echo "::error::/me returned HTTP ${me_status} — token is rejected at the auth layer. Body (first 500 chars):"
+            head -c 500 "${tmp_me}" || true
+            echo ""
+            echo "::error::Regenerate GOATCOUNTER_TOKEN with Read statistics + All sites, update the GitHub secret, re-run."
+            exit 1
+          fi
+          # Pull out non-secret token metadata (name, permissions bitmask,
+          # sites scope, user id/email). Never logs the token value.
+          python3 - "${tmp_me}" <<'PY'
+          import json, sys
+          with open(sys.argv[1]) as f:
+              me = json.load(f)
+          u = me.get("user", {})
+          t = me.get("token", {})
+          print(f"  user.id:           {u.get('id')}")
+          print(f"  user.email:        {u.get('email')}")
+          print(f"  user.site:         {u.get('site')}")
+          print(f"  token.name:        {t.get('name')!r}")
+          print(f"  token.permissions: {t.get('permissions')}")
+          print(f"  token.sites:       {t.get('sites')}")
+          PY
+
           # Location stats — country breakdown.
           fetch "${BASE}/stats/locations?start=${START}&end=${END}" \
                 "${tmp_loc}" "stats/locations"
