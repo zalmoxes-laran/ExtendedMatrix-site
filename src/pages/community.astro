@@ -205,14 +205,18 @@ const fmtTime = (d: Date) =>
       </section>
 
       <!-- ── Development meetings ──────────────────────────────── -->
-      <section class="block">
+      <section class="block" id="dev-meetings">
         <header class="block__head">
           <h2>Development meetings</h2>
           <p class="block__lede">
             Monthly public coordination for the codebase. Open by default,
             notes-first, decisions are recorded so direction stays
             transparent — especially as more contributors arrive with
-            AI-assisted workflows.
+            AI-assisted workflows. Each meeting has its own page with
+            TL;DR, attendees, decisions and action items; async agenda
+            gathering happens on the
+            <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-dev-site/discussions/categories/meeting-notes" target="_blank" rel="noopener">Meeting Notes</a>
+            discussion category on the dev-site repo.
           </p>
         </header>
 
@@ -227,11 +231,20 @@ const fmtTime = (d: Date) =>
                     <div class="meet__date-time">{fmtTime(e.data.date)}</div>
                   </div>
                   <div>
-                    <h4 class="meet__title">{e.data.title}</h4>
+                    <h4 class="meet__title">
+                      <a href={`${B}/community/dev-meetings/${e.id.replace(/\.md$/, '')}/`}>
+                        {e.data.title}
+                      </a>
+                    </h4>
+                    {e.data.tldr && <p class="meet__tldr">{e.data.tldr}</p>}
                     <div class="meet__links">
                       {e.data.meetingUrl && (
                         <a href={e.data.meetingUrl} target="_blank" rel="noopener">Join meeting →</a>
                       )}
+                      {e.data.discussionUrl && (
+                        <a href={e.data.discussionUrl} target="_blank" rel="noopener">Agenda thread ↗</a>
+                      )}
+                      <a href={`${B}/community/dev-meetings/${e.id.replace(/\.md$/, '')}/`}>Full page →</a>
                     </div>
                   </div>
                 </li>
@@ -250,7 +263,12 @@ const fmtTime = (d: Date) =>
                     <div class="meet__date-day">{fmtDate(e.data.date)}</div>
                   </div>
                   <div>
-                    <h4 class="meet__title">{e.data.title}</h4>
+                    <h4 class="meet__title">
+                      <a href={`${B}/community/dev-meetings/${e.id.replace(/\.md$/, '')}/`}>
+                        {e.data.title}
+                      </a>
+                    </h4>
+                    {e.data.tldr && <p class="meet__tldr">{e.data.tldr}</p>}
                     {e.data.decisions.length > 0 && (
                       <div class="meet__detail">
                         <strong>Decisions:</strong>
@@ -259,6 +277,12 @@ const fmtTime = (d: Date) =>
                         </ul>
                       </div>
                     )}
+                    <div class="meet__links">
+                      <a href={`${B}/community/dev-meetings/${e.id.replace(/\.md$/, '')}/`}>Full page →</a>
+                      {e.data.discussionUrl && (
+                        <a href={e.data.discussionUrl} target="_blank" rel="noopener">Discussion thread ↗</a>
+                      )}
+                    </div>
                   </div>
                 </li>
               ))}
@@ -514,6 +538,19 @@ const fmtTime = (d: Date) =>
     margin-top: 4px;
   }
   .meet__title { font-size: 17px; margin: 0 0 6px; }
+  .meet__title a { color: var(--em-navy); }
+  .meet__title a:hover { color: var(--em-gold); text-decoration: none; }
+  /*
+   * Meeting TL;DR — short blender.org-style summary surfaced on
+   * /community without needing to click into the meeting page.
+   */
+  .meet__tldr {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.55;
+    margin: 0 0 8px;
+    max-width: 60ch;
+  }
   .meet__summary { font-size: 14px; color: var(--em-text); margin: 0 0 10px; }
   .meet__links {
     display: flex;

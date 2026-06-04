@@ -142,6 +142,20 @@ const devMeetings = defineCollection({
       videoUrl: z.string().url().optional(),
       meetingUrl: z.string().url().optional(),
       upcoming: z.boolean().default(false),
+      // One-sentence TL;DR shown at the top of the meeting page,
+      // blender.org-module-meeting style. Keep it under a sentence —
+      // anything longer belongs in the body.
+      tldr: z.string().max(280).optional(),
+      // The date of the next scheduled meeting. When set, the
+      // meeting page renders a "Next meeting: <date>" pointer at the
+      // bottom; the date is also surfaced on the /community list so
+      // readers can subscribe even without reading the body.
+      nextMeeting: z.coerce.date().optional(),
+      // Optional link to a GitHub Discussions thread used for async
+      // agenda gathering before the meeting and follow-up after.
+      // Lives under the "Meeting Notes" category on the
+      // ExtendedMatrix-dev-site repo.
+      discussionUrl: z.string().url().optional(),
     }),
 });
 

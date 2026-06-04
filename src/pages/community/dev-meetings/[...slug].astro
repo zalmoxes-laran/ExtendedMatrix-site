@@ -1,0 +1,290 @@
+---
+/**
+ * Individual page for a single Development Meeting. Notes-first
+ * blender.org-module-meeting style:
+ *   - TL;DR up top
+ *   - Attendees as a short list
+ *   - Body (markdown — Topic / Discussion / Decision / Action item)
+ *   - Decisions and action items reflected as structured side cards
+ *     when the frontmatter populates them
+ *   - Footer with link to the GitHub Discussions thread (async
+ *     agenda + follow-up) and the next-meeting pointer
+ *
+ * Lives under /community/dev-meetings/<slug>/ — kebab-case path is
+ * deliberate (the content folder is `devMeetings` camelCase for
+ * Astro collection conventions, the URL is hyphenated for human
+ * readability).
+ */
+
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const meetings = await getCollection('devMeetings');
+  return meetings.map((m) => ({
+    params: { slug: m.id.replace(/\.md$/, '') },
+    props: { meeting: m },
+  }));
+}
+
+const { meeting } = Astro.props;
+const { Content } = await render(meeting);
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const fmtFull = (d: Date) =>
+  d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+const fmtShort = (d: Date) =>
+  d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+const fmtTime = (d: Date) =>
+  d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+const today = new Date();
+const isUpcoming = meeting.data.date >= today || meeting.data.upcoming;
+
+const description =
+  meeting.data.tldr ||
+  `EM Developer Meeting on ${fmtShort(meeting.data.date)} — public coordination for the Extended Matrix codebase.`;
+---
+
+<BaseLayout
+  title={meeting.data.title}
+  description={description}
+>
+  <article class="dm">
+    <div class="container">
+      <a href={`${B}/community/#dev-meetings`} class="dm__back">← All development meetings</a>
+
+      <div class="dm__head">
+        <span class={`dm__badge ${isUpcoming ? 'dm__badge--upcoming' : 'dm__badge--past'}`}>
+          {isUpcoming ? 'Upcoming' : 'Past meeting'}
+        </span>
+      </div>
+
+      <h1 class="dm__title">{meeting.data.title}</h1>
+
+      <div class="dm__meta">
+        <span>{fmtFull(meeting.data.date)}</span>
+        <span>· {fmtTime(meeting.data.date)} CET</span>
+      </div>
+
+      {meeting.data.tldr && (
+        <p class="dm__tldr">
+          <strong>TL;DR.</strong> {meeting.data.tldr}
+        </p>
+      )}
+
+      <!-- ── Action buttons ──────────────────────────────── -->
+      <div class="dm__links">
+        {isUpcoming && meeting.data.meetingUrl && (
+          <a href={meeting.data.meetingUrl} target="_blank" rel="noopener" class="dm__btn">
+            ▶ Join meeting
+          </a>
+        )}
+        {meeting.data.discussionUrl && (
+          <a href={meeting.data.discussionUrl} target="_blank" rel="noopener" class="dm__btn dm__btn--ghost">
+            {isUpcoming ? 'Agenda & discussion thread' : 'Discussion thread'} ↗
+          </a>
+        )}
+        {meeting.data.videoUrl && !isUpcoming && (
+          <a href={meeting.data.videoUrl} target="_blank" rel="noopener" class="dm__btn dm__btn--ghost">
+            Recording ↗
+          </a>
+        )}
+      </div>
+
+      <!-- ── Two-column body: prose on the left, structured side on the right ── -->
+      <div class="dm__grid">
+        <section class="dm__body">
+          <Content />
+        </section>
+
+        <aside class="dm__side">
+          {meeting.data.attendees.length > 0 && (
+            <div class="dm__sidecard">
+              <h3>Attendees</h3>
+              <ul>
+                {meeting.data.attendees.map((a) => <li>{a}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {meeting.data.decisions.length > 0 && (
+            <div class="dm__sidecard dm__sidecard--decisions">
+              <h3>Decisions</h3>
+              <ul>
+                {meeting.data.decisions.map((d) => <li>{d}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {meeting.data.actionItems.length > 0 && (
+            <div class="dm__sidecard dm__sidecard--actions">
+              <h3>Action items</h3>
+              <ul>
+                {meeting.data.actionItems.map((a) => <li>{a}</li>)}
+              </ul>
+            </div>
+          )}
+
+          {meeting.data.nextMeeting && (
+            <div class="dm__sidecard dm__sidecard--next">
+              <h3>Next meeting</h3>
+              <p>
+                <strong>{fmtFull(meeting.data.nextMeeting)}</strong><br />
+                {fmtTime(meeting.data.nextMeeting)} CET
+              </p>
+              <p class="dm__next-note">
+                Links and the live agenda thread will be on
+                <a href={`${B}/community/#dev-meetings`}>extendedmatrix.org/community</a>
+                as the date approaches.
+              </p>
+            </div>
+          )}
+        </aside>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .dm { padding: 60px 0 80px; }
+  .dm__back {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--em-text-muted);
+    margin-bottom: 16px;
+  }
+  .dm__head { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+  .dm__badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+  }
+  .dm__badge--upcoming { color: var(--em-gold); background: var(--em-gold-tint); }
+  .dm__badge--past     { color: var(--em-text-muted); background: var(--em-bg-warm); }
+
+  .dm__title { margin: 12px 0 8px; font-size: 32px; letter-spacing: -0.01em; }
+  .dm__meta {
+    color: var(--em-text-muted);
+    font-size: 14px;
+    margin-bottom: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dm__tldr {
+    font-size: 16px;
+    line-height: 1.65;
+    color: var(--em-text);
+    background: var(--em-gold-tint);
+    border-left: 3px solid var(--em-gold);
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    margin: 16px 0 28px;
+    max-width: 780px;
+  }
+  .dm__tldr strong { color: var(--em-gold); }
+
+  .dm__links { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+  .dm__btn {
+    background: var(--em-navy);
+    color: var(--em-bg);
+    padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 14px;
+  }
+  .dm__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
+  .dm__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
+  .dm__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
+
+  .dm__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 40px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .dm__grid { grid-template-columns: 1fr; gap: 28px; }
+  }
+
+  .dm__body :global(h2) {
+    margin-top: 28px;
+    font-size: 20px;
+    color: var(--em-navy);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--em-border);
+  }
+  .dm__body :global(h3) {
+    margin-top: 20px;
+    font-size: 16px;
+    color: var(--em-navy);
+  }
+  .dm__body :global(p) { margin-bottom: 14px; line-height: 1.7; }
+  .dm__body :global(ul), .dm__body :global(ol) {
+    margin-bottom: 14px;
+    padding-left: 22px;
+  }
+  .dm__body :global(blockquote) {
+    border-left: 3px solid var(--em-gold);
+    padding: 8px 16px;
+    color: var(--em-text-muted);
+    font-style: italic;
+    margin: 16px 0;
+  }
+  .dm__body :global(code) {
+    font-size: 13px;
+    background: var(--em-bg-warm);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+  .dm__body :global(strong) { color: var(--em-navy); }
+
+  .dm__side {
+    display: grid;
+    gap: 16px;
+    position: sticky;
+    top: 80px;
+  }
+  @media (max-width: 900px) {
+    .dm__side { position: static; }
+  }
+  .dm__sidecard {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    padding: 16px 18px;
+    background: var(--em-bg);
+  }
+  .dm__sidecard h3 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--em-text-muted);
+    margin: 0 0 10px;
+  }
+  .dm__sidecard ul {
+    list-style: disc;
+    padding-left: 18px;
+    margin: 0;
+  }
+  .dm__sidecard li {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--em-text);
+    margin-bottom: 6px;
+  }
+  .dm__sidecard--decisions { border-left: 3px solid var(--em-gold); }
+  .dm__sidecard--decisions h3 { color: var(--em-gold); }
+  .dm__sidecard--actions { border-left: 3px solid var(--em-navy); }
+  .dm__sidecard--actions h3 { color: var(--em-navy); }
+  .dm__sidecard--next {
+    background: var(--em-bg-warm);
+    border-left: 3px solid var(--em-text-muted);
+  }
+  .dm__sidecard--next p { margin: 0 0 8px; font-size: 14px; line-height: 1.5; }
+  .dm__next-note { font-size: 13px !important; color: var(--em-text-muted); margin: 8px 0 0 !important; }
+</style>
