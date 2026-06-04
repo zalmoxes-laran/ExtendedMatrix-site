@@ -5,7 +5,7 @@ attendees: []
 decisions: []
 actionItems: []
 upcoming: true
-meetingUrl: "https://meet.example.org/em-dev"
+meetingUrl: "https://teams.microsoft.com/meet/388419352314569?p=qvWgByiUm0jGtpW4mQ"
 ---
 
 Public development coordination meeting for the Extended Matrix
