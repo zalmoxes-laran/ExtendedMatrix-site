@@ -20,6 +20,14 @@ const allEvents = (await getCollection('events'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const featuredEvents = allEvents.slice(0, 3);
 
+// Latest news (top 5 non-draft). News is the "micro-event" strand of
+// community life — short posts about releases, milestones, EU-project
+// news, etc. The top nav doesn't link /news directly anymore; this
+// strip is the primary surface, with /news as the full archive.
+const latestNews = (await getCollection('news', (p) => !p.data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, 5);
+
 const kindLabel: Record<string, string> = {
   conference: 'Conference',
   bazaar: 'Bazaar',
@@ -44,8 +52,9 @@ const fmtTime = (d: Date) =>
       <span class="tag">Community</span>
       <h1>Where Extended Matrix lives.</h1>
       <p class="comm__sub">
-        Two recurring meetings, two chat channels, one issue tracker.
-        Everything is open — drop in, ask questions, share work.
+        News, two recurring meetings, two chat channels, one issue
+        tracker. Everything is open — drop in, ask questions, share
+        work.
       </p>
 
       <!-- ── Channels strip ─────────────────────────────────────── -->
@@ -67,6 +76,35 @@ const fmtTime = (d: Date) =>
           <div class="channel__desc">Datasets, paradata bundles, case studies, papers — all FAIR.</div>
         </a>
       </div>
+
+      <!-- ── Latest news ────────────────────────────────────────── -->
+      {latestNews.length > 0 && (
+        <section class="block">
+          <header class="block__head block__head--row">
+            <div>
+              <h2>Latest news</h2>
+              <p class="block__lede">
+                Short posts about releases, milestones, EU-project news
+                and other day-to-day community signal. The full archive
+                lives at <a href={`${B}/news/`}>/news</a>.
+              </p>
+            </div>
+            <a href={`${B}/news/`} class="block__more">All news →</a>
+          </header>
+
+          <ul class="news-strip">
+            {latestNews.map((n) => (
+              <li class="news-card">
+                <a href={`${B}/news/${n.id.replace(/\.md$/, '')}/`}>
+                  <div class="news-card__date">{fmtShort(n.data.date)}</div>
+                  <h3 class="news-card__title">{n.data.title}</h3>
+                  <p class="news-card__excerpt">{n.data.excerpt}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <!-- ── Events strip (Conferences · Bazaars · Talks) ─────────── -->
       {featuredEvents.length > 0 && (
@@ -307,6 +345,64 @@ const fmtTime = (d: Date) =>
     letter-spacing: 0.08em;
     color: var(--em-gold);
     margin: 24px 0 14px;
+  }
+
+  /*
+   * News strip — short card grid for the top 5 recent /news entries.
+   * Sibling to the events strip below but lighter visually since news
+   * items are smaller atoms (no kind badge, no location).
+   */
+  .news-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  @media (max-width: 900px) {
+    .news-strip { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 560px) {
+    .news-strip { grid-template-columns: 1fr; }
+  }
+  .news-card {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .news-card:hover { border-color: var(--em-gold); box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+  .news-card a {
+    display: block;
+    padding: 18px 20px;
+    color: inherit;
+    height: 100%;
+  }
+  .news-card a:hover { text-decoration: none; }
+  .news-card__date {
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--em-text-muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .news-card__title {
+    font-size: 16px;
+    line-height: 1.35;
+    margin: 0 0 8px;
+    color: var(--em-navy);
+  }
+  .news-card:hover .news-card__title { color: var(--em-gold); }
+  .news-card__excerpt {
+    font-size: 13px;
+    color: var(--em-text);
+    line-height: 1.55;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   /* Events strip ----------------------------------------------- */
