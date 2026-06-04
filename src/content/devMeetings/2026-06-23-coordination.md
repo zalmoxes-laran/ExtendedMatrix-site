@@ -32,9 +32,11 @@ format. Open by default, notes-first, decisions visible.
   on the ExtendedMatrix-dev-site repo. The thread is open from a
   week before the meeting; the maintainer pins the top agenda items
   to the body once the deadline closes.
-- **Live, during the meeting**: join the Teams call linked above
-  (anonymous access works, no Microsoft account required). Speak up
-  on any agenda item; raise your hand for "open floor" topics.
+- **Live, during the meeting**: join the Teams call linked above —
+  it opens in the browser, no Microsoft account required. Teams will
+  ask you for a display name on the join page; please use your real
+  name (and an affiliation if relevant). Speak up on any agenda item;
+  raise your hand for "open floor" topics.
 - **After the meeting**: the maintainer transcribes the discussion
   into this page (TL;DR, decisions, action items in the frontmatter
   + per-topic narrative in the body). The discussion thread stays

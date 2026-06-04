@@ -1,7 +1,7 @@
 ---
 title: "Two community meetings in June: EM Hour (11th) and Dev Meeting (23rd)"
 date: 2026-06-04T11:30:00+02:00
-excerpt: "After the EM 1.5 LTS release and the new site, June reopens the recurring meetings calendar. EM Hour on the 11th (community happy hour), Developer Meeting on the 23rd (public coordination for contributors). Both on Teams, anonymous access, no recording."
+excerpt: "After the EM 1.5 LTS release and the new site, June reopens the recurring meetings calendar. EM Hour on the 11th (community happy hour), Developer Meeting on the 23rd (public coordination for contributors). Both on Teams in the browser — no Microsoft account required, you'll be asked for a display name when you join (please use your real name)."
 tags:
   - community
   - em-hour
@@ -12,7 +12,11 @@ After the release of **EM 1.5 LTS** and the relaunch of
 [extendedmatrix.org](https://extendedmatrix.org), the recurring
 meetings calendar is reopening. Two appointments in June, one for the
 broader community and one more technical — both public, both on
-Microsoft Teams, both reachable without a Microsoft account.
+Microsoft Teams in the browser. **No Microsoft account is required**
+to join: Teams will simply ask you for a display name on the join
+page. We ask everyone to use their real name (and an affiliation if
+relevant) out of basic courtesy — these are small community meetings
+where it helps to know who's in the room.
 
 ## 🍻 EM Hour — Wednesday 11 June, 16:00–17:00 CET
 
