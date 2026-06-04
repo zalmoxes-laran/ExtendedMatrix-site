@@ -2,14 +2,17 @@
 /**
  * Publications — the bibliographic record of the EM ecosystem.
  *
- * Two sections:
- *   1. Foundational — papers that define EM (kind: foundational)
- *   2. Applications — community papers using EM (kind: application)
+ * Five sections, rendered in this order:
+ *   1. Foundational — papers that define EM
+ *   2. Framework & tools — papers about the EM software ecosystem
+ *   3. Software releases — Zenodo DOIs for citable software
+ *   4. Applications — community case studies using EM
+ *   5. Theses — PhD/Master/Bachelor theses with EM as methodological backbone
  *
- * Followed by a "Did you publish using EM?" call-to-share banner.
+ * Drafts are filtered out. Within each section, entries are sorted by
+ * featured (true first), year DESC, order ASC, then title ASC.
  *
- * Drafts are filtered out. Entries with `featured: true` come first
- * inside their section, then year DESC, then `order` ASC, then title.
+ * A "Did you publish using EM?" share banner closes the page.
  */
 
 import { getCollection } from 'astro:content';
@@ -17,183 +20,209 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const all = (await getCollection('publications', (p) => !p.data.draft));
+const all = await getCollection('publications', (p) => !p.data.draft);
 
 type Pub = (typeof all)[number];
 
 const sortPubs = (a: Pub, b: Pub) => {
-  // featured first
   if (a.data.featured !== b.data.featured) return a.data.featured ? -1 : 1;
-  // year descending
   if (a.data.year !== b.data.year) return b.data.year - a.data.year;
-  // order ascending within a year
   if (a.data.order !== b.data.order) return a.data.order - b.data.order;
-  // title ascending
   return a.data.title.localeCompare(b.data.title);
 };
 
-const foundational = all.filter((p) => p.data.kind === 'foundational').sort(sortPubs);
-const applications = all.filter((p) => p.data.kind === 'application').sort(sortPubs);
+const byKind = (k: Pub['data']['kind']) =>
+  all.filter((p) => p.data.kind === k).sort(sortPubs);
 
-// Render each entry's body. We don't actually render the body inline on
-// the card — but the body's first paragraph is shown as the abstract,
-// so we pre-extract it for the cheaper case. (We could call render()
-// but a hand-rolled first-paragraph extractor keeps the card light.)
-const firstParagraph = (raw: string): string | null => {
-  const stripped = raw
-    .replace(/^---[\s\S]*?---\s*/m, '')   // strip frontmatter just in case
-    .trim();
+const foundational = byKind('foundational');
+const tools = byKind('tools');
+const software = byKind('software');
+const application = byKind('application');
+const thesis = byKind('thesis');
+
+const firstParagraph = (raw: string | undefined): string | null => {
+  // Many publications are frontmatter-only (e.g. software DOI cards) — `body`
+  // is then undefined or empty, and we just fall back to the tagline.
+  if (!raw) return null;
+  const stripped = raw.replace(/^---[\s\S]*?---\s*/m, '').trim();
   if (!stripped) return null;
   const para = stripped.split(/\n\s*\n/)[0]?.trim();
   return para || null;
 };
 
-const cardFor = (p: Pub) => ({
+type Card = Pub['data'] & {
+  id: string;
+  blurb: string | null;
+};
+
+const cardFor = (p: Pub): Card => ({
   id: p.id.replace(/\.md$/, ''),
   ...p.data,
-  // Prefer explicit tagline; fall back to first body paragraph if any.
   blurb: p.data.tagline || firstParagraph(p.body) || null,
 });
 
 const foundationalCards = foundational.map(cardFor);
-const applicationCards = applications.map(cardFor);
+const toolsCards = tools.map(cardFor);
+const softwareCards = software.map(cardFor);
+const applicationCards = application.map(cardFor);
+const thesisCards = thesis.map(cardFor);
+
+const degreeLabel: Record<string, string> = {
+  phd: 'PhD',
+  master: 'Master',
+  bachelor: 'Bachelor',
+};
+
+interface SectionDef {
+  id: string;
+  title: string;
+  sub: string;
+  emptyMsg: string;
+  cards: Card[];
+}
+
+const sections: SectionDef[] = [
+  {
+    id: 'foundational',
+    title: 'Foundational',
+    sub: 'Papers that define the Extended Matrix method, framework, and extensions.',
+    emptyMsg: 'No foundational publications listed yet.',
+    cards: foundationalCards,
+  },
+  {
+    id: 'tools',
+    title: 'Framework & tools',
+    sub: 'Papers about the EM software ecosystem — Tools, Manager, EMviq, interop.',
+    emptyMsg: 'No framework / tools papers listed yet.',
+    cards: toolsCards,
+  },
+  {
+    id: 'software',
+    title: 'Software releases',
+    sub: 'Citable software DOIs — for when you want to cite the code itself rather than a paper.',
+    emptyMsg: 'No software releases listed yet.',
+    cards: softwareCards,
+  },
+  {
+    id: 'applications',
+    title: 'Applications',
+    sub: 'Case studies and reconstructions published by the EM community.',
+    emptyMsg:
+      "No application papers listed yet — if your paper uses EM and you don't see it here, the share form below is for you.",
+    cards: applicationCards,
+  },
+  {
+    id: 'theses',
+    title: 'Theses',
+    sub: 'PhD, master and bachelor theses where Extended Matrix is the methodological backbone.',
+    emptyMsg: 'No theses listed yet.',
+    cards: thesisCards,
+  },
+];
 ---
 
 <BaseLayout
   title="Publications"
-  description="Foundational and community publications around Extended Matrix — the formal language, the framework, and the case studies that use them."
+  description="Foundational, framework, application and thesis publications around Extended Matrix — and citable software DOIs."
 >
   <section class="pubs">
     <div class="container">
       <span class="tag">Publications</span>
       <h1 class="pubs__h1">Publications around Extended Matrix.</h1>
       <p class="pubs__lede">
-        The papers below define Extended Matrix — and the case studies that
-        use it. The <strong>foundational</strong> publications introduce the
-        formal language and the framework; the <strong>applications</strong>
-        are community papers that put EM to work on specific reconstructions.
-        For citation guidance when you use EM in your own work, see the
-        <a href={`${B}/cite`}>Citing EM</a> page.
+        Five threads make up the published record of EM: the
+        <strong>foundational</strong> papers that define the method;
+        the <strong>framework &amp; tools</strong> papers that document
+        the surrounding software; the <strong>software releases</strong>
+        you can cite as DOIs; the <strong>applications</strong> in which
+        EM was used on real archaeological sites; and the
+        <strong>theses</strong> that picked EM as their methodological
+        backbone. For citation guidance when you use EM in your own
+        work, see the <a href={`${B}/cite`}>Citing EM</a> page.
       </p>
 
-      <!-- ── Foundational ───────────────────────────────────── -->
-      <section class="pubs__section">
-        <header class="pubs__section-head">
-          <h2>Foundational</h2>
-          <p class="pubs__section-sub">
-            Papers that define the Extended Matrix method and framework.
-          </p>
-        </header>
-        {foundationalCards.length === 0 && (
-          <p class="pubs__empty">No foundational publications listed yet.</p>
-        )}
-        <ul class="pubs__list">
-          {foundationalCards.map((p) => (
-            <li class={`pub ${p.featured ? 'pub--featured' : ''}`} id={p.id}>
-              <div class="pub__head">
-                <span class="pub__year">{p.year}</span>
-                {p.emVersion && <span class="pub__chip">EM {p.emVersion}</span>}
-                {p.featured && <span class="pub__chip pub__chip--featured">Foundation paper</span>}
-              </div>
-              <h3 class="pub__title">
-                {(p.doi || p.url) ? (
-                  <a href={p.doi ? `https://doi.org/${p.doi}` : p.url} target="_blank" rel="noopener">{p.title}</a>
-                ) : (
-                  <span>{p.title}</span>
-                )}
-              </h3>
-              <p class="pub__authors">{p.authors}</p>
-              {p.venue && <p class="pub__venue">{p.venue}</p>}
-              {p.blurb && <p class="pub__blurb">{p.blurb}</p>}
-              <div class="pub__links">
-                {p.doi && (
-                  <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener" class="pub__link">DOI</a>
-                )}
-                {p.url && !p.doi && (
-                  <a href={p.url} target="_blank" rel="noopener" class="pub__link">Open</a>
-                )}
-                {p.pdfUrl && (
-                  <a href={p.pdfUrl} target="_blank" rel="noopener" class="pub__link">PDF</a>
-                )}
-                {p.bibtex && (
-                  <details class="pub__bibtex">
-                    <summary>BibTeX</summary>
-                    <pre><code>{p.bibtex.trim()}</code></pre>
-                  </details>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <!-- ── In-page nav ─────────────────────────────────────── -->
+      <nav class="pubs__toc" aria-label="On this page">
+        {sections.map((s) => (
+          <a href={`#${s.id}`}>
+            <span class="pubs__toc-label">{s.title}</span>
+            <span class="pubs__toc-count">{s.cards.length}</span>
+          </a>
+        ))}
+      </nav>
 
-      <!-- ── Applications ───────────────────────────────────── -->
-      <section class="pubs__section">
-        <header class="pubs__section-head">
-          <h2>Applications</h2>
-          <p class="pubs__section-sub">
-            Case studies and reconstructions published by the EM community.
-          </p>
-        </header>
-        {applicationCards.length === 0 && (
-          <p class="pubs__empty">
-            No application papers listed yet — if your paper uses EM and you
-            don't see it here, the share form below is for you.
-          </p>
-        )}
-        <ul class="pubs__list">
-          {applicationCards.map((p) => (
-            <li class="pub" id={p.id}>
-              <div class="pub__head">
-                <span class="pub__year">{p.year}</span>
-                {p.emVersion && <span class="pub__chip">EM {p.emVersion}</span>}
-                {p.project && <span class="pub__chip pub__chip--project">Project: {p.project}</span>}
-              </div>
-              <h3 class="pub__title">
-                {(p.doi || p.url) ? (
-                  <a href={p.doi ? `https://doi.org/${p.doi}` : p.url} target="_blank" rel="noopener">{p.title}</a>
-                ) : (
-                  <span>{p.title}</span>
+      {sections.map((s) => (
+        <section class="pubs__section" id={s.id}>
+          <header class="pubs__section-head">
+            <h2>{s.title}</h2>
+            <p class="pubs__section-sub">{s.sub}</p>
+          </header>
+          {s.cards.length === 0 && <p class="pubs__empty">{s.emptyMsg}</p>}
+          <ul class="pubs__list">
+            {s.cards.map((p) => (
+              <li class={`pub ${p.featured ? 'pub--featured' : ''}`} id={p.id}>
+                <div class="pub__head">
+                  <span class="pub__year">{p.year}</span>
+                  {p.kind === 'thesis' && p.degreeLevel && (
+                    <span class="pub__chip pub__chip--thesis">{degreeLabel[p.degreeLevel] ?? 'Thesis'}</span>
+                  )}
+                  {p.emVersion && <span class="pub__chip">EM {p.emVersion}</span>}
+                  {p.featured && p.kind === 'foundational' && (
+                    <span class="pub__chip pub__chip--featured">Foundation paper</span>
+                  )}
+                  {p.project && <span class="pub__chip pub__chip--project">Project: {p.project}</span>}
+                </div>
+                <h3 class="pub__title">
+                  {(p.doi || p.url) ? (
+                    <a href={p.doi ? `https://doi.org/${p.doi}` : p.url} target="_blank" rel="noopener">{p.title}</a>
+                  ) : (
+                    <span>{p.title}</span>
+                  )}
+                </h3>
+                {p.authors && <p class="pub__authors">{p.authors}</p>}
+                {p.venue && <p class="pub__venue">{p.venue}</p>}
+                {p.institution && (
+                  <p class="pub__venue">
+                    {p.institution}{p.advisor ? ` · advisor: ${p.advisor}` : ''}
+                  </p>
                 )}
-              </h3>
-              <p class="pub__authors">{p.authors}</p>
-              {p.venue && <p class="pub__venue">{p.venue}</p>}
-              {p.blurb && <p class="pub__blurb">{p.blurb}</p>}
-              <div class="pub__links">
-                {p.doi && (
-                  <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener" class="pub__link">DOI</a>
-                )}
-                {p.url && !p.doi && (
-                  <a href={p.url} target="_blank" rel="noopener" class="pub__link">Open</a>
-                )}
-                {p.pdfUrl && (
-                  <a href={p.pdfUrl} target="_blank" rel="noopener" class="pub__link">PDF</a>
-                )}
-                {p.bibtex && (
-                  <details class="pub__bibtex">
-                    <summary>BibTeX</summary>
-                    <pre><code>{p.bibtex.trim()}</code></pre>
-                  </details>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
+                {p.blurb && <p class="pub__blurb">{p.blurb}</p>}
+                <div class="pub__links">
+                  {p.doi && (
+                    <a href={`https://doi.org/${p.doi}`} target="_blank" rel="noopener" class="pub__link">DOI</a>
+                  )}
+                  {p.url && !p.doi && (
+                    <a href={p.url} target="_blank" rel="noopener" class="pub__link">Open</a>
+                  )}
+                  {p.pdfUrl && (
+                    <a href={p.pdfUrl} target="_blank" rel="noopener" class="pub__link">PDF</a>
+                  )}
+                  {p.bibtex && (
+                    <details class="pub__bibtex">
+                      <summary>BibTeX</summary>
+                      <pre><code>{p.bibtex.trim()}</code></pre>
+                    </details>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
 
       <!-- ── Share-your-paper banner ────────────────────────── -->
       <aside class="pubs__share">
         <div>
-          <h3>Published a paper using Extended Matrix?</h3>
+          <h3>Published a paper, software, or thesis using Extended Matrix?</h3>
           <p>
-            We track community publications here so the method's footprint
-            stays visible to everyone — funders, students, future
-            collaborators. Send us the DOI (or just the citation) and we'll
-            add it under <em>Applications</em>.
+            We track community work here so the method's footprint stays
+            visible to everyone — funders, students, future
+            collaborators. Send us the DOI (or the citation) and we'll
+            add it under the right section.
           </p>
         </div>
         <div class="pubs__share-cta">
-          <a class="pubs__share-btn" href="mailto:emanuel.demetrescu@cnr.it?subject=EM%20application%20paper">
+          <a class="pubs__share-btn" href="mailto:emanuel.demetrescu@cnr.it?subject=EM%20publication%20to%20add">
             Email the maintainer
           </a>
           <a class="pubs__share-btn pubs__share-btn--ghost" href="https://t.me/UserGroupEM" target="_blank" rel="noopener">
@@ -216,10 +245,55 @@ const applicationCards = applications.map(cardFor);
   .pubs__h1 { margin: 12px 0 8px; font-size: 38px; letter-spacing: -0.01em; }
   .pubs__lede {
     font-size: 17px; color: var(--em-text); max-width: 760px; line-height: 1.65;
-    margin-bottom: 48px;
+    margin-bottom: 32px;
   }
 
-  .pubs__section { margin-bottom: 56px; }
+  /*
+   * In-page TOC strip — gives the reader an at-a-glance count of what
+   * lives below and a quick jump-to link per section.
+   */
+  .pubs__toc {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 48px;
+    padding: 12px;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg-warm);
+  }
+  .pubs__toc a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: var(--em-bg);
+    color: var(--em-navy);
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--em-border);
+  }
+  .pubs__toc a:hover {
+    background: var(--em-navy);
+    color: var(--em-bg);
+    border-color: var(--em-navy);
+    text-decoration: none;
+  }
+  .pubs__toc-count {
+    font-size: 11px;
+    background: var(--em-gold-tint);
+    color: var(--em-gold);
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .pubs__toc a:hover .pubs__toc-count {
+    background: var(--em-gold);
+    color: var(--em-navy);
+  }
+
+  .pubs__section { margin-bottom: 56px; scroll-margin-top: 80px; }
   .pubs__section-head { margin-bottom: 24px; border-bottom: 1px solid var(--em-border); padding-bottom: 12px; }
   .pubs__section-head h2 { font-size: 26px; margin: 0 0 4px; color: var(--em-navy); }
   .pubs__section-sub { color: var(--em-text-muted); font-size: 14px; margin: 0; }
@@ -256,6 +330,7 @@ const applicationCards = applications.map(cardFor);
   }
   .pub__chip--featured { background: var(--em-gold-tint); color: var(--em-gold); }
   .pub__chip--project { background: #ecf3ff; color: #1a4380; }
+  .pub__chip--thesis { background: #fdf3e2; color: #8a5a14; }
   .pub__title {
     font-size: 18px;
     line-height: 1.4;
@@ -265,8 +340,8 @@ const applicationCards = applications.map(cardFor);
   .pub__title a { color: inherit; }
   .pub__title a:hover { color: var(--em-gold); }
   .pub__authors { font-size: 14px; color: var(--em-text); margin: 0 0 4px; }
-  .pub__venue { font-size: 13px; color: var(--em-text-muted); font-style: italic; margin: 0 0 10px; }
-  .pub__blurb { font-size: 14px; color: var(--em-text); line-height: 1.6; margin: 0 0 12px; }
+  .pub__venue { font-size: 13px; color: var(--em-text-muted); font-style: italic; margin: 0 0 6px; }
+  .pub__blurb { font-size: 14px; color: var(--em-text); line-height: 1.6; margin: 6px 0 12px; }
   .pub__links { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
   .pub__link {
     font-size: 13px; font-weight: 600; color: var(--em-navy);

@@ -342,24 +342,35 @@ const events = defineCollection({
 /**
  * Publications — the bibliographic record of the EM ecosystem.
  *
- * Two kinds of entry live here, distinguished by the `kind` field:
+ * Five kinds of entry live here, distinguished by the `kind` field. The
+ * /publications page renders one section per kind, in this order:
  *
- *   - **foundational** — papers that *define* Extended Matrix (the formal
- *     language, the framework, the method). Typically authored by the
- *     core team. The 2015 Journal of Archaeological Science paper is the
- *     archetype. There are usually only a handful of these.
+ *   1. **foundational** — papers that *define* Extended Matrix (the
+ *      formal language, the framework, the method, extensions to it).
+ *      Typically authored by the core team. The 2015 JAS paper is the
+ *      archetype.
  *
- *   - **application** — papers from the community that *use* EM on a
- *     specific case study or project. They demonstrate the method in
- *     practice and grow the citable footprint of the framework. There
- *     can be many.
+ *   2. **tools** — papers about the EM software ecosystem (EM Tools, EM
+ *      Manager, EMviq, Aton+EM integration, interop work). These don't
+ *      define EM the language, they extend its ecosystem.
  *
- * The /publications page renders these in two sections (Foundational
- * first, Applications below). The /cite page is unchanged and remains
- * the operational "which papers should I cite when using EM" guide; it
- * pulls from versions[].flagPaper. Foundational entries here and flag
- * papers there can overlap — that's fine, the two pages serve
- * different purposes.
+ *   3. **software** — citable software releases on Zenodo (DOI-bearing
+ *      archives of EM Tools, s3dgraphy, EM Manager). Distinct from
+ *      tools papers in that there is no peer-reviewed paper — just a
+ *      software citation.
+ *
+ *   4. **application** — papers from the community that *use* EM on a
+ *      specific case study or project. They demonstrate the method in
+ *      practice and grow the citable footprint of the framework.
+ *
+ *   5. **thesis** — PhD, master and bachelor theses where EM is the
+ *      methodological backbone. Useful for students looking for prior
+ *      art and for tracking who's working with EM in academic training.
+ *
+ * The /cite page is unchanged and remains the operational "which papers
+ * should I cite when using EM" guide; it pulls from
+ * versions[].flagPaper. Foundational entries here and flag papers there
+ * can overlap — that's fine, the two pages serve different purposes.
  *
  * To add a publication, drop a markdown file in
  * src/content/publications/<year>-<slug>.md with the frontmatter below.
@@ -377,10 +388,12 @@ const publications = defineCollection({
       url: z.string().url().optional(),     // fallback when no DOI
       pdfUrl: z.string().url().optional(),  // open-access PDF if separate
       bibtex: z.string().optional(),        // raw BibTeX block, no fences
-      // foundational = papers that define EM; application = community uses
-      kind: z.enum(['foundational', 'application']),
-      // EM version used (for application papers). Free text so authors can
-      // say "1.4 LTS" or "1.5-dev" without us needing to keep a registry.
+      // foundational = define EM | tools = software-ecosystem papers
+      // application = community case studies | software = Zenodo DOIs
+      // thesis = PhD/Master/Bachelor theses
+      kind: z.enum(['foundational', 'tools', 'application', 'software', 'thesis']),
+      // EM version used or attached to. Free text so authors can say
+      // "1.4 LTS" or "1.5-dev" without us needing to keep a registry.
       emVersion: z.string().optional(),
       // Optional link to a project in the projects collection. Use the
       // project's slug (file basename without .md). Surfaces a small
@@ -389,6 +402,10 @@ const publications = defineCollection({
       // Optional short tagline that appears under the title on the card.
       // If absent, the body's first paragraph is used as fallback.
       tagline: z.string().max(280).optional(),
+      // Thesis-only fields. Ignored unless kind === 'thesis'.
+      degreeLevel: z.enum(['phd', 'master', 'bachelor']).optional(),
+      institution: z.string().optional(),   // "Università degli Studi di Padova"
+      advisor: z.string().optional(),       // "Prof. M. Surname"
       featured: z.boolean().default(false), // highlight on the page
       order: z.number().default(0),         // tie-breaker within a year
       draft: z.boolean().default(false),
