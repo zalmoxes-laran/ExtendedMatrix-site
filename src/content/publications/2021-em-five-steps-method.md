@@ -7,6 +7,7 @@ doi: "10.3390/app11115206"
 url: "https://doi.org/10.3390/app11115206"
 kind: foundational
 emVersion: "1.2"
+versionFlag: true
 order: 0
 tagline: "Codifies the EM application protocol into five sequential steps from fieldwork to scientific publication. The methods section defines EM 1.2."
 bibtex: |

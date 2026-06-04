@@ -6,7 +6,8 @@ venue: "Heritage, 6(2), 1264–1276"
 doi: "10.3390/heritage6020069"
 url: "https://doi.org/10.3390/heritage6020069"
 kind: tools
-emVersion: "1.3.1"
+emVersion: "1.3"
+versionFlag: true
 order: 0
 tagline: "Documents EMtools (Blender add-on) and EMviq (online WebXR viewer) at version 1.3.1 — the open-source toolchain for semantic enrichment, source-based 3D modelling, and immersive inspection."
 bibtex: |

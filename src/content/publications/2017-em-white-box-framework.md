@@ -7,6 +7,7 @@ doi: "10.1016/j.jasrep.2017.06.034"
 url: "https://doi.org/10.1016/j.jasrep.2017.06.034"
 kind: foundational
 emVersion: "1.1"
+versionFlag: true
 order: 0
 tagline: "Introduces the Extended Matrix Framework (EMF) — the visual and computational layer that turns the EM language into queryable 3D scenes. Validated on the Great Temple of Sarmizegetusa."
 bibtex: |

@@ -6,6 +6,8 @@ venue: "Journal of Archaeological Science, 57, 42–55"
 doi: "10.1016/j.jas.2015.02.004"
 url: "https://doi.org/10.1016/j.jas.2015.02.004"
 kind: foundational
+emVersion: "1.0"
+versionFlag: true
 featured: true
 order: 0
 tagline: "The original paper introducing Extended Matrix as a formal language for transparent virtual reconstruction in archaeology."

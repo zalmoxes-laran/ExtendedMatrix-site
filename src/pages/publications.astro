@@ -166,7 +166,14 @@ const sections: SectionDef[] = [
                   {p.kind === 'thesis' && p.degreeLevel && (
                     <span class="pub__chip pub__chip--thesis">{degreeLabel[p.degreeLevel] ?? 'Thesis'}</span>
                   )}
-                  {p.emVersion && <span class="pub__chip">EM {p.emVersion}</span>}
+                  {p.versionFlag && p.emVersion && (
+                    <span class="pub__chip pub__chip--versionflag" title="Flag paper for this EM release — cite it when you use features it introduced">
+                      EM {p.emVersion} flag
+                    </span>
+                  )}
+                  {!p.versionFlag && p.emVersion && (
+                    <span class="pub__chip">EM {p.emVersion}</span>
+                  )}
                   {p.featured && p.kind === 'foundational' && (
                     <span class="pub__chip pub__chip--featured">Foundation paper</span>
                   )}
@@ -331,6 +338,17 @@ const sections: SectionDef[] = [
   .pub__chip--featured { background: var(--em-gold-tint); color: var(--em-gold); }
   .pub__chip--project { background: #ecf3ff; color: #1a4380; }
   .pub__chip--thesis { background: #fdf3e2; color: #8a5a14; }
+  /*
+   * Version-flag chip — papers that anchor a specific EM release per
+   * the cumulative-citation rule (see /cite). Visually stronger than
+   * the plain "EM <version>" chip because these papers are the things
+   * you cite when you use features the release introduced.
+   */
+  .pub__chip--versionflag {
+    background: var(--em-navy);
+    color: var(--em-bg);
+    font-weight: 700;
+  }
   .pub__title {
     font-size: 18px;
     line-height: 1.4;

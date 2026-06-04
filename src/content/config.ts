@@ -409,6 +409,13 @@ const publications = defineCollection({
       // EM version used or attached to. Free text so authors can say
       // "1.4 LTS" or "1.5-dev" without us needing to keep a registry.
       emVersion: z.string().optional(),
+      // Marks an entry as the *flag paper* of the EM version named in
+      // `emVersion`. Driven by the cumulative-citation rule on /cite:
+      // each release line has at most one flag paper that you cite when
+      // you use features it introduced. Surfaces as a dedicated "Version
+      // flag" chip on the publications page. Always pair `versionFlag:
+      // true` with an explicit `emVersion` value.
+      versionFlag: z.boolean().default(false),
       // Optional link to a project in the projects collection. Use the
       // project's slug (file basename without .md). Surfaces a small
       // "Project: <name>" pill on the publication card.
