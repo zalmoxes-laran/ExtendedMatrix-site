@@ -84,6 +84,76 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         </p>
       </section>
 
+      <!-- ── Decision helper ──────────────────────────────── -->
+      <section class="cite__chooser">
+        <h2>Which paper should I cite?</h2>
+        <p class="cite__chooser-lede">
+          Pick the row that best matches your situation. Every row
+          starts from the foundation paper; everything else is added
+          on top. The full catalogue — theses, application papers,
+          version-flag references — lives on the
+          <a href={`${B}/publications/`}><strong>Publications</strong></a>
+          page.
+        </p>
+        <table class="cite__chooser-table">
+          <thead>
+            <tr>
+              <th scope="col">If you…</th>
+              <th scope="col">Cite this combination</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>are using EM at all (any version, any tool)</td>
+              <td>
+                <strong>Foundation paper</strong> (Demetrescu, 2015) —
+                see below.
+              </td>
+            </tr>
+            <tr>
+              <td>used a specific EM <strong>version</strong> (1.2, 1.3, 1.5, …)</td>
+              <td>
+                Foundation paper <strong>+</strong> the
+                <a href="#flag-papers">flag paper of that version</a>.
+              </td>
+            </tr>
+            <tr>
+              <td>used EM with the <strong>EM Tools / EMviq / Heriverse</strong> stack</td>
+              <td>
+                Foundation paper + the matching flag paper +
+                the <a href="#software">Zenodo software DOI</a> of the
+                component you used.
+              </td>
+            </tr>
+            <tr>
+              <td>are writing about EM as a <strong>method</strong> (no specific version)</td>
+              <td>
+                Foundation paper + the 1.2 <em>Five Steps Method</em>
+                paper (Demetrescu &amp; Ferdani, 2021) — the most
+                widely-cited methodological reference.
+              </td>
+            </tr>
+            <tr>
+              <td>need <strong>worked examples</strong> of EM-based projects</td>
+              <td>
+                Browse the
+                <a href={`${B}/publications/#applications`}><em>Applications</em></a>
+                section — case studies by other teams that used EM in
+                their own work.
+              </td>
+            </tr>
+            <tr>
+              <td>are looking for <strong>student theses</strong> using EM</td>
+              <td>
+                Browse the
+                <a href={`${B}/publications/#theses`}><em>Theses</em></a>
+                section on the Publications page.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
       <!-- ── Foundation paper ─────────────────────────────── -->
       {foundation && (
         <section class="cite__paper cite__paper--foundation">
@@ -109,7 +179,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       <!-- ── Per-version flag papers ──────────────────────── -->
       {(versionPapers.length > 0 || ltsWithoutPaper.length > 0) && (
-        <section class="cite__papers">
+        <section class="cite__papers" id="flag-papers">
           <h2>2 · Flag papers per EM version</h2>
           <p class="cite__papers-lede">
             Cite the entry corresponding to the EM version you used. If you
@@ -172,7 +242,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       )}
 
       <!-- ── Software / Zenodo citation ────────────────────── -->
-      <section class="cite__software">
+      <section class="cite__software" id="software">
         <h2>3 · Software citation (Zenodo DOIs)</h2>
         <p>
           Cite the software components only when you actually used them
@@ -200,6 +270,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       <section class="cite__seealso">
         <h2>See also</h2>
         <ul>
+          <li><a href={`${B}/publications/`}><strong>All publications</strong></a> — the full catalogue: foundation paper, version-flag papers, theses, application papers and software references, browsable by category.</li>
           <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Language documentation</a> — the canonical reference for the formal language, its glossary and the full bibliography.</li>
           <li><a href={`${B}/versions/`}>EM versions</a> — full release matrix with flag papers per version.</li>
           <li><a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Zenodo community</a> — software DOIs, datasets, paradata bundles.</li>
@@ -367,4 +438,62 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     gap: 6px;
   }
   .cite__seealso a { color: var(--em-gold); font-weight: 600; }
+
+  /* Decision-helper chooser block */
+  .cite__chooser {
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    padding: 22px 26px;
+  }
+  .cite__chooser h2 { margin: 0 0 8px; font-size: 22px; }
+  .cite__chooser-lede {
+    color: var(--em-text-muted);
+    line-height: 1.6;
+    margin: 0 0 16px;
+    max-width: 720px;
+  }
+  .cite__chooser-lede a { color: var(--em-gold); font-weight: 600; }
+  .cite__chooser-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .cite__chooser-table th,
+  .cite__chooser-table td {
+    text-align: left;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--em-border);
+    vertical-align: top;
+  }
+  .cite__chooser-table th {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-navy);
+    border-bottom: 2px solid var(--em-border);
+    background: var(--em-bg-warm);
+  }
+  .cite__chooser-table tbody tr:last-child td { border-bottom: none; }
+  .cite__chooser-table td:first-child { width: 42%; color: var(--em-text); }
+  .cite__chooser-table td:last-child { color: var(--em-text-muted); }
+  .cite__chooser-table a { color: var(--em-gold); font-weight: 600; }
+  @media (max-width: 640px) {
+    .cite__chooser-table,
+    .cite__chooser-table tbody,
+    .cite__chooser-table tr,
+    .cite__chooser-table td { display: block; }
+    .cite__chooser-table thead { display: none; }
+    .cite__chooser-table tr {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--em-border);
+    }
+    .cite__chooser-table td { padding: 4px 0; border: none; width: auto !important; }
+    .cite__chooser-table td:first-child {
+      font-weight: 700;
+      color: var(--em-text);
+    }
+  }
 </style>
