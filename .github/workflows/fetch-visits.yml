@@ -46,28 +46,54 @@ jobs:
           fi
 
           # Diagnostic: token length (never the value). A valid GoatCounter
-          # token is 45 chars; anything materially different points to a
-          # truncated paste or stray whitespace in the secret.
+          # token is ~50 characters (e.g. the docs example is 51); anything
+          # materially shorter points to a truncated paste or stray whitespace
+          # in the secret. The lower-bound warning kicks in at <30 chars.
           GC_TOKEN_TRIMMED="$(printf '%s' "${GC_TOKEN}" | tr -d '[:space:]')"
           echo "Token length (untrimmed): ${#GC_TOKEN}"
           echo "Token length (trimmed):   ${#GC_TOKEN_TRIMMED}"
           if [ "${#GC_TOKEN_TRIMMED}" -lt 30 ]; then
-            echo "::warning::Token appears short (${#GC_TOKEN_TRIMMED} chars). Expected ~45. Check the GOATCOUNTER_TOKEN secret."
+            echo "::warning::Token appears short (${#GC_TOKEN_TRIMMED} chars). Expected ~50. Check the GOATCOUNTER_TOKEN secret."
           fi
+
+          # Egress diagnostics — logged unconditionally so that if GoatCounter
+          # rejects the request again with the catch-all `{"error":"not
+          # found"}` body (which would indicate the API route isn't matched —
+          # see 2026-06 investigation), we already have the GH Actions
+          # egress IP + curl version in the log to attach to the upstream
+          # bug report on https://github.com/arp242/goatcounter . Never
+          # touches the secret.
+          echo "── Runner egress diagnostics ──"
+          echo "curl:           $(curl --version | head -1)"
+          echo "runner.os:      $(uname -srm)"
+          # ipv4.icanhazip.com is operated by Cloudflare, sub-second TTLs,
+          # safe to query from CI. Fail-soft so a network blip doesn't break
+          # the run.
+          echo "egress.ipv4:    $(curl -sS --max-time 5 https://ipv4.icanhazip.com 2>/dev/null || echo '(unreachable)')"
+          echo "───────────────────────────────"
 
           START="2026-06-02"
           END=$(date -u +%Y-%m-%d)
           BASE="https://emanueldemetrescu.goatcounter.com/api/v0"
+          # Explicit User-Agent so the requests are identifiable in any
+          # upstream filtering chain (Varnish, anti-abuse, etc.). The string
+          # is intentionally botlike + URL-bearing so a goatcounter.com
+          # operator can correlate a 404 catch-all back to this workflow.
+          UA="ExtendedMatrixStatsBot/1.0 (+https://extendedmatrix.org; gh-actions fetch-visits)"
 
           tmp_loc=$(mktemp)
           tmp_tot=$(mktemp)
 
           # Helper that captures HTTP status + body so failures print the
-          # GoatCounter error message instead of a curl exit code.
+          # GoatCounter error message instead of a curl exit code. The
+          # explicit UA is sent on every API request; a fresh `-A` argument
+          # is the simplest way (curl always honours it over implicit
+          # defaults).
           fetch() {
             local url="$1" outfile="$2" label="$3"
             local status
             status=$(curl -sS \
+              -A "${UA}" \
               -H "Authorization: Bearer ${GC_TOKEN_TRIMMED}" \
               -H "Content-Type: application/json" \
               -o "${outfile}" \
@@ -84,42 +110,20 @@ jobs:
             return 0
           }
 
-          # Pre-flight: hit /me to confirm the token resolves to a user
-          # and to log its actual permission bitmask + site scope. When
-          # the /stats calls 404, comparing /me's response against a
-          # known-good run isolates whether the issue is the token's
-          # permissions (different bitmask), its scope (sites != [-1]),
-          # or something else entirely on the GoatCounter side.
-          tmp_me=$(mktemp)
-          me_status=$(curl -sS \
-            -H "Authorization: Bearer ${GC_TOKEN_TRIMMED}" \
-            -H "Content-Type: application/json" \
-            -o "${tmp_me}" \
-            -w "%{http_code}" \
-            "${BASE}/me")
-          echo "→ pre-flight /me: HTTP ${me_status}"
-          if [ "${me_status}" != "200" ]; then
-            echo "::error::/me returned HTTP ${me_status} — token is rejected at the auth layer. Body (first 500 chars):"
-            head -c 500 "${tmp_me}" || true
-            echo ""
-            echo "::error::Regenerate GOATCOUNTER_TOKEN with Read statistics + All sites, update the GitHub secret, re-run."
-            exit 1
-          fi
-          # Pull out non-secret token metadata (name, permissions bitmask,
-          # sites scope, user id/email). Never logs the token value.
-          python3 - "${tmp_me}" <<'PY'
-          import json, sys
-          with open(sys.argv[1]) as f:
-              me = json.load(f)
-          u = me.get("user", {})
-          t = me.get("token", {})
-          print(f"  user.id:           {u.get('id')}")
-          print(f"  user.email:        {u.get('email')}")
-          print(f"  user.site:         {u.get('site')}")
-          print(f"  token.name:        {t.get('name')!r}")
-          print(f"  token.permissions: {t.get('permissions')}")
-          print(f"  token.sites:       {t.get('sites')}")
-          PY
+          # NOTE: the `/api/v0/me` preflight previously here was removed on
+          # 2026-06-08. Its purpose was diagnostic — log permission bitmask +
+          # sites scope of the token — but since 2026-06-06 it has been
+          # returning HTTP 404 `{"error":"not found"}` from GitHub Actions
+          # runner IPs while the same token + URL returns 200 from a local
+          # macOS terminal. The 404 body matches the catch-all handler in
+          # GoatCounter's `handlers/api.go` exactly, suggesting the request
+          # never reaches the `/me` route (most likely a Varnish edge or
+          # IP-based filter in front of the GoatCounter SaaS). The stats
+          # endpoints below have well-documented error codes (401 / 403),
+          # so a failed preflight was blocking the job for no useful reason.
+          # If `/stats/*` calls start exhibiting the same 404 catch-all,
+          # the egress diagnostics logged above plus the explicit UA give
+          # us a clean reproducer to file on the upstream tracker.
 
           # Location stats — country breakdown.
           fetch "${BASE}/stats/locations?start=${START}&end=${END}" \
