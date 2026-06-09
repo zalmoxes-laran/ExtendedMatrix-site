@@ -1,32 +1,42 @@
 {
   "schema": 1,
-  "fetched_at": "2026-06-05T07:37:46Z",
+  "fetched_at": "2026-06-09T07:22:44Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-06-05"
+    "end": "2026-06-09"
   },
-  "total": 229,
-  "total_events": 59,
+  "total": 457,
+  "total_events": 145,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 179
+      "count": 332
     },
     {
       "code": "ES",
       "name": "Spain",
-      "count": 18
+      "count": 45
+    },
+    {
+      "code": "BE",
+      "name": "Belgium",
+      "count": 30
     },
     {
       "code": "US",
       "name": "United States",
-      "count": 10
+      "count": 19
+    },
+    {
+      "code": "UZ",
+      "name": "Uzbekistan",
+      "count": 11
     },
     {
       "code": "FR",
       "name": "France",
-      "count": 7
+      "count": 8
     },
     {
       "code": "MX",
@@ -39,8 +49,28 @@
       "count": 5
     },
     {
+      "code": "HK",
+      "name": "Hong Kong",
+      "count": 4
+    },
+    {
+      "code": "IL",
+      "name": "Israel",
+      "count": 4
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom",
+      "count": 3
+    },
+    {
       "code": "DE",
       "name": "Germany",
+      "count": 2
+    },
+    {
+      "code": "PK",
+      "name": "Pakistan",
       "count": 2
     },
     {
@@ -49,9 +79,19 @@
       "count": 2
     },
     {
-      "code": "GB",
-      "name": "United Kingdom",
-      "count": 2
+      "code": "ID",
+      "name": "Indonesia",
+      "count": 1
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands",
+      "count": 1
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "count": 1
     },
     {
       "code": "SE",
