@@ -1,25 +1,21 @@
 ---
 /**
- * BlenderRepoInstall — "add the repository, then install from the list" UI for
- * the self-hosted Blender extension repository at blender.extendedmatrix.org.
+ * BlenderRepoInstall — one-gesture install for the self-hosted Blender
+ * extension repository at blender.extendedmatrix.org.
  *
- * Props:
- *   only?: 'em_tools' | 'dsc_tools'  — when set, Step 2 lists only that tool
- *          (per-tool pages). Omitted on the /download hub → both.
+ * Props: only?: 'em_tools' | 'dsc_tools'  — limit to one tool.
  *
- * WHY NO DRAG-AND-DROP: verified in Blender's own source
- * (addons_core/bl_pkg/bl_extension_ops.py) — when a link is dropped, Blender
- * matches the dropped archive *by filename* to a repository entry, then checks
- * that entry's platform + Blender version against the user's system. EM Tools
- * and 3D Survey Collection ship per-OS + per-Python builds (bundled wheels), so
- * a single static drag link only matches ONE build and fails on every other
- * OS/Blender combination ("extension not found / not compatible"). The
- * supported, universal path for multi-build extensions is: add the repository
- * once, then install from the Get Extensions list, where Blender resolves the
- * correct build for the user's system — and keeps it auto-updated.
+ * Single step: drag the tool's handle into Blender TWICE — the 1st drop adds
+ * the Extended Matrix repository, the 2nd installs the tool (once is enough if
+ * the repo is already added). Because Blender matches a dropped link to a repo
+ * entry by archive FILENAME and then checks platform + Blender version against
+ * the user's system (bl_pkg/bl_extension_ops.py), the handle must point to the
+ * build matching the user — so the OS is auto-detected and the Blender line is
+ * a selector; client JS sets the handle href to that exact build.
  *
- * AUTO-TRACKING: tool versions are read from the live index.json at build time.
- * Reuses the site design tokens (--em-navy / --em-gold / --em-bg-warm / ...).
+ * AUTO-TRACKING: build URLs + versions are read from the live index.json at
+ * build time. Fallback (paste repo URL / install from the list) is tucked in a
+ * <details> for anyone who can't drag.
  */
 interface Props { only?: string; }
 const { only } = Astro.props;
@@ -29,107 +25,126 @@ const STABLE = `${REPO}/index.json`;
 const DEV = `${REPO}/dev/index.json`;
 
 async function fetchChannel(url: string): Promise<any | null> {
-  try {
-    const r = await fetch(url);
-    return r.ok ? await r.json() : null;
-  } catch {
-    return null;
-  }
+  try { const r = await fetch(url); return r.ok ? await r.json() : null; }
+  catch { return null; }
 }
 const [stableIdx, devIdx] = await Promise.all([fetchChannel(STABLE), fetchChannel(DEV)]);
 
-function repEntry(idx: any, id: string): any | null {
-  return idx?.data?.find((e: any) => e.id === id) ?? null;
+function buildsFor(idx: any, id: string): Record<string, Record<string, string>> {
+  const out: Record<string, Record<string, string>> = {};
+  for (const e of (idx?.data ?? [])) {
+    if (e.id !== id) continue;
+    const plat = e.platforms?.[0];
+    const m = String(e.archive_url).match(/-(blender5\d)\.zip$/);
+    if (plat && m) (out[plat] = out[plat] ?? {})[m[1]] = e.archive_url;
+  }
+  return out;
 }
 
 interface ToolDef { id: string; name: string; summary: string; releases: string; }
 const DEFS: ToolDef[] = [
-  {
-    id: 'em_tools',
-    name: 'EM Tools',
-    summary: 'Connect an Extended Matrix graph to 3D content in Blender.',
-    releases: 'https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest',
-  },
-  {
-    id: 'dsc_tools',
-    name: '3D Survey Collection',
-    summary: 'Tools for 3D survey: LOD, Cesium tiles, ortho & panorama.',
-    releases: 'https://github.com/zalmoxes-laran/3D-survey-collection/releases/latest',
-  },
+  { id: 'em_tools', name: 'EM Tools', summary: 'Connect an Extended Matrix graph to 3D content in Blender.', releases: 'https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest' },
+  { id: 'dsc_tools', name: '3D Survey Collection', summary: 'Tools for 3D survey: LOD, Cesium tiles, ortho & panorama.', releases: 'https://github.com/zalmoxes-laran/3D-survey-collection/releases/latest' },
 ];
 
 const allTools = DEFS.map((t) => {
-  const s = repEntry(stableIdx, t.id);
-  const d = repEntry(devIdx, t.id);
-  const src = s ? { e: s, channel: 'stable' } : d ? { e: d, channel: 'dev' } : null;
+  const inStable = (stableIdx?.data ?? []).some((e: any) => e.id === t.id);
+  const channel = inStable ? 'stable' : ((devIdx?.data ?? []).some((e: any) => e.id === t.id) ? 'dev' : null);
+  const idx = channel === 'stable' ? stableIdx : channel === 'dev' ? devIdx : null;
+  const builds = idx ? buildsFor(idx, t.id) : {};
+  const sample = idx ? (idx.data.find((e: any) => e.id === t.id) ?? null) : null;
   return {
-    id: t.id,
-    name: t.name,
-    summary: t.summary,
-    releases: t.releases,
-    version: src ? src.e.version : null,
-    channel: src ? src.channel : null,
+    id: t.id, name: t.name, summary: t.summary, releases: t.releases,
+    version: sample ? sample.version : null,
+    channel,
+    repoUrl: channel === 'dev' ? DEV : STABLE,
+    builds,
+    hasBuilds: Object.keys(builds).length > 0,
   };
 });
 const tools = only ? allTools.filter((t) => t.id === only) : allTools;
+
+const MOVE =
+  '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' +
+  '<path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3' +
+  'h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>';
+
+const OS_OPTS = [
+  ['windows-x64', 'Windows'],
+  ['macos-arm64', 'macOS (Apple Silicon)'],
+  ['macos-x64', 'macOS (Intel)'],
+  ['linux-x64', 'Linux'],
+];
 ---
 
 <section class="bri" id="install" aria-labelledby="bri-title">
   <div class="bri__head">
     <h2 class="bri__title" id="bri-title">Install in Blender</h2>
     <p class="bri__sub">
-      Add the Extended Matrix repository once, then install the tools from
-      Blender's extension list. Blender picks the build matching your OS and
-      Blender version (4.4+) and keeps it <strong>updated automatically</strong>.
+      Drag a tool into the Blender window — Blender picks the build matching your
+      OS and Blender version (4.4+) and keeps it <strong>updated automatically</strong>.
     </p>
   </div>
 
-  <!-- ── Step 1 — add the repository ─────────────────────────── -->
-  <div class="bri__step">
-    <div class="bri__num">1</div>
-    <div class="bri__body">
-      <h3 class="bri__steptitle">Add the repository <span class="bri__once">· once</span></h3>
-      <p class="bri__note">
-        In Blender: <em>Edit ▸ Preferences ▸ Get Extensions ▸ Repositories ▸ ＋ ▸
-        Add Remote Repository</em> — paste the URL below and tick
-        <em>Check for Updates on Start</em>.
-      </p>
-      <div class="bri__url">
-        <input readonly value={STABLE} onclick="this.select()" aria-label="Stable repository URL" />
-        <button type="button" onclick={`navigator.clipboard.writeText('${STABLE}')`}>Copy</button>
-      </div>
-      <p class="bri__dev">
-        Testing prereleases? Use the <strong>Dev</strong> channel instead:
-        <code>{DEV}</code>
-      </p>
-    </div>
-  </div>
+  <div class={tools.length > 1 ? 'bri__tools' : 'bri__tools bri__tools--single'}>
+    {tools.map((t) => (
+      <div class="bri__tool" data-builds={JSON.stringify(t.builds)} data-repo={t.repoUrl}>
+        <div class="bri__toolname">
+          {t.name}{t.version && <span class="bri__toolver">{t.version}</span>}
+        </div>
+        <p class="bri__toolsum">{t.summary}</p>
 
-  <!-- ── Step 2 — install from the list ──────────────────────── -->
-  <div class="bri__step">
-    <div class="bri__num">2</div>
-    <div class="bri__body">
-      <h3 class="bri__steptitle">{tools.length > 1 ? 'Install the tools' : 'Install the tool'}</h3>
-      <p class="bri__note">
-        Still in <em>Get Extensions</em>, find {tools.length > 1 ? 'each tool' : 'it'} below in the
-        list and click <strong>Install</strong>. Blender downloads the right build
-        for your system automatically — no need to pick OS or Blender version.
-      </p>
-      <div class={tools.length > 1 ? 'bri__tools' : 'bri__tools bri__tools--single'}>
-        {tools.map((t) => (
-          <div class="bri__tool">
-            <div class="bri__toolname">
-              {t.name}{t.version && <span class="bri__toolver">{t.version}</span>}
+        {t.hasBuilds ? (
+          <>
+            <div class="bri__pick">
+              <label>OS
+                <select class="bri-os">
+                  {OS_OPTS.map(([v, label]) => <option value={v}>{label}</option>)}
+                </select>
+              </label>
+              <label>Blender
+                <select class="bri-bl">
+                  <option value="blender50">4.4 – 5.0</option>
+                  <option value="blender51">5.1 +</option>
+                </select>
+              </label>
             </div>
-            <p class="bri__toolsum">{t.summary}</p>
-            <p class="bri__find">Find <strong>{t.name}</strong> in the list → <em>Install</em></p>
-            {t.channel === 'dev' && (
-              <p class="bri__toolnote">Currently in the <strong>Dev</strong> channel — add the Dev repository above to get it (stable build coming soon).</p>
-            )}
-          </div>
-        ))}
+
+            <div class="bri__dndrow">
+              <a class="bri__handle bri-dnd" href="#" title="Drag this into the Blender window">
+                <Fragment set:html={MOVE} /><span>Drag &amp; Drop into Blender</span>
+              </a>
+              <span class="bri__x2" aria-hidden="true">×&#8201;2</span>
+            </div>
+            <p class="bri__twice">
+              <strong>Drop it twice.</strong> The 1st drag adds the Extended Matrix
+              repository, the 2nd installs it.
+              <span class="bri__twice-sub">Already added the repository? Once is enough.</span>
+            </p>
+            <p class="bri__unavail" hidden>No build for that combination — use the fallback below.</p>
+
+            <details class="bri__alt">
+              <summary>Can't drag &amp; drop?</summary>
+              <p>
+                Add the repository in <em>Edit ▸ Preferences ▸ Get Extensions ▸
+                Repositories ▸ ＋ ▸ Add Remote Repository</em>, then install
+                <strong>{t.name}</strong> from the list:
+              </p>
+              <div class="bri__url">
+                <input readonly value={t.repoUrl} onclick="this.select()" aria-label={`${t.name} repository URL`} />
+                <button type="button" onclick={`navigator.clipboard.writeText('${t.repoUrl}')`}>Copy</button>
+              </div>
+            </details>
+          </>
+        ) : (
+          <p class="bri__toolnote">No published build yet.</p>
+        )}
+
+        {t.channel === 'dev' && (
+          <p class="bri__toolnote">Currently in the <strong>Dev</strong> channel (stable build coming soon).</p>
+        )}
       </div>
-    </div>
+    ))}
   </div>
 
   <p class="bri__offline">
@@ -141,79 +156,88 @@ const tools = only ? allTools.filter((t) => t.id === only) : allTools;
   </p>
 </section>
 
+<script>
+  function detectOS(): string {
+    const uap = (navigator as any).userAgentData?.platform || navigator.platform || '';
+    const ua = navigator.userAgent || '';
+    if (/win/i.test(uap) || /Windows/i.test(ua)) return 'windows-x64';
+    if (/mac/i.test(uap) || /Mac/i.test(ua)) return 'macos-arm64';
+    if (/linux/i.test(uap) || (/Linux/i.test(ua) && !/Android/i.test(ua))) return 'linux-x64';
+    return 'windows-x64';
+  }
+
+  function wire(block: HTMLElement) {
+    const builds = JSON.parse(block.dataset.builds || '{}');
+    const repo = block.dataset.repo || '';
+    const osSel = block.querySelector('.bri-os') as HTMLSelectElement | null;
+    const blSel = block.querySelector('.bri-bl') as HTMLSelectElement | null;
+    const handle = block.querySelector('.bri-dnd') as HTMLAnchorElement | null;
+    const warn = block.querySelector('.bri__unavail') as HTMLElement | null;
+    if (!osSel || !blSel || !handle) return;
+    const os0 = detectOS();
+    if (builds[os0]) osSel.value = os0;
+    const update = () => {
+      const url = builds[osSel.value]?.[blSel.value];
+      if (url) {
+        const min = blSel.value === 'blender50' ? '4.4.0' : '5.1.0';
+        const max = blSel.value === 'blender50' ? '5.1.0' : '';
+        let href = url + '?repository=' + repo + '&blender_version_min=' + min + '&platform=' + osSel.value;
+        if (max) href += '&blender_version_max=' + max;
+        handle.href = href;
+        handle.classList.remove('is-off');
+        if (warn) warn.hidden = true;
+      } else {
+        handle.removeAttribute('href');
+        handle.classList.add('is-off');
+        if (warn) warn.hidden = false;
+      }
+    };
+    osSel.addEventListener('change', update);
+    blSel.addEventListener('change', update);
+    update();
+  }
+  document.querySelectorAll<HTMLElement>('.bri__tool[data-builds]').forEach(wire);
+</script>
+
 <style>
-  .bri {
-    margin: 8px 0 36px;
-    padding: 24px 26px 20px;
-    background: var(--em-bg-warm);
-    border: 1px solid var(--em-border);
-    border-radius: var(--radius-md);
-  }
-  .bri__head { margin-bottom: 22px; }
+  .bri { margin: 8px 0 36px; padding: 24px 26px 22px; background: var(--em-bg-warm); border: 1px solid var(--em-border); border-radius: var(--radius-md); }
+  .bri__head { margin-bottom: 20px; }
   .bri__title { margin: 0 0 8px; font-size: 22px; color: var(--em-navy); font-weight: 700; }
-  .bri__sub {
-    margin: 0; font-size: 14px; line-height: 1.6;
-    color: var(--em-text-muted); max-width: 680px;
-  }
+  .bri__sub { margin: 0; font-size: 14px; line-height: 1.6; color: var(--em-text-muted); max-width: 680px; }
 
-  /* ── Steps ── */
-  .bri__step { display: flex; gap: 16px; padding: 18px 0; border-top: 1px solid var(--em-border); }
-  .bri__num {
-    flex: 0 0 auto;
-    width: 30px; height: 30px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
-    background: var(--em-navy); color: var(--em-bg);
-    font-weight: 700; font-size: 15px;
-  }
-  .bri__body { flex: 1 1 auto; min-width: 0; }
-  .bri__steptitle { margin: 4px 0 6px; font-size: 16px; color: var(--em-navy); font-weight: 700; }
-  .bri__once { color: var(--em-gold); font-weight: 600; }
-  .bri__note { margin: 0 0 14px; font-size: 13px; line-height: 1.55; color: var(--em-text-muted); max-width: 640px; }
+  .bri__tools { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .bri__tools--single { grid-template-columns: 1fr; max-width: 520px; }
+  .bri__tool { border: 1px solid var(--em-border); border-radius: var(--radius-md); padding: 18px 18px 16px; background: var(--em-bg); }
+  .bri__toolname { font-weight: 700; color: var(--em-navy); font-size: 16px; display: flex; align-items: baseline; gap: 8px; }
+  .bri__toolver { font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 600; color: var(--em-gold); background: var(--em-gold-tint); padding: 1px 7px; border-radius: 2px; }
+  .bri__toolsum { margin: 4px 0 14px; font-size: 12.5px; line-height: 1.5; color: var(--em-text-muted); }
 
-  .bri__url { display: flex; gap: 8px; max-width: 560px; }
-  .bri__url input {
-    flex: 1; min-width: 0;
-    padding: 9px 10px;
-    font-family: var(--font-mono, monospace); font-size: 12px;
-    border: 1px solid var(--em-border); border-radius: var(--radius-sm);
-    background: var(--em-bg); color: var(--em-text);
-  }
-  .bri__url button {
-    border: 1px solid var(--em-border); border-radius: var(--radius-sm);
-    background: var(--em-navy); color: var(--em-bg);
-    padding: 9px 16px; font-weight: 600; font-size: 13px; cursor: pointer;
-  }
+  .bri__pick { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 0 0 12px; }
+  .bri__pick label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--em-text-muted); display: flex; flex-direction: column; gap: 3px; }
+  .bri__pick select { font-size: 13px; padding: 5px 8px; border: 1px solid var(--em-border); border-radius: var(--radius-sm); background: var(--em-bg); color: var(--em-text); font-weight: 500; text-transform: none; letter-spacing: 0; }
+
+  .bri__dndrow { display: flex; align-items: center; gap: 12px; }
+  .bri__handle { display: inline-flex; align-items: center; gap: 9px; padding: 13px 18px; border: 2px dashed var(--em-gold); border-radius: var(--radius-sm); background: var(--em-bg); color: var(--em-navy); fill: var(--em-gold); font-weight: 600; font-size: 14.5px; text-decoration: none; transition: background 0.12s ease, border-color 0.12s ease; }
+  .bri__handle:hover, .bri__handle:focus-visible { background: var(--em-gold-tint); border-color: var(--em-gold); text-decoration: none; outline: none; }
+  .bri__handle.is-off { opacity: 0.45; pointer-events: none; }
+  .bri__x2 { font-size: 22px; font-weight: 800; color: var(--em-gold); line-height: 1; letter-spacing: -0.01em; flex: 0 0 auto; }
+
+  .bri__twice { margin: 12px 0 0; font-size: 14px; line-height: 1.5; color: var(--em-navy); font-weight: 600; }
+  .bri__twice strong { color: var(--em-gold); }
+  .bri__twice-sub { display: block; font-size: 12px; font-weight: 400; color: var(--em-text-muted); margin-top: 2px; }
+  .bri__unavail { margin: 8px 0 0; font-size: 11px; font-style: italic; color: var(--em-gold); }
+
+  .bri__alt { margin: 14px 0 0; font-size: 12.5px; color: var(--em-text-muted); }
+  .bri__alt summary { cursor: pointer; font-weight: 600; color: var(--em-navy); }
+  .bri__alt p { margin: 8px 0; line-height: 1.5; }
+  .bri__url { display: flex; gap: 8px; }
+  .bri__url input { flex: 1; min-width: 0; padding: 8px 9px; font-family: var(--font-mono, monospace); font-size: 11.5px; border: 1px solid var(--em-border); border-radius: var(--radius-sm); background: var(--em-bg-warm); color: var(--em-text); }
+  .bri__url button { border: 1px solid var(--em-border); border-radius: var(--radius-sm); background: var(--em-navy); color: var(--em-bg); padding: 8px 14px; font-weight: 600; font-size: 12px; cursor: pointer; }
   .bri__url button:hover { background: var(--em-gold); }
-  .bri__dev { margin: 12px 0 0; font-size: 12px; color: var(--em-text-muted); }
-  .bri__dev code { font-size: 11.5px; word-break: break-all; }
 
-  /* ── Step 2 tool cards ── */
-  .bri__tools { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .bri__tools--single { grid-template-columns: 1fr; max-width: 440px; }
-  .bri__tool {
-    border: 1px solid var(--em-border); border-radius: var(--radius-sm);
-    padding: 14px 16px; background: var(--em-bg);
-  }
-  .bri__toolname { font-weight: 700; color: var(--em-navy); font-size: 15px; display: flex; align-items: baseline; gap: 8px; }
-  .bri__toolver {
-    font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 600;
-    color: var(--em-gold); background: var(--em-gold-tint);
-    padding: 1px 7px; border-radius: 2px;
-  }
-  .bri__toolsum { margin: 4px 0 10px; font-size: 12.5px; line-height: 1.5; color: var(--em-text-muted); }
-  .bri__find {
-    margin: 0; font-size: 12.5px; color: var(--em-navy); font-weight: 600;
-    background: var(--em-navy-tint); display: inline-block;
-    padding: 4px 10px; border-radius: var(--radius-sm);
-  }
   .bri__toolnote { margin: 10px 0 0; font-size: 11px; font-style: italic; color: var(--em-gold); line-height: 1.4; }
-
   .bri__offline { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--em-border); font-size: 12.5px; color: var(--em-text-muted); }
   .bri__offline a { font-weight: 600; }
 
-  @media (max-width: 640px) {
-    .bri { padding: 18px 16px; }
-    .bri__tools { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 640px) { .bri { padding: 18px 16px; } .bri__tools { grid-template-columns: 1fr; } }
 </style>
