@@ -86,12 +86,16 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         // EM Tools has multiple builds per release (OS × Blender version)
         // so the single "Download latest" CTA is replaced by a dedicated
         // picker component. Other tools keep the original single-button UX.
-        const isEmTools = toolSlug === 'em-tools';
+        // Tools that live in the self-hosted Blender extension repository get
+        // the repo install UI (Step 1 add-repo + Step 2 install that tool),
+        // and skip the generic single-button download.
+        const REPO_TOOL = ({ 'em-tools': 'em_tools', '3dsc': 'dsc_tools' } as Record<string, string>)[toolSlug];
+        const hasRepoInstall = !!REPO_TOOL;
         return (
           <>
-            {isEmTools && <BlenderRepoInstall />}
+            {hasRepoInstall && <BlenderRepoInstall only={REPO_TOOL} />}
             <div class="tp__links">
-              {!isEmTools && latestDownload && (
+              {!hasRepoInstall && latestDownload && (
                 <a href={latestDownload} target="_blank" rel="noopener" class="tp__btn"
                    data-goatcounter-click={`dl-${toolSlug}-latest`}>
                   ⬇ Download latest

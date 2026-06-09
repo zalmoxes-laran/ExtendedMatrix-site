@@ -10,7 +10,7 @@ partners:
   - "Politecnico di Torino — Elisabetta Caterina Giovannini"
   - "European Commission, SSHOC — Social Sciences & Humanities Open Cloud (H2020 grant 823782)"
 website: "https://doi.org/10.5281/zenodo.6718970"
-summary: "SSHOC Task 5.7 archaeological case study — a virtual reconstruction of the Roman theatre of Catania piloting the transition of archaeological documentation from individual-computer data silos to cloud-published, CIDOC-CRM-aligned Linked Open Data. The Extended Matrix is the reconstruction-side workflow; legacy and new data are integrated in one unified pipeline."
+summary: "SSHOC Task 5.7 case study — a virtual reconstruction of the Roman theatre of Catania, piloting the shift of archaeological documentation from individual data silos to cloud-published, CIDOC-CRM-aligned Linked Open Data. Extended Matrix is the reconstruction-side workflow, unifying legacy and new data."
 featured: true
 order: 60
 cover: ../../assets/projects/2021_catania.jpg

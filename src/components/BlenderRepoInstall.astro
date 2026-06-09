@@ -3,47 +3,85 @@
  * BlenderRepoInstall — "add the repository, then install the tools" UI for the
  * self-hosted Blender extension repository at blender.extendedmatrix.org.
  *
- * Auto-updating install in two steps:
- *   Step 1 — add the repository once (one URL, includes both tools).
- *   Step 2 — install each tool you want.
- * Blender then downloads the build matching the user's OS and Blender version
- * (4.4+) and keeps it updated.
+ * Props:
+ *   only?: 'em_tools' | 'dsc_tools'  — when set, Step 2 lists only that tool
+ *          (used on the per-tool pages). Omitted on the /download hub → both.
  *
- * DRAFT — per-tool drag handles use Blender's documented URL form
- *   <zip>?repository=<index.json>&blender_version_min=<min>
- * (same as extensions.blender.org). To be verified in Blender once the domain
- * is live; if a per-tool handle doesn't resolve the right OS build it falls
- * back to "install <name> from the list" (the card already says both).
+ * AUTO-TRACKING: at build time this fetches the live channel index.json files
+ * and derives each tool's current version + per-tool install handle from the
+ * real release assets, so handles never go stale when a release is published
+ * or removed. If the repo is unreachable at build time it degrades to
+ * "add the repository, then install from the list".
+ *
+ * Install model: Step 1 add the repository once (one URL, all tools); Step 2
+ * install each tool (the per-tool drag handle uses Blender's documented
+ * `<zip>?repository=<index.json>` form, so Blender resolves the build matching
+ * the user's OS/Blender version via the repo).
  *
  * Reuses the site design tokens (--em-navy / --em-gold / --em-bg-warm / ...).
  */
+interface Props { only?: string; }
+const { only } = Astro.props;
+
 const REPO = 'https://blender.extendedmatrix.org';
 const STABLE = `${REPO}/index.json`;
 const DEV = `${REPO}/dev/index.json`;
 
-interface Tool {
-  name: string;
-  summary: string;
-  install: string;   // per-tool drag handle href (provisional, see note above)
-  release: string;   // GitHub release page (manual / offline)
-  note?: string;
+async function fetchChannel(url: string): Promise<any | null> {
+  try {
+    const r = await fetch(url);
+    return r.ok ? await r.json() : null;
+  } catch {
+    return null;
+  }
+}
+const [stableIdx, devIdx] = await Promise.all([fetchChannel(STABLE), fetchChannel(DEV)]);
+
+// A representative entry (any platform) for a tool id within a channel.
+function repEntry(idx: any, id: string): any | null {
+  return idx?.data?.find((e: any) => e.id === id) ?? null;
 }
 
-const tools: Tool[] = [
+interface ToolDef { id: string; name: string; summary: string; releases: string; }
+const DEFS: ToolDef[] = [
   {
+    id: 'em_tools',
     name: 'EM Tools',
     summary: 'Connect an Extended Matrix graph to 3D content in Blender.',
-    install: `https://github.com/zalmoxes-laran/EM-blender-tools/releases/download/v1.5.2/em_tools-v1.5.2-windows-x64-blender50.zip?repository=${STABLE}&blender_version_min=4.4.0`,
-    release: 'https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest',
+    releases: 'https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest',
   },
   {
+    id: 'dsc_tools',
     name: '3D Survey Collection',
     summary: 'Tools for 3D survey: LOD, Cesium tiles, ortho & panorama.',
-    install: `https://github.com/zalmoxes-laran/3D-survey-collection/releases/download/v1.7.0-dev.2/dsc_tools-v1.7.0-dev.2-windows-x64-blender50.zip?repository=${DEV}&blender_version_min=4.4.0`,
-    release: 'https://github.com/zalmoxes-laran/3D-survey-collection/releases/latest',
-    note: 'Currently in the Dev channel — add Dev above to get it (stable build coming soon).',
+    releases: 'https://github.com/zalmoxes-laran/3D-survey-collection/releases/latest',
   },
 ];
+
+const allTools = DEFS.map((t) => {
+  const s = repEntry(stableIdx, t.id);
+  const d = repEntry(devIdx, t.id);
+  const src = s
+    ? { e: s, chan: STABLE, channel: 'stable' }
+    : d
+      ? { e: d, chan: DEV, channel: 'dev' }
+      : null;
+  const install = src
+    ? `${src.e.archive_url}?repository=${src.chan}&blender_version_min=${src.e.blender_version_min ?? '4.4.0'}`
+    : null;
+  return {
+    id: t.id,
+    name: t.name,
+    summary: t.summary,
+    releases: t.releases,
+    version: src ? src.e.version : null,
+    channel: src ? src.channel : null,
+    install,
+  };
+});
+
+// On a per-tool page (only=...) show just that tool; on the hub show all.
+const tools = only ? allTools.filter((t) => t.id === only) : allTools;
 
 // Material "open_with" glyph — the canonical 4-arrow move/drag handle.
 const MOVE =
@@ -68,8 +106,9 @@ const MOVE =
     <div class="bri__body">
       <h3 class="bri__steptitle">Add the repository <span class="bri__once">· once</span></h3>
       <p class="bri__note">
-        One repository, both tools. Drag the handle into Blender (it asks to add
-        the repository — confirm), or paste the URL in
+        Add it once — the repository serves all the Extended Matrix Blender
+        add-ons. Drag the handle into Blender (it asks to add the repository —
+        confirm), or paste the URL in
         <em>Preferences ▸ Get Extensions ▸ Repositories ▸ Add Remote Repository</em>.
       </p>
       <div class="bri__addrow">
@@ -88,24 +127,32 @@ const MOVE =
     </div>
   </div>
 
-  <!-- ── Step 2 — install the tools ──────────────────────────── -->
+  <!-- ── Step 2 — install the tool(s) ────────────────────────── -->
   <div class="bri__step">
     <div class="bri__num">2</div>
     <div class="bri__body">
-      <h3 class="bri__steptitle">Install the tools</h3>
+      <h3 class="bri__steptitle">{tools.length > 1 ? 'Install the tools' : 'Install'}</h3>
       <p class="bri__note">
-        Drag a tool's handle to install just that one — or find it in Blender's
-        extensions list and click <em>Install</em>.
+        Drag the handle to install — or find it in Blender's extensions list and
+        click <em>Install</em>.
       </p>
-      <div class="bri__tools">
+      <div class={tools.length > 1 ? 'bri__tools' : 'bri__tools bri__tools--single'}>
         {tools.map((t) => (
           <div class="bri__tool">
-            <div class="bri__toolname">{t.name}</div>
+            <div class="bri__toolname">
+              {t.name}{t.version && <span class="bri__toolver">{t.version}</span>}
+            </div>
             <p class="bri__toolsum">{t.summary}</p>
-            <a class="bri__handle bri__handle--sm" href={t.install} title={`Install ${t.name}`}>
-              <Fragment set:html={MOVE} /><span>Drag &amp; Drop into Blender</span>
-            </a>
-            {t.note && <p class="bri__toolnote">{t.note}</p>}
+            {t.install ? (
+              <a class="bri__handle bri__handle--sm" href={t.install} title={`Install ${t.name}`}>
+                <Fragment set:html={MOVE} /><span>Drag &amp; Drop into Blender</span>
+              </a>
+            ) : (
+              <p class="bri__toolnote">Find <strong>{t.name}</strong> in Blender's extensions list and click Install.</p>
+            )}
+            {t.channel === 'dev' && (
+              <p class="bri__toolnote">Currently in the <strong>Dev</strong> channel — add the Dev repository above to get it (stable build coming soon).</p>
+            )}
           </div>
         ))}
       </div>
@@ -115,8 +162,9 @@ const MOVE =
   <p class="bri__offline">
     <strong>Manual / offline install</strong> (advanced, no auto-updates): grab the
     platform zip from the GitHub release —
-    <a href={tools[0].release} target="_blank" rel="noopener">EM Tools ↗</a> ·
-    <a href={tools[1].release} target="_blank" rel="noopener">3D Survey Collection ↗</a>.
+    {tools.map((t, i) => (
+      <>{i > 0 && ' · '}<a href={t.releases} target="_blank" rel="noopener">{t.name} ↗</a></>
+    ))}.
   </p>
 </section>
 
@@ -187,11 +235,17 @@ const MOVE =
 
   /* ── Step 2 tool cards ── */
   .bri__tools { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .bri__tools--single { grid-template-columns: 1fr; max-width: 420px; }
   .bri__tool {
     border: 1px solid var(--em-border); border-radius: var(--radius-sm);
     padding: 14px 16px; background: var(--em-bg);
   }
-  .bri__toolname { font-weight: 700; color: var(--em-navy); font-size: 15px; }
+  .bri__toolname { font-weight: 700; color: var(--em-navy); font-size: 15px; display: flex; align-items: baseline; gap: 8px; }
+  .bri__toolver {
+    font-family: var(--font-mono, monospace); font-size: 11px; font-weight: 600;
+    color: var(--em-gold); background: var(--em-gold-tint);
+    padding: 1px 7px; border-radius: 2px;
+  }
   .bri__toolsum { margin: 4px 0 12px; font-size: 12.5px; line-height: 1.5; color: var(--em-text-muted); }
   .bri__toolnote { margin: 10px 0 0; font-size: 11px; font-style: italic; color: var(--em-gold); line-height: 1.4; }
 
