@@ -115,6 +115,7 @@ const emCount = all.filter((a) => a.data.emPipeline).length;
               const text = [d.name, d.summary, (d.tags || []).join(' ')].join(' ').toLowerCase();
               return (
                 <li
+                  id={a.id.replace(/\.md$/, '')}
                   class:list={['tool', { 'tool--rec': d.recommended }]}
                   data-cat={d.category}
                   data-status={d.status}
@@ -292,6 +293,7 @@ const emCount = all.filter((a) => a.data.emPipeline).length;
     border-radius: var(--radius-md);
     background: var(--em-bg);
     padding: 16px 18px;
+    scroll-margin-top: 140px; /* so #slug deep-links clear the sticky nav + filter bar */
     transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
   }
   .tool:hover {
@@ -301,7 +303,10 @@ const emCount = all.filter((a) => a.data.emPipeline).length;
     box-shadow: 0 4px 18px rgba(26, 40, 69, 0.08);
   }
   .tool--rec { border-left-color: var(--em-gold); background: var(--em-gold-tint); }
-  .tool.is-hidden { display: none; }
+  /* A filtered-out tool AND a group whose tools are all filtered out both
+     collapse — so no empty category headers are left to scroll past. */
+  .tool.is-hidden,
+  .group.is-hidden { display: none; }
 
   .tool__head {
     display: flex;
