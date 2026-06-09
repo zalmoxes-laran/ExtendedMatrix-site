@@ -1,0 +1,206 @@
+---
+/**
+ * BlenderRepoInstall — "add the repository, then install the tools" UI for the
+ * self-hosted Blender extension repository at blender.extendedmatrix.org.
+ *
+ * Auto-updating install in two steps:
+ *   Step 1 — add the repository once (one URL, includes both tools).
+ *   Step 2 — install each tool you want.
+ * Blender then downloads the build matching the user's OS and Blender version
+ * (4.4+) and keeps it updated.
+ *
+ * DRAFT — per-tool drag handles use Blender's documented URL form
+ *   <zip>?repository=<index.json>&blender_version_min=<min>
+ * (same as extensions.blender.org). To be verified in Blender once the domain
+ * is live; if a per-tool handle doesn't resolve the right OS build it falls
+ * back to "install <name> from the list" (the card already says both).
+ *
+ * Reuses the site design tokens (--em-navy / --em-gold / --em-bg-warm / ...).
+ */
+const REPO = 'https://blender.extendedmatrix.org';
+const STABLE = `${REPO}/index.json`;
+const DEV = `${REPO}/dev/index.json`;
+
+interface Tool {
+  name: string;
+  summary: string;
+  install: string;   // per-tool drag handle href (provisional, see note above)
+  release: string;   // GitHub release page (manual / offline)
+  note?: string;
+}
+
+const tools: Tool[] = [
+  {
+    name: 'EM Tools',
+    summary: 'Connect an Extended Matrix graph to 3D content in Blender.',
+    install: `https://github.com/zalmoxes-laran/EM-blender-tools/releases/download/v1.5.2/em_tools-v1.5.2-windows-x64-blender50.zip?repository=${STABLE}&blender_version_min=4.4.0`,
+    release: 'https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest',
+  },
+  {
+    name: '3D Survey Collection',
+    summary: 'Tools for 3D survey: LOD, Cesium tiles, ortho & panorama.',
+    install: `https://github.com/zalmoxes-laran/3D-survey-collection/releases/download/v1.7.0-dev.2/dsc_tools-v1.7.0-dev.2-windows-x64-blender50.zip?repository=${DEV}&blender_version_min=4.4.0`,
+    release: 'https://github.com/zalmoxes-laran/3D-survey-collection/releases/latest',
+    note: 'Currently in the Dev channel — add Dev above to get it (stable build coming soon).',
+  },
+];
+
+// Material "open_with" glyph — the canonical 4-arrow move/drag handle.
+const MOVE =
+  '<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true">' +
+  '<path d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3' +
+  'h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"/></svg>';
+---
+
+<section class="bri" id="install" aria-labelledby="bri-title">
+  <div class="bri__head">
+    <h2 class="bri__title" id="bri-title">Install in Blender</h2>
+    <p class="bri__sub">
+      Add the Extended Matrix repository once, then install the tools. Blender
+      downloads the build matching your OS and Blender version (4.4+) and keeps
+      everything <strong>updated automatically</strong>.
+    </p>
+  </div>
+
+  <!-- ── Step 1 — add the repository ─────────────────────────── -->
+  <div class="bri__step">
+    <div class="bri__num">1</div>
+    <div class="bri__body">
+      <h3 class="bri__steptitle">Add the repository <span class="bri__once">· once</span></h3>
+      <p class="bri__note">
+        One repository, both tools. Drag the handle into Blender (it asks to add
+        the repository — confirm), or paste the URL in
+        <em>Preferences ▸ Get Extensions ▸ Repositories ▸ Add Remote Repository</em>.
+      </p>
+      <div class="bri__addrow">
+        <a class="bri__handle" href={STABLE} title="Drag this into the Blender window">
+          <Fragment set:html={MOVE} /><span>Drag &amp; Drop into Blender</span>
+        </a>
+        <div class="bri__url">
+          <input readonly value={STABLE} onclick="this.select()" aria-label="Stable repository URL" />
+          <button type="button" onclick={`navigator.clipboard.writeText('${STABLE}')`}>Copy</button>
+        </div>
+      </div>
+      <p class="bri__dev">
+        Testing prereleases? Add the <strong>Dev</strong> channel instead:
+        <code>{DEV}</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Step 2 — install the tools ──────────────────────────── -->
+  <div class="bri__step">
+    <div class="bri__num">2</div>
+    <div class="bri__body">
+      <h3 class="bri__steptitle">Install the tools</h3>
+      <p class="bri__note">
+        Drag a tool's handle to install just that one — or find it in Blender's
+        extensions list and click <em>Install</em>.
+      </p>
+      <div class="bri__tools">
+        {tools.map((t) => (
+          <div class="bri__tool">
+            <div class="bri__toolname">{t.name}</div>
+            <p class="bri__toolsum">{t.summary}</p>
+            <a class="bri__handle bri__handle--sm" href={t.install} title={`Install ${t.name}`}>
+              <Fragment set:html={MOVE} /><span>Drag &amp; Drop into Blender</span>
+            </a>
+            {t.note && <p class="bri__toolnote">{t.note}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+
+  <p class="bri__offline">
+    <strong>Manual / offline install</strong> (advanced, no auto-updates): grab the
+    platform zip from the GitHub release —
+    <a href={tools[0].release} target="_blank" rel="noopener">EM Tools ↗</a> ·
+    <a href={tools[1].release} target="_blank" rel="noopener">3D Survey Collection ↗</a>.
+  </p>
+</section>
+
+<style>
+  .bri {
+    margin: 8px 0 36px;
+    padding: 24px 26px 20px;
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+  }
+  .bri__head { margin-bottom: 22px; }
+  .bri__title { margin: 0 0 8px; font-size: 22px; color: var(--em-navy); font-weight: 700; }
+  .bri__sub {
+    margin: 0; font-size: 14px; line-height: 1.6;
+    color: var(--em-text-muted); max-width: 680px;
+  }
+
+  /* ── Steps ── */
+  .bri__step { display: flex; gap: 16px; padding: 18px 0; border-top: 1px solid var(--em-border); }
+  .bri__num {
+    flex: 0 0 auto;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    background: var(--em-navy); color: var(--em-bg);
+    font-weight: 700; font-size: 15px;
+  }
+  .bri__body { flex: 1 1 auto; min-width: 0; }
+  .bri__steptitle { margin: 4px 0 6px; font-size: 16px; color: var(--em-navy); font-weight: 700; }
+  .bri__once { color: var(--em-gold); font-weight: 600; }
+  .bri__note { margin: 0 0 14px; font-size: 13px; line-height: 1.55; color: var(--em-text-muted); max-width: 640px; }
+
+  /* ── The canonical drag handle ── */
+  .bri__addrow { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .bri__handle {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 11px 16px;
+    border: 2px dashed var(--em-gold);
+    border-radius: var(--radius-sm);
+    background: var(--em-bg);
+    color: var(--em-navy); fill: var(--em-gold);
+    font-weight: 600; font-size: 14px; text-decoration: none;
+    transition: background 0.12s ease, border-color 0.12s ease;
+  }
+  .bri__handle:hover, .bri__handle:focus-visible {
+    background: var(--em-gold-tint); border-color: var(--em-gold);
+    text-decoration: none; outline: none;
+  }
+  .bri__handle--sm { font-size: 13px; padding: 9px 13px; }
+
+  .bri__url { display: flex; gap: 8px; flex: 1 1 280px; min-width: 0; }
+  .bri__url input {
+    flex: 1; min-width: 0;
+    padding: 9px 10px;
+    font-family: var(--font-mono, monospace); font-size: 12px;
+    border: 1px solid var(--em-border); border-radius: var(--radius-sm);
+    background: var(--em-bg); color: var(--em-text);
+  }
+  .bri__url button {
+    border: 1px solid var(--em-border); border-radius: var(--radius-sm);
+    background: var(--em-bg); color: var(--em-navy);
+    padding: 9px 14px; font-weight: 600; font-size: 13px; cursor: pointer;
+  }
+  .bri__url button:hover { background: var(--em-gold-tint); }
+  .bri__dev { margin: 12px 0 0; font-size: 12px; color: var(--em-text-muted); }
+  .bri__dev code { font-size: 11.5px; word-break: break-all; }
+
+  /* ── Step 2 tool cards ── */
+  .bri__tools { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .bri__tool {
+    border: 1px solid var(--em-border); border-radius: var(--radius-sm);
+    padding: 14px 16px; background: var(--em-bg);
+  }
+  .bri__toolname { font-weight: 700; color: var(--em-navy); font-size: 15px; }
+  .bri__toolsum { margin: 4px 0 12px; font-size: 12.5px; line-height: 1.5; color: var(--em-text-muted); }
+  .bri__toolnote { margin: 10px 0 0; font-size: 11px; font-style: italic; color: var(--em-gold); line-height: 1.4; }
+
+  .bri__offline { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--em-border); font-size: 12.5px; color: var(--em-text-muted); }
+  .bri__offline a { font-weight: 600; }
+
+  @media (max-width: 640px) {
+    .bri { padding: 18px 16px; }
+    .bri__tools { grid-template-columns: 1fr; }
+    .bri__url { flex-basis: 100%; }
+  }
+</style>
