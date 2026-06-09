@@ -8,7 +8,10 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "sync:addons": "node scripts/sync-addons.mjs",
+    "predev": "npm run sync:addons",
+    "prebuild": "npm run sync:addons"
   },
   "dependencies": {
     "astro": "^5.0.0",

@@ -3,6 +3,9 @@ dist/
 dist-preview/
 .astro/
 
+# generated mirror of the BlenderAddons4CH catalog (see scripts/sync-addons.mjs)
+src/content/blenderAddons/
+
 # dependencies
 node_modules/
 

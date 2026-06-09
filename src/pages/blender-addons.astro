@@ -1,0 +1,356 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const all = await getCollection('blenderAddons');
+
+// Category display order + titles (section-aligned with the BlenderAddons4CH
+// catalog). Empty categories are skipped automatically.
+const CATS: [string, string][] = [
+  ['sites', 'Where to find add-ons'],
+  ['texturing', 'Texture painting'],
+  ['vertex-paint', 'Vertex painting'],
+  ['sculpting', 'Sculpting'],
+  ['materials', 'Materials'],
+  ['pbr', 'PBR materials & FOSS ecosystem'],
+  ['modelling', 'Modelling & procedural'],
+  ['retopology', 'Retopology / hard-surface'],
+  ['uv', 'UV mapping'],
+  ['interface', '3D viewport interface'],
+  ['baking', 'Baking'],
+  ['photogrammetry', 'Photogrammetry import'],
+  ['point-cloud', 'Point-cloud import'],
+  ['gaussian-splatting', '3D Gaussian Splatting'],
+  ['compositor', 'Compositor'],
+  ['multiuser', 'Multi-user'],
+  ['gis-landscape', 'Landscape & GIS'],
+  ['camera', 'Camera & rendering'],
+  ['rendering', 'Rendering'],
+  ['animation', 'Animation'],
+  ['libraries', 'External libraries'],
+  ['coding', 'Coding'],
+  ['themes', 'Themes'],
+  ['paid', 'Paid / commercial'],
+  ['simulation', 'Simulation'],
+  ['exchange', 'Exporter / Importer'],
+  ['derived-data', '2D plans & derived data'],
+  ['bim-hbim', 'BIM / HBIM'],
+  ['documentation', 'Documentation'],
+  ['misc', 'Miscellaneous'],
+];
+
+const STATUS_RANK: Record<string, number> = { maintained: 0, unknown: 1, legacy: 2, dead: 3 };
+
+function sortAddons(a: any, b: any) {
+  if (!!a.data.recommended !== !!b.data.recommended) return a.data.recommended ? -1 : 1;
+  const s = (STATUS_RANK[a.data.status] ?? 9) - (STATUS_RANK[b.data.status] ?? 9);
+  if (s) return s;
+  return a.data.name.localeCompare(b.data.name);
+}
+
+// Build the ordered, non-empty groups.
+const groups = CATS
+  .map(([key, title]) => ({
+    key,
+    title,
+    items: all.filter((a) => a.data.category === key).sort(sortAddons),
+  }))
+  .filter((g) => g.items.length > 0);
+
+const total = all.length;
+const verified = all[0]?.data.lastVerified ?? '';
+const recommendedCount = all.filter((a) => a.data.recommended).length;
+const emCount = all.filter((a) => a.data.emPipeline).length;
+---
+
+<BaseLayout
+  title="Blender add-ons for CH"
+  description="A curated catalog of Blender add-ons (and standalone companions) useful in Cultural Heritage 3D work — photogrammetry, point clouds, Gaussian Splatting, HBIM and more."
+>
+  <section class="cat">
+    <div class="container">
+      <span class="tag">Catalog</span>
+      <h1>Blender add-ons for Cultural Heritage.</h1>
+      <p class="cat__sub">
+        A curated catalog of <strong>third-party</strong> Blender add-ons (and a
+        few standalone companions) useful across the Cultural Heritage 3D
+        pipeline — photogrammetry, point clouds, 3D Gaussian Splatting, HBIM and
+        more. Distinct from the <a href={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/tools`}>EM Framework tools</a>:
+        these are tools you <em>combine</em> with EM, not part of it.
+      </p>
+      <p class="cat__meta">
+        {total} tools · {recommendedCount} recommended · {emCount} tagged
+        <span class="b b--em">EM&nbsp;pipeline</span>
+        {verified && <> · links verified {verified}</>} · source:
+        <a href="https://github.com/zalmoxes-laran/BlenderAddons4CH" target="_blank" rel="noopener">BlenderAddons4CH</a>
+      </p>
+
+      <!-- Filters -->
+      <div class="filters" role="search">
+        <input class="filters__search" type="search" placeholder="Search add-ons…" data-f="q" aria-label="Search add-ons" />
+        <select class="filters__select" data-f="cat" aria-label="Filter by category">
+          <option value="all">All categories</option>
+          {groups.map((g) => <option value={g.key}>{g.title}</option>)}
+        </select>
+        <select class="filters__select" data-f="status" aria-label="Filter by status">
+          <option value="all">Any status</option>
+          <option value="maintained">Maintained</option>
+          <option value="legacy">Legacy</option>
+          <option value="dead">Dead</option>
+          <option value="unknown">Unverified</option>
+        </select>
+        <label class="filters__toggle">
+          <input type="checkbox" data-f="em" /> EM pipeline only
+        </label>
+        <span class="filters__count" data-count>{total} / {total}</span>
+      </div>
+
+      <!-- Groups -->
+      {groups.map((g) => (
+        <section class="group" data-cat-group={g.key}>
+          <h2 class="group__head">{g.title} <span class="group__n">{g.items.length}</span></h2>
+          <ul class="grid">
+            {g.items.map((a) => {
+              const d = a.data;
+              const text = [d.name, d.summary, (d.tags || []).join(' ')].join(' ').toLowerCase();
+              return (
+                <li
+                  class:list={['tool', { 'tool--rec': d.recommended }]}
+                  data-cat={d.category}
+                  data-status={d.status}
+                  data-em={d.emPipeline ? '1' : '0'}
+                  data-text={text}
+                >
+                  <div class="tool__head">
+                    <h3 class="tool__name">{d.name}</h3>
+                    <div class="tool__badges">
+                      {d.recommended && <span class="b b--rec">★ recommended</span>}
+                      {d.emPipeline && <span class="b b--em">EM pipeline</span>}
+                      <span class:list={['b', 'b--status', `b--${d.status}`]}>{d.status}</span>
+                      {d.platform !== 'blender' && <span class="b b--meta">{d.platform}</span>}
+                      {d.blenderVersion && <span class="b b--meta">Blender {d.blenderVersion}</span>}
+                      {d.license && <span class="b b--meta">{d.license}</span>}
+                    </div>
+                  </div>
+                  <p class="tool__summary">{d.summary}</p>
+                  {d.links && d.links.length > 0 && (
+                    <div class="tool__links">
+                      {d.links.map((l: any) => (
+                        <a href={l.url} target="_blank" rel="noopener">{l.label}</a>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+
+      <p class="cat__empty" data-empty hidden>No add-ons match these filters.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const q = document.querySelector('[data-f="q"]');
+  const cat = document.querySelector('[data-f="cat"]');
+  const status = document.querySelector('[data-f="status"]');
+  const em = document.querySelector('[data-f="em"]');
+  const count = document.querySelector('[data-count]');
+  const empty = document.querySelector('[data-empty]');
+  const tools = Array.from(document.querySelectorAll<HTMLElement>('.tool'));
+  const groups = Array.from(document.querySelectorAll<HTMLElement>('[data-cat-group]'));
+  const total = tools.length;
+
+  function apply() {
+    const term = (q && 'value' in q ? String(q.value) : '').trim().toLowerCase();
+    const c = cat && 'value' in cat ? String(cat.value) : 'all';
+    const s = status && 'value' in status ? String(status.value) : 'all';
+    const emOnly = !!(em && 'checked' in em && em.checked);
+    let visible = 0;
+
+    for (const el of tools) {
+      const ds = el.dataset;
+      const show =
+        (c === 'all' || ds.cat === c) &&
+        (s === 'all' || ds.status === s) &&
+        (!emOnly || ds.em === '1') &&
+        (!term || (ds.text || '').includes(term));
+      el.classList.toggle('is-hidden', !show);
+      if (show) visible++;
+    }
+
+    for (const g of groups) {
+      const any = g.querySelector('.tool:not(.is-hidden)');
+      g.classList.toggle('is-hidden', !any);
+    }
+
+    if (count) count.textContent = visible + ' / ' + total;
+    if (empty) empty.toggleAttribute('hidden', visible !== 0);
+  }
+
+  [q, cat, status, em].forEach((el) => {
+    if (!el) return;
+    el.addEventListener('input', apply);
+    el.addEventListener('change', apply);
+  });
+</script>
+
+<style>
+  .cat { padding: 80px 0 60px; }
+  .cat h1 { margin: 14px 0 16px; }
+  .cat__sub {
+    max-width: 760px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 14px;
+  }
+  .cat__meta {
+    font-size: 13px;
+    color: var(--em-text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 36px;
+  }
+
+  /* ── Filter bar ─────────────────────────────────────────── */
+  .filters {
+    position: sticky;
+    top: 64px; /* under the nav */
+    z-index: 10;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 0;
+    margin-bottom: 28px;
+    background: var(--em-bg);
+    border-bottom: 1px solid var(--em-border);
+  }
+  .filters__search,
+  .filters__select {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--em-text);
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+  }
+  .filters__search { flex: 1 1 220px; min-width: 180px; }
+  .filters__search:focus,
+  .filters__select:focus { outline: none; border-color: var(--em-gold); }
+  .filters__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--em-text-muted);
+    cursor: pointer;
+  }
+  .filters__count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em-text-muted);
+  }
+
+  /* ── Groups ─────────────────────────────────────────────── */
+  .group { margin-bottom: 44px; }
+  .group__head {
+    font-size: 14px;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--em-gold);
+    border-bottom: 1px solid var(--em-border);
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .group__n {
+    font-size: 11px;
+    color: var(--em-text-muted);
+    letter-spacing: 0;
+  }
+
+  .grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  /* ── Tool card ──────────────────────────────────────────── */
+  .tool {
+    border: 1px solid var(--em-border);
+    border-left: 3px solid var(--em-border);
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+    padding: 16px 18px;
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .tool:hover {
+    border-color: var(--em-gold);
+    border-left-color: var(--em-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 18px rgba(26, 40, 69, 0.08);
+  }
+  .tool--rec { border-left-color: var(--em-gold); background: var(--em-gold-tint); }
+  .tool.is-hidden { display: none; }
+
+  .tool__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .tool__name { font-size: 16px; margin: 0; color: var(--em-navy); }
+  .tool__badges { display: inline-flex; flex-wrap: wrap; gap: 5px; }
+  .tool__summary {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.55;
+    margin: 0 0 10px;
+  }
+  .tool__links { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .tool__links a {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--em-gold);
+  }
+  .tool__links a:hover { color: var(--em-navy); }
+
+  /* ── Badges ─────────────────────────────────────────────── */
+  .b {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: lowercase;
+    border-radius: 2px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .b--rec { color: #7a5a1f; border-color: var(--em-gold-soft); background: var(--em-gold-tint); text-transform: none; }
+  .b--em { color: var(--em-navy); border-color: #b8c2cc; background: var(--em-navy-tint); text-transform: none; }
+  .b--meta { color: var(--em-text-muted); border-color: var(--em-border); background: var(--em-bg-warm); font-family: var(--font-mono); }
+  .b--status { text-transform: capitalize; }
+  .b--maintained { color: #2c5a2c; border-color: #b3d6b3; background: #e9f3e9; }
+  .b--legacy     { color: #5a6b7a; border-color: #cdd5dc; background: #eef2f5; }
+  .b--dead       { color: #8a3a3a; border-color: #e0b3b3; background: #f7e9e9; }
+  .b--unknown    { color: #6a4a1f; border-color: #ddc9a0; background: #f5efe1; }
+
+  .cat__empty { color: var(--em-text-muted); font-size: 16px; padding: 20px 0; }
+
+  @media (max-width: 720px) {
+    .grid { grid-template-columns: 1fr; }
+    .filters__count { margin-left: 0; width: 100%; }
+  }
+</style>

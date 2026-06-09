@@ -433,8 +433,50 @@ const publications = defineCollection({
     }),
 });
 
+/**
+ * Blender add-ons catalog (BlenderAddons4CH) — a curated catalog of THIRD-PARTY
+ * Blender add-ons (and a few standalone companions) useful in Cultural Heritage
+ * 3D work. Distinct from the `tools` collection above (EM's OWN framework
+ * components). Source of truth: the BlenderAddons4CH repo; the markdown under
+ * src/content/blenderAddons/ is a build-time mirror — see scripts/sync-addons.mjs.
+ */
+const blenderAddons = defineCollection({
+  type: 'content',
+  schema: () =>
+    z.object({
+      name: z.string(),
+      // NB: `slug` is a reserved field in Astro content collections (it sets the
+      // entry's routing slug and is stripped from `data`), so it is intentionally
+      // NOT declared here. The filename already equals the slug.
+      category: z.enum([
+        'sites', 'texturing', 'vertex-paint', 'sculpting', 'materials', 'pbr',
+        'modelling', 'retopology', 'uv', 'interface', 'baking', 'photogrammetry',
+        'point-cloud', 'gaussian-splatting', 'compositor', 'multiuser',
+        'gis-landscape', 'camera', 'rendering', 'animation', 'libraries', 'coding',
+        'themes', 'paid', 'simulation', 'exchange', 'derived-data', 'bim-hbim',
+        'documentation', 'misc',
+      ]),
+      platform: z.enum(['blender', 'standalone', 'web']),
+      status: z.enum(['maintained', 'legacy', 'dead', 'unknown']),
+      recommended: z.boolean().default(false),
+      emPipeline: z.boolean().default(false),
+      blenderVersion: z.string().optional(),
+      license: z.string().optional(),
+      stars: z.number().int().nonnegative().optional(),
+      added: z.string().optional(),
+      lastVerified: z.string(),
+      tags: z.array(z.string()).default([]),
+      links: z
+        .array(z.object({ label: z.string(), url: z.string().url() }))
+        .default([]),
+      summary: z.string(),
+      image: z.string().optional(),
+    }),
+});
+
 export const collections = {
   news,
+  blenderAddons,
   projects,
   team,
   partners,
