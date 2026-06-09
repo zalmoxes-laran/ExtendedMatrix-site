@@ -1108,7 +1108,7 @@ const blockCatalog = {
   'import-point-data': {
     phase: 1,
     title: 'Import point data (total station / GPS)',
-    microcopy: 'Point data from total station or dual-frequency / double-differential GPS — imported in 3DSC via <code>Import Coordinates</code>, consuming the project <code>SHIFT.txt</code> for consistent georeferencing. Includes a step-by-step recipe for georeferencing total station data onto GPS points.',
+    microcopy: 'Point data from total station or dual-frequency / double-differential GPS — imported in 3DSC via <code>Import Coordinates</code>, consuming the project <code>SHIFT.txt</code> for consistent georeferencing. Includes a step-by-step recipe for georeferencing total station data onto GPS points. For dense point clouds (E57/LAS/LAZ/PLY, e.g. terrestrial laser scans), import with <a href="/blender-addons#point-cloud-io">Point Cloud I/O</a> from the add-on catalog.',
     tool: '3DSC (Import Coordinates)',
     learnLink: { url: 'https://docs.extendedmatrix.org/projects/3DSC/en/latest/', label: 'Learn the concept →' },
     howToLink: { url: 'https://docs.extendedmatrix.org/projects/3DSC/en/latest/how-to/import/points.html#import-point-data', label: 'How to do it →' },
@@ -1163,7 +1163,7 @@ const blockCatalog = {
   'import-gis-blendergis': {
     phase: 1,
     title: 'Import GIS data (BlenderGIS)',
-    microcopy: 'Use the well-known BlenderGIS addon (install if not present) for GIS layers, satellite imagery, DEMs and georeferenced remote-sensing data — integrates automatically with the EM Tools ecosystem.',
+    microcopy: 'Use the well-known <a href="/blender-addons#blendergis">BlenderGIS</a> addon (install if not present) for GIS layers, satellite imagery, DEMs and georeferenced remote-sensing data — integrates automatically with the EM Tools ecosystem.',
     tool: 'BlenderGIS',
     learnLink: null,
     howToLink: { url: 'https://github.com/domlysz/BlenderGIS/wiki', label: 'How to do it (BlenderGIS wiki) ↗' },
@@ -1329,7 +1329,7 @@ const blockCatalog = {
   'add-representation-models': {
     phase: 4,
     title: 'Add representation models',
-    microcopy: 'Layer polished visual models over proxies for high-fidelity rendering — proxies keep the evidence link.',
+    microcopy: 'Layer polished visual models over proxies for high-fidelity rendering — proxies keep the evidence link. For 2D technical drawings (plans, sections, elevations) see <a href="/blender-addons#measureit-arch">MeasureIt_ARCH</a>; for Gaussian-Splatting representations, <a href="/blender-addons#3dgs-render-kiri">3DGS Render</a> — both in the add-on catalog.',
     tool: 'EM Tools',
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5/project_organization.html', label: 'Learn the concept →' },
     howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/panels/rm_manager.html#add-representation-models', label: 'How to do it →' },
