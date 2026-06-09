@@ -11,12 +11,15 @@
 //
 // Resolution order for the source:
 //   1. $BLENDERADDONS4CH_DIR (explicit override)
-//   2. ../BlenderAddons4CH/data/addons (sibling checkout — the dev default)
+//   2. ../BlenderAddons4CH/data/addons (sibling checkout — live local edits)
+//   3. vendor/blenderaddons4ch/data/addons (git submodule — CI / fallback)
 //
-// PRODUCTION NOTE: in CI the sibling repo isn't present. Before going live,
-// add BlenderAddons4CH as a git submodule and point SRC at it (or commit the
-// mirror). If the source can't be found, this script leaves any existing
-// mirror untouched and exits 0 so the build never hard-fails.
+// The submodule (added with `git submodule add … vendor/blenderaddons4ch`) is
+// what makes the production build work: GitHub Actions checks it out
+// (submodules: recursive) and this script copies from it. Locally the sibling
+// checkout wins so your in-progress edits to BlenderAddons4CH show immediately
+// without a submodule pointer bump. If no source is found, the existing mirror
+// is left untouched and the script exits 0 so the build never hard-fails.
 // =============================================================
 
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync, rmSync } from 'node:fs';
@@ -28,7 +31,8 @@ const DEST = join(ROOT, 'src', 'content', 'blenderAddons');
 
 const candidates = [
   process.env.BLENDERADDONS4CH_DIR,
-  resolve(ROOT, '..', 'BlenderAddons4CH', 'data', 'addons'),
+  resolve(ROOT, '..', 'BlenderAddons4CH', 'data', 'addons'), // sibling (live local edits)
+  resolve(ROOT, 'vendor', 'blenderaddons4ch', 'data', 'addons'), // git submodule (CI)
 ].filter(Boolean);
 
 const SRC = candidates.find((p) => existsSync(p));

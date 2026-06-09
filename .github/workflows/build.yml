@@ -22,6 +22,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          # The Blender add-on catalog lives in the BlenderAddons4CH repo,
+          # included here as a git submodule (vendor/blenderaddons4ch). The
+          # prebuild sync copies its data into the content collection.
+          submodules: recursive
 
       - name: Setup Node
         uses: actions/setup-node@v4

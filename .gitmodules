@@ -1,0 +1,3 @@
+[submodule "vendor/blenderaddons4ch"]
+	path = vendor/blenderaddons4ch
+	url = https://github.com/zalmoxes-laran/BlenderAddons4CH.git
