@@ -3,7 +3,25 @@
  * BlenderRepoInstall — one-gesture install for the self-hosted Blender
  * extension repository at blender.extendedmatrix.org.
  *
- * Props: only?: 'em_tools' | 'dsc_tools'  — limit to one tool.
+ * Props:
+ *   only?: 'em_tools' | 'dsc_tools'  — limit to one tool.
+ *   channel?: 'stable' | 'dev' | 'auto'  — force a specific channel
+ *     (default 'auto').
+ *
+ *     - 'auto'   → prefer stable; fall back to dev when the tool is
+ *                  absent from stable. Used on /download and on
+ *                  /tools/<slug>/ landing pages — the visitor wants
+ *                  the most polished build available.
+ *     - 'stable' → render only the stable build; if the tool is not
+ *                  in the stable index, the card collapses to "No
+ *                  published build yet." Useful on a stable-line
+ *                  version page (e.g. /versions/1-5/).
+ *     - 'dev'    → render only the dev build; same collapse rule if
+ *                  the tool is not in the dev index. Used on
+ *                  development-line version pages (e.g.
+ *                  /versions/1-6/) so visitors see the smooth dev
+ *                  install path instead of being routed to the
+ *                  stable release for an older line.
  *
  * Single step: drag the tool's handle into Blender TWICE — the 1st drop adds
  * the Extended Matrix repository, the 2nd installs the tool (once is enough if
@@ -17,8 +35,9 @@
  * build time. Fallback (paste repo URL / install from the list) is tucked in a
  * <details> for anyone who can't drag.
  */
-interface Props { only?: string; }
-const { only } = Astro.props;
+type Channel = 'stable' | 'dev' | 'auto';
+interface Props { only?: string; channel?: Channel; }
+const { only, channel: forceChannel = 'auto' } = Astro.props;
 
 const REPO = 'https://blender.extendedmatrix.org';
 const STABLE = `${REPO}/index.json`;
@@ -41,6 +60,22 @@ function buildsFor(idx: any, id: string): Record<string, Record<string, string>>
   return out;
 }
 
+/**
+ * Decide which channel to render for a given tool id, given the
+ * `forceChannel` prop. Returns null when the tool is not present in
+ * the required channel(s); the card collapses to "No published build
+ * yet." in that case.
+ */
+function pickChannel(id: string, force: Channel): 'stable' | 'dev' | null {
+  const inStable = (stableIdx?.data ?? []).some((e: any) => e.id === id);
+  const inDev = (devIdx?.data ?? []).some((e: any) => e.id === id);
+  if (force === 'stable') return inStable ? 'stable' : null;
+  if (force === 'dev') return inDev ? 'dev' : null;
+  // 'auto': stable wins; fall back to dev when stable doesn't carry it.
+  if (inStable) return 'stable';
+  return inDev ? 'dev' : null;
+}
+
 interface ToolDef { id: string; name: string; summary: string; releases: string; }
 const DEFS: ToolDef[] = [
   { id: 'em_tools', name: 'EM Tools', summary: 'Connect an Extended Matrix graph to 3D content in Blender.', releases: 'https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest' },
@@ -48,8 +83,7 @@ const DEFS: ToolDef[] = [
 ];
 
 const allTools = DEFS.map((t) => {
-  const inStable = (stableIdx?.data ?? []).some((e: any) => e.id === t.id);
-  const channel = inStable ? 'stable' : ((devIdx?.data ?? []).some((e: any) => e.id === t.id) ? 'dev' : null);
+  const channel = pickChannel(t.id, forceChannel);
   const idx = channel === 'stable' ? stableIdx : channel === 'dev' ? devIdx : null;
   const builds = idx ? buildsFor(idx, t.id) : {};
   const sample = idx ? (idx.data.find((e: any) => e.id === t.id) ?? null) : null;
@@ -63,6 +97,14 @@ const allTools = DEFS.map((t) => {
   };
 });
 const tools = only ? allTools.filter((t) => t.id === only) : allTools;
+
+// When forceChannel pins a specific channel, the title hint reflects
+// that — so a visitor lands on /versions/1-6/ and sees
+// "Install in Blender (dev channel)" rather than the generic title
+// used on /download.
+const channelHint =
+  forceChannel === 'dev' ? ' (dev channel)' :
+  forceChannel === 'stable' ? ' (stable channel)' : '';
 
 const MOVE =
   '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">' +
@@ -79,10 +121,19 @@ const OS_OPTS = [
 
 <section class="bri" id="install" aria-labelledby="bri-title">
   <div class="bri__head">
-    <h2 class="bri__title" id="bri-title">Install in Blender</h2>
+    <h2 class="bri__title" id="bri-title">Install in Blender{channelHint}</h2>
     <p class="bri__sub">
       Drag a tool into the Blender window — Blender picks the build matching your
       OS and Blender version (4.4+) and keeps it <strong>updated automatically</strong>.
+      {forceChannel === 'dev' && (
+        <>
+          {' '}This card serves the <strong>dev channel</strong>
+          {' '}(<code>{DEV}</code>), so Blender will follow the
+          {' '}<code>v1.6.0-dev.N</code> stream and update as new dev
+          {' '}releases ship. For a stable build, see
+          {' '}<a href="/versions/1-5/">EM 1.5 LTS</a>.
+        </>
+      )}
     </p>
   </div>
 

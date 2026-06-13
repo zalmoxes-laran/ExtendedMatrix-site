@@ -2,13 +2,10 @@
 /**
  * EmToolsDownloadPicker — Blender × OS download picker for EM Tools.
  *
- * Single source of truth for the version is the `RELEASE_TAG` const a
- * few lines down: bump it on the day a new EM Tools 1.5.x patch ships
- * and every download URL, filename, button aria-label, GoatCounter
- * event-id and the "Browse the v1.5.x release on GitHub" link follow
- * automatically. The matching `version:` field on the 1-5.md tools
- * entry (`src/content/versions/1-5.md`) should be bumped in the same
- * commit — those two are the only places that need to change.
+ * Hardcoded against the EM Tools v1.5.2 GitHub release assets (4 OS × 2
+ * Python ABIs = 8 zips). When 1.6 ships with its own multi-build set,
+ * extend `downloads` below — see release page for asset names:
+ *   https://github.com/zalmoxes-laran/EM-blender-tools/releases
  *
  * Blender compatibility per ABI column (NB: the "blender50" / "blender51"
  * suffix in filenames refers to the bundled Python wheels, not to the
@@ -35,53 +32,59 @@ interface BuildRow {
   os: string;            // user-facing OS name
   arch: string;          // user-facing arch tag
   goatOs: string;        // short id for goatcounter event-ids
-  b50File: string;       // filename for the Python 3.11 ABI zip
-  b51File: string;       // filename for the Python 3.13 ABI zip
+  b50: string;           // Python 3.11 ABI zip URL (Blender 4.4 LTS / 5.0)
+  b51: string;           // Python 3.13 ABI zip URL (Blender 4.5 LTS / 5.1)
+  b50File: string;       // filename, for tooltip
+  b51File: string;
   note?: string;         // optional caveat shown under the OS label
 }
 
-// ─── SINGLE SOURCE OF TRUTH ────────────────────────────────────────
-// Bump this string and the matching `version:` field on the em-tools
-// entry of src/content/versions/1-5.md when a new 1.5.x patch ships.
-// Nothing else in this file should reference a hard-coded version.
-const RELEASE_TAG = 'v1.5.3';
-// ───────────────────────────────────────────────────────────────────
-
-const version = RELEASE_TAG.replace(/^v/, '');
-const RELEASE_BASE = `https://github.com/zalmoxes-laran/EM-blender-tools/releases/download/${RELEASE_TAG}`;
-const VERSION_TAG_URL = `https://github.com/zalmoxes-laran/EM-blender-tools/releases/tag/${RELEASE_TAG}`;
+const RELEASE_BASE =
+  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/download/v1.5.2';
+const VERSION_TAG_URL =
+  'https://github.com/zalmoxes-laran/EM-blender-tools/releases/tag/v1.5.2';
 
 const downloads: BuildRow[] = [
   {
     os: 'Linux',
     arch: 'x64',
     goatOs: 'linux-x64',
-    b50File: `em_tools-${RELEASE_TAG}-linux-x64-blender50.zip`,
-    b51File: `em_tools-${RELEASE_TAG}-linux-x64-blender51.zip`,
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-linux-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-linux-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-linux-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-linux-x64-blender51.zip',
   },
   {
     os: 'macOS',
     arch: 'Apple Silicon (arm64)',
     goatOs: 'macos-arm64',
-    b50File: `em_tools-${RELEASE_TAG}-macosx-arm64-blender50.zip`,
-    b51File: `em_tools-${RELEASE_TAG}-macosx-arm64-blender51.zip`,
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-arm64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-arm64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-macosx-arm64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-macosx-arm64-blender51.zip',
   },
   {
     os: 'macOS',
     arch: 'Intel (x86_64, pre-2020 Macs)',
     goatOs: 'macos-x64',
-    b50File: `em_tools-${RELEASE_TAG}-macosx-x64-blender50.zip`,
-    b51File: `em_tools-${RELEASE_TAG}-macosx-x64-blender51.zip`,
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-macosx-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-macosx-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-macosx-x64-blender51.zip',
     note: 'Pair with Blender 4.4 or 4.5 LTS — Blender 5.x has no Intel build',
   },
   {
     os: 'Windows',
     arch: 'x64',
     goatOs: 'windows-x64',
-    b50File: `em_tools-${RELEASE_TAG}-windows-x64-blender50.zip`,
-    b51File: `em_tools-${RELEASE_TAG}-windows-x64-blender51.zip`,
+    b50: `${RELEASE_BASE}/em_tools-v1.5.2-windows-x64-blender50.zip`,
+    b51: `${RELEASE_BASE}/em_tools-v1.5.2-windows-x64-blender51.zip`,
+    b50File: 'em_tools-v1.5.2-windows-x64-blender50.zip',
+    b51File: 'em_tools-v1.5.2-windows-x64-blender51.zip',
   },
 ];
+
+const version = '1.5.2';
 ---
 
 <section class="em-picker" id="download" aria-labelledby="em-picker-title">
@@ -123,7 +126,7 @@ const downloads: BuildRow[] = [
 
         <div class="em-picker__cell">
           <a
-            href={`${RELEASE_BASE}/${row.b50File}`}
+            href={row.b50}
             class="em-picker__btn"
             title={row.b50File}
             aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 4.4 LTS or 5.0`}
@@ -141,7 +144,7 @@ const downloads: BuildRow[] = [
 
         <div class="em-picker__cell">
           <a
-            href={`${RELEASE_BASE}/${row.b51File}`}
+            href={row.b51}
             class="em-picker__btn"
             title={row.b51File}
             aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 4.5 LTS or 5.1`}

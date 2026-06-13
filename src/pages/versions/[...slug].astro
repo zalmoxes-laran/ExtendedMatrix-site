@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlenderRepoInstall from '../../components/BlenderRepoInstall.astro';
 
 export async function getStaticPaths() {
   const versions = await getCollection('versions');
@@ -310,6 +311,22 @@ const statusPill: Record<string, string> = {
             </tbody>
           </table>
         </section>
+      )}
+
+      <!-- ── Quick install (drag-and-drop, repo-driven) ──────────
+           Embed the BlenderRepoInstall card when the version page
+           is for a development line and the matching tool exists in
+           the self-hosted dev channel at blender.extendedmatrix.org.
+           The component is channel-locked to `dev` here so the
+           card surfaces the v1.6.0-dev.N stream — the default
+           "stable wins" auto-selection would otherwise show the
+           1.5.x stable build to anyone landing on /versions/1-6/,
+           which defeats the purpose of the version-specific page.
+           Stable-line pages (1.5 and earlier) keep the granular
+           installSteps + EmToolsDownloadPicker flow they already
+           have on /tools/em-tools/. -->
+      {version.data.status === 'development' && (
+        <BlenderRepoInstall only="em_tools" channel="dev" />
       )}
 
       <!-- ── Install steps ───────────────────────────────────── -->
