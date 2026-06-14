@@ -102,9 +102,15 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     border-radius: var(--radius-md);
     overflow: hidden;
     text-align: center;
-    /* Cap visual width at the source image's intrinsic size so small
-       covers don't get upscaled to the 1100px container width. */
-    max-width: 100%;
+    /* Cap at 60% of the container on desktop — most project covers
+       are honest archaeological photos / renders that don't hold up
+       being upscaled to the 1100px container width. The 60% cap is
+       applied here at the wrapper level so the figure (including
+       potential captions in the future) stays centered with the
+       same aspect ratio. Mobile reverts to 100% via the media query
+       below — at <=768px viewports the 60% cap would make images
+       too small to read. */
+    max-width: 60%;
   }
   .proj__cover img {
     max-width: 100%;
@@ -118,17 +124,28 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .proj__body :global(ul) { margin-bottom: 14px; padding-left: 22px; }
 
   /* Figure-style: a paragraph that contains only an image, optionally
-     followed by a paragraph that contains only an italic caption. */
+     followed by a paragraph that contains only an italic caption.
+     Same 60% cap as .proj__cover: most inline body images on project
+     pages are figures / process screenshots / render comparisons
+     that don't read well at full container width. */
   .proj__body :global(p:has(> img:only-child)) {
     margin: 28px 0 4px;
     text-align: center;
   }
   .proj__body :global(p:has(> img:only-child) img) {
-    max-width: 100%;
+    max-width: 60%;
     height: auto;
     display: block;
     margin: 0 auto;
     border-radius: var(--radius-sm);
+  }
+
+  /* Mobile breakpoint: at <=768px the 60% cap kicks in too hard
+     (60% of ~360px = ~216px wide) — for phone screens revert to
+     100% so figures stay legible. */
+  @media (max-width: 768px) {
+    .proj__cover { max-width: 100%; }
+    .proj__body :global(p:has(> img:only-child) img) { max-width: 100%; }
   }
   .proj__body :global(p:has(> img:only-child) + p:has(> em:only-child)) {
     text-align: center;
