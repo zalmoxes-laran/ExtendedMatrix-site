@@ -85,29 +85,60 @@ jobs:
           tmp_tot=$(mktemp)
 
           # Helper that captures HTTP status + body so failures print the
-          # GoatCounter error message instead of a curl exit code. The
-          # explicit UA is sent on every API request; a fresh `-A` argument
-          # is the simplest way (curl always honours it over implicit
-          # defaults).
+          # GoatCounter error message instead of a curl exit code, retries
+          # on non-200 with exponential backoff (2s / 4s / 8s — keep the
+          # whole job inside the workflow_dispatch UI's perceived "fast"
+          # bracket), and reports the egress IP on every retry so the
+          # upstream tracker can correlate run-to-run flakiness against
+          # specific Azure NAT exits.
+          #
+          # The retry exists because, since 2026-06-06, the `/api/v0/me`
+          # preflight (now removed) and now also `/api/v0/stats/locations`
+          # have been hitting GoatCounter's catch-all 404 handler from
+          # GitHub Actions runner IPs — the same token + URL succeed from
+          # a local terminal in the same minute. Pattern looks like
+          # IP-based filtering at GoatCounter's edge (Varnish or similar)
+          # rotating which Azure egress NAT exits are bucketed as
+          # malicious. A small retry catches the case where the runner's
+          # next outbound connection lands on a different exit IP that
+          # isn't currently bucketed. Failures that persist after 3
+          # attempts are surfaced as `::warning::` (not `::error::`) so
+          # the workflow doesn't fail the day — see the FETCH_OK guard
+          # below for the soft-fail policy.
           fetch() {
             local url="$1" outfile="$2" label="$3"
-            local status
-            status=$(curl -sS \
-              -A "${UA}" \
-              -H "Authorization: Bearer ${GC_TOKEN_TRIMMED}" \
-              -H "Content-Type: application/json" \
-              -o "${outfile}" \
-              -w "%{http_code}" \
-              "${url}")
-            echo "→ ${label}: HTTP ${status}"
-            if [ "${status}" != "200" ]; then
-              echo "::error::${label} returned HTTP ${status}. Response body (first 500 chars):"
-              head -c 500 "${outfile}" || true
-              echo ""
-              echo "::error::Request URL was: ${url}"
-              return 1
-            fi
-            return 0
+            local status attempt=0 max_attempts=3 sleep_for egress
+            while [ $attempt -lt $max_attempts ]; do
+              attempt=$((attempt + 1))
+              status=$(curl -sS \
+                -A "${UA}" \
+                -H "Authorization: Bearer ${GC_TOKEN_TRIMMED}" \
+                -H "Content-Type: application/json" \
+                -o "${outfile}" \
+                -w "%{http_code}" \
+                "${url}")
+              echo "→ ${label} (attempt ${attempt}/${max_attempts}): HTTP ${status}"
+              if [ "${status}" = "200" ]; then
+                return 0
+              fi
+              if [ $attempt -lt $max_attempts ]; then
+                # Re-check egress IP on each retry: if a hot reconnect
+                # lands on a different NAT exit, the log shows which
+                # IP was used for which attempt. Helps file accurate
+                # bug reports on the upstream tracker.
+                egress="$(curl -sS --max-time 5 https://ipv4.icanhazip.com 2>/dev/null || echo '?')"
+                sleep_for=$((1 << attempt))   # 2, 4, 8
+                echo "   egress now ${egress} — waiting ${sleep_for}s before retry"
+                sleep "${sleep_for}"
+              fi
+            done
+            echo "::warning::${label} returned HTTP ${status} after ${max_attempts} attempts."
+            echo "::warning::Last response body (first 500 chars):"
+            head -c 500 "${outfile}" || true
+            echo ""
+            echo "::warning::Request URL was: ${url}"
+            echo "::warning::Egress IPv4 (re-checked): $(curl -sS --max-time 5 https://ipv4.icanhazip.com 2>/dev/null || echo '(unreachable)')"
+            return 1
           }
 
           # NOTE: the `/api/v0/me` preflight previously here was removed on
@@ -121,17 +152,44 @@ jobs:
           # IP-based filter in front of the GoatCounter SaaS). The stats
           # endpoints below have well-documented error codes (401 / 403),
           # so a failed preflight was blocking the job for no useful reason.
-          # If `/stats/*` calls start exhibiting the same 404 catch-all,
-          # the egress diagnostics logged above plus the explicit UA give
-          # us a clean reproducer to file on the upstream tracker.
+          # Update (2026-06-14): `/stats/locations` is now exhibiting the
+          # same catch-all 404 pattern intermittently. See `fetch()` retry
+          # above and the FETCH_OK soft-fail guard below; upstream issue
+          # draft tracked in `.cowork-work/goatcounter-issue-draft.md`.
+
+          # Soft-fail wrapper: returns 0 if the fetch succeeded (after
+          # retries), 1 if every attempt hit the catch-all 404 / other
+          # non-200. The two stats endpoints are best-effort — we'd rather
+          # keep yesterday's visits.json on disk than red-flag the
+          # workflow when GoatCounter's edge is rotating Azure NAT exits.
+          # The Commit step naturally short-circuits to "nothing to
+          # commit" when visits.json isn't touched, so the cron simply
+          # tries again tomorrow.
+          # Set FETCH_OK=0 only when BOTH stats endpoints succeeded.
+          FETCH_OK=1
 
           # Location stats — country breakdown.
-          fetch "${BASE}/stats/locations?start=${START}&end=${END}" \
-                "${tmp_loc}" "stats/locations"
+          if ! fetch "${BASE}/stats/locations?start=${START}&end=${END}" \
+                     "${tmp_loc}" "stats/locations"; then
+            FETCH_OK=0
+          fi
 
           # Total counts — overall visits & events.
-          fetch "${BASE}/stats/total?start=${START}&end=${END}" \
-                "${tmp_tot}" "stats/total"
+          if ! fetch "${BASE}/stats/total?start=${START}&end=${END}" \
+                     "${tmp_tot}" "stats/total"; then
+            FETCH_OK=0
+          fi
+
+          if [ "${FETCH_OK}" = "0" ]; then
+            echo "::warning::One or more stats fetches failed after retries — skipping visits.json update."
+            echo "::warning::Yesterday's public/data/visits.json stays on disk; the next scheduled run will retry."
+            echo "::warning::If this persists for >7 consecutive days, escalate via the upstream issue draft."
+            # Exit 0: the step succeeds, no diff to visits.json, Commit
+            # step short-circuits, Trigger Build step is skipped. No
+            # alarm fatigue, no manual re-run needed — tomorrow's cron
+            # will try again on a (probably) different egress IP.
+            exit 0
+          fi
 
           mkdir -p public/data
 
