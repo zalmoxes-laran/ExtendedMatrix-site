@@ -234,7 +234,13 @@ const groupLabel: Record<string, string> = {
     display: grid;
     grid-template-columns: 1.4fr 1fr;
     gap: 64px;
-    margin-bottom: 80px;
+    /* Was 80px; reduced to 40px to match the post-2026-06 vertical
+       rhythm pass — the intro grid and the partners block were
+       sitting ~144px apart (80 here + 64 on .partners margin-top
+       below), which felt slack on a desktop read. 40 + 32 = 72px
+       between the two reads as a deliberate section break without
+       being airy. */
+    margin-bottom: 40px;
   }
   .about h2 {
     font-size: 22px;
@@ -287,7 +293,10 @@ const groupLabel: Record<string, string> = {
   }
   .links a:hover { color: var(--em-gold); text-decoration: none; }
 
-  .partners { margin-top: 64px; }
+  /* Paired with the .about__grid margin-bottom: 40px reduction
+     above so the cumulative break between intro and partners
+     reads as 72px, not the previous ~144px. */
+  .partners { margin-top: 32px; }
   .partners h2 { font-size: 28px; margin-bottom: 12px; }
   .partners__lede {
     color: var(--em-text-muted);
