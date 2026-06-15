@@ -84,7 +84,23 @@ p { line-height: 1.7; color: var(--em-text); }
   padding: 0 var(--gutter);
 }
 
-section { padding: 80px 0; }
+/*
+ * Default vertical rhythm on every <section> across the site.
+ *
+ * Was 80px top + bottom — which stacks to 160px on every boundary
+ * where two adjacent <section> elements sit one above the other,
+ * and 80+page-wrapper(80px) = 160px on pages where the outermost
+ * page container also pads 80px. The accumulated whitespace
+ * made pages with multiple inner sections (about, cite, ecosystem,
+ * version slug, find-your-path, ...) feel airier than intended.
+ *
+ * Reduced to 48px so a two-section boundary lands at 96px — still
+ * comfortably airy for an editorial-style site, no longer feels
+ * like a presentation deck. Pages that *want* more breathing room
+ * (homepage hero, marketing landings) continue to override this
+ * rule on their own top-level wrapper class.
+ */
+section { padding: 48px 0; }
 
 /* ── Buttons ─────────────────────────────────────────────── */
 
