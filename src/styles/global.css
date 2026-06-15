@@ -85,22 +85,46 @@ p { line-height: 1.7; color: var(--em-text); }
 }
 
 /*
- * Default vertical rhythm on every <section> across the site.
+ * Default vertical rhythm on TOP-LEVEL <section> elements only.
  *
- * Was 80px top + bottom — which stacks to 160px on every boundary
- * where two adjacent <section> elements sit one above the other,
- * and 80+page-wrapper(80px) = 160px on pages where the outermost
- * page container also pads 80px. The accumulated whitespace
- * made pages with multiple inner sections (about, cite, ecosystem,
- * version slug, find-your-path, ...) feel airier than intended.
+ * History of this rule (do not undo without re-checking the audit):
  *
- * Reduced to 48px so a two-section boundary lands at 96px — still
- * comfortably airy for an editorial-style site, no longer feels
- * like a presentation deck. Pages that *want* more breathing room
- * (homepage hero, marketing landings) continue to override this
- * rule on their own top-level wrapper class.
+ *   1. Original: `section { padding: 80px 0; }` — stacked to ~160px
+ *      between sibling sections; pages with multiple inner sections
+ *      (about, cite, ecosystem, tool slug, version slug, find-your-
+ *      path …) felt airier than intended. The versions/[...slug]
+ *      template had already patched around it locally with
+ *      `.vp section { padding: 0 }`.
+ *
+ *   2. 2026-06-14: reduced to `section { padding: 48px 0 }`
+ *      site-wide. Helped, but inline-content layouts (tool slug
+ *      page being the canonical example) still showed ~116px
+ *      between the "Or pick an EM version below ↓" hint and the
+ *      first body <h2>, because the .tp__hint margin-bottom (36px)
+ *      stacked with the global section padding (48px) and the
+ *      h2 margin-top (32px).
+ *
+ *   3. 2026-06-15: scoped to `main > section` — direct children
+ *      of <main> only. This is the homepage's marketing pattern
+ *      (every top-level section is a hero/banner sibling and most
+ *      define their own padding via a per-section class rule
+ *      anyway; the rule serves as a fallback for the few sections
+ *      that don't). Inline content pages put their sections
+ *      inside an <article> or a wrapping <section class="page">,
+ *      so the inner sub-sections no longer inherit the global
+ *      padding and the rhythm is driven by per-element margins
+ *      (which is what the pages already use).
+ *
+ * Net effect of step 3 on every page that has its outermost
+ * element as <section> (about, cite, ecosystem, …) is zero: the
+ * outermost section keeps its own class-scoped padding, which
+ * always wins over the global rule. Net effect on pages whose
+ * outermost element is <article> or <div> (tool slug, version
+ * slug, project slug, …) is that inner <section> elements
+ * collapse to zero padding by default, which is what those
+ * layouts already want.
  */
-section { padding: 48px 0; }
+main > section { padding: 48px 0; }
 
 /* ── Buttons ─────────────────────────────────────────────── */
 
