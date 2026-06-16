@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-06-15T08:11:38Z",
+  "fetched_at": "2026-06-16T08:06:47Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-06-15"
+    "end": "2026-06-16"
   },
-  "total": 907,
-  "total_events": 305,
+  "total": 934,
+  "total_events": 307,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 651
+      "count": 666
     },
     {
       "code": "ES",
@@ -29,6 +29,11 @@
       "count": 24
     },
     {
+      "code": "PT",
+      "name": "Portugal",
+      "count": 17
+    },
+    {
       "code": "AT",
       "name": "Austria",
       "count": 15
@@ -41,16 +46,11 @@
     {
       "code": "UZ",
       "name": "Uzbekistan",
-      "count": 12
+      "count": 13
     },
     {
       "code": "FR",
       "name": "France",
-      "count": 8
-    },
-    {
-      "code": "PT",
-      "name": "Portugal",
       "count": 8
     },
     {
