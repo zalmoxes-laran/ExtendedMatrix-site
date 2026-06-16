@@ -1,0 +1,161 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const all = (await getCollection('workflows'))
+  .filter((r) => !r.data.draft)
+  .sort((a, b) => (b.data.order ?? 0) - (a.data.order ?? 0) || a.data.title.localeCompare(b.data.title));
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Workflows"
+  description="Workflows for the Extended Matrix ecosystem — multi-tool end-to-end paths tied to a scientific question or a technology (photogrammetric reconstruction, geophysical survey, anastylosis, drone survey, web publication, …)."
+>
+  <section class="wf">
+    <div class="container">
+      <span class="tag">Workflows</span>
+      <h1>Methodological paths across the EM ecosystem.</h1>
+      <p class="wf__sub">
+        Each workflow describes a complete path tied to a <strong>scientific
+        question or a technology</strong> — photogrammetric pipeline, geophysical
+        survey, anastylosis, web publication — and orchestrates multiple
+        Extended Matrix tools end-to-end (yEd, EM Tools, s3dgraphy, 3DSC,
+        Heriverse). Each step links into the canonical tool manual at the
+        right depth rather than duplicating reference content — the workflow
+        is the operational glue between manuals, not a fifth source of truth.
+      </p>
+      <p class="wf__sub wf__sub--note">
+        <strong>Workflows vs Cookbook.</strong>
+        A workflow answers <em>"how does this method work end-to-end?"</em>
+        and is bound to a methodology or technology. A cookbook recipe
+        answers <em>"how do I express this archaeological situation in the
+        EM language?"</em> and is bound to a grammar pattern — those live
+        inside the
+        <a href="https://docs.extendedmatrix.org/en/1.5/cookbook/" target="_blank" rel="noopener">EM language cookbook</a>
+        in the language manual. A workflow can call cookbook patterns as
+        reusable building blocks.
+      </p>
+
+      {all.length === 0 ? (
+        <p class="wf__empty">
+          The workflows collection is being seeded. Entries will appear here
+          as they are authored — see the project tracker for what is in
+          flight.
+        </p>
+      ) : (
+        <ul class="wf__grid">
+          {all.map((r) => (
+            <li class="wf__card">
+              <a href={`${B}/workflows/${r.id.replace(/\.md$/, '')}/`}>
+                <div class="wf__cover">
+                  {r.data.cover ? (
+                    <img src={r.data.cover.src} alt={r.data.coverAlt || r.data.title} loading="lazy" width="320" height="200" />
+                  ) : (
+                    <div class="wf__placeholder">📖</div>
+                  )}
+                </div>
+                <div class="wf__body">
+                  <h3 class="wf__title">{r.data.title}</h3>
+                  <p class="wf__summary">{r.data.summary}</p>
+                  {r.data.tools_used.length > 0 && (
+                    <div class="wf__tools">
+                      {r.data.tools_used.map((t) => (
+                        <span class="wf__tool-badge">{t}</span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wf { padding: 60px 0 80px; }
+  .wf h1 { margin: 14px 0 16px; }
+  .wf__sub {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .wf__empty {
+    color: var(--em-text-muted);
+    font-style: italic;
+    border: 1px dashed var(--em-border);
+    padding: 24px 28px;
+    border-radius: var(--radius-md);
+    max-width: 720px;
+  }
+  .wf__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+  }
+  .wf__card {
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--em-bg);
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
+  }
+  .wf__card:hover { border-color: var(--em-gold); transform: translateY(-2px); }
+  .wf__card a { display: block; text-decoration: none; color: inherit; }
+  .wf__cover {
+    aspect-ratio: 16/9;
+    background: var(--em-bg-warm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .wf__cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .wf__placeholder { font-size: 48px; opacity: 0.4; }
+  .wf__body { padding: 20px 22px 22px; }
+  .wf__title {
+    font-size: 19px;
+    color: var(--em-navy);
+    margin: 0 0 8px;
+    font-family: var(--font-display);
+  }
+  .wf__summary {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.55;
+    margin: 0 0 14px;
+  }
+  .wf__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .wf__tool-badge {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: var(--em-navy-tint);
+    color: var(--em-navy);
+    font-weight: 600;
+  }
+  .wf__sub--note {
+    margin-top: 24px;
+    padding: 14px 18px;
+    background: var(--em-bg-warm);
+    border-left: 3px solid var(--em-gold);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .wf__sub--note strong { color: var(--em-navy); }
+</style>

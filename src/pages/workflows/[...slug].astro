@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-  const recipes = await getCollection('cookbook');
+  const recipes = await getCollection('workflows');
   return recipes.map((r) => ({
     params: { slug: r.id.replace(/\.md$/, '') },
     props: { recipe: r },
@@ -22,7 +22,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 >
   <article class="rc">
     <div class="container">
-      <a href={`${B}/cookbook/`} class="rc__back">← All recipes</a>
+      <a href={`${B}/workflows/`} class="rc__back">← All recipes</a>
 
       <h1 class="rc__title">{recipe.data.title}</h1>
       <p class="rc__lede">{recipe.data.summary}</p>

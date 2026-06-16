@@ -27,7 +27,7 @@ working correctly.
 
 - An EM Tools scene where the graph, the proxies and (optionally)
   the RMs are all linked. If you don't have one yet, start from the
-  [Author EM in yEd, render in Blender](/cookbook/author-em-in-yed-then-blender/)
+  [Author EM in yEd, render in Blender](/workflows/author-em-in-yed-then-blender/)
   recipe.
 - A **Heriverse** account or local Heriverse instance — see the
   [Heriverse manual](https://docs.extendedmatrix.org/projects/heriverse/)

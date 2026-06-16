@@ -12,9 +12,10 @@ order: 100
 draft: true
 ---
 
-> *This recipe is a starter / pattern example for the new cookbook
-> collection. It is currently marked `draft: true` while the body is
-> being filled in. When the body is final, flip `draft` to false.*
+> *This workflow is a starter / pattern example for the new
+> workflows collection. It is currently marked `draft: true` while
+> the body is being filled in. When the body is final, flip `draft`
+> to false.*
 
 ## What you'll do
 
@@ -87,18 +88,20 @@ to sync.
   see the [DP-34 Label & Layout System](https://dev.extendedmatrix.org/devprojects/dp-34-label-and-layout-system/)
   page on the dev tracker for the upcoming MVP.
 
-## Recipe pattern (notes for editors)
+## Workflow pattern (notes for editors)
 
-This recipe demonstrates the cookbook pattern:
+This workflow demonstrates the canonical pattern:
 
 1. **What you'll do** — single paragraph in plain language.
 2. **What you'll need** — links INTO each tool's install path, never
    embedded.
 3. **Steps** — short narrative sections; each step that uses a tool
-   links into the tool's reference at the right depth. The recipe
-   does not duplicate panel reference content.
-4. **Where to go next** — cross-recipe pointers + dev-tracker links
-   for in-flight work.
+   links into the tool's reference at the right depth (panel
+   reference, mini-tutorial, how-to-start, or — for grammar
+   patterns — an EM language cookbook entry). The workflow never
+   duplicates content already in a manual.
+4. **Where to go next** — cross-workflow pointers + dev-tracker
+   links for in-flight work.
 
 When draft becomes false, this recipe goes live at
-`/cookbook/author-em-in-yed-then-blender/`.
+`/workflows/author-em-in-yed-then-blender/`.

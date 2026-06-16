@@ -474,27 +474,38 @@ const blenderAddons = defineCollection({
     }),
 });
 
-// ─── Cookbook collection ─────────────────────────────────────────────
-// Cross-tool recipes that orchestrate multiple components of the
-// Extended Matrix ecosystem (EM language + EM Tools + s3dgraphy + 3DSC
-// + Heriverse). Each recipe links INTO each tool's own manual rather
-// than duplicating reference content; the recipe is the operational
-// glue between the manuals. See
-// `.cowork-work/docs-restructure-2026-06-16.md` for the rationale.
+// ─── Workflows collection ────────────────────────────────────────────
+// Multi-tool end-to-end paths tied to a scientific question or a
+// technology (photogrammetric pipeline, geophysical survey,
+// anastylosis, drone survey, web publication). Each workflow
+// orchestrates multiple components of the Extended Matrix ecosystem
+// (EM language + EM Tools + s3dgraphy + 3DSC + Heriverse). Each step
+// links INTO the canonical tool manual at the right depth — the
+// workflow is the operational glue between manuals, not a fifth
+// source of truth.
 //
-// Schema kept intentionally lightweight (2026-06-16 decision): title,
-// summary, cover, optional tools_used badges. Field additions
-// (difficulty, time_estimate, outputs, …) once patterns emerge from
-// the first three recipes.
-const cookbook = defineCollection({
+// NOT to be confused with the EM language **cookbook** that lives in
+// `ExtendedMatrix-doc/docs/cookbook/`: the cookbook covers EM
+// grammar patterns ("how to express X in nodes/edges/groups"); the
+// workflow covers methodologies and technologies ("how does this
+// pipeline work end-to-end"). A workflow can call cookbook patterns
+// as reusable building blocks; the cookbook does not reference
+// workflows. See `.cowork-work/docs-restructure-2026-06-16.md` for
+// the full rationale.
+//
+// Schema kept intentionally lightweight (2026-06-16 decision):
+// title, summary, cover, optional tools_used badges. Field
+// additions (difficulty, time_estimate, outputs, …) once patterns
+// emerge from the first three real workflows.
+const workflows = defineCollection({
   type: 'content',
   schema: ({ image }) =>
     z.object({
       title: z.string(),
       summary: z.string().max(320),
-      // Slugs from the `tools` collection — surfaced as small badges on
-      // the recipe header so a visitor sees "this recipe uses EM Tools
-      // and Heriverse" at a glance.
+      // Slugs from the `tools` collection — surfaced as small badges
+      // on the workflow header so a visitor sees "this workflow uses
+      // EM Tools and Heriverse" at a glance.
       tools_used: z.array(z.string()).default([]),
       cover: image().optional(),
       coverAlt: z.string().optional(),
@@ -519,5 +530,5 @@ export const collections = {
   tools,
   events,
   publications,
-  cookbook,
+  workflows,
 };
