@@ -38,13 +38,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         reusable building blocks.
       </p>
 
-      {all.length === 0 ? (
-        <p class="wf__empty">
-          The workflows collection is being seeded. Entries will appear here
-          as they are authored — see the project tracker for what is in
-          flight.
-        </p>
-      ) : (
+      {all.length > 0 && (
         <ul class="wf__grid">
           {all.map((r) => (
             <li class="wf__card">
@@ -72,6 +66,92 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
           ))}
         </ul>
       )}
+
+      <!-- ── Coming soon teasers ─────────────────────────────────
+           The collection is being seeded; until at least one
+           workflow flips `draft: false`, the page shows the planned
+           list as "coming soon" cards so it doesn't look empty.
+           Each teaser names the workflow + the tools it will
+           orchestrate. When a workflow ships, remove its entry
+           from this list. -->
+      <h2 class="wf__planned-h">Coming soon</h2>
+      <p class="wf__planned-lede">
+        The workflows below are being authored. Each card lists the
+        tools the workflow will orchestrate. Track day-to-day status
+        on the <a href="https://dev.extendedmatrix.org/" target="_blank" rel="noopener">EM dev tracker</a>.
+      </p>
+      <ul class="wf__grid wf__grid--planned">
+        <li class="wf__card wf__card--planned">
+          <div class="wf__cover wf__cover--planned"><div class="wf__placeholder">📐</div></div>
+          <div class="wf__body">
+            <h3 class="wf__title">Author EM in yEd, render in Blender</h3>
+            <p class="wf__summary">
+              Drawing the matrix in yEd, importing in EM Tools, linking
+              proxies to graph rows, ending on a navigable Blender scene.
+            </p>
+            <div class="wf__tools">
+              <span class="wf__tool-badge">yed-palette</span>
+              <span class="wf__tool-badge">em-tools</span>
+            </div>
+          </div>
+        </li>
+        <li class="wf__card wf__card--planned">
+          <div class="wf__cover wf__cover--planned"><div class="wf__placeholder">🛰️</div></div>
+          <div class="wf__body">
+            <h3 class="wf__title">Drone survey → EM reconstruction</h3>
+            <p class="wf__summary">
+              Photogrammetric pipeline via 3DSC (LOD, georeferencing,
+              tilesets), landing the cleaned mesh as a Representation
+              Model in EM Tools.
+            </p>
+            <div class="wf__tools">
+              <span class="wf__tool-badge">3dsc</span>
+              <span class="wf__tool-badge">em-tools</span>
+            </div>
+          </div>
+        </li>
+        <li class="wf__card wf__card--planned">
+          <div class="wf__cover wf__cover--planned"><div class="wf__placeholder">🌐</div></div>
+          <div class="wf__body">
+            <h3 class="wf__title">Publish your reconstruction to Heriverse</h3>
+            <p class="wf__summary">
+              Taking a complete EM Tools scene (graph + proxies + RMs)
+              and publishing it as a navigable Heriverse experience.
+            </p>
+            <div class="wf__tools">
+              <span class="wf__tool-badge">em-tools</span>
+              <span class="wf__tool-badge">heriverse</span>
+            </div>
+          </div>
+        </li>
+        <li class="wf__card wf__card--planned">
+          <div class="wf__cover wf__cover--planned"><div class="wf__placeholder">🧭</div></div>
+          <div class="wf__body">
+            <h3 class="wf__title">PyArchInit → EM Tools (excavation data import)</h3>
+            <p class="wf__summary">
+              Bringing field data from PyArchInit through s3dgraphy's
+              reverse-export into EM Tools as ready-to-annotate proxies.
+            </p>
+            <div class="wf__tools">
+              <span class="wf__tool-badge">em-tools</span>
+              <span class="wf__tool-badge">pyarchinit</span>
+            </div>
+          </div>
+        </li>
+        <li class="wf__card wf__card--planned">
+          <div class="wf__cover wf__cover--planned"><div class="wf__placeholder">📏</div></div>
+          <div class="wf__body">
+            <h3 class="wf__title">Re-publish the same plate at A2 and A3</h3>
+            <p class="wf__summary">
+              DP-34 Layout System use case: defining a prospetto / sezione
+              once, re-rendering it at different scales and resolutions.
+            </p>
+            <div class="wf__tools">
+              <span class="wf__tool-badge">em-tools</span>
+            </div>
+          </div>
+        </li>
+      </ul>
     </div>
   </section>
 </BaseLayout>
@@ -94,6 +174,38 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     border-radius: var(--radius-md);
     max-width: 720px;
   }
+
+  /* Coming-soon teasers: card layout identical to live workflows,
+     but visually quieter (no hover lift, dashed border, slightly
+     desaturated background, no link wrapping). When a workflow
+     flips draft: false, remove its teaser entry from the markup. */
+  .wf__planned-h {
+    font-size: 18px;
+    color: var(--em-navy);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 40px 0 8px;
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+  .wf__planned-lede {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+  .wf__planned-lede a { color: var(--em-gold); font-weight: 600; }
+  .wf__grid--planned { margin-top: 8px; }
+  .wf__card--planned {
+    border-style: dashed;
+    background: var(--em-bg-warm);
+    opacity: 0.78;
+    cursor: default;
+  }
+  .wf__card--planned:hover { transform: none; border-color: var(--em-border); }
+  .wf__cover--planned { background: var(--em-navy-tint); }
+  .wf__cover--planned .wf__placeholder { opacity: 0.55; }
   .wf__grid {
     list-style: none;
     padding: 0;
