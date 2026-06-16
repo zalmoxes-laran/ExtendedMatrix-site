@@ -474,6 +474,38 @@ const blenderAddons = defineCollection({
     }),
 });
 
+// ─── Cookbook collection ─────────────────────────────────────────────
+// Cross-tool recipes that orchestrate multiple components of the
+// Extended Matrix ecosystem (EM language + EM Tools + s3dgraphy + 3DSC
+// + Heriverse). Each recipe links INTO each tool's own manual rather
+// than duplicating reference content; the recipe is the operational
+// glue between the manuals. See
+// `.cowork-work/docs-restructure-2026-06-16.md` for the rationale.
+//
+// Schema kept intentionally lightweight (2026-06-16 decision): title,
+// summary, cover, optional tools_used badges. Field additions
+// (difficulty, time_estimate, outputs, …) once patterns emerge from
+// the first three recipes.
+const cookbook = defineCollection({
+  type: 'content',
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      summary: z.string().max(320),
+      // Slugs from the `tools` collection — surfaced as small badges on
+      // the recipe header so a visitor sees "this recipe uses EM Tools
+      // and Heriverse" at a glance.
+      tools_used: z.array(z.string()).default([]),
+      cover: image().optional(),
+      coverAlt: z.string().optional(),
+      // Ordering hint for the index page. Defaults to 0; positive
+      // numbers float to the top, negative to the bottom.
+      order: z.number().default(0),
+      // Draft entries are excluded from the index page during build.
+      draft: z.boolean().default(false),
+    }),
+});
+
 export const collections = {
   news,
   blenderAddons,
@@ -487,4 +519,5 @@ export const collections = {
   tools,
   events,
   publications,
+  cookbook,
 };
