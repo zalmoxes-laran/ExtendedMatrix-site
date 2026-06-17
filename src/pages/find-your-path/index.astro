@@ -648,6 +648,46 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
   @media (max-width: 640px) {
     .find-your-path .backbone { grid-template-columns: 1fr; }
+    /* The standalone #backboneHeader row stacks awkwardly above the
+       blocks on a single-column layout (all 5 headers up top, then
+       all 5 track groups below — visitor loses the association).
+       Hide it on mobile and rely on the .phase-mobile-label inside
+       each track group instead. */
+    .find-your-path #backboneHeader { display: none; }
+  }
+
+  /* Mobile-only inline phase label: shown next to each track group
+     when the standalone backbone header is hidden (≤ 640px). */
+  .find-your-path .phase-mobile-label {
+    display: none;
+  }
+  @media (max-width: 640px) {
+    .find-your-path .phase-mobile-label {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-soft) 100%);
+      color: #fff;
+      padding: 8px 12px;
+      border-radius: var(--fyp-radius-sm);
+      margin-bottom: 6px;
+      box-shadow: var(--fyp-shadow-sm);
+    }
+    .find-your-path .phase-mobile-label__num {
+      flex: 0 0 auto;
+      background: var(--gold);
+      color: var(--navy-deep);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+      letter-spacing: 0.02em;
+    }
+    .find-your-path .phase-mobile-label__title {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
   }
 
   .find-your-path .phase-col {
@@ -1532,6 +1572,24 @@ function renderBackbone() {
   phases.forEach(phase => {
     const col = document.createElement('div');
     col.className = 'phase-col';
+    col.dataset.phaseNum = phase.num;
+    col.dataset.phaseTitle = phase.title;
+
+    // Mobile-only repeat-header: on viewports where the backbone
+    // collapses to a single column (≤ 640px) the standalone
+    // `#backboneHeader` row is hidden by CSS and these inline
+    // labels replace it so each block group is visibly associated
+    // with its phase. Desktop CSS hides this label so the
+    // standalone header keeps its role. Two-line label so the
+    // number stays prominent ("Step N") and the title wraps
+    // cleanly on narrow screens.
+    const mobileLabel = document.createElement('div');
+    mobileLabel.className = 'phase-mobile-label';
+    mobileLabel.innerHTML =
+      `<span class="phase-mobile-label__num">Step ${phase.num}</span>` +
+      `<span class="phase-mobile-label__title">${phase.title}</span>`;
+    col.appendChild(mobileLabel);
+
     const inner = document.createElement('div');
     inner.className = 'phase-col__inner';
 
