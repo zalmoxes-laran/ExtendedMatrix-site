@@ -178,7 +178,24 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     overflow: hidden;
     background: var(--em-navy-tint);
   }
-  .member__avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .member__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    /* Uniform editorial B/W treatment across the team page.
+       Source images stay in colour in the repo so a future
+       editorial choice (mixed colour, full colour, sepia, …)
+       is a single CSS line away. Filters chain on hover/focus
+       for a tiny accent. */
+    filter: grayscale(100%) contrast(1.02);
+    transition: filter 0.2s var(--ease);
+  }
+  .member:hover .member__avatar img,
+  .member:focus-within .member__avatar img {
+    /* Subtle dial-up on hover — still B/W, just sharper. */
+    filter: grayscale(100%) contrast(1.08);
+  }
   .member__avatar-empty {
     display: flex;
     width: 100%;
