@@ -2,54 +2,140 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const team = (await getCollection('team'))
+const allTeam = (await getCollection('team'))
   .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
+
+// Three sections, in render order: active maintainers, past
+// contributors (still credited), scientific committee (future
+// structure — section appears empty for now with a "being designed"
+// note). The `status` enum on the schema drives this split.
+const active = allTeam.filter((m) => (m.data.status ?? 'active') === 'active');
+const past = allTeam.filter((m) => m.data.status === 'past');
+const committee = allTeam.filter((m) => m.data.status === 'committee');
+
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <BaseLayout
   title="Team"
-  description="The people behind Extended Matrix — core maintainers, contributors and active community members."
+  description="The people behind Extended Matrix — core maintainers, past contributors and (future) scientific committee."
 >
   <section class="team">
     <div class="container">
       <span class="tag">Team</span>
       <h1>The people behind EM.</h1>
       <p class="team__sub">
-        Extended Matrix is developed by an open community. The core
-        maintainers and active contributors are listed below; many more
-        people use, teach and extend EM in their own work — see the
+        Extended Matrix is developed by an open, voluntary research
+        community. Active maintainers and contributors are listed
+        first, followed by past contributors whose work shaped the
+        project. Many more people use, teach and extend EM in their
+        own work — see the
         <a href={`${B}/projects`}>projects gallery</a> and the
         <a href={`${B}/about#partners`}>partners section</a>.
       </p>
 
-      <ul class="grid">
-        {team.map((m) => (
-          <li class="member">
-            <div class="member__avatar">
-              {m.data.avatar ? (
-                <img src={m.data.avatar.src} alt={m.data.name} loading="lazy" />
-              ) : (
-                <div class="member__avatar-empty">{m.data.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
-              )}
-            </div>
-            <div class="member__body">
-              <h2 class="member__name">{m.data.name}</h2>
-              <div class="member__role">{m.data.role}</div>
-              <div class="member__aff">{m.data.affiliation}</div>
-              {m.data.bio && <p class="member__bio">{m.data.bio}</p>}
-              <ul class="member__links">
-                {m.data.orcid && <li><a href={`https://orcid.org/${m.data.orcid}`} target="_blank" rel="noopener">ORCID</a></li>}
-                {m.data.email && <li><a href={`mailto:${m.data.email}`}>email</a></li>}
-              </ul>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {active.length > 0 && (
+        <>
+          <h2 class="team__section-h">Active maintainers</h2>
+          <ul class="grid">
+            {active.map((m) => (
+              <li class="member">
+                <div class="member__avatar">
+                  {m.data.avatar ? (
+                    <img src={m.data.avatar.src} alt={m.data.name} loading="lazy" />
+                  ) : (
+                    <div class="member__avatar-empty">{m.data.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
+                  )}
+                </div>
+                <div class="member__body">
+                  <h3 class="member__name">{m.data.name}</h3>
+                  <div class="member__role">{m.data.role}</div>
+                  <div class="member__aff">{m.data.affiliation}</div>
+                  {m.data.bio && <p class="member__bio">{m.data.bio}</p>}
+                  <ul class="member__links">
+                    {m.data.orcid && <li><a href={`https://orcid.org/${m.data.orcid}`} target="_blank" rel="noopener">ORCID</a></li>}
+                    {m.data.email && <li><a href={`mailto:${m.data.email}`}>email</a></li>}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {past.length > 0 && (
+        <>
+          <h2 class="team__section-h">Past contributors</h2>
+          <p class="team__section-lede">
+            Researchers and contributors whose past work shaped the
+            project; still credited for the role they played.
+          </p>
+          <ul class="grid">
+            {past.map((m) => (
+              <li class="member member--past">
+                <div class="member__avatar">
+                  {m.data.avatar ? (
+                    <img src={m.data.avatar.src} alt={m.data.name} loading="lazy" />
+                  ) : (
+                    <div class="member__avatar-empty">{m.data.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
+                  )}
+                </div>
+                <div class="member__body">
+                  <h3 class="member__name">{m.data.name}</h3>
+                  <div class="member__role">{m.data.role}</div>
+                  <div class="member__aff">{m.data.affiliation}</div>
+                  {m.data.bio && <p class="member__bio">{m.data.bio}</p>}
+                  <ul class="member__links">
+                    {m.data.orcid && <li><a href={`https://orcid.org/${m.data.orcid}`} target="_blank" rel="noopener">ORCID</a></li>}
+                    {m.data.email && <li><a href={`mailto:${m.data.email}`}>email</a></li>}
+                  </ul>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <h2 class="team__section-h">Scientific committee</h2>
+      <p class="team__section-lede team__section-lede--placeholder">
+        The scientific committee is a separate, prestige-tier
+        structure being designed. It will be populated as the
+        composition and membership criteria are finalised.
+      </p>
+      {committee.length > 0 && (
+        <ul class="grid">
+          {committee.map((m) => (
+            <li class="member member--committee">
+              <div class="member__avatar">
+                {m.data.avatar ? (
+                  <img src={m.data.avatar.src} alt={m.data.name} loading="lazy" />
+                ) : (
+                  <div class="member__avatar-empty">{m.data.name.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
+                )}
+              </div>
+              <div class="member__body">
+                <h3 class="member__name">{m.data.name}</h3>
+                <div class="member__role">{m.data.role}</div>
+                <div class="member__aff">{m.data.affiliation}</div>
+                {m.data.bio && <p class="member__bio">{m.data.bio}</p>}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <p class="team__disclaimer">
+        <em>Affiliations are listed for identification purposes only.
+        The team is a voluntary research community: contributions are
+        made in individual capacity and do not imply any financial
+        commitment or formal endorsement on the part of the
+        institutions cited.</em>
+      </p>
 
       <p class="team__foot">
-        <em>To add yourself to this page (after a sustained contribution),
-        open a PR adding a YAML file in
+        <em>To be added to this page (after a sustained contribution),
+        get in touch with the project lead. Existing members can edit
+        their entry via a PR adding/updating a YAML file in
         <code>src/content/team/</code>. See the
         <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-site/blob/main/EDITORS_GUIDE.md" target="_blank" rel="noopener">EDITORS_GUIDE</a>.</em>
       </p>
@@ -139,8 +225,51 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-weight: 600;
   }
 
+  /* Section heading between Active / Past / Committee groups */
+  .team__section-h {
+    margin: 40px 0 12px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--em-gold);
+    font-family: var(--font-display);
+    font-weight: 700;
+  }
+  .team__section-h:first-of-type { margin-top: 8px; }
+  .team__section-lede {
+    color: var(--em-text-muted);
+    font-size: 14px;
+    line-height: 1.65;
+    margin: 0 0 20px;
+    max-width: 720px;
+  }
+  .team__section-lede--placeholder {
+    font-style: italic;
+    border-left: 3px solid var(--em-border);
+    padding-left: 14px;
+    color: var(--em-text-muted);
+  }
+  /* Past contributor cards: same shape but slightly quieter to
+     signal "credited, not currently active". */
+  .member--past {
+    background: var(--em-bg-warm);
+    border-style: dashed;
+  }
+
+  .team__disclaimer {
+    margin: 40px 0 24px;
+    padding: 16px 18px;
+    background: var(--em-bg-warm);
+    border-left: 3px solid var(--em-gold);
+    border-radius: var(--radius-sm);
+    color: var(--em-text-muted);
+    font-size: 13px;
+    line-height: 1.65;
+    max-width: 760px;
+  }
+
   .team__foot {
-    margin-top: 56px;
+    margin-top: 24px;
     color: var(--em-text-muted);
     font-size: 13px;
   }

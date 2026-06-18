@@ -61,6 +61,16 @@ const team = defineCollection({
       name: z.string(),
       role: z.string(),
       affiliation: z.string(),
+      // ─── Status tag (added 2026-06-18) ─────────────────────────
+      // Renders into three sections on /team:
+      //   - 'active': core maintainers + community members
+      //     currently involved in the project's day-to-day
+      //   - 'past': contributors whose work is historical but
+      //     still credited (e.g. early design, founding figures)
+      //   - 'committee': members of the scientific committee
+      //     (a separate, prestige-tier structure being designed)
+      // Defaults to 'active' for backward compatibility.
+      status: z.enum(['active', 'past', 'committee']).default('active'),
       bio: z.string().optional(),
       avatar: image().optional(),
       orcid: z.string().optional(),
