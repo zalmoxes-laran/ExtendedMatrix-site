@@ -245,17 +245,25 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 12px;
   }
   .member__links a {
-    /* See note on .member__role above: gold on white fails AA at
-       this size (12px uppercase bold). Navy passes AAA. */
-    color: var(--em-navy);
+    /* ORCID / EMAIL chips kept in gold by editorial choice: they are
+       small accent labels (12px uppercase, letter-spaced, bold) at
+       the bottom of each card, not body text — their function as
+       links is reinforced by the uniform position, the uppercase
+       casing and the colour shift on hover. Gold #b8893a on white is
+       3.14:1: below WCAG AA for normal text (4.5:1), above the 3:1
+       large-text / UI-component threshold. The role line and section
+       headings (which DO carry primary information) were moved to
+       navy; these label-chips stay gold so the card retains its
+       warm visual rhythm. */
+    color: var(--em-gold);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-weight: 600;
   }
   .member__links a:hover {
-    /* Gold reappears on hover — it's transient, and 3:1 is fine for
-       the moment the user is actively pointing at the link. */
-    color: var(--em-gold);
+    /* Hover → navy: the colour swap signals interactivity and lifts
+       contrast to AAA-class while the user is actively pointing. */
+    color: var(--em-navy);
   }
 
   /* Section heading between Active / Honorary / Committee groups */
