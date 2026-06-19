@@ -213,7 +213,11 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     margin-bottom: 12px;
   }
   .chooser__badge--preferred {
-    color: var(--em-gold);
+    /* WCAG: gold #b8893a on gold-tint #f5ecd9 is 2.69:1 — fails even
+       the 3:1 large-text / UI-component threshold. Navy on gold-tint
+       is 12.9:1 — well into AAA. Keeps the gold "warm" badge feel
+       via the background; the text becomes legible. */
+    color: var(--em-navy);
     background: var(--em-gold-tint);
   }
   .chooser__badge--legacy {
@@ -232,7 +236,11 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     gap: 4px;
   }
   .chooser__cta {
-    color: var(--em-gold);
+    /* Same a11y pattern as team.astro: text carrying primary info
+       (here the "Download EM Tools 1.5.4 ↓" call-to-action) goes to
+       navy for AAA contrast. Gold is reserved for decorative
+       accents — borders, hover, footer chip-links. */
+    color: var(--em-navy);
     font-weight: 600;
     font-size: 14px;
   }
@@ -307,7 +315,8 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--em-text-muted);
     font-size: 14px;
   }
-  .dl__all a { color: var(--em-gold); font-weight: 600; }
+  /* "See all releases" link in body — informational, navy for AAA. */
+  .dl__all a { color: var(--em-navy); font-weight: 600; }
 
   .dltools { margin-top: 80px; }
   .dltools h2 { font-size: 28px; }
@@ -337,7 +346,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    color: var(--em-gold);
+    /* Same shape as .card__role on tools/ + .member__role on team:
+       informational badge → navy. */
+    color: var(--em-navy);
     margin: 4px 0 10px;
   }
   .dltools__desc {
@@ -354,7 +365,12 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-family: var(--font-mono);
     color: var(--em-text-muted);
   }
+  /* Footer chip-link ("Open →") — same pattern as ORCID/EMAIL chips
+     on team.astro: small accent label at the bottom of a card. Stays
+     gold by editorial choice; its function as a link is reinforced
+     by position, weight and the chip-like context. */
   .dltools__open { color: var(--em-gold); font-weight: 600; }
+  .dltools__card:hover .dltools__open { color: var(--em-navy); }
 
   @media (max-width: 800px) {
     .chooser { grid-template-columns: 1fr; }

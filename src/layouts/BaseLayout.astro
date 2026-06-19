@@ -197,8 +197,15 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     </script>
   </head>
   <body>
+    <!--
+      Skip-to-content link (WCAG 2.4.1 Bypass Blocks). Visually hidden
+      off-screen by default; becomes visible on keyboard focus so users
+      navigating with Tab can jump past the nav directly to the main
+      content. The :focus rule is in global.css under .skip-link.
+    -->
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <Nav />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <Footer />

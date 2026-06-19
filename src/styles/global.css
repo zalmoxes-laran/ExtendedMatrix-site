@@ -61,6 +61,35 @@ a {
 }
 a:hover { color: var(--em-gold); }
 
+/* Skip-to-content link (WCAG 2.4.1 Bypass Blocks). Visually hidden
+   off-screen by default; becomes visible on keyboard focus so Tab
+   users can bypass the nav block. Markup lives in BaseLayout.astro
+   as the first focusable element inside <body>. Navy bg + white
+   text → 14.6:1, AAA. */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 1000;
+  padding: 10px 18px;
+  background: var(--em-navy);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom-right-radius: var(--radius-sm);
+  transition: top 0.15s var(--ease);
+}
+.skip-link:focus {
+  top: 0;
+  outline: 2px solid var(--em-gold);
+  outline-offset: -2px;
+  /* Override the global a:hover gold colour so the focused link
+     stays high-contrast white-on-navy. */
+  color: #ffffff;
+}
+
 img, svg { display: block; max-width: 100%; height: auto; }
 
 h1, h2, h3, h4 {

@@ -249,16 +249,23 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .card__status--planned { color: #555; background: #eee; }
   .card__role {
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--em-gold); font-weight: 600; margin: 6px 0 10px;
+    /* Informational role label ("Web platform", "Survey pipeline", …)
+       → navy for WCAG AA. Same a11y pattern as team.astro's
+       .member__role and download.astro's .dltools__role. */
+    color: var(--em-navy); font-weight: 600; margin: 6px 0 10px;
   }
   .card__desc { font-size: 14px; line-height: 1.6; color: var(--em-text); margin: 0 0 14px; }
   .card__foot {
     display: flex; justify-content: space-between; align-items: center;
     font-size: 12px; font-family: var(--font-mono); color: var(--em-text-muted);
   }
+  /* Footer chip-link "Open →" stays gold (editorial — same pattern
+     as ORCID/EMAIL on team.astro). Hover swaps to navy for AAA. */
   .card__open { color: var(--em-gold); font-weight: 600; }
+  .card:hover .card__open { color: var(--em-navy); }
   .tools__foot { margin-top: 48px; color: var(--em-text-muted); font-size: 14px; }
-  .tools__foot a { color: var(--em-gold); font-weight: 600; }
+  /* Body link → navy for AAA. */
+  .tools__foot a { color: var(--em-navy); font-weight: 600; }
 
   @media (max-width: 700px) { .grid { grid-template-columns: 1fr; } }
 
@@ -318,18 +325,23 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-family: var(--font-mono);
   }
   .card__links a {
-    color: var(--em-gold);
+    /* Card footer link list (Docs / Repo / Releases). Same a11y rule
+       as the rest of the page: body links → navy for AAA. */
+    color: var(--em-navy);
     font-weight: 600;
   }
+  .card__links a:hover { color: var(--em-gold); }
 
   .third-party__more {
     margin: 8px 0 0;
     font-size: 14px;
   }
   .third-party__more a {
-    color: var(--em-gold);
+    /* Body link → navy. */
+    color: var(--em-navy);
     font-weight: 600;
   }
+  .third-party__more a:hover { color: var(--em-gold); }
 
   /* "Wider ecosystem" call-to-action → the curated Blender add-on catalog.
      Gold-tinted block link, mirroring the recommended-card accent used on
@@ -362,6 +374,8 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     line-height: 1.65;
     margin: 0 0 16px;
   }
-  .wider__cta { color: var(--em-gold); font-weight: 700; font-size: 15px; }
-  .wider__card:hover .wider__cta { color: var(--em-navy); }
+  /* CTA "Browse the Blender add-on catalog →" — 15px bold is below
+     WCAG large-text threshold (14pt bold = 18.66px), so the 4.5:1
+     rule applies. Navy carries the CTA cleanly at AAA contrast. */
+  .wider__cta { color: var(--em-navy); font-weight: 700; font-size: 15px; }
 </style>
