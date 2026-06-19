@@ -5,10 +5,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const allTeam = (await getCollection('team'))
   .sort((a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name));
 
-// Three sections, in render order: active maintainers, past
-// contributors (still credited), scientific committee (future
-// structure — section appears empty for now with a "being designed"
-// note). The `status` enum on the schema drives this split.
+// Three sections, in render order: active maintainers, honorary
+// contributors (still credited — past work that continues to shape
+// the project), scientific committee (future structure — section
+// appears empty for now with a "being designed" note). The
+// `status` enum on the schema drives this split; the internal
+// enum value remains `past` to avoid churn in the YAML data
+// files — only the user-visible label changes.
 const active = allTeam.filter((m) => (m.data.status ?? 'active') === 'active');
 const past = allTeam.filter((m) => m.data.status === 'past');
 const committee = allTeam.filter((m) => m.data.status === 'committee');
@@ -18,7 +21,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 <BaseLayout
   title="Team"
-  description="The people behind Extended Matrix — core maintainers, past contributors and (future) scientific committee."
+  description="The people behind Extended Matrix — core maintainers, honorary contributors and (future) scientific committee."
 >
   <section class="team">
     <div class="container">
@@ -27,9 +30,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       <p class="team__sub">
         Extended Matrix is developed by an open, voluntary research
         community. Active maintainers and contributors are listed
-        first, followed by past contributors whose work shaped the
-        project. Many more people use, teach and extend EM in their
-        own work — see the
+        first, followed by honorary contributors whose past work
+        continues to shape the project. Many more people use, teach
+        and extend EM in their own work — see the
         <a href={`${B}/projects`}>projects gallery</a> and the
         <a href={`${B}/about#partners`}>partners section</a>.
       </p>
@@ -65,10 +68,10 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
       {past.length > 0 && (
         <>
-          <h2 class="team__section-h">Past contributors</h2>
+          <h2 class="team__section-h">Honorary contributors</h2>
           <p class="team__section-lede">
-            Researchers and contributors whose past work shaped the
-            project; still credited for the role they played.
+            Researchers and contributors whose past work continues
+            to shape EM today — recognised for the role they played.
           </p>
           <ul class="grid">
             {past.map((m) => (
@@ -266,8 +269,11 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     padding-left: 14px;
     color: var(--em-text-muted);
   }
-  /* Past contributor cards: same shape but slightly quieter to
-     signal "credited, not currently active". */
+  /* Honorary contributor cards: same shape but slightly quieter to
+     signal "credited, contribution still visible in the project,
+     not currently in the active rotation". (CSS class name keeps
+     `--past` to match the schema enum value; only the section
+     label and lede have moved to "Honorary contributors".) */
   .member--past {
     background: var(--em-bg-warm);
     border-style: dashed;
