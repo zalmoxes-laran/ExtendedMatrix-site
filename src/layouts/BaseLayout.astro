@@ -32,13 +32,6 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
 
-    <!--
-      Block search engines while the new site is on a staging URL.
-      Remove this <meta> tag (and the public/robots.txt rule) when you
-      flip the DNS to extendedmatrix.org and want the site indexed.
-    -->
-    <meta name="robots" content="noindex, nofollow" />
-
     <!-- Open Graph -->
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />

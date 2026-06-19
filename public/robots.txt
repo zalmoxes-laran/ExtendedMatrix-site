@@ -1,5 +1,10 @@
-# Block all crawlers while the new site is on the staging URL.
-# When the new site goes live on extendedmatrix.org, replace this file
-# with one that allows indexing (User-agent: *, Allow: /, plus a Sitemap line).
+# Extended Matrix — production robots policy.
+# Site lives at https://www.extendedmatrix.org (the apex extendedmatrix.org
+# redirects to www per the GitHub Pages + CNAME setup). The sitemap is
+# auto-generated at build time by @astrojs/sitemap and emitted as
+# /sitemap-index.xml (then /sitemap-0.xml etc.).
+
 User-agent: *
-Disallow: /
+Allow: /
+
+Sitemap: https://www.extendedmatrix.org/sitemap-index.xml
