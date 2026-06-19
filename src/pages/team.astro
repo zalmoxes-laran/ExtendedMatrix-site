@@ -214,7 +214,13 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .member__name { font-size: 17px; margin: 0; color: var(--em-navy); }
   .member__role {
     font-size: 13px;
-    color: var(--em-gold);
+    /* Accessibility: gold (#b8893a) on white is 3.14:1 — fails
+       WCAG AA (4.5:1 minimum for normal text). Navy (#1a2845) on
+       white is 14.6:1 — passes AAA. Gold survives as a decorative
+       accent (borders, hover, separators) where the 3:1 UI-component
+       threshold applies, not as a colour for text that carries
+       information. */
+    color: var(--em-navy);
     font-weight: 600;
     margin-top: 4px;
   }
@@ -239,19 +245,32 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 12px;
   }
   .member__links a {
-    color: var(--em-gold);
+    /* See note on .member__role above: gold on white fails AA at
+       this size (12px uppercase bold). Navy passes AAA. */
+    color: var(--em-navy);
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-weight: 600;
   }
+  .member__links a:hover {
+    /* Gold reappears on hover — it's transient, and 3:1 is fine for
+       the moment the user is actively pointing at the link. */
+    color: var(--em-gold);
+  }
 
-  /* Section heading between Active / Past / Committee groups */
+  /* Section heading between Active / Honorary / Committee groups */
   .team__section-h {
     margin: 40px 0 12px;
     font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--em-gold);
+    /* Section headings used to be gold for visual consistency with
+       role lines and link text. With those moved to navy for
+       accessibility, gold here would isolate it as the only "warm"
+       text on the page — visually orphaned. Navy keeps the page
+       coherent; the section's identity is carried by the uppercase
+       + letter-spacing + display font, not by the colour. */
+    color: var(--em-navy);
     font-family: var(--font-display);
     font-weight: 700;
   }
