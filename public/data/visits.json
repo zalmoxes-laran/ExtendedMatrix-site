@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-06-21T07:45:54Z",
+  "fetched_at": "2026-06-22T08:13:07Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-06-21"
+    "end": "2026-06-22"
   },
-  "total": 1112,
-  "total_events": 364,
+  "total": 1140,
+  "total_events": 368,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 807
+      "count": 814
     },
     {
       "code": "ES",
@@ -26,7 +26,7 @@
     {
       "code": "US",
       "name": "United States",
-      "count": 26
+      "count": 27
     },
     {
       "code": "AT",
@@ -41,7 +41,7 @@
     {
       "code": "FR",
       "name": "France",
-      "count": 15
+      "count": 18
     },
     {
       "code": "UZ",
@@ -54,8 +54,18 @@
       "count": 13
     },
     {
+      "code": "NL",
+      "name": "Netherlands",
+      "count": 10
+    },
+    {
       "code": "TR",
       "name": "Turkey",
+      "count": 8
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom",
       "count": 8
     },
     {
@@ -69,14 +79,14 @@
       "count": 5
     },
     {
-      "code": "NL",
-      "name": "Netherlands",
-      "count": 5
-    },
-    {
       "code": "KR",
       "name": "South Korea",
       "count": 5
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
+      "count": 4
     },
     {
       "code": "HK",
@@ -89,11 +99,6 @@
       "count": 4
     },
     {
-      "code": "DE",
-      "name": "Germany",
-      "count": 3
-    },
-    {
       "code": "IE",
       "name": "Ireland",
       "count": 3
@@ -101,11 +106,6 @@
     {
       "code": "RO",
       "name": "Romania",
-      "count": 3
-    },
-    {
-      "code": "GB",
-      "name": "United Kingdom",
       "count": 3
     }
   ]
