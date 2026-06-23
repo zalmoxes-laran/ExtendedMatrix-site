@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-06-22T08:13:07Z",
+  "fetched_at": "2026-06-23T07:22:48Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-06-22"
+    "end": "2026-06-23"
   },
-  "total": 1140,
-  "total_events": 368,
+  "total": 1188,
+  "total_events": 375,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 814
+      "count": 854
     },
     {
       "code": "ES",
@@ -34,14 +34,14 @@
       "count": 24
     },
     {
+      "code": "FR",
+      "name": "France",
+      "count": 21
+    },
+    {
       "code": "PT",
       "name": "Portugal",
       "count": 20
-    },
-    {
-      "code": "FR",
-      "name": "France",
-      "count": 18
     },
     {
       "code": "UZ",
@@ -51,12 +51,12 @@
     {
       "code": "GR",
       "name": "Greece",
-      "count": 13
+      "count": 14
     },
     {
       "code": "NL",
       "name": "Netherlands",
-      "count": 10
+      "count": 12
     },
     {
       "code": "TR",
@@ -72,6 +72,11 @@
       "code": "IL",
       "name": "Israel",
       "count": 6
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "count": 5
     },
     {
       "code": "MX",
@@ -99,13 +104,8 @@
       "count": 4
     },
     {
-      "code": "IE",
-      "name": "Ireland",
-      "count": 3
-    },
-    {
-      "code": "RO",
-      "name": "Romania",
+      "code": "JP",
+      "name": "Japan",
       "count": 3
     }
   ]
