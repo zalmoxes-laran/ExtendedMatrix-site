@@ -484,48 +484,13 @@ const blenderAddons = defineCollection({
     }),
 });
 
-// ─── Workflows collection ────────────────────────────────────────────
-// Multi-tool end-to-end paths tied to a scientific question or a
-// technology (photogrammetric pipeline, geophysical survey,
-// anastylosis, drone survey, web publication). Each workflow
-// orchestrates multiple components of the Extended Matrix ecosystem
-// (EM language + EM Tools + s3dgraphy + 3DSC + Heriverse). Each step
-// links INTO the canonical tool manual at the right depth — the
-// workflow is the operational glue between manuals, not a fifth
-// source of truth.
-//
-// NOT to be confused with the EM language **cookbook** that lives in
-// `ExtendedMatrix-doc/docs/cookbook/`: the cookbook covers EM
-// grammar patterns ("how to express X in nodes/edges/groups"); the
-// workflow covers methodologies and technologies ("how does this
-// pipeline work end-to-end"). A workflow can call cookbook patterns
-// as reusable building blocks; the cookbook does not reference
-// workflows. See `.cowork-work/docs-restructure-2026-06-16.md` for
-// the full rationale.
-//
-// Schema kept intentionally lightweight (2026-06-16 decision):
-// title, summary, cover, optional tools_used badges. Field
-// additions (difficulty, time_estimate, outputs, …) once patterns
-// emerge from the first three real workflows.
-const workflows = defineCollection({
-  type: 'content',
-  schema: ({ image }) =>
-    z.object({
-      title: z.string(),
-      summary: z.string().max(320),
-      // Slugs from the `tools` collection — surfaced as small badges
-      // on the workflow header so a visitor sees "this workflow uses
-      // EM Tools and Heriverse" at a glance.
-      tools_used: z.array(z.string()).default([]),
-      cover: image().optional(),
-      coverAlt: z.string().optional(),
-      // Ordering hint for the index page. Defaults to 0; positive
-      // numbers float to the top, negative to the bottom.
-      order: z.number().default(0),
-      // Draft entries are excluded from the index page during build.
-      draft: z.boolean().default(false),
-    }),
-});
+// NOTE: the `workflows` content collection (and its rendered pages at
+// /workflows/) was retired on 2026-06-22 because the section was
+// incomplete and not yet useful to readers. The scaffold is intact in
+// git history — see commits up to e5792b3 — and can be restored
+// when the workflow content is mature enough to justify a public
+// section. The reasoning behind the workflow / cookbook split is
+// documented in `.cowork-work/docs-restructure-2026-06-16.md`.
 
 export const collections = {
   news,
@@ -540,5 +505,4 @@ export const collections = {
   tools,
   events,
   publications,
-  workflows,
 };
