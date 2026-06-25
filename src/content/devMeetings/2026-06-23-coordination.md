@@ -6,7 +6,6 @@ attendees:
   - "Simone Berto"
   - "Mattia Curto"
   - "Giacomo Mancuso"
-  - "Sai Paing Thet Phyo"
 decisions:
   - "Move Oxigraph integration directly into the Extended Matrix library so the knowledge-graph can be written to the triplestore from Python rather than only exported as Turtle and re-imported."
   - "Adopt a parallel persistence model for the graph (DB + GraphML), so that recovery and external interoperability stay first-class even when the primary tool's database file becomes the source of truth."
