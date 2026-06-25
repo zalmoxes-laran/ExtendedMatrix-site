@@ -2,110 +2,140 @@
 title: "Dev coordination — June public sync"
 date: 2026-06-23T15:00:00+02:00
 attendees: []
-decisions: []
-actionItems: []
-upcoming: true
+decisions:
+  - "Move Oxigraph integration directly into the Extended Matrix library so the knowledge-graph can be written to the triplestore from Python rather than only exported as Turtle and re-imported."
+  - "Adopt a parallel persistence model for the graph (DB + GraphML), so that recovery and external interoperability stay first-class even when the primary tool's database file becomes the source of truth."
+  - "Treat property-graph vs triple-store as a mapping question, not an architectural choice — the same EM dataset must be expressible in both, with national archaeological cataloguing schemas (Italian, German, Israeli, …) as the user-facing layer."
+  - "Adopt the Visual Studio Code + Jacques Lucke add-on workflow as the recommended Blender-Python dev loop (live reload, in-Blender debugger, no restart required)."
+actionItems:
+  - "Emanuel — wire direct Oxigraph write from the Extended Matrix library (in addition to the existing Turtle export)."
+  - "Mattia — implement an automatic graph backup alongside the database file (GraphML format), on top of the existing trash-bin recovery system."
+  - "Giacomo + Emanuel — evaluate an analytics module in EM Meter using Jupyter, for volumes / visible surfaces / proxy statistics, leveraging the graph structure for queries."
+  - "Mattia — analyse how to map and auto-convert national archaeological catalogue schedas (Italian / German / Israeli) via the knowledge graph and the underlying data structure."
+upcoming: false
 meetingUrl: "https://teams.microsoft.com/meet/388419352314569?p=qvWgByiUm0jGtpW4mQ"
 # Async agenda gathering happens in the GitHub Discussions thread
 # linked below. Open this URL once the thread is created on the
 # ExtendedMatrix-dev-site repo under the "Meeting Notes" category.
 # discussionUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix-dev-site/discussions/NNN"
-tldr: "First public dev meeting of the post-1.5 cycle. EM 1.5 LTS shipped, PR #28 (Postgres pyArchInit backend) merged, DP-61 (Mappings Registry) on the table. Open floor on Sub-3 timing and how to contribute."
+tldr: "First public dev meeting of the post-1.5 cycle. Deep-dive on the Python-for-Blender dev pipeline, plan to move Oxigraph integration into EM directly, GraphML backups alongside the DB, EM Meter analytics with Jupyter, and multi-national archaeological cataloguing mapping. Four action items assigned."
 nextMeeting: 2026-07-21T15:00:00+02:00
 ---
 
-## Standing agenda
+## TL;DR
 
-This meeting follows the standard
-[blender.org module meeting](https://devtalk.blender.org/c/blender/module-meetings/)
-format. Open by default, notes-first, decisions visible.
+First public dev meeting of the post-1.5 cycle. The session ran for
+just over an hour and stayed close to engineering work in flight,
+rather than process or governance. Five discussion threads, four
+action items assigned — see the side card on this page for the
+crisp summary.
 
-1. **Announcements & releases** since the last meeting.
-2. **PRs and proposals** on the table.
-3. **Architectural decisions** to discuss.
-4. **Open floor.**
+## Cadence
 
-## How to participate
+Roughly **monthly, on a Tuesday afternoon at 15:00 CET**, with the
+exact Tuesday decided per meeting (calendars permitting). The next
+meeting date is pinned in `nextMeeting` in the frontmatter of this
+page and shown at the bottom, so subscribing to the
+[Meeting Notes discussion thread](https://github.com/zalmoxes-laran/ExtendedMatrix-dev-site/discussions/categories/meeting-notes)
+on the dev-site repo is enough to never miss a session.
 
-- **Async, before the meeting**: drop agenda items in the
-  [Meeting Notes discussion thread](https://github.com/zalmoxes-laran/ExtendedMatrix-dev-site/discussions/categories/meeting-notes)
-  on the ExtendedMatrix-dev-site repo. The thread is open from a
-  week before the meeting; the maintainer pins the top agenda items
-  to the body once the deadline closes.
-- **Live, during the meeting**: join the Teams call linked above —
-  it opens in the browser, no Microsoft account required. Teams will
-  ask you for a display name on the join page; please use your real
-  name (and an affiliation if relevant). Speak up on any agenda item;
-  raise your hand for "open floor" topics.
-- **After the meeting**: the maintainer transcribes the discussion
-  into this page (TL;DR, decisions, action items in the frontmatter
-  + per-topic narrative in the body). The discussion thread stays
-  open for follow-up questions.
+## Discussion
 
-## Topics expected this session
+### Python for Blender — the maturing dev pipeline
 
-Based on what landed since the last meeting and what's currently in
-flight, the following topics are likely:
+Emanuel walked through how the Python-for-Blender ecosystem has
+evolved since the first EM-Tools releases. The relevant components
+now span 3D modelling, geophysics, photogrammetry and several
+adjacent pipelines, which has pushed the project to split the work
+into smaller, individually-shippable modules.
 
-### Topic 1 — EM 1.5 LTS retrospective
+The current setup is automated end-to-end:
 
-**Discussion:** what worked / what didn't in the 1.5 release process.
-EM 1.5 LTS shipped with Landscape mode, CronoFilter, Document
-Manager, Proxy Box Creator, and `s3dgraphy` standalone on PyPI.
-What was the friction? What's the LTS commitment going forward?
+- An `M.SH` / `M.BAT` bootstrap script installs every Python
+  dependency the Blender extension needs. Differences between
+  Blender's bundled Python versions are handled by the script,
+  including how the manifest declares which Python it targets.
+- External libraries (PyTorch, TorchVision, …) are added to the
+  requirements file. The script picks the right wheels per
+  platform so the extension sees its dependencies without
+  conflicting with anything else Blender already ships.
+- Releases for the dev branch are published to GitHub via a single
+  automated command — build per OS, draft a release, generate the
+  drag-and-drop install asset. Users install stable or dev
+  versions with the same drag-and-drop gesture.
+- Visual Studio Code is the recommended editor. The
+  [Blender Development add-on by Jacques Lucke](https://marketplace.visualstudio.com/items?itemName=JacquesLucke.blender-development)
+  attaches a debugger to a running Blender instance and live-reloads
+  code without a Blender restart. The productivity delta vs the
+  pre-add-on workflow is large enough that the team is treating it
+  as the recommended dev loop going forward.
 
-*Decision (to be filled in after the meeting).*
+### Knowledge graphs in Extended Matrix and Stratigraph
 
-*Action items (to be filled in after the meeting).*
+Emanuel introduced the role of the knowledge graph in StratiGraph
+(the EU project, hardening EM-aware infrastructure 2025–2029) and
+the trade-offs between a triplestore and a property graph for
+archaeological data. The learning curve of a full triplestore
+deployment was flagged as a real barrier for the archaeology
+community; the team is evaluating
+[Oxigraph](https://github.com/oxigraph/oxigraph) as a more
+accessible alternative — a fast embeddable triplestore with a
+small operational footprint.
 
-### Topic 2 — PR #28 wrap-up & Sub-3 plan
+The discussion converged on three points:
 
-**Discussion:** PR #28 (PostgreSQL/PostGIS backend for pyArchInit
-imports, contributed by Enzo Cocca) merged into
-`EM-tools_v1.6.0_dev`. The smoke test was green; follow-up items
-landed on `main` via three separate commits (SpatiaLite fixtures,
-pytest scaffolding migration, dead-stub cleanup). Open question for
-@enzococca: **Sub-3 (reverse export) — same branch, same PR style,
-which week?** Asking so the s3dgraphy-side write-path review can be
-lined up at the right moment.
+- A graph store gives more flexibility than a tabular schema for
+  mapping different national archaeological cataloguing standards
+  (Italian, Anglo-Saxon, German, Israeli) without forcing a
+  lowest-common-denominator schema. Mapping happens *at the model
+  level*, not *at the database level*.
+- Export and import between graph formats (JSON, RDF, Turtle) are
+  already automated inside the Extended Matrix ecosystem.
+  Serialisation between formats is not the bottleneck.
+- Mattia showed how his own software already stores data in
+  parallel as tables and GraphML, with automatic backups and a
+  trash-bin recovery system. The pattern (DB + GraphML side-by-side)
+  is a good template for the EM core.
 
-*Decision (to be filled in after the meeting).*
+Giacomo shared related experience with CIDOC-CRM, ARCO and Omeka S,
+and underlined that the value of a graph-based approach is the
+ability to **map between ontologies** rather than picking one — a
+position aligned with the long-term [[project_cidoc_s3d_extension]]
+direction.
 
-*Action items (to be filled in after the meeting).*
+### Open-source collaboration
 
-### Topic 3 — DP-61 EM Mappings Registry & Builder
+Emanuel sketched how the project handles contributions: pull
+requests review, merge into the dev branch, Zenodo publication for
+stable releases (a DOI per release, citation-ready and durable
+beyond GitHub itself). Newcomers — including Enzo Cocca, whose PR
+#28 brought Postgres pyArchInit backend support — are explicitly
+welcomed and encouraged to propose changes and new features
+through the same workflow.
 
-**Discussion:** DP-61 has just been drafted on the dev-site
-(`dev.extendedmatrix.org`). It proposes a community-curated
-registry of mapping JSONs served from
-`mappings.extendedmatrix.org`, with an embedded client-side mapping
-builder and a publish-as-PR flow. Four open decisions are called
-out in the notes — subdomain, hosting, PR review policy, builder
-embed style. This meeting is the natural place to converge on
-those.
+### Georeferencing + GIS in Blender
 
-*Decision (to be filled in after the meeting).*
+Emanuel and Simone discussed the need to integrate georeferencing
+into Extended Matrix workflows so that datasets keep their spatial
+context inside Blender. The direction is a pipeline that ingests
+georeferenced data — including from
+[Open Topography](https://opentopography.org/) — via existing libraries
+like GDAL, and surfaces them in Blender as native scene objects.
+This is a forward-looking conversation; no immediate action item.
 
-*Action items (to be filled in after the meeting).*
+### Analytics and quantitative pipelines
 
-### Topic 4 — How to contribute (always-on item)
+Giacomo raised the question of an analytics surface in EM-Tools —
+volume, visible surface, proxy-count statistics, and similar
+metrics computed against the graph and the 3D scene. The direction
+is a Jupyter-integrated module in EM Meter that surfaces these
+calculations and ties results back to the graph for richer
+queries. Owners assigned (see action items).
 
-**Discussion:** standing slot for anyone who wants to contribute
-but doesn't know where to start. Bring the kind of work you'd like
-to do (code, manual, integrations, case studies) and we'll match
-it to what's open. ORCID-tagged contributions are welcome (see
-DP-59 for the long-term identity layer); anonymous contributions
-are equally welcome.
+## Notes for next meeting (21 July 2026)
 
-### Topic 5 — Open floor
-
-Anything that didn't fit above. Raise your hand during the call,
-or drop it into the discussion thread before/after.
-
----
-
-*Decisions and action items reached during the meeting are
-populated in the frontmatter above and shown as side cards on the
-page. The body of this file becomes the verbatim narrative — keep
-edits to the body in plain prose so readers can scan it without
-clicking around.*
+The four action items above are the natural agenda for the next
+session — each owner brings status. Anything else discovered in
+between belongs in the
+[Meeting Notes discussion thread](https://github.com/zalmoxes-laran/ExtendedMatrix-dev-site/discussions/categories/meeting-notes)
+so it can be pinned to the agenda before the meeting opens.
