@@ -285,6 +285,14 @@ const fmtTime = (d: Date) =>
                     )}
                     <div class="meet__links">
                       <a href={`${B}/community/dev-meetings/${e.id.replace(/\.md$/, '')}/`}>Full page →</a>
+                      {/* Surface the recording link directly in the
+                          /community list (mirroring the EM Hour past
+                          block above): if a past dev-meeting was
+                          recorded, the watch link should be one click
+                          away without needing to open the detail page. */}
+                      {e.data.videoUrl && (
+                        <a href={e.data.videoUrl} target="_blank" rel="noopener">Recording ↗</a>
+                      )}
                       {e.data.discussionUrl && (
                         <a href={e.data.discussionUrl} target="_blank" rel="noopener">Discussion thread ↗</a>
                       )}
