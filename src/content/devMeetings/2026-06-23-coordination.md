@@ -55,7 +55,7 @@ into smaller, individually-shippable modules.
 
 The current setup is automated end-to-end:
 
-- An `M.SH` / `M.BAT` bootstrap script installs every Python
+- An `EM.sh` / `EM.bat` bootstrap script installs every Python
   dependency the Blender extension needs. Differences between
   Blender's bundled Python versions are handled by the script,
   including how the manifest declares which Python it targets.
