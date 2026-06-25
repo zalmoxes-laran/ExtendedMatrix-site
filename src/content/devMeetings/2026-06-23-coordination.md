@@ -22,7 +22,7 @@ meetingUrl: "https://teams.microsoft.com/meet/388419352314569?p=qvWgByiUm0jGtpW4
 # linked below. Open this URL once the thread is created on the
 # ExtendedMatrix-dev-site repo under the "Meeting Notes" category.
 # discussionUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix-dev-site/discussions/NNN"
-tldr: "First public dev meeting of the post-1.5 cycle. Deep-dive on the Python-for-Blender dev pipeline, plan to move Oxigraph integration into EM directly, GraphML backups alongside the DB, EM Meter analytics with Jupyter, and multi-national archaeological cataloguing mapping. Four action items assigned."
+tldr: "First public dev meeting of the post-1.5 cycle. Python-for-Blender pipeline, Oxigraph integration in EM, GraphML backups alongside the DB, EM Meter analytics with Jupyter, multi-national cataloguing mapping. Four action items assigned."
 nextMeeting: 2026-07-21T15:00:00+02:00
 ---
 
