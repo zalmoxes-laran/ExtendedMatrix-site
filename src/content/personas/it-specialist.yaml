@@ -1,0 +1,9 @@
+name: "Information Technology specialist"
+alias: "IT / cloud manager"
+emPhase: "data-management"
+clusters: ["developer"]
+order: 20
+summary: "Owns the technical substrate that the rest of the team builds on. Sets up project storage and backups, configures shared cloud space, installs and maintains the EM tools across the team's machines, and keeps the data infrastructure (graph stores, triplestores, repos) running. Often invisible when the project goes well."
+tools:
+  - "s3dgraphy"
+source: "Demetrescu & Ferdani 2021, Applied Sciences 11(11):5206. doi:10.3390/app11115206"

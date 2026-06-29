@@ -116,6 +116,33 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         </article>
       </div>
 
+      <!--
+        Fourth path — for project leads / coordinators thinking
+        about team composition rather than personal entry. Visually
+        narrower than the three primary cards above (it's a meta-
+        path), but linked from the same "paths" rhythm so the user
+        sees it as a real choice rather than a footer afterthought.
+      -->
+      <article class="path path--meta">
+        <header>
+          <span class="path__num">4</span>
+          <h2>Building a team or scoping a project</h2>
+          <p class="path__who">For project leads, coordinators, supervisors.</p>
+        </header>
+        <p>
+          Extended Matrix projects compose <strong>eight canonical
+          professional figures</strong> — source hunter,
+          IT specialist, 3D survey specialist, stratigrapher,
+          EM drawer, basic modeller, advanced modeller, storyteller.
+          Most projects cover them with two or three real humans
+          wearing several hats. Naming the figures explicitly is
+          what lets a project scale beyond a single researcher.
+        </p>
+        <p class="path__cross">
+          <a href={`${B}/personas/`}>→ See the eight team roles</a>
+        </p>
+      </article>
+
       <section class="cta-find-path" aria-labelledby="cta-find-path-title">
         <h2 id="cta-find-path-title">Ready to begin your own project?</h2>
         <p>
@@ -238,6 +265,26 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .start__foot a {
     font-weight: 600;
     color: var(--em-gold);
+  }
+
+  /* Meta-path — fourth card surfaced for project leads thinking
+     about team composition rather than personal entry. Sits
+     between the three primary paths and the find-your-path CTA.
+     Quieter visual style (dashed border, gold tint) so it reads
+     as a meta-step, not as a fourth peer to the three. */
+  .path--meta {
+    margin-top: 28px;
+    background: var(--em-bg-warm);
+    border-style: dashed;
+    border-color: var(--em-gold);
+  }
+  .path--meta header {
+    background: transparent;
+    border-bottom: 1px dashed var(--em-gold);
+  }
+  .path--meta .path__num {
+    background: var(--em-gold);
+    color: var(--em-bg);
   }
 
   /* CTA band — bridge to /find-your-path/ */

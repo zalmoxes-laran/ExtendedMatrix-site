@@ -1,0 +1,10 @@
+name: "3D Survey & Photogrammetry specialist"
+alias: "Specialista rilievo 3D"
+emPhase: "data-collection"
+clusters: ["modeller"]
+order: 30
+summary: "Plans and runs the on-site or in-lab 3D capture: photogrammetry, structured-light scanning, total station, GNSS, drone surveys. Produces the dense reality-based data (point clouds, meshes, orthomosaics) that the rest of the EM workflow then annotates, simplifies and reconstructs over."
+tools:
+  - "3dsc"
+  - "3dsc-metashape"
+source: "Demetrescu & Ferdani 2021, Applied Sciences 11(11):5206. doi:10.3390/app11115206"

@@ -1,0 +1,10 @@
+name: "Source Hunter"
+alias: "Topo di biblioteca"
+emPhase: "data-collection"
+clusters: ["archaeologist"]
+order: 10
+summary: "Finds, evaluates and curates the documentary base of the project. Reads archives and old reports, tracks down photogrammetric campaigns, evaluates the reliability of each source, and stages everything in the DosCO document collection so the rest of the team can cite it as paradata."
+tools:
+  - "source-list-xlsx"
+  - "folder-tree"
+source: "Demetrescu & Ferdani 2021, Applied Sciences 11(11):5206. doi:10.3390/app11115206"

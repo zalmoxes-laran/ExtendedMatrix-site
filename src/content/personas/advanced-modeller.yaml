@@ -1,0 +1,10 @@
+name: "Advanced Modeller"
+alias: "Modellatore avanzato"
+emPhase: "representation"
+clusters: ["modeller"]
+order: 70
+summary: "Picks up where the basic modeller stops. Photorealistic texturing, UV mapping, material shading, cinematic lighting, production-grade rendering and Representation Models (RM) authoring. Competences that build on the Golden Twelve but extend well beyond — colour science, PBR, compositing."
+tools:
+  - "em-tools"
+  - "heriverse"
+source: "Demetrescu 2026, The Golden Twelve. Zenodo. doi:10.5281/zenodo.21029013 · Demetrescu & Ferdani 2021, Applied Sciences 11(11):5206"

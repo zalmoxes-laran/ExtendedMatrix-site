@@ -1,0 +1,388 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+/**
+ * Personas — the eight canonical professional figures of an
+ * Extended Matrix project.
+ *
+ * Originally formalised as seven figures in Demetrescu & Ferdani
+ * 2021 (Applied Sciences 11(11):5206), the typology grew to eight
+ * with the explicit Storyteller role. The personas are *not* job
+ * titles — most real EM projects compose them across two or three
+ * humans. The typology exists to make team composition explicit,
+ * which matters for professional adoption: you can't scale a
+ * project beyond a single researcher without naming the
+ * responsibilities you're allocating.
+ *
+ * This page is organised by the EM 5-phase method:
+ *   1. Data Collection
+ *   2. Data Management
+ *   3. Implementation & Virtual Reconstruction
+ *   4. Representation Model
+ *   5. Publication & Dissemination
+ * Each phase shows the personas that drive it. Coarse clusters
+ * (archaeologist / modeller / developer) are surfaced via
+ * cross-ref chips so visitors can pivot to the matching cluster
+ * on /versions/[slug]/.
+ */
+
+const personas = (await getCollection('personas'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+// Resolve tool slugs to (name, page) pairs once so the persona
+// cards can render real tool chips with internal links.
+const toolCache = new Map<string, { name: string; page: string }>();
+for (const p of personas) {
+  for (const slug of p.data.tools) {
+    if (toolCache.has(slug)) continue;
+    const entry = await getEntry('tools', slug);
+    if (entry) {
+      toolCache.set(slug, {
+        name: entry.data.name,
+        page: `${B}/tools/${slug}/`,
+      });
+    }
+  }
+}
+
+const phases = [
+  { key: 'data-collection',  num: 1, label: 'Data Collection' },
+  { key: 'data-management',  num: 2, label: 'Data Management' },
+  { key: 'implementation',   num: 3, label: 'Implementation & Virtual Reconstruction' },
+  { key: 'representation',   num: 4, label: 'Representation Model' },
+  { key: 'publication',      num: 5, label: 'Publication & Dissemination' },
+] as const;
+
+const grouped = phases.map((ph) => ({
+  ...ph,
+  personas: personas.filter((p) => p.data.emPhase === ph.key),
+}));
+---
+
+<BaseLayout
+  title="Team roles"
+  description="The eight canonical professional figures of an Extended Matrix project — source hunter, IT specialist, 3D survey specialist, stratigrapher, EM drawer, basic modeller, advanced modeller, storyteller. The typology makes team composition explicit, so projects scale beyond a single researcher."
+>
+  <section class="ps">
+    <div class="container">
+      <span class="tag">Team roles</span>
+      <h1>Eight figures, one EM project.</h1>
+      <p class="ps__sub">
+        Extended Matrix projects compose <strong>eight canonical
+        professional figures</strong> across the five phases of the
+        method. The figures are not job titles — most projects
+        cover them with two or three real humans wearing several
+        hats. Naming them explicitly is what lets a project scale
+        beyond a single researcher.
+      </p>
+
+      <aside class="ps__intro">
+        <h2>Why team composition matters</h2>
+        <p>
+          When a project is one person, the persona model is
+          invisible — the same researcher hunts sources, draws the
+          matrix, models proxies and tells the story. When the
+          project grows, those responsibilities have to be
+          assigned. The eight figures below are the canonical
+          allocation: each persona owns a specific layer of the EM
+          workflow, has a recognisable skill profile, and points
+          at the tools they most often reach for. Use them as a
+          checklist when you're forming a team or scoping a
+          collaboration.
+        </p>
+        <p>
+          Origin: the model was first formalised as seven figures
+          in
+          <a href="https://doi.org/10.3390/app11115206" target="_blank" rel="noopener">
+            Demetrescu &amp; Ferdani 2021
+          </a>
+          (Applied Sciences 11(11):5206). The Storyteller was added
+          later to give publication and dissemination their own
+          named owner — what the 5-phase method always implied but
+          never named.
+        </p>
+      </aside>
+
+      {grouped.map((ph) => ph.personas.length > 0 && (
+        <section class="ps__phase">
+          <header class="ps__phase-head">
+            <span class="ps__phase-num">Phase {ph.num}</span>
+            <h2>{ph.label}</h2>
+          </header>
+          <ul class="ps__grid">
+            {ph.personas.map((p) => (
+              <li class="ps__card">
+                <header class="ps__card-head">
+                  <h3 class="ps__card-name">{p.data.name}</h3>
+                  {p.data.alias && (
+                    <p class="ps__card-alias">{p.data.alias}</p>
+                  )}
+                </header>
+                {p.data.clusters.length > 0 && (
+                  <div class="ps__card-clusters">
+                    {p.data.clusters.map((c) => (
+                      <span class={`ps__cluster-pill ps__cluster-pill--${c}`}>{c}</span>
+                    ))}
+                  </div>
+                )}
+                <p class="ps__card-summary">{p.data.summary}</p>
+                {p.data.tools.length > 0 && (
+                  <div class="ps__card-tools">
+                    <span class="ps__card-tools-label">Tools they reach for:</span>
+                    <ul class="ps__card-tools-list">
+                      {p.data.tools.map((slug) => {
+                        const t = toolCache.get(slug);
+                        if (!t) return null;
+                        return (
+                          <li>
+                            <a href={t.page}>{t.name}</a>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                )}
+                {p.data.source && (
+                  <p class="ps__card-source">
+                    <em>Source: {p.data.source}</em>
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+
+      <aside class="ps__crossref">
+        <h2>Where to go from here</h2>
+        <p>
+          The version pages cluster the EM tools by the three
+          coarser role buckets (<strong>archaeologist</strong> ·
+          <strong>modeller</strong> ·
+          <strong>developer</strong>) so you can find the right
+          downloads quickly. The personas above sit one zoom level
+          deeper.
+        </p>
+        <ul class="ps__crossref-links">
+          <li>
+            <a href={`${B}/versions/1-5/`}>→ Downloads for EM 1.5 LTS</a>
+          </li>
+          <li>
+            <a href={`${B}/find-your-path/`}>→ Walk through Find Your Path</a>
+          </li>
+          <li>
+            <a href={`${B}/start/`}>→ Back to the three entry points</a>
+          </li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ps { padding: 80px 0 60px; }
+  .ps h1 { margin: 14px 0 16px; }
+  .ps__sub {
+    max-width: 760px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 32px;
+  }
+
+  .ps__intro {
+    margin: 0 0 48px;
+    padding: 24px 28px;
+    background: var(--em-bg-warm);
+    border-left: 3px solid var(--em-navy);
+    border-radius: var(--radius-md);
+    max-width: 820px;
+  }
+  .ps__intro h2 {
+    margin: 0 0 10px;
+    font-size: 19px;
+    color: var(--em-navy);
+  }
+  .ps__intro p {
+    margin: 0 0 12px;
+    color: var(--em-text);
+    line-height: 1.65;
+    font-size: 14px;
+  }
+  .ps__intro p:last-child { margin-bottom: 0; }
+  .ps__intro a { color: var(--em-navy); font-weight: 600; }
+  .ps__intro a:hover { color: var(--em-gold); }
+
+  /* Phase grouping */
+  .ps__phase { margin: 0 0 48px; }
+  .ps__phase-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--em-border);
+  }
+  .ps__phase-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-text-muted);
+    font-weight: 700;
+  }
+  .ps__phase-head h2 {
+    font-size: 22px;
+    margin: 0;
+    color: var(--em-navy);
+  }
+
+  /* Persona cards */
+  .ps__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 18px;
+  }
+  .ps__card {
+    padding: 22px 24px;
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    transition: border-color 0.2s var(--ease);
+  }
+  .ps__card:hover { border-color: var(--em-gold); }
+
+  .ps__card-head { margin-bottom: 10px; }
+  .ps__card-name {
+    margin: 0;
+    font-size: 18px;
+    color: var(--em-navy);
+  }
+  .ps__card-alias {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--em-text-muted);
+    font-style: italic;
+  }
+
+  .ps__card-clusters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0 0 12px;
+  }
+  .ps__cluster-pill {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 2px;
+  }
+  .ps__cluster-pill--archaeologist {
+    color: var(--em-navy);
+    background: var(--em-gold-tint);
+  }
+  .ps__cluster-pill--modeller {
+    color: var(--em-navy);
+    background: var(--em-navy-tint);
+  }
+  .ps__cluster-pill--developer {
+    color: #333;
+    background: #e8e8e8;
+  }
+
+  .ps__card-summary {
+    margin: 0 0 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--em-text);
+  }
+
+  .ps__card-tools {
+    margin: 0 0 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--em-border);
+  }
+  .ps__card-tools-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--em-text-muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .ps__card-tools-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .ps__card-tools-list li {
+    padding: 0;
+  }
+  .ps__card-tools-list a {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 12px;
+    color: var(--em-navy);
+    background: var(--em-bg-warm);
+    border: 1px solid var(--em-border);
+    border-radius: 2px;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .ps__card-tools-list a:hover {
+    border-color: var(--em-gold);
+    color: var(--em-gold);
+  }
+
+  .ps__card-source {
+    margin: 8px 0 0;
+    font-size: 11px;
+    color: var(--em-text-muted);
+    line-height: 1.5;
+  }
+
+  /* Cross-ref footer */
+  .ps__crossref {
+    margin: 56px 0 0;
+    padding: 22px 26px;
+    background: var(--em-bg-warm);
+    border: 1px dashed var(--em-border);
+    border-radius: var(--radius-md);
+    max-width: 820px;
+  }
+  .ps__crossref h2 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    color: var(--em-navy);
+  }
+  .ps__crossref p {
+    margin: 0 0 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--em-text);
+  }
+  .ps__crossref-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 4px;
+  }
+  .ps__crossref-links a {
+    color: var(--em-navy);
+    font-weight: 600;
+  }
+  .ps__crossref-links a:hover { color: var(--em-gold); }
+</style>

@@ -1,0 +1,11 @@
+name: "Stratigrapher"
+alias: "Stratigrafo"
+emPhase: "data-management"
+clusters: ["archaeologist"]
+order: 40
+summary: "The interpretive archaeologist. Reads the evidence assembled by the source hunter and the 3D survey specialist and articulates it as stratigraphic units (SU), virtual stratigraphic units (USV), special finds (SF) and the relationships between them. The intellectual author of what the graph eventually encodes."
+tools:
+  - "yed-palette"
+  - "pyarchinit"
+  - "source-list-xlsx"
+source: "Demetrescu & Ferdani 2021, Applied Sciences 11(11):5206. doi:10.3390/app11115206"

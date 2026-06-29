@@ -492,6 +492,68 @@ const blenderAddons = defineCollection({
 // section. The reasoning behind the workflow / cookbook split is
 // documented in `.cowork-work/docs-restructure-2026-06-16.md`.
 
+// ─── Personas collection ─────────────────────────────────────────
+// The eight canonical professional figures involved in a complete
+// Extended Matrix project. Originally formalised as a "seven
+// figures" model in Demetrescu & Ferdani 2021 (Applied Sciences
+// 11(11):5206), the typology has since grown to eight — the
+// Storyteller is the most recent addition, codifying the
+// publication / dissemination role that the original 5-phase
+// method left implicit.
+//
+// The personas are not job titles — most EM projects compose them
+// across two or three real humans. The taxonomy is meant to make
+// team composition explicit, especially for professional adoption
+// where allocating responsibility to named figures helps a project
+// scale beyond a single researcher.
+//
+// Each persona maps to one of the five EM method phases (data
+// collection → data management → implementation → representation
+// → publication) and to a recommended set of tools from the
+// `tools` collection. The /personas page renders the typology as
+// a phase-grouped gallery.
+const personas = defineCollection({
+  type: 'data',
+  schema: () =>
+    z.object({
+      name: z.string(),
+      // Italian colloquial / alias (often used informally), e.g.
+      // "Topo di biblioteca" for the Source Hunter.
+      alias: z.string().optional(),
+      // EM 5-phase mapping (data-collection / data-management /
+      // implementation / representation / publication). The
+      // /personas page groups cards by this field.
+      emPhase: z.enum([
+        'data-collection',
+        'data-management',
+        'implementation',
+        'representation',
+        'publication',
+      ]),
+      // Coarser role cluster — mirrors the /versions/[slug] cluster
+      // taxonomy (archaeologist / modeller / developer) so the
+      // /personas page can link sideways into the right cluster on
+      // the version pages. Some personas straddle two clusters
+      // (e.g. EM drawer is archaeologist + a touch of developer).
+      clusters: z.array(z.enum(['archaeologist', 'modeller', 'developer'])).default([]),
+      summary: z.string().max(320),
+      // Ordering within /personas. Roughly follows the canonical
+      // sequence the user laid out: source hunter, IT, 3D survey,
+      // stratigrapher, EM drawer, basic modeller, advanced
+      // modeller, storyteller.
+      order: z.number().default(0),
+      // Tool slugs (from the `tools` collection) that this persona
+      // most directly uses. Surfaced as cross-ref chips on the
+      // persona card.
+      tools: z.array(z.string()).default([]),
+      // Optional bibliographic anchor — a DOI, URL or short
+      // reference for the canonical definition of this persona
+      // (Demetrescu & Ferdani 2021 for figures 1-7; this site for
+      // the 8th).
+      source: z.string().optional(),
+    }),
+});
+
 export const collections = {
   news,
   blenderAddons,
@@ -505,4 +567,5 @@ export const collections = {
   tools,
   events,
   publications,
+  personas,
 };

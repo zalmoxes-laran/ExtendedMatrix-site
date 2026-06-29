@@ -1,0 +1,10 @@
+name: "Storyteller"
+alias: "Narratore · publication & dissemination"
+emPhase: "publication"
+clusters: ["modeller", "archaeologist"]
+order: 80
+summary: "Closes the loop. Turns the project's reconstructed scenes, paradata chains and supporting documents into a publication others can read, navigate and trust — a Heriverse scene, museum interactive, paper figure, turntable. Owns transparency: every claim a reader sees is anchored to its evidence."
+tools:
+  - "heriverse"
+  - "emviq"
+source: "Site-formalised in 2026 — extends the original 7-figures model from Demetrescu & Ferdani 2021 with explicit dissemination responsibility"
