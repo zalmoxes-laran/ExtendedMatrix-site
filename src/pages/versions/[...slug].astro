@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlenderRepoInstall from '../../components/BlenderRepoInstall.astro';
+import EmToolsDownloadPicker from '../../components/EmToolsDownloadPicker.astro';
 
 export async function getStaticPaths() {
   const versions = await getCollection('versions');
@@ -322,12 +323,33 @@ const statusPill: Record<string, string> = {
            "stable wins" auto-selection would otherwise show the
            1.5.x stable build to anyone landing on /versions/1-6/,
            which defeats the purpose of the version-specific page.
-           Stable-line pages (1.5 and earlier) keep the granular
-           installSteps + EmToolsDownloadPicker flow they already
-           have on /tools/em-tools/. -->
+      -->
       {version.data.status === 'development' && (
         <BlenderRepoInstall only="em_tools" channel="dev" />
       )}
+
+      <!-- ── Pinned EM Tools picker for the LTS lines ───────────
+           For stable / LTS version pages, embed the granular
+           Blender × OS download picker pinned to the EM Tools
+           release tag declared in this version's `tools` array.
+           This is the "stay on 1.5 forever" gesture: once 1.6
+           supersedes 1.5 as the latest stable, /tools/em-tools/
+           will be serving 1.6.x through BlenderRepoInstall, but
+           /versions/1-5/ keeps offering the 1.5.x picker so
+           projects pinned to the LTS line don't get pulled
+           forward by accident. The release tag is read from the
+           YAML so bumping the patch version is a one-line edit
+           on the version content file (no component edits).
+      -->
+      {(version.data.status === 'lts' || version.data.status === 'stable') && (() => {
+        const em = version.data.tools.find((t) => t.slug === 'em-tools');
+        if (!em?.version) return null;
+        // Strip optional leading "v" and any parenthetical suffix
+        // (e.g. "1.5.3 (Blender 4.4+)") to keep the prop clean.
+        const cleanVer = em.version.replace(/^v/, '').split(/[\s(]/)[0];
+        const releaseTag = `v${cleanVer}`;
+        return <EmToolsDownloadPicker releaseTag={releaseTag} />;
+      })()}
 
       <!-- ── Install steps ───────────────────────────────────── -->
       {version.data.installSteps.length > 0 && (

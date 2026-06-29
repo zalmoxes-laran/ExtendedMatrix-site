@@ -40,11 +40,24 @@ interface BuildRow {
   note?: string;         // optional caveat shown under the OS label
 }
 
-// ─── SINGLE SOURCE OF TRUTH ────────────────────────────────────────
-// Bump this string and the matching `version:` field on the em-tools
-// entry of src/content/versions/1-5.md when a new 1.5.x patch ships.
-// Nothing else in this file should reference a hard-coded version.
-const RELEASE_TAG = 'v1.5.3';
+// ─── PROP: pin the picker to a specific release tag ────────────────
+// The picker is now embedded on version pages (e.g. /versions/1-5/)
+// and on /tools/em-tools/. Each embedder passes the EM Tools release
+// tag they want pinned. Default kept for backward compatibility with
+// any caller that still embeds without a prop — when a new 1.5.x
+// patch ships, callers bump the prop value on their side rather than
+// editing this component.
+//
+// Rationale: once 1.6 stable ships, /tools/em-tools/ will route to
+// the latest stable via BlenderRepoInstall (auto-updating), but
+// projects pinned to 1.5 LTS still need a stable way to install
+// exactly 1.5.x even after 1.6 supersedes the "latest" channel —
+// hence the per-page pin lives on the LTS version page.
+export interface Props {
+  releaseTag?: string;
+}
+const { releaseTag = 'v1.5.3' } = Astro.props;
+const RELEASE_TAG = releaseTag;
 // ───────────────────────────────────────────────────────────────────
 
 const version = RELEASE_TAG.replace(/^v/, '');
