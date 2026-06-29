@@ -1,0 +1,473 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+/**
+ * Code map — repository overview for the Extended Matrix ecosystem.
+ *
+ * This page is the in-site replacement for the old GitHub-icon link in
+ * the top navigation (which used to jump straight to the
+ * github.com/topics/extended-matrix search). The topic search showed
+ * an arbitrary order of repos with no narrative; this page imposes the
+ * editorial structure the user actually needs to navigate the project:
+ *
+ *   1. EM language — the formal foundation. Single source repo, with
+ *      derived artefacts (yEd palette, source_list template) that
+ *      travel inside it.
+ *   2. First-party tools — every component of the EM Framework, each
+ *      with its own RST manual hosted on docs.extendedmatrix.org.
+ *   3. Sites — the public sites themselves (this one + the dev
+ *      tracker), kept separate at the bottom so they don't drown out
+ *      the language + tools above.
+ *
+ * Third-party integrations (PyArchInit, etc.) intentionally do NOT
+ * appear here — they live on /ecosystem/, which has its own
+ * inclusion criteria. This page is the first-party map.
+ */
+
+// Pull tools from the content collection. Filter out the two entries
+// that are *artefacts* of the EM language repo (yEd palette,
+// source_list.xlsx) — those are shown in the "EM language" section
+// because their repoUrl is `zalmoxes-laran/ExtendedMatrix`, not a
+// standalone tool repo. Also filter out PyArchInit, which is third-
+// party (lives on /ecosystem/).
+const allTools = (await getCollection('tools'))
+  .sort((a, b) => a.data.order - b.data.order);
+
+const LANGUAGE_REPO = 'https://github.com/zalmoxes-laran/ExtendedMatrix';
+
+const tools = allTools.filter((t) => {
+  if (t.data.repoUrl === LANGUAGE_REPO) return false;       // language artefacts
+  if (t.id.replace(/\.md$/, '') === 'pyarchinit') return false; // third-party
+  return true;
+});
+
+// The language artefacts that travel inside the EM language repo —
+// shown under the "EM language" section for completeness without
+// duplicating their full /tools/ pages.
+const languageArtefacts = allTools.filter((t) => t.data.repoUrl === LANGUAGE_REPO);
+
+// Status labels (visual cue for stable/beta/etc.).
+const statusLabel: Record<string, string> = {
+  stable: 'stable',
+  beta: 'beta',
+  alpha: 'alpha',
+  planned: 'planned',
+};
+---
+
+<BaseLayout
+  title="Code"
+  description="Repository map of the Extended Matrix ecosystem — the formal language, the first-party tools (each with its own manual), and the two sites that surface the project."
+>
+  <section class="cm">
+    <div class="container">
+      <span class="tag">Code</span>
+      <h1>The Extended Matrix code, mapped.</h1>
+      <p class="cm__sub">
+        Extended Matrix is open source. Every piece lives on GitHub in
+        a small set of repositories — the formal language, then the
+        first-party tools that author and consume it, then the two
+        sites you are reading right now. This page is the map: pick
+        the layer you care about and follow it to the repo, manual or
+        live site you need.
+      </p>
+
+      <!-- ── Layer 1: EM language ─────────────────────────────── -->
+      <section class="cm__layer cm__layer--lang">
+        <header class="cm__layer-head">
+          <span class="cm__layer-tag">Layer 1 — the foundation</span>
+          <h2>EM language</h2>
+          <p class="cm__layer-lede">
+            The formal language is what every tool in the framework
+            speaks. Its definition, the palette that lets you author
+            graphs in yEd, the source-list templates, and the canonical
+            reference manual all live in a single repository so the
+            language stays a single source of truth.
+          </p>
+        </header>
+
+        <div class="cm__card cm__card--primary">
+          <div class="cm__card-head">
+            <h3>Extended Matrix — language spec, palette, templates</h3>
+            <span class="cm__card-role">language repository</span>
+          </div>
+          <p class="cm__card-desc">
+            The single-source-of-truth repository: yEd palette files,
+            source-list templates, and the historical record of the
+            language. The reference manual is generated from the same
+            source tree on Read the Docs.
+          </p>
+          <ul class="cm__card-links">
+            <li>
+              <a class="cm__btn cm__btn--repo" href={LANGUAGE_REPO} target="_blank" rel="noopener">
+                <span class="cm__btn-label">Repository</span>
+                <span class="cm__btn-host">github.com/zalmoxes-laran/ExtendedMatrix</span>
+              </a>
+            </li>
+            <li>
+              <a class="cm__btn cm__btn--docs" href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">
+                <span class="cm__btn-label">Manual (RST)</span>
+                <span class="cm__btn-host">docs.extendedmatrix.org</span>
+              </a>
+            </li>
+            <li>
+              <a class="cm__btn cm__btn--site" href={`${B}/versions`}>
+                <span class="cm__btn-label">Versions on this site</span>
+                <span class="cm__btn-host">extendedmatrix.org/versions</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        {languageArtefacts.length > 0 && (
+          <details class="cm__artefacts">
+            <summary>What ships inside the language repo</summary>
+            <ul class="cm__artefacts-list">
+              {languageArtefacts.map((t) => (
+                <li>
+                  <strong>{t.data.name}</strong>
+                  <span class="cm__artefacts-role"> — {t.data.role}</span>
+                  <span class="cm__artefacts-sep">·</span>
+                  <a href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}>tool page →</a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </section>
+
+      <!-- ── Layer 2: First-party tools ─────────────────────────── -->
+      <section class="cm__layer cm__layer--tools">
+        <header class="cm__layer-head">
+          <span class="cm__layer-tag">Layer 2 — the framework</span>
+          <h2>First-party tools</h2>
+          <p class="cm__layer-lede">
+            Each tool is a separate repository with its own release
+            cadence and its own RST manual hosted on
+            <code>docs.extendedmatrix.org</code>. They share a common
+            spine: the EM language above and the
+            <code>s3dgraphy</code> data model in the middle.
+            Third-party integrations (e.g. PyArchInit) are catalogued
+            on <a href={`${B}/ecosystem`}>/ecosystem/</a>.
+          </p>
+        </header>
+
+        <ul class="cm__tools-grid">
+          {tools.map((t) => (
+            <li class="cm__card cm__card--tool">
+              <div class="cm__card-head">
+                <h3>{t.data.name}</h3>
+                {t.data.status && (
+                  <span class={`cm__status cm__status--${t.data.status}`}>{statusLabel[t.data.status] ?? t.data.status}</span>
+                )}
+              </div>
+              <p class="cm__card-role">{t.data.role}</p>
+              <p class="cm__card-desc">{t.data.summary}</p>
+              <ul class="cm__card-links">
+                {t.data.repoUrl && (
+                  <li>
+                    <a class="cm__btn cm__btn--repo" href={t.data.repoUrl} target="_blank" rel="noopener"
+                       data-goatcounter-click={`code-repo-${t.id.replace(/\.md$/, '')}`}>
+                      <span class="cm__btn-label">Repository</span>
+                      <span class="cm__btn-host">{(t.data.repoUrl ?? '').replace(/^https?:\/\//, '').replace(/^github\.com\//, '')}</span>
+                    </a>
+                  </li>
+                )}
+                {t.data.docsUrl && (
+                  <li>
+                    <a class="cm__btn cm__btn--docs" href={t.data.docsUrl} target="_blank" rel="noopener"
+                       data-goatcounter-click={`code-docs-${t.id.replace(/\.md$/, '')}`}>
+                      <span class="cm__btn-label">Manual (RST)</span>
+                      <span class="cm__btn-host">docs.extendedmatrix.org</span>
+                    </a>
+                  </li>
+                )}
+                <li>
+                  <a class="cm__btn cm__btn--site" href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}>
+                    <span class="cm__btn-label">Tool page</span>
+                    <span class="cm__btn-host">extendedmatrix.org/tools/{t.id.replace(/\.md$/, '')}/</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <!-- ── Layer 3: Sites (separate, at the bottom) ─────────── -->
+      <hr class="cm__divider" />
+      <section class="cm__layer cm__layer--sites">
+        <header class="cm__layer-head">
+          <span class="cm__layer-tag">Layer 3 — surfaces</span>
+          <h2>The sites</h2>
+          <p class="cm__layer-lede">
+            The two public sites of the project, kept separate from the
+            framework layer above because they are <em>about</em> the
+            project rather than <em>of</em> it: this site is the
+            public-facing surface, the dev site is the contributor
+            tracker. Both are open source.
+          </p>
+        </header>
+
+        <ul class="cm__sites">
+          <li class="cm__card cm__card--site">
+            <div class="cm__card-head">
+              <h3>extendedmatrix.org</h3>
+              <span class="cm__card-role">public site (this one)</span>
+            </div>
+            <p class="cm__card-desc">
+              The site you are reading right now — landing pages, tool
+              catalogue, version pages, community, news, projects.
+              Built with Astro, deployed on GitHub Pages.
+            </p>
+            <ul class="cm__card-links">
+              <li>
+                <a class="cm__btn cm__btn--repo" href="https://github.com/zalmoxes-laran/ExtendedMatrix-site" target="_blank" rel="noopener">
+                  <span class="cm__btn-label">Repository</span>
+                  <span class="cm__btn-host">github.com/zalmoxes-laran/ExtendedMatrix-site</span>
+                </a>
+              </li>
+              <li>
+                <a class="cm__btn cm__btn--site" href="https://extendedmatrix.org" target="_blank" rel="noopener">
+                  <span class="cm__btn-label">Live site</span>
+                  <span class="cm__btn-host">extendedmatrix.org</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+
+          <li class="cm__card cm__card--site">
+            <div class="cm__card-head">
+              <h3>dev.extendedmatrix.org</h3>
+              <span class="cm__card-role">contributor tracker</span>
+            </div>
+            <p class="cm__card-desc">
+              The development tracker — design proposals (DPs),
+              architectural decisions, the 1.6 roadmap, meeting notes
+              category for the public dev meetings.
+            </p>
+            <ul class="cm__card-links">
+              <li>
+                <a class="cm__btn cm__btn--repo" href="https://github.com/zalmoxes-laran/ExtendedMatrix-dev-site" target="_blank" rel="noopener">
+                  <span class="cm__btn-label">Repository</span>
+                  <span class="cm__btn-host">github.com/zalmoxes-laran/ExtendedMatrix-dev-site</span>
+                </a>
+              </li>
+              <li>
+                <a class="cm__btn cm__btn--site" href="https://dev.extendedmatrix.org" target="_blank" rel="noopener">
+                  <span class="cm__btn-label">Live tracker</span>
+                  <span class="cm__btn-host">dev.extendedmatrix.org</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </section>
+
+      <p class="cm__foot">
+        Looking for the user-facing tool pages? See
+        <a href={`${B}/tools/`}>Tools</a>. Looking for third-party
+        software that consumes the EM data model? See
+        <a href={`${B}/ecosystem/`}>Ecosystem</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cm { padding: 80px 0 60px; }
+  .cm h1 { margin: 14px 0 16px; }
+  .cm__sub {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 17px;
+    margin-bottom: 56px;
+  }
+
+  .cm__layer { margin: 0 0 56px; }
+  .cm__layer-head { margin-bottom: 20px; }
+  .cm__layer-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-text-muted);
+    margin-bottom: 8px;
+  }
+  .cm__layer h2 { font-size: 28px; margin: 0 0 8px; }
+  .cm__layer-lede {
+    max-width: 720px;
+    color: var(--em-text-muted);
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* Cards */
+  .cm__card {
+    list-style: none;
+    background: var(--em-bg);
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-md);
+    padding: 24px 26px;
+    margin-bottom: 16px;
+  }
+  .cm__card--primary { border-left: 4px solid var(--em-gold); }
+  .cm__card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 6px;
+    flex-wrap: wrap;
+  }
+  .cm__card-head h3 {
+    font-size: 19px;
+    color: var(--em-navy);
+    margin: 0;
+  }
+  .cm__card-role {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--em-navy);
+    font-weight: 600;
+    font-family: var(--font-mono);
+  }
+  .cm__card-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--em-text);
+    margin: 0 0 16px;
+  }
+
+  /* Status pill */
+  .cm__status {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 3px 9px;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+  .cm__status--stable  { color: #2c5a2c; background: #d8ecd8; }
+  .cm__status--beta    { color: var(--em-navy); background: var(--em-navy-tint); }
+  .cm__status--alpha   { color: #8a5a14; background: #fae6c8; }
+  .cm__status--planned { color: #555; background: #eee; }
+
+  /* Link buttons */
+  .cm__card-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 8px;
+  }
+  .cm__btn {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 14px;
+    border: 1px solid var(--em-border);
+    border-radius: var(--radius-sm);
+    background: var(--em-bg-warm);
+    color: var(--em-text);
+    text-decoration: none;
+    transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+  }
+  .cm__btn:hover { border-color: var(--em-gold); background: var(--em-bg); text-decoration: none; }
+  .cm__btn-label {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--em-navy);
+    margin-bottom: 2px;
+  }
+  .cm__btn-host {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--em-text-muted);
+    word-break: break-all;
+  }
+
+  /* Tools grid */
+  .cm__tools-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 800px) {
+    .cm__tools-grid { grid-template-columns: 1fr; }
+  }
+  .cm__tools-grid .cm__card { margin-bottom: 0; }
+  .cm__tools-grid .cm__card-role {
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--em-text-muted);
+    margin: 4px 0 12px;
+  }
+
+  /* Language-artefacts disclosure */
+  .cm__artefacts {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: var(--em-bg-warm);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+  }
+  .cm__artefacts summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--em-navy);
+    user-select: none;
+  }
+  .cm__artefacts-list {
+    list-style: none;
+    padding: 12px 0 0;
+    margin: 0;
+  }
+  .cm__artefacts-list li {
+    padding: 4px 0;
+    color: var(--em-text);
+  }
+  .cm__artefacts-role { color: var(--em-text-muted); }
+  .cm__artefacts-sep  { color: var(--em-text-muted); margin: 0 6px; }
+
+  /* Sites at the bottom — visually quieter than the tools layer */
+  .cm__divider {
+    margin: 56px 0 32px;
+    border: 0;
+    border-top: 1px solid var(--em-border);
+  }
+  .cm__sites {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 800px) {
+    .cm__sites { grid-template-columns: 1fr; }
+  }
+  .cm__sites .cm__card { margin-bottom: 0; }
+
+  .cm__foot {
+    margin-top: 40px;
+    color: var(--em-text-muted);
+    font-size: 14px;
+    border-top: 1px solid var(--em-border);
+    padding-top: 24px;
+  }
+  .cm__foot a { color: var(--em-navy); font-weight: 600; }
+  .cm__foot a:hover { color: var(--em-gold); }
+</style>

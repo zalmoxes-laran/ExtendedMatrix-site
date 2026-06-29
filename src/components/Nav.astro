@@ -35,11 +35,19 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Docs</a></li>
       <li><a href="https://dev.extendedmatrix.org/" target="_blank" rel="noopener noreferrer">Developers</a></li>
       <li class="em-nav__icons">
-        <a href="https://github.com/topics/extended-matrix"
-           target="_blank" rel="noopener"
+        <!--
+          GitHub icon now routes to the in-site /code map rather than
+          the github.com/topics/extended-matrix search. The map gives
+          users an editorial overview (language → tools → sites) and
+          links out to each individual repo, instead of dropping them
+          into an unsorted GitHub topic page. The visual is still the
+          GitHub octocat because the code does live on GitHub — the
+          map is the explanatory layer on top.
+        -->
+        <a href={`${B}/code`}
            class="em-nav__icon"
-           aria-label="Extended Matrix on GitHub"
-           title="GitHub">
+           aria-label="Extended Matrix code map — repositories on GitHub"
+           title="Code map">
           <!--
             GitHub mark. Inline SVG so we don't ship an icon font and so
             the colour follows currentColor (hovers cleanly to gold).
