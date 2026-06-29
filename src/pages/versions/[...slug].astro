@@ -240,79 +240,186 @@ const statusPill: Record<string, string> = {
         )}
       </section>
 
-      <!-- ── Tools matrix with inline downloads ──────────────── -->
-      {toolRows.length > 0 && (
-        <section class="vp__tools">
-          <h2>Tools shipping with this version</h2>
-          <table class="vp__matrix">
-            <thead>
-              <tr>
-                <th>Tool</th>
-                <th>Version</th>
-                <th>Status</th>
-                <th>Download</th>
-                <th>Doc</th>
-                <th>Code</th>
-              </tr>
-            </thead>
-            <tbody>
-              {toolRows.map((t) => (
-                <tr>
-                  <td>
-                    <a href={t.toolPage}><strong>{t.toolName}</strong></a>
-                    <div class="vp__role">{t.toolRole}</div>
-                    {t.toolRoles.length > 0 && (
-                      <div class="vp__rolerow">
-                        {t.toolRoles.map((r) => (
-                          <span class={`role-badge role-badge--${r}`}>{r}</span>
-                        ))}
-                      </div>
-                    )}
-                    {t.note && <div class="vp__note">{t.note}</div>}
-                  </td>
-                  <td class="vp__ver">{t.version ?? '—'}</td>
-                  <td><span class={`vp__pill ${statusPill[t.status]}`}>{t.status}</span></td>
-                  <td>
-                    {t.downloadHref
-                      ? (t.downloadIsExternal
-                          ? <a href={t.downloadHref} target="_blank" rel="noopener" class="vp__dlink"
-                               data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download ↗</a>
-                          : <a href={t.downloadHref} class="vp__dlink"
-                               data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download</a>)
-                      : '—'}
-                  </td>
-                  <td>
-                    {t.toolDocs
-                      ? <a href={t.toolDocs} target="_blank" rel="noopener">manual ↗</a>
-                      : '—'}
-                  </td>
-                  <td class="vp__repo">
-                    {t.toolRepo
-                      ? (
-                          <a href={t.toolRepo} target="_blank" rel="noopener"
-                             class="vp__repolink"
-                             aria-label={`${t.toolName} source code on GitHub`}
-                             title="Source code on GitHub"
-                             data-goatcounter-click={`repo-${t.slug}-${versionSlug}`}>
-                            <!--
-                              GitHub mark — inline SVG so it follows
-                              currentColor on hover and doesn't need an
-                              external icon font.
-                            -->
-                            <svg viewBox="0 0 24 24" width="18" height="18"
-                                 fill="currentColor" aria-hidden="true">
-                              <path d="M12 .5C5.4.5 0 5.9 0 12.5c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 3 .1 3.3.8.9 1.3 2 1.3 3.2 0 4.6-2.7 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.2 8.2-11.4C24 5.9 18.6.5 12 .5z"/>
-                            </svg>
-                          </a>
-                        )
-                      : '—'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      )}
+      <!-- ── Tools by role cluster ─────────────────────────────
+           The flat tools table used to be daunting for first-time
+           visitors: 8-10 entries with no editorial guidance about
+           which to download first. Replaced with three role-bound
+           clusters that mirror the /start triad (archaeologist /
+           modeller / developer) plus a "starred" marker on the
+           Core items every project needs regardless of role
+           (palette, source list, folder tree). Each cluster is its
+           own visually distinct box; tools appear in their PRIMARY
+           role cluster (first entry of the `roles` array), with
+           role-badges still visible so multi-role tools are
+           discoverable from any angle. Cross-ref to Find Your Path
+           at the bottom of the section.
+      -->
+      {toolRows.length > 0 && (() => {
+        // Group tools by primary role (first entry of t.toolRoles).
+        // Tools without any role fall into a fourth "Other" bucket
+        // at the bottom — present here only as a safety net.
+        const CORE_SLUGS = new Set(['yed-palette', 'source-list-xlsx', 'folder-tree']);
+        const buckets: Record<string, typeof toolRows> = {
+          archaeologist: [],
+          modeller: [],
+          developer: [],
+          other: [],
+        };
+        for (const t of toolRows) {
+          const primary = (t.toolRoles && t.toolRoles[0]) || 'other';
+          (buckets[primary] || buckets.other).push(t);
+        }
+        // Cluster metadata (label, lede, modifier class for styling)
+        const clusters: Array<{
+          key: keyof typeof buckets;
+          label: string;
+          lede: string;
+          mod: string;
+        }> = [
+          {
+            key: 'archaeologist',
+            label: 'For archaeologists · the core',
+            lede: 'The foundation for any EM project. The three starred items (palette, source list, folder tree) are needed *every time*, regardless of whether you intend to model in 3D, develop on top of the graph, or simply read the matrix on paper. EM Tools is added once you move from yEd into Blender.',
+            mod: 'archaeologist',
+          },
+          {
+            key: 'modeller',
+            label: 'For 3D modellers',
+            lede: 'Reach for these once your matrix is in good shape and you need to attach proxies to a photogrammetric model or run a survey pipeline.',
+            mod: 'modeller',
+          },
+          {
+            key: 'developer',
+            label: 'For developers',
+            lede: 'Lower-level libraries and tooling for anyone extending Extended Matrix or building integrations.',
+            mod: 'developer',
+          },
+        ];
+
+        const renderRow = (t: typeof toolRows[number]) => {
+          const isCore = CORE_SLUGS.has(t.slug);
+          return (
+            <tr class={isCore ? 'vp__row vp__row--core' : 'vp__row'}>
+              <td>
+                <a href={t.toolPage}>
+                  {isCore && (
+                    <span class="vp__star" aria-label="Core item — recommended for every project">★</span>
+                  )}
+                  <strong>{t.toolName}</strong>
+                </a>
+                <div class="vp__role">{t.toolRole}</div>
+                {t.toolRoles.length > 0 && (
+                  <div class="vp__rolerow">
+                    {t.toolRoles.map((r) => (
+                      <span class={`role-badge role-badge--${r}`}>{r}</span>
+                    ))}
+                  </div>
+                )}
+                {t.note && <div class="vp__note">{t.note}</div>}
+              </td>
+              <td class="vp__ver">{t.version ?? '—'}</td>
+              <td><span class={`vp__pill ${statusPill[t.status]}`}>{t.status}</span></td>
+              <td>
+                {t.downloadHref
+                  ? (t.downloadIsExternal
+                      ? <a href={t.downloadHref} target="_blank" rel="noopener" class="vp__dlink"
+                           data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download ↗</a>
+                      : <a href={t.downloadHref} class="vp__dlink"
+                           data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>download</a>)
+                  : '—'}
+              </td>
+              <td>
+                {t.toolDocs
+                  ? <a href={t.toolDocs} target="_blank" rel="noopener">manual ↗</a>
+                  : '—'}
+              </td>
+              <td class="vp__repo">
+                {t.toolRepo
+                  ? (
+                      <a href={t.toolRepo} target="_blank" rel="noopener"
+                         class="vp__repolink"
+                         aria-label={`${t.toolName} source code on GitHub`}
+                         title="Source code on GitHub"
+                         data-goatcounter-click={`repo-${t.slug}-${versionSlug}`}>
+                        <svg viewBox="0 0 24 24" width="18" height="18"
+                             fill="currentColor" aria-hidden="true">
+                          <path d="M12 .5C5.4.5 0 5.9 0 12.5c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 3 .1 3.3.8.9 1.3 2 1.3 3.2 0 4.6-2.7 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.2 8.2-11.4C24 5.9 18.6.5 12 .5z"/>
+                        </svg>
+                      </a>
+                    )
+                  : '—'}
+              </td>
+            </tr>
+          );
+        };
+
+        return (
+          <section class="vp__tools">
+            <h2>Tools shipping with this version</h2>
+            <p class="vp__tools-intro">
+              <strong>If you're new to EM</strong>, start with the
+              starred (★) items in the first cluster — they are the
+              foundation every project needs, regardless of role.
+              Pick up the modeller and developer clusters only when
+              the work calls for them.
+            </p>
+            {clusters.map((c) => buckets[c.key].length > 0 && (
+              <section class={`vp__cluster vp__cluster--${c.mod}`}>
+                <header class="vp__cluster-head">
+                  <span class={`vp__cluster-tag vp__cluster-tag--${c.mod}`}>{c.label}</span>
+                </header>
+                <p class="vp__cluster-lede">{c.lede}</p>
+                <table class="vp__matrix">
+                  <thead>
+                    <tr>
+                      <th>Tool</th>
+                      <th>Version</th>
+                      <th>Status</th>
+                      <th>Download</th>
+                      <th>Doc</th>
+                      <th>Code</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {buckets[c.key].map(renderRow)}
+                  </tbody>
+                </table>
+              </section>
+            ))}
+            {buckets.other.length > 0 && (
+              <section class="vp__cluster vp__cluster--other">
+                <header class="vp__cluster-head">
+                  <span class="vp__cluster-tag vp__cluster-tag--other">Other</span>
+                </header>
+                <table class="vp__matrix">
+                  <thead>
+                    <tr><th>Tool</th><th>Version</th><th>Status</th><th>Download</th><th>Doc</th><th>Code</th></tr>
+                  </thead>
+                  <tbody>{buckets.other.map(renderRow)}</tbody>
+                </table>
+              </section>
+            )}
+
+            <!--
+              Cross-ref to Find Your Path — the other half of the
+              decision loop. Find Your Path picks tools by what
+              the user wants to do; this page picks them by which
+              version they want to pin to. The two surfaces feed
+              each other.
+            -->
+            <aside class="vp__not-sure">
+              <h3>Not sure which tools you need?</h3>
+              <p>
+                Walk through <a href={`${B}/find-your-path/`}>Find your path</a> —
+                pick the materials you already have and the outcome you want, and
+                the picker maps the project to the right combination of EM
+                language artefacts and tools. Then come back here for the right
+                version of each.
+              </p>
+            </aside>
+          </section>
+        );
+      })()}
 
       <!-- ── Quick install (drag-and-drop, repo-driven) ──────────
            Embed the BlenderRepoInstall card when the version page
@@ -555,6 +662,113 @@ const statusPill: Record<string, string> = {
   .prereq__ver { font-family: var(--font-mono); font-size: 12px; color: var(--em-gold); margin: 2px 0 8px; }
   .prereq__desc { font-size: 13px; color: var(--em-text-muted); line-height: 1.5; margin-bottom: 10px; }
   .prereq__cta { color: var(--em-gold); font-weight: 600; font-size: 13px; }
+
+  /* Tools — clustered by primary role.
+     Each cluster is its own visual card with a left accent bar that
+     codes the role family (gold / navy-tint / grey). The "Core"
+     items inside the archaeologist cluster carry a ★ to flag them
+     as "always needed regardless of role". */
+  .vp__tools-intro {
+    margin: 0 0 24px;
+    max-width: 720px;
+    padding: 14px 18px;
+    background: var(--em-bg-warm);
+    border-left: 3px solid var(--em-navy);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--em-text);
+  }
+  .vp__cluster {
+    margin: 0 0 28px;
+    padding: 22px 24px;
+    border: 1px solid var(--em-border);
+    border-left-width: 4px;
+    border-radius: var(--radius-md);
+    background: var(--em-bg);
+  }
+  .vp__cluster--archaeologist {
+    border-left-color: var(--em-gold);
+    background: linear-gradient(180deg, var(--em-gold-tint) 0%, var(--em-bg) 35%);
+  }
+  .vp__cluster--modeller {
+    border-left-color: var(--em-navy);
+    background: linear-gradient(180deg, var(--em-navy-tint) 0%, var(--em-bg) 35%);
+  }
+  .vp__cluster--developer {
+    border-left-color: #666;
+    background: var(--em-bg);
+  }
+  .vp__cluster--other {
+    border-left-color: var(--em-border);
+    background: var(--em-bg-warm);
+  }
+
+  .vp__cluster-head {
+    margin-bottom: 8px;
+  }
+  .vp__cluster-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+  .vp__cluster-tag--archaeologist { color: var(--em-navy); background: rgba(184, 137, 58, 0.18); }
+  .vp__cluster-tag--modeller       { color: var(--em-navy); background: var(--em-navy-tint); }
+  .vp__cluster-tag--developer      { color: #333;          background: #e8e8e8; }
+  .vp__cluster-tag--other          { color: #666;          background: #f0f0ed; }
+
+  .vp__cluster-lede {
+    margin: 8px 0 18px;
+    max-width: 700px;
+    color: var(--em-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* Star on the Core items inside the archaeologist cluster. */
+  .vp__star {
+    display: inline-block;
+    color: var(--em-gold);
+    font-size: 14px;
+    margin-right: 4px;
+    vertical-align: baseline;
+  }
+  .vp__row--core {
+    background: rgba(184, 137, 58, 0.06);
+  }
+
+  /* "Not sure?" cross-ref to Find Your Path at the bottom of the tools
+     section. Quieter than the cluster cards above so it reads as a
+     pivot, not as another tool family. */
+  .vp__not-sure {
+    margin-top: 8px;
+    padding: 18px 22px;
+    background: var(--em-bg-warm);
+    border: 1px dashed var(--em-border);
+    border-radius: var(--radius-md);
+  }
+  .vp__not-sure h3 {
+    margin: 0 0 6px;
+    font-size: 16px;
+    color: var(--em-navy);
+  }
+  .vp__not-sure p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--em-text);
+    max-width: 720px;
+  }
+  .vp__not-sure a {
+    color: var(--em-navy);
+    font-weight: 600;
+  }
+  .vp__not-sure a:hover { color: var(--em-gold); }
 
   /* Tools matrix */
   .vp__matrix {

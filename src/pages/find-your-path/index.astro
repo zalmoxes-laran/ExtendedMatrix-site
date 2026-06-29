@@ -224,6 +224,40 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         </details>
       </section>
 
+      <!--
+        Now pick a version — the other half of the loop. Find Your
+        Path picks WHICH tools you need by use-case; the version
+        pages pin WHICH VERSION of each tool to download. The two
+        surfaces feed each other: this CTA closes the decision tree
+        by sending the visitor on to /versions/ for the actual
+        download gestures.
+      -->
+      <section class="fyp-pick-version">
+        <h2 class="fyp-pick-version__title">Now pick a version.</h2>
+        <p class="fyp-pick-version__lede">
+          Find Your Path tells you <em>which</em> tools to use. The
+          version pages tell you <em>which version</em> of each tool
+          to install — and group them by role so the right cluster
+          is one click away.
+        </p>
+        <div class="fyp-pick-version__grid">
+          <a class="fyp-pick-version__card fyp-pick-version__card--lts"
+             href={`${B}/versions/1-5/`}
+             data-goatcounter-click="picker_outbound_versions_1-5">
+            <span class="fyp-pick-version__tag">Recommended · LTS</span>
+            <strong>EM 1.5 LTS</strong>
+            <span class="fyp-pick-version__hint">Stable. Use for any new project unless you specifically need 1.6 features.</span>
+          </a>
+          <a class="fyp-pick-version__card fyp-pick-version__card--dev"
+             href={`${B}/versions/1-6/`}
+             data-goatcounter-click="picker_outbound_versions_1-6">
+            <span class="fyp-pick-version__tag">Development</span>
+            <strong>EM 1.6 dev</strong>
+            <span class="fyp-pick-version__hint">Preview of the next iteration. Auto-updating from the dev channel.</span>
+          </a>
+        </div>
+      </section>
+
       <!-- ============ BOTTOM CTA ============ -->
       <div class="fyp-bottom-cta">
         <a class="fyp-breadcrumb" href={`${B}/start`}>← Back to overview</a>
@@ -360,6 +394,73 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-size: 0.75rem;
     font-weight: 500;
     color: var(--em-text-muted, #5a6b7a);
+  }
+
+  /* --- "Now pick a version" cross-ref to the version pages.
+     Lives between the FAQ and the bottom CTA. Bridges the
+     "WHAT tools" of Find Your Path with the "WHICH VERSION" of
+     /versions/. Visually warmer than the rest of the page so it
+     reads as a deliberate hand-off. */
+  .fyp-pick-version {
+    margin: 48px 0 32px;
+    padding: 28px 32px;
+    background: var(--em-bg-warm, #fafaf7);
+    border: 1px solid var(--em-border, #e5e2db);
+    border-radius: var(--radius-md, 8px);
+  }
+  .fyp-pick-version__title {
+    margin: 0 0 8px;
+    font-size: 1.5rem;
+    color: var(--em-navy, #1a2845);
+  }
+  .fyp-pick-version__lede {
+    margin: 0 0 20px;
+    color: var(--em-text-muted, #5a6b7a);
+    font-size: 0.95rem;
+    line-height: 1.55;
+    max-width: 720px;
+  }
+  .fyp-pick-version__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .fyp-pick-version__card {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 18px 22px;
+    background: var(--em-bg, #ffffff);
+    border: 1px solid var(--em-border, #e5e2db);
+    border-left-width: 4px;
+    border-radius: var(--radius-sm, 4px);
+    text-decoration: none;
+    color: var(--em-text, #1a1a1a);
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .fyp-pick-version__card:hover {
+    border-color: var(--em-gold, #b8893a);
+    transform: translateY(-1px);
+    text-decoration: none;
+  }
+  .fyp-pick-version__card--lts { border-left-color: var(--em-gold, #b8893a); }
+  .fyp-pick-version__card--dev { border-left-color: var(--em-navy, #1a2845); }
+  .fyp-pick-version__tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-navy, #1a2845);
+    font-weight: 700;
+  }
+  .fyp-pick-version__card strong {
+    font-size: 1.1rem;
+    color: var(--em-navy, #1a2845);
+  }
+  .fyp-pick-version__hint {
+    font-size: 13px;
+    color: var(--em-text-muted, #5a6b7a);
+    line-height: 1.5;
   }
 
   /* --- Progress dots --- */
