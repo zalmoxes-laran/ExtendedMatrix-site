@@ -1,7 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import BlenderRepoInstall from '../components/BlenderRepoInstall.astro';
 
 const versions = (await getCollection('versions'))
   .sort((a, b) => b.data.order - a.data.order);
@@ -134,8 +133,16 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         Looking for an older release? See <a href={`${B}/versions/`}>all versions →</a>
       </p>
 
-      <!-- ── Blender add-ons: install via the extension repository ── -->
-      <BlenderRepoInstall />
+      <!-- The drag-and-drop "Install in Blender" card used to live
+           here, alongside the version chooser. It was duplicated on
+           the version detail pages (e.g. /versions/1-6/ for the dev
+           channel) and on the individual tool pages (/tools/em-tools/,
+           /tools/3dsc/), which created confusion: same UI in three
+           places, with the version page being the most specific
+           context. Editorial decision (2026-06-29): the card lives on
+           the per-tool and per-version pages only; /download/ keeps
+           the chooser + the manual / offline-install fallback link
+           at the bottom of the page. -->
 
       <!-- ── Tools strip ────────────────────────────────────────── -->
       <section class="dltools">
