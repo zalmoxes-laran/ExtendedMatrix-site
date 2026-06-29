@@ -21,6 +21,40 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         </p>
       </header>
 
+      <!--
+        Prerequisite callout — placed between the hero and the picker
+        progress bar. It is non-blocking (the picker still works for
+        users who already know Blender) but recommends the Golden
+        Twelve card to newcomers as the foundational 3D-modelling
+        layer that every EM path eventually depends on. The card
+        teaches Blender via 12 keyboard-shortcut command families
+        that have been stable since Blender 1.0 (1995), so the skill
+        survives every future Blender release — directly relevant
+        for proxy modelling, control-point modelling, LOD work and
+        the other 3D gestures EM workflows lean on.
+      -->
+      <aside class="fyp-prereq" role="note">
+        <span class="fyp-prereq__tag">Prerequisite · recommended</span>
+        <h2 class="fyp-prereq__title">Start with the Golden Twelve.</h2>
+        <p class="fyp-prereq__body">
+          Before walking any path that touches Blender, give yourself
+          the foundation: <strong>The Golden Twelve</strong> is a
+          two-page reference card with the twelve keyboard-shortcut
+          command families that cover every modelling task you'll do
+          in Blender for cultural heritage — proxy modelling, control-
+          point modelling, LOD work, semantic shapes. The shortcuts
+          have been stable since Blender 1.0 (1995); the skill you
+          build now still works in 2035.
+        </p>
+        <p class="fyp-prereq__cta">
+          <a href="https://zenodo.org/records/21029013" target="_blank" rel="noopener"
+             data-goatcounter-click="golden-twelve-zenodo">
+            Open on Zenodo
+            <span class="fyp-prereq__doi">doi: 10.5281/zenodo.21029013 ↗</span>
+          </a>
+        </p>
+      </aside>
+
       <!-- Progress -->
       <div class="progress" id="progress">
         <div class="progress__dot progress__dot--active" id="dot1">1</div>
@@ -272,6 +306,60 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     max-width: 760px;
     font-size: 1.05rem;
     line-height: 1.55;
+  }
+
+  /* --- Golden Twelve prerequisite callout ---
+     Sits between the hero and the picker progress bar. Visually
+     "warm" (gold-tint background, gold left bar) so newcomers
+     spot it before diving into the picker; CSS-only, no JS or
+     dismissibility needed. */
+  .fyp-prereq {
+    margin: 0 0 28px;
+    padding: 20px 24px;
+    background: var(--em-gold-tint, #f5ecd9);
+    border-left: 4px solid var(--em-gold, #b8893a);
+    border-radius: var(--radius-md, 8px);
+    max-width: 760px;
+  }
+  .fyp-prereq__tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-navy, #1a2845);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .fyp-prereq__title {
+    margin: 0 0 8px;
+    font-size: 1.25rem;
+    color: var(--em-navy, #1a2845);
+    line-height: 1.2;
+  }
+  .fyp-prereq__body {
+    margin: 0 0 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--em-text, #1a1a1a);
+  }
+  .fyp-prereq__cta {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+  .fyp-prereq__cta a {
+    color: var(--em-navy, #1a2845);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .fyp-prereq__cta a:hover { color: var(--em-gold, #b8893a); }
+  .fyp-prereq__doi {
+    display: inline-block;
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--em-text-muted, #5a6b7a);
   }
 
   /* --- Progress dots --- */

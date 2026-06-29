@@ -267,6 +267,58 @@ const statusLabel: Record<string, string> = {
         </ul>
       </section>
 
+      <!-- ── Companion resource: the Golden Twelve learning card ──
+           Not a repository per se, but it ships from the same Zenodo
+           account used for EM citable releases and is the canonical
+           "before you start" handout for proxy / control-point
+           modelling in Blender — the foundation every EM modelling
+           workflow eventually rests on. Surfaced here, after the
+           code-and-sites layers, because newcomers landing on this
+           page from the top-nav GitHub icon are exactly the audience
+           the card was written for. -->
+      <section class="cm__resource">
+        <header class="cm__layer-head">
+          <span class="cm__layer-tag">Companion · learning material</span>
+          <h2>The Golden Twelve</h2>
+          <p class="cm__layer-lede">
+            Two-page reference card with the twelve keyboard-shortcut
+            command families that cover every modelling task in
+            Blender for cultural heritage — proxy modelling, control-
+            point modelling, LOD work, semantic shapes. The shortcuts
+            have been stable since Blender 1.0 (1995): the skill
+            survives every future Blender release. Cite as
+            <code>doi:10.5281/zenodo.21029013</code>; companion paper
+            in submission to <em>DAACH</em>.
+          </p>
+        </header>
+        <div class="cm__card cm__card--primary">
+          <div class="cm__card-head">
+            <h3>The Golden Twelve — Reference Card for 3D Cultural Heritage Modelling (v1.0)</h3>
+            <span class="cm__card-role">learning · reference card</span>
+          </div>
+          <p class="cm__card-desc">
+            Recommended starting point for anyone walking an EM path
+            that touches Blender. Hosted on Zenodo with a citable DOI;
+            CC-BY-SA 4.0. Author: Emanuel Demetrescu, CNR-ISPC.
+          </p>
+          <ul class="cm__card-links">
+            <li>
+              <a class="cm__btn cm__btn--repo" href="https://zenodo.org/records/21029013" target="_blank" rel="noopener"
+                 data-goatcounter-click="code-golden-twelve-zenodo">
+                <span class="cm__btn-label">Open on Zenodo</span>
+                <span class="cm__btn-host">doi: 10.5281/zenodo.21029013</span>
+              </a>
+            </li>
+            <li>
+              <a class="cm__btn cm__btn--site" href={`${B}/find-your-path/`}>
+                <span class="cm__btn-label">Start in the picker</span>
+                <span class="cm__btn-host">extendedmatrix.org/find-your-path</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
       <p class="cm__foot">
         Looking for the user-facing tool pages? See
         <a href={`${B}/tools/`}>Tools</a>. Looking for third-party
@@ -460,6 +512,15 @@ const statusLabel: Record<string, string> = {
     .cm__sites { grid-template-columns: 1fr; }
   }
   .cm__sites .cm__card { margin-bottom: 0; }
+
+  /* Companion resource section — same card shape as Layer 1, set
+     apart by a top divider so it reads as "extra, recommended" not
+     "layer of the project". */
+  .cm__resource {
+    margin: 56px 0 0;
+    padding-top: 32px;
+    border-top: 1px dashed var(--em-border);
+  }
 
   .cm__foot {
     margin-top: 40px;
