@@ -18,6 +18,31 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 // Stable id used for GoatCounter event-ids (e.g. "1-5").
 const versionSlug = version.id.replace(/\.md$/, '');
 
+// Version-switcher data ------------------------------------------------
+// The user reaches a version page through Find Your Path, the homepage
+// or a deep link, and frequently wants to compare the same content
+// across a couple of adjacent releases. The chip strip near the top of
+// the page lets them jump between versions without bouncing back to
+// the index. Sorted by version number descending so the latest /
+// development line is leftmost — the place the eye lands first.
+const allVersions = await getCollection('versions');
+const versionChips = allVersions
+  .map((v) => ({
+    slug: v.id.replace(/\.md$/, ''),
+    label: v.data.version,
+    status: v.data.status,
+  }))
+  .sort((a, b) => {
+    // Numeric compare on dotted version strings (1.10 > 1.6).
+    const pa = a.label.split('.').map(Number);
+    const pb = b.label.split('.').map(Number);
+    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+      const da = pa[i] ?? 0, db = pb[i] ?? 0;
+      if (da !== db) return db - da;
+    }
+    return 0;
+  });
+
 const statusLabel: Record<string, string> = {
   development: 'In development',
   stable: 'Stable',
@@ -88,6 +113,28 @@ const statusPill: Record<string, string> = {
   <article class="vp">
     <div class="container">
       <a href={`${B}/versions/`} class="vp__back">← All versions</a>
+
+      <!--
+        Version switcher — chip strip with every release so the user
+        can jump between adjacent versions in one click. The active
+        chip is highlighted; the rest are passive links. Aligned left
+        like the breadcrumb above to read as a navigation row rather
+        than a content block.
+      -->
+      <nav class="vp__switcher" aria-label="Switch EM version">
+        <span class="vp__switcher-label">Version:</span>
+        <ul class="vp__switcher-list">
+          {versionChips.map((vc) => (
+            <li>
+              {vc.slug === versionSlug
+                ? <span class={`vp__chip vp__chip--active vp__chip--${vc.status}`} aria-current="page">EM {vc.label}</span>
+                : <a class={`vp__chip vp__chip--${vc.status}`} href={`${B}/versions/${vc.slug}/`}
+                     data-goatcounter-click={`vp-switch-${vc.slug}`}>EM {vc.label}</a>}
+            </li>
+          ))}
+        </ul>
+      </nav>
+
       <div class="vp__head">
         <span class="vp__num">EM {version.data.version}</span>
         <span class={`vp__status v__status--${version.data.status}`}>{statusLabel[version.data.status]}</span>
@@ -282,11 +329,13 @@ const statusPill: Record<string, string> = {
         // explicit switch instead of a generic-cast lookup. Same
         // end-state for the TS checker, zero parser ambiguity.
         const buckets: {
+          core: typeof toolRows;
           archaeologist: typeof toolRows;
           modeller: typeof toolRows;
           developer: typeof toolRows;
           other: typeof toolRows;
         } = {
+          core: [],
           archaeologist: [],
           modeller: [],
           developer: [],
@@ -300,7 +349,19 @@ const statusPill: Record<string, string> = {
         // physically present in only one of the two clusters. Host
         // editorial decision (2026-06-30): tags > containers when a
         // tool genuinely spans roles.
+        //
+        // Core items (palette, source-list, folder-tree) are the
+        // foundation every project needs regardless of role. They
+        // get extracted into a dedicated "Core" cluster at the top
+        // (decision 2026-06-30) and skipped from the per-role
+        // buckets so they don't double-render. Without this, the
+        // palette would land inside "For archaeologists" — true but
+        // misleading, since modellers and developers also need it.
         for (const t of toolRows) {
+          if (CORE_SLUGS.has(t.slug)) {
+            buckets.core.push(t);
+            continue;
+          }
           const roles = (t.toolRoles && t.toolRoles.length > 0)
             ? t.toolRoles
             : ['other'];
@@ -318,9 +379,15 @@ const statusPill: Record<string, string> = {
         // ambiguity (see comment above).
         const clusters: { key: keyof typeof buckets; label: string; lede: string; mod: string }[] = [
           {
+            key: 'core',
+            label: 'Core · for everyone',
+            lede: 'The foundation every EM project needs, regardless of whether you intend to model in 3D, develop on top of the graph, or simply read the matrix on paper. Start here, then add the role-specific clusters below as the work calls for them.',
+            mod: 'core',
+          },
+          {
             key: 'archaeologist',
-            label: 'For archaeologists · the core',
-            lede: 'The foundation for any EM project. The three starred items (palette, source list, folder tree) are needed *every time*, regardless of whether you intend to model in 3D, develop on top of the graph, or simply read the matrix on paper. EM Tools is added once you move from yEd into Blender.',
+            label: 'For archaeologists',
+            lede: 'Adds the archaeologist-facing tools on top of Core: graph authoring in Blender, stratigraphic database integrations, source dossier management.',
             mod: 'archaeologist',
           },
           {
@@ -399,10 +466,11 @@ const statusPill: Record<string, string> = {
             <h2>Tools shipping with this version</h2>
             <p class="vp__tools-intro">
               <strong>If you're new to EM</strong>, start with the
-              starred (★) items in the first cluster — they are the
-              foundation every project needs, regardless of role.
-              Pick up the modeller and developer clusters only when
-              the work calls for them.
+              <strong>Core · for everyone</strong> cluster — these
+              three items are the foundation every project needs,
+              regardless of role. Then pick up the archaeologist,
+              modeller or developer clusters only when the work
+              calls for them.
             </p>
             {clusters.map((c) => buckets[c.key].length > 0 && (
               <section class={`vp__cluster vp__cluster--${c.mod}`}>
@@ -536,6 +604,67 @@ const statusPill: Record<string, string> = {
   .vp section { padding: 0; }
 
   .vp__back { display: inline-block; font-size: 13px; color: var(--em-text-muted); margin-bottom: 16px; }
+
+  /* Version switcher — chip strip just below the breadcrumb.
+     Reads as navigation, not content: small label, inline list of
+     chips, active chip highlighted. Wraps gracefully on narrow
+     viewports. */
+  .vp__switcher {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 4px 0 22px;
+    font-size: 13px;
+  }
+  .vp__switcher-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--em-text-muted);
+    font-weight: 700;
+  }
+  .vp__switcher-list {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .vp__chip {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--em-border);
+    background: var(--em-bg);
+    color: var(--em-text);
+    text-decoration: none;
+    line-height: 1.5;
+    transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+  }
+  .vp__chip:hover {
+    border-color: var(--em-gold);
+    text-decoration: none;
+  }
+  .vp__chip--active {
+    background: var(--em-navy);
+    color: #fff;
+    border-color: var(--em-navy);
+    cursor: default;
+  }
+  .vp__chip--active:hover { border-color: var(--em-navy); }
+  /* Subtle status accent on the chips so the user spots LTS / dev
+     lines at a glance. Active chip uses the navy fill regardless. */
+  .vp__chip--lts:not(.vp__chip--active)         { border-color: var(--em-gold); }
+  .vp__chip--development:not(.vp__chip--active) { border-color: var(--em-navy); border-style: dashed; }
+  .vp__chip--legacy:not(.vp__chip--active)      { color: var(--em-text-muted); }
+  .vp__chip--eol:not(.vp__chip--active)         { color: #a22; border-color: #fae0e0; }
+
   .vp__head { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
   .vp__num { font-family: var(--font-display); font-weight: 800; font-size: 28px; color: var(--em-navy); }
   .vp__status {
@@ -709,9 +838,19 @@ const statusPill: Record<string, string> = {
     border-radius: var(--radius-md);
     background: var(--em-bg);
   }
-  .vp__cluster--archaeologist {
+  /* Core cluster — visually prioritised so it reads as "start here"
+     before the role-coded clusters below. Uses the gold accent that
+     used to live on archaeologist, since Core IS the foundation; the
+     archaeologist cluster moves to a calmer navy accent to step
+     visually behind it. */
+  .vp__cluster--core {
     border-left-color: var(--em-gold);
-    background: linear-gradient(180deg, var(--em-gold-tint) 0%, var(--em-bg) 35%);
+    background: linear-gradient(180deg, var(--em-gold-tint) 0%, var(--em-bg) 30%);
+    border-left-width: 6px;
+  }
+  .vp__cluster--archaeologist {
+    border-left-color: var(--em-navy);
+    background: linear-gradient(180deg, var(--em-navy-tint) 0%, var(--em-bg) 35%);
   }
   .vp__cluster--modeller {
     border-left-color: var(--em-navy);
@@ -739,7 +878,8 @@ const statusPill: Record<string, string> = {
     padding: 4px 12px;
     border-radius: 2px;
   }
-  .vp__cluster-tag--archaeologist { color: var(--em-navy); background: rgba(184, 137, 58, 0.18); }
+  .vp__cluster-tag--core           { color: var(--em-navy); background: rgba(184, 137, 58, 0.22); }
+  .vp__cluster-tag--archaeologist  { color: var(--em-navy); background: var(--em-navy-tint); }
   .vp__cluster-tag--modeller       { color: var(--em-navy); background: var(--em-navy-tint); }
   .vp__cluster-tag--developer      { color: #333;          background: #e8e8e8; }
   .vp__cluster-tag--other          { color: #666;          background: #f0f0ed; }
