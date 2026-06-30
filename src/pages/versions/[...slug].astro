@@ -270,14 +270,16 @@ const statusPill: Record<string, string> = {
         }
         // Cluster metadata (label, lede, modifier class for styling).
         //
-        // NB: avoid the `Array<{...}>` generic syntax inside an .astro
-        // template body — Astro's parser reads `<{` as the opener of a
-        // JSX Fragment shorthand and bails with "Unable to assign
-        // attributes when using <> Fragment shorthand syntax". Either
-        // postfix-array (`{...}[]`) or `as const` works; we use the
-        // postfix form so `key` is still typed as one of the bucket
-        // keys (avoids implicit-any when buckets[c.key] is indexed
-        // below).
+        // NB on the syntax used here: do NOT use the generic-prefix
+        // form (Array followed by left-angle followed by left-brace)
+        // for the type annotation inside this .astro template body.
+        // The Astro parser scans for left-angle even inside comments
+        // and treats that exact sequence as the opener of a JSX
+        // Fragment shorthand, failing the build with "Unable to
+        // assign attributes when using Fragment shorthand syntax".
+        // The postfix-array form is safe and keeps `key` typed as one
+        // of the bucket keys (avoids implicit-any when buckets[c.key]
+        // is indexed below).
         const clusters: { key: keyof typeof buckets; label: string; lede: string; mod: string }[] = [
           {
             key: 'archaeologist',
