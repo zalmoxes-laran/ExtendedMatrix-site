@@ -22,38 +22,16 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       </header>
 
       <!--
-        Prerequisite callout — placed between the hero and the picker
-        progress bar. It is non-blocking (the picker still works for
-        users who already know Blender) but recommends the Golden
-        Twelve card to newcomers as the foundational 3D-modelling
-        layer that every EM path eventually depends on. The card
-        teaches Blender via 12 keyboard-shortcut command families
-        that have been stable since Blender 1.0 (1995), so the skill
-        survives every future Blender release — directly relevant
-        for proxy modelling, control-point modelling, LOD work and
-        the other 3D gestures EM workflows lean on.
+        NOTE — Golden Twelve placement: previously sat as a generic
+        page-wide prerequisite block here. Moved (2026-06-30) into
+        the specific output cards that lean on Blender modelling
+        (proxy work, LOD/mesh cleanup, anastylosis, polished
+        representations) as a per-block `foundationLink`. The
+        reference card is the right *foundation* for those specific
+        modelling gestures — it is NOT a global prerequisite, since
+        many EM paths (graph-only documentation, source curation,
+        PyArchInit import) never touch the 3D viewport.
       -->
-      <aside class="fyp-prereq" role="note">
-        <span class="fyp-prereq__tag">Prerequisite · recommended</span>
-        <h2 class="fyp-prereq__title">Start with the Golden Twelve.</h2>
-        <p class="fyp-prereq__body">
-          Before walking any path that touches Blender, give yourself
-          the foundation: <strong>The Golden Twelve</strong> is a
-          two-page reference card with the twelve keyboard-shortcut
-          command families that cover every modelling task you'll do
-          in Blender for cultural heritage — proxy modelling, control-
-          point modelling, LOD work, semantic shapes. The shortcuts
-          have been stable since Blender 1.0 (1995); the skill you
-          build now still works in 2035.
-        </p>
-        <p class="fyp-prereq__cta">
-          <a href="https://zenodo.org/records/21029013" target="_blank" rel="noopener"
-             data-goatcounter-click="golden-twelve-zenodo">
-            Open on Zenodo
-            <span class="fyp-prereq__doi">doi: 10.5281/zenodo.21029013 ↗</span>
-          </a>
-        </p>
-      </aside>
 
       <!-- Progress -->
       <div class="progress" id="progress">
