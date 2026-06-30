@@ -1,7 +1,6 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import BlenderRepoInstall from '../../components/BlenderRepoInstall.astro';
 
 export async function getStaticPaths() {
   const versions = await getCollection('versions');
@@ -447,42 +446,18 @@ const statusPill: Record<string, string> = {
         );
       })()}
 
-      <!-- ── Quick install (drag-and-drop, repo-driven) ──────────
-           Embed the BlenderRepoInstall card when the version page
-           is for a development line and the matching tool exists in
-           the self-hosted dev channel at blender.extendedmatrix.org.
-           The component is channel-locked to `dev` here so the
-           card surfaces the v1.6.0-dev.N stream — the default
-           "stable wins" auto-selection would otherwise show the
-           1.5.x stable build to anyone landing on /versions/1-6/,
-           which defeats the purpose of the version-specific page.
+      <!--
+        Install card removed from the version page (2026-06-30).
+        Previously this block embedded the BlenderRepoInstall
+        component on each version (channel=dev for development lines,
+        channel=stable for LTS / stable lines). Host editorial
+        decision: the drag-and-drop install belongs on the per-tool
+        page (/tools/em-tools/), not duplicated on every version
+        page. Symmetric with 3DSC, whose install card has always
+        lived only on /tools/3dsc/. The version page now relies on
+        the components-table row's "download" link, which routes
+        to the appropriate per-tool install anchor.
       -->
-      {version.data.status === 'development' && (
-        <BlenderRepoInstall only="em_tools" channel="dev" />
-      )}
-
-      <!-- ── Quick install (drag-and-drop) for the LTS lines ────
-           Stable / LTS version pages also get the drag-and-drop
-           Blender extension repo card — same UX as /tools/em-tools/.
-           The previous draft of this block embedded the legacy
-           EmToolsDownloadPicker (per-OS × per-Blender static
-           download matrix), but that surface is deprecated: the
-           Blender extension repo handles install + auto-updates in
-           a single drag gesture. Per-file static downloads only
-           live now in the components-table row's "download ↗" link,
-           for offline / restricted-network installs.
-
-           Channel = "stable" because /versions/1-5/ is the LTS
-           landing. When 1.6 ships stable later this year the same
-           channel will start serving 1.6.x — at that point the
-           "stay on 1.5 forever" gesture moves to a dedicated 1.5
-           channel on the blender.extendedmatrix.org repo (a server-
-           side change, no component edits needed). Tracked as a
-           parking ticket; current behaviour matches /tools/em-tools/.
-      -->
-      {(version.data.status === 'lts' || version.data.status === 'stable') && (
-        <BlenderRepoInstall only="em_tools" channel="stable" />
-      )}
 
       <!-- ── Install steps ───────────────────────────────────── -->
       {version.data.installSteps.length > 0 && (
@@ -568,11 +543,11 @@ const statusPill: Record<string, string> = {
     border: 1px solid var(--em-gold);
     border-left-width: 4px;
     border-radius: var(--radius-md);
-    /* Generous breathing room — bullets and CTAs felt cramped against
-       the box edges at the previous 28px 30px. */
-    padding: 36px 40px;
+    /* Generous breathing room — bullets, title, tag pill and CTAs
+       all need air around them. Bumped twice on host feedback. */
+    padding: 40px 44px;
   }
-  .vp__lang-head { display: flex; align-items: center; gap: 12px; }
+  .vp__lang-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
   .vp__lang-head h2 { margin: 0; }
   .vp__lang-tag {
     font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
@@ -709,9 +684,10 @@ const statusPill: Record<string, string> = {
   }
   .vp__cluster {
     margin: 0 0 32px;
-    /* More breathing room around the inner table — previously the
-       table edges sat tight against the cluster box borders. */
-    padding: 28px 32px;
+    /* Generous breathing room around the inner content. Previously
+       the cluster-tag pill sat right against the top of the box and
+       the table edges hit the side borders. */
+    padding: 32px 36px;
     border: 1px solid var(--em-border);
     border-left-width: 4px;
     border-radius: var(--radius-md);
@@ -735,7 +711,7 @@ const statusPill: Record<string, string> = {
   }
 
   .vp__cluster-head {
-    margin-bottom: 8px;
+    margin-bottom: 14px;
   }
   .vp__cluster-tag {
     display: inline-block;
