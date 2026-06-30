@@ -2,7 +2,6 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlenderRepoInstall from '../../components/BlenderRepoInstall.astro';
-import EmToolsDownloadPicker from '../../components/EmToolsDownloadPicker.astro';
 
 export async function getStaticPaths() {
   const versions = await getCollection('versions');
@@ -435,28 +434,28 @@ const statusPill: Record<string, string> = {
         <BlenderRepoInstall only="em_tools" channel="dev" />
       )}
 
-      <!-- ── Pinned EM Tools picker for the LTS lines ───────────
-           For stable / LTS version pages, embed the granular
-           Blender × OS download picker pinned to the EM Tools
-           release tag declared in this version's `tools` array.
-           This is the "stay on 1.5 forever" gesture: once 1.6
-           supersedes 1.5 as the latest stable, /tools/em-tools/
-           will be serving 1.6.x through BlenderRepoInstall, but
-           /versions/1-5/ keeps offering the 1.5.x picker so
-           projects pinned to the LTS line don't get pulled
-           forward by accident. The release tag is read from the
-           YAML so bumping the patch version is a one-line edit
-           on the version content file (no component edits).
+      <!-- ── Quick install (drag-and-drop) for the LTS lines ────
+           Stable / LTS version pages also get the drag-and-drop
+           Blender extension repo card — same UX as /tools/em-tools/.
+           The previous draft of this block embedded the legacy
+           EmToolsDownloadPicker (per-OS × per-Blender static
+           download matrix), but that surface is deprecated: the
+           Blender extension repo handles install + auto-updates in
+           a single drag gesture. Per-file static downloads only
+           live now in the components-table row's "download ↗" link,
+           for offline / restricted-network installs.
+
+           Channel = "stable" because /versions/1-5/ is the LTS
+           landing. When 1.6 ships stable later this year the same
+           channel will start serving 1.6.x — at that point the
+           "stay on 1.5 forever" gesture moves to a dedicated 1.5
+           channel on the blender.extendedmatrix.org repo (a server-
+           side change, no component edits needed). Tracked as a
+           parking ticket; current behaviour matches /tools/em-tools/.
       -->
-      {(version.data.status === 'lts' || version.data.status === 'stable') && (() => {
-        const em = version.data.tools.find((t) => t.slug === 'em-tools');
-        if (!em?.version) return null;
-        // Strip optional leading "v" and any parenthetical suffix
-        // (e.g. "1.5.3 (Blender 4.4+)") to keep the prop clean.
-        const cleanVer = em.version.replace(/^v/, '').split(/[\s(]/)[0];
-        const releaseTag = `v${cleanVer}`;
-        return <EmToolsDownloadPicker releaseTag={releaseTag} />;
-      })()}
+      {(version.data.status === 'lts' || version.data.status === 'stable') && (
+        <BlenderRepoInstall only="em_tools" channel="stable" />
+      )}
 
       <!-- ── Install steps ───────────────────────────────────── -->
       {version.data.installSteps.length > 0 && (
