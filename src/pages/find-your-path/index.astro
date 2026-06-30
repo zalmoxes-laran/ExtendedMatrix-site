@@ -320,58 +320,27 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     line-height: 1.55;
   }
 
-  /* --- Golden Twelve prerequisite callout ---
-     Sits between the hero and the picker progress bar. Visually
-     "warm" (gold-tint background, gold left bar) so newcomers
-     spot it before diving into the picker; CSS-only, no JS or
-     dismissibility needed. */
-  .fyp-prereq {
-    margin: 0 0 28px;
-    padding: 20px 24px;
+  /* --- Per-card "Foundation" chip (Golden Twelve and similar
+     foundation references). Lives inside the .pop-links row on
+     specific output cards — proxy modelling, mesh cleanup,
+     anastylosis, representations. Visually distinct from the
+     ordinary learn/howto/get links: a small gold-tint pill so
+     users see at a glance that this is *foundational reading*
+     rather than the task's own tutorial. */
+  .pop-links a.foundation-link {
     background: var(--em-gold-tint, #f5ecd9);
-    border-left: 4px solid var(--em-gold, #b8893a);
-    border-radius: var(--radius-md, 8px);
-    max-width: 760px;
-  }
-  .fyp-prereq__tag {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    border: 1px solid var(--em-gold, #b8893a);
     color: var(--em-navy, #1a2845);
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
-  .fyp-prereq__title {
-    margin: 0 0 8px;
-    font-size: 1.25rem;
-    color: var(--em-navy, #1a2845);
-    line-height: 1.2;
-  }
-  .fyp-prereq__body {
-    margin: 0 0 12px;
-    font-size: 0.95rem;
-    line-height: 1.6;
-    color: var(--em-text, #1a1a1a);
-  }
-  .fyp-prereq__cta {
-    margin: 0;
-    font-size: 0.9rem;
-  }
-  .fyp-prereq__cta a {
-    color: var(--em-navy, #1a2845);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.75rem;
     font-weight: 600;
     text-decoration: none;
+    line-height: 1.4;
   }
-  .fyp-prereq__cta a:hover { color: var(--em-gold, #b8893a); }
-  .fyp-prereq__doi {
-    display: inline-block;
-    margin-left: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: var(--em-text-muted, #5a6b7a);
+  .pop-links a.foundation-link:hover {
+    background: var(--em-gold, #b8893a);
+    color: #fff;
   }
 
   /* --- "Now pick a version" cross-ref to the version pages.
@@ -1342,6 +1311,7 @@ const blockCatalog = {
     learnLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/tutorials/03-3dsc-lod-concept.html', label: 'Learn the concept →' },
     howToLink: { url: 'https://docs.extendedmatrix.org/projects/3DSC/en/latest/how-to/digital-replica/phase-4-lod-generation.html', label: 'How to do it →' },
     getLink:   { url: '/tools/3dsc/', label: 'Get 3DSC →' },
+    foundationLink: { url: 'https://zenodo.org/records/21068528', label: 'Foundation: Golden Twelve ↗' },
     status: 'stable',
     triggers: { materials: ['3d-survey'] }
   },
@@ -1353,6 +1323,7 @@ const blockCatalog = {
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5/source_node.html', label: 'Learn the concept →' },
     howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/tutorials/place_drawings_as_references.html#place-drawings-as-refs', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    foundationLink: { url: 'https://zenodo.org/records/21068528', label: 'Foundation: Golden Twelve ↗' },
     status: 'stable',
     triggers: { materials: ['drawings'] }
   },
@@ -1505,6 +1476,7 @@ const blockCatalog = {
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5/stratigraphic_nodes.html', label: 'Learn the concept →' },
     howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/tutorials/build-proxies.html', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    foundationLink: { url: 'https://zenodo.org/records/21068528', label: 'Foundation: Golden Twelve ↗' },
     status: 'stable',
     isSpine: true,
     triggers: { always: true, goals: ['documented-reconstruction', 'anastylosis', 'polished-viz'] }
@@ -1528,6 +1500,7 @@ const blockCatalog = {
     learnLink: { url: 'https://docs.extendedmatrix.org/en/1.5/canvas.html', label: 'Learn the concept →' },
     howToLink: { url: 'https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/panels/epochs_manager.html#assemble-epochs', label: 'How to do it →' },
     getLink:   { url: '/tools/em-tools/', label: 'Get EM Tools →' },
+    foundationLink: { url: 'https://zenodo.org/records/21068528', label: 'Foundation: Golden Twelve ↗' },
     status: 'stable',
     triggers: { goals: ['documented-reconstruction', 'polished-viz', 'publish-online'] }
   },
@@ -1855,6 +1828,13 @@ function buildPopLinks(block, id) {
     parts.push(`<a href="${withBase(block.getLink.url)}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_tool_${id}">${block.getLink.label}</a>`);
   } else if (!isInDev) {
     parts.push(`<span class="tutorial-coming">Tool info coming</span>`);
+  }
+  // Foundation reading — only present on cards whose task leans on
+  // hands-on Blender modelling (proxy work, mesh cleanup, anastylosis,
+  // polished representations). Rendered as a distinct gold pill so
+  // it reads as foundational background, not the task's own tutorial.
+  if (block.foundationLink) {
+    parts.push(`<a class="foundation-link" href="${block.foundationLink.url}" target="_blank" rel="noopener" data-goatcounter-click="picker_outbound_foundation_${id}">${block.foundationLink.label}</a>`);
   }
   return parts.join('');
 }
