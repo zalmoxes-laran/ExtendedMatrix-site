@@ -135,35 +135,15 @@ const statusPill: Record<string, string> = {
         </dl>
       </section>
 
-      <!-- ── Prerequisites ───────────────────────────────────── -->
-      <section class="vp__prereq">
-        <h2>Prerequisites</h2>
-        <p class="vp__prereq-lede">
-          You need <strong>Blender</strong> and <strong>yEd</strong> installed
-          before you can run this release. Install them first, then proceed
-          to the EM-specific tools below.
-        </p>
-        <div class="vp__prereq-grid">
-          <a class="prereq" href={version.data.blenderDownloadUrl ?? 'https://www.blender.org/download/'} target="_blank" rel="noopener"
-             data-goatcounter-click={`dl-blender-${versionSlug}`}>
-            <div class="prereq__name">Blender</div>
-            <div class="prereq__ver">
-              {version.data.blenderLts ? `${version.data.blenderLts} LTS` : `${version.data.blenderMin}+`}
-            </div>
-            <div class="prereq__desc">3D authoring environment. Free, GPL-3.</div>
-            <span class="prereq__cta">Download from blender.org ↗</span>
-          </a>
-          <a class="prereq" href={version.data.yedDownloadUrl} target="_blank" rel="noopener"
-             data-goatcounter-click={`dl-yed-${versionSlug}`}>
-            <div class="prereq__name">yEd</div>
-            <div class="prereq__ver">{version.data.yedRequirement}</div>
-            <div class="prereq__desc">Free graph editor used to author the EM `.graphml` file.</div>
-            <span class="prereq__cta">Download from yworks.com ↗</span>
-          </a>
-        </div>
-      </section>
-
-      <!-- ── Core formal language ────────────────────────────── -->
+      <!-- ── Core formal language ──────────────────────────────
+           Moved to the top of the version content (above the
+           Prerequisites block) on 2026-06-30 so the page leads
+           with "EM is a language" before naming the third-party
+           software that helps you USE the language. Mentioning
+           Blender immediately under the version number used to
+           make EM look like a Blender-only add-on, which is
+           the wrong first impression.
+      -->
       <section class="vp__lang">
         <div class="vp__lang-head">
           <h2>Core language — EM {version.data.version}</h2>
@@ -236,6 +216,42 @@ const statusPill: Record<string, string> = {
             </div>
           </div>
         )}
+      </section>
+
+      <!-- ── Prerequisites ─────────────────────────────────────
+           Lives BELOW the language section so the page reads as
+           "EM is this formal language" → "and here are the
+           third-party software packages that help you author and
+           publish it". The reverse order made EM look like a
+           Blender plugin by mention-priority, which it isn't.
+      -->
+      <section class="vp__prereq">
+        <h2>Prerequisites</h2>
+        <p class="vp__prereq-lede">
+          The Extended Matrix language is the heart of the project, but to
+          author and publish a project on your computer you also need a
+          few free, third-party tools alongside the EM-specific ones in
+          the next section. Install them once and they apply to every EM
+          project.
+        </p>
+        <div class="vp__prereq-grid">
+          <a class="prereq" href={version.data.blenderDownloadUrl ?? 'https://www.blender.org/download/'} target="_blank" rel="noopener"
+             data-goatcounter-click={`dl-blender-${versionSlug}`}>
+            <div class="prereq__name">Blender</div>
+            <div class="prereq__ver">
+              {version.data.blenderLts ? `${version.data.blenderLts} LTS` : `${version.data.blenderMin}+`}
+            </div>
+            <div class="prereq__desc">3D authoring environment. Free, GPL-3.</div>
+            <span class="prereq__cta">Download from blender.org ↗</span>
+          </a>
+          <a class="prereq" href={version.data.yedDownloadUrl} target="_blank" rel="noopener"
+             data-goatcounter-click={`dl-yed-${versionSlug}`}>
+            <div class="prereq__name">yEd</div>
+            <div class="prereq__ver">{version.data.yedRequirement}</div>
+            <div class="prereq__desc">Free graph editor used to author the EM `.graphml` file.</div>
+            <span class="prereq__cta">Download from yworks.com ↗</span>
+          </a>
+        </div>
       </section>
 
       <!-- ── Tools by role cluster ─────────────────────────────
