@@ -277,13 +277,25 @@ const statusPill: Record<string, string> = {
           developer: [],
           other: [],
         };
+        // Multi-role tools (EM Tools = archaeologist+modeller,
+        // Heriverse = archaeologist+modeller+developer, …) appear in
+        // EVERY cluster they belong to rather than only their first
+        // role. This avoids the misleading visual asymmetry where a
+        // tool with role-badges shown ([archaeologist, modeller]) is
+        // physically present in only one of the two clusters. Host
+        // editorial decision (2026-06-30): tags > containers when a
+        // tool genuinely spans roles.
         for (const t of toolRows) {
-          const primary = (t.toolRoles && t.toolRoles[0]) || 'other';
-          switch (primary) {
-            case 'archaeologist': buckets.archaeologist.push(t); break;
-            case 'modeller':      buckets.modeller.push(t);      break;
-            case 'developer':     buckets.developer.push(t);     break;
-            default:              buckets.other.push(t);
+          const roles = (t.toolRoles && t.toolRoles.length > 0)
+            ? t.toolRoles
+            : ['other'];
+          for (const r of roles) {
+            switch (r) {
+              case 'archaeologist': buckets.archaeologist.push(t); break;
+              case 'modeller':      buckets.modeller.push(t);      break;
+              case 'developer':     buckets.developer.push(t);     break;
+              default:              buckets.other.push(t);
+            }
           }
         }
         // Cluster metadata (label, lede, modifier class for styling).
@@ -556,7 +568,9 @@ const statusPill: Record<string, string> = {
     border: 1px solid var(--em-gold);
     border-left-width: 4px;
     border-radius: var(--radius-md);
-    padding: 28px 30px;
+    /* Generous breathing room — bullets and CTAs felt cramped against
+       the box edges at the previous 28px 30px. */
+    padding: 36px 40px;
   }
   .vp__lang-head { display: flex; align-items: center; gap: 12px; }
   .vp__lang-head h2 { margin: 0; }
@@ -694,8 +708,10 @@ const statusPill: Record<string, string> = {
     color: var(--em-text);
   }
   .vp__cluster {
-    margin: 0 0 28px;
-    padding: 22px 24px;
+    margin: 0 0 32px;
+    /* More breathing room around the inner table — previously the
+       table edges sat tight against the cluster box borders. */
+    padding: 28px 32px;
     border: 1px solid var(--em-border);
     border-left-width: 4px;
     border-radius: var(--radius-md);

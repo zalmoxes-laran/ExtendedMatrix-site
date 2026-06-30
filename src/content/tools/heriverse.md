@@ -7,7 +7,7 @@ docsUrl: "https://docs.extendedmatrix.org/projects/heriverse/en/latest/"
 repoUrl: "https://github.com/StratiGraph-ECCCH/Heriverse"
 licence: "GPL-3.0"
 status: beta
-roles: [archaeologist, modeller]
+roles: [archaeologist, modeller, developer]
 order: 40
 ---
 
