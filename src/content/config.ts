@@ -220,6 +220,16 @@ const versions = defineCollection({
       blenderMin: z.string().optional(),    // "4.4"
       blenderTested: z.array(z.string()).default([]),
       blenderLts: z.string().optional(),    // "4.3" — only when status==='lts'
+      // Optional disclosure for the Compatibility table: a single
+      // paragraph (markdown — bold + links) explaining what the
+      // Blender pin actually means (ABI splits, Mac Intel cutoff,
+      // upcoming Foundation LTS targets, etc.). Renders inside a
+      // collapsed <details> so the table stays compact for users
+      // who don't need the lore. Added in the audit 2026-06-30 as
+      // the single canonical home for the Blender-pin discussion;
+      // the install-step prose and body callouts that used to
+      // repeat it are removed.
+      blenderPinNote: z.string().optional(),
       yedRequirement: z.string().default('yEd 3.21 or later'),
       // Direct download URLs for the *prerequisites* of this version
       blenderDownloadUrl: z.string().url().optional(),
@@ -256,6 +266,20 @@ const versions = defineCollection({
             slug: z.string(), // ref to a tools collection entry
             version: z.string().optional(),
             status: z.enum(['included', 'optional', 'deprecated', 'removed']).default('included'),
+            // Action verb for the primary CTA button — different tools
+            // are reached in fundamentally different ways and the label
+            // should match:
+            //   download → direct file download (palette .zip, source
+            //              list .xlsx, folder-tree .zip, etc.) — label
+            //              renders as "Download ↓".
+            //   install  → in-app install or pip-install (EM Tools and
+            //              3DSC use Blender's drag-and-drop card on
+            //              /tools/X/#install; s3dgraphy uses PyPI).
+            //              Label renders as "Install →".
+            //   open     → web service or external landing page (e.g.
+            //              Heriverse docs / runtime). Label "Open ↗".
+            // Default is `download` to keep existing content working.
+            action: z.enum(['download', 'install', 'open']).default('download'),
             // Direct download for THIS tool in THIS EM version.
             // Accepts either an absolute URL (https://…) or a root-relative
             // path (e.g. "/tools/em-tools/#download") that points to an
