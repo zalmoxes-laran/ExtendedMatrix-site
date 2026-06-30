@@ -258,7 +258,20 @@ const statusPill: Record<string, string> = {
         // Tools without any role fall into a fourth "Other" bucket
         // at the bottom — present here only as a safety net.
         const CORE_SLUGS = new Set(['yed-palette', 'source-list-xlsx', 'folder-tree']);
-        const buckets: Record<string, typeof toolRows> = {
+        // NB on the syntax used here: the Astro template parser
+        // (inside this `{(() => { ... })()}` expression) mistakes
+        // TypeScript generic-prefix forms (Record-of-comma,
+        // Array-of-brace, etc.) for JSX tag opens and fails the
+        // build with cascading parse errors. So this block uses
+        // object literals instead of Record generics, and an
+        // explicit switch instead of a generic-cast lookup. Same
+        // end-state for the TS checker, zero parser ambiguity.
+        const buckets: {
+          archaeologist: typeof toolRows;
+          modeller: typeof toolRows;
+          developer: typeof toolRows;
+          other: typeof toolRows;
+        } = {
           archaeologist: [],
           modeller: [],
           developer: [],
@@ -266,20 +279,16 @@ const statusPill: Record<string, string> = {
         };
         for (const t of toolRows) {
           const primary = (t.toolRoles && t.toolRoles[0]) || 'other';
-          (buckets[primary] || buckets.other).push(t);
+          switch (primary) {
+            case 'archaeologist': buckets.archaeologist.push(t); break;
+            case 'modeller':      buckets.modeller.push(t);      break;
+            case 'developer':     buckets.developer.push(t);     break;
+            default:              buckets.other.push(t);
+          }
         }
         // Cluster metadata (label, lede, modifier class for styling).
-        //
-        // NB on the syntax used here: do NOT use the generic-prefix
-        // form (Array followed by left-angle followed by left-brace)
-        // for the type annotation inside this .astro template body.
-        // The Astro parser scans for left-angle even inside comments
-        // and treats that exact sequence as the opener of a JSX
-        // Fragment shorthand, failing the build with "Unable to
-        // assign attributes when using Fragment shorthand syntax".
-        // The postfix-array form is safe and keeps `key` typed as one
-        // of the bucket keys (avoids implicit-any when buckets[c.key]
-        // is indexed below).
+        // Type uses the postfix-array form to avoid the Astro parser
+        // ambiguity (see comment above).
         const clusters: { key: keyof typeof buckets; label: string; lede: string; mod: string }[] = [
           {
             key: 'archaeologist',
