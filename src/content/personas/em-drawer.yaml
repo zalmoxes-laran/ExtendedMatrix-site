@@ -1,9 +1,15 @@
 name: "EM Drawer"
-alias: "Disegnatore della matrice"
+alias: "The matrix scribe"
 emPhase: "data-management"
 clusters: ["archaeologist"]
 order: 50
-summary: "Translates the stratigrapher's interpretive analysis into a formally well-formed Extended Matrix graph in yEd — wiring stratigraphic and virtual stratigraphic nodes, attaching documents, extractors and combiners, drawing the paradata chains. The figure who actually writes EM as a language."
+# Reworked 2026-06-30: the EM Drawer is the figure who FUSES the
+# source hunter's dossier with the stratigrapher's interpretation
+# into a single formal graph. Previous wording made it sound like
+# they were just transcribing the stratigrapher's work; in
+# practice they are the crossroads where evidence and
+# interpretation come together as an authored artefact.
+summary: "Creates the Extended Matrix by fusing the source hunter's dossier with the stratigrapher's reading of the palimpsest — a single formally well-formed graph in yEd that wires stratigraphic and virtual stratigraphic nodes, attaches documents, extractors and combiners, and draws the paradata chains. The figure who actually writes EM as a language: the crossroads where evidence and interpretation become an authored artefact."
 tools:
   - "yed-palette"
   - "em-tools"

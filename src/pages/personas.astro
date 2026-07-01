@@ -64,7 +64,7 @@ const grouped = phases.map((ph) => ({
 
 <BaseLayout
   title="Team roles"
-  description="The eight canonical professional figures of an Extended Matrix project — source hunter, IT specialist, 3D survey specialist, stratigrapher, EM drawer, basic modeller, advanced modeller, storyteller. The typology makes team composition explicit, so projects scale beyond a single researcher."
+  description="The eight canonical professional figures of an Extended Matrix project — stratigrapher, source hunter, survey specialist, IT specialist, EM drawer, basic modeller, advanced modeller, storyteller. The typology makes team composition explicit, so projects scale beyond a single researcher. Vertical domain specialists (ceramicists, epigraphists, geophysicists, topographic surveyors) sit inside these personas as subject-matter axes, not as separate figures."
 >
   <section class="ps">
     <div class="container">
@@ -80,18 +80,27 @@ const grouped = phases.map((ph) => ({
       </p>
 
       <aside class="ps__intro">
-        <h2>Why team composition matters</h2>
+        <h2>These are roles, not silos.</h2>
         <p>
-          When a project is one person, the persona model is
-          invisible — the same researcher hunts sources, draws the
-          matrix, models proxies and tells the story. When the
-          project grows, those responsibilities have to be
-          assigned. The eight figures below are the canonical
-          allocation: each persona owns a specific layer of the EM
-          workflow, has a recognisable skill profile, and points
-          at the tools they most often reach for. Use them as a
-          checklist when you're forming a team or scoping a
-          collaboration.
+          A premise: competences <strong>are not and should not be
+          watertight compartments</strong>. Real work blurs the
+          boundaries — a stratigrapher who draws their own matrix, a
+          modeller who curates the source dossier, a source hunter
+          who runs a survey campaign. What follows is <em>one
+          possible division of labour</em> that helps a team scale
+          beyond a single researcher — a checklist of
+          responsibilities you can assign when the project grows,
+          not a set of exclusive job titles.
+        </p>
+        <p>
+          When a project is one person, this model is invisible —
+          the same researcher hunts sources, draws the matrix,
+          models proxies and tells the story. When the project
+          grows, those responsibilities have to be named. The eight
+          figures below are the canonical allocation: each persona
+          owns a specific layer of the EM workflow, has a
+          recognisable skill profile, and points at the tools they
+          most often reach for.
         </p>
         <p>
           Origin: the model was first formalised as seven figures
@@ -103,6 +112,18 @@ const grouped = phases.map((ph) => ({
           later to give publication and dissemination their own
           named owner — what the 5-phase method always implied but
           never named.
+        </p>
+        <p class="ps__intro-verticals">
+          <strong>Domain specialists</strong> — ceramicists,
+          epigraphists, numismatists, palaeobotanists,
+          geophysicists, topographic surveyors — sit <em>inside</em>
+          these personas as subject-matter axes rather than as
+          separate figures. Ceramic and epigraphic readings inhabit
+          the Stratigrapher role; geophysical prospection and
+          topographic survey inhabit the Survey specialist. The
+          eight personas describe <em>what you contribute to the
+          EM graph</em>, not <em>which discipline you were trained
+          in</em>.
         </p>
       </aside>
 
@@ -214,6 +235,18 @@ const grouped = phases.map((ph) => ({
   .ps__intro p:last-child { margin-bottom: 0; }
   .ps__intro a { color: var(--em-navy); font-weight: 600; }
   .ps__intro a:hover { color: var(--em-gold); }
+
+  /* Domain-specialists paragraph — visually calmer than the main
+     intro copy so it reads as a footnote-style clarification, not
+     as a new topic. */
+  .ps__intro-verticals {
+    margin-top: 14px !important;
+    padding: 10px 14px;
+    background: var(--em-navy-tint);
+    border-left: 3px solid var(--em-gold);
+    border-radius: var(--radius-sm);
+    font-size: 13.5px !important;
+  }
 
   /* Phase grouping */
   .ps__phase { margin: 0 0 48px; }

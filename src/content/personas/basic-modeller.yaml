@@ -1,5 +1,5 @@
 name: "Basic Modeller"
-alias: "Modellatore base · the Golden Twelve figure"
+alias: "Golden Twelve"
 emPhase: "implementation"
 clusters: ["modeller"]
 order: 60

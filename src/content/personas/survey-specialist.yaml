@@ -1,9 +1,17 @@
-name: "3D Survey & Photogrammetry specialist"
-alias: "Specialista rilievo 3D"
+name: "Survey specialist"
+alias: "The reality capturer"
 emPhase: "data-collection"
 clusters: ["modeller"]
 order: 30
-summary: "Plans and runs the on-site or in-lab 3D capture: photogrammetry, structured-light scanning, total station, GNSS, drone surveys. Produces the dense reality-based data (point clouds, meshes, orthomosaics) that the rest of the EM workflow then annotates, simplifies and reconstructs over."
+# Broadened summary on 2026-06-30 to cover the vertical survey
+# subfields — photogrammetry, structured-light, total station,
+# GNSS, drone, LiDAR, AND geophysical prospection (georadar,
+# magnetometry, geoelectric). All of them share the same role in
+# the EM workflow: producing reality-based captured data that
+# feeds the graph as evidence. Domain specialists (a geophysicist,
+# a topographic surveyor, a photogrammetrist) all inhabit this
+# persona depending on the campaign.
+summary: "Plans and runs the on-site or in-lab capture of reality-based data — photogrammetry, structured-light scanning, total station, GNSS, drone flights, terrestrial LiDAR, and geophysical prospection (georadar, magnetometry, geoelectric). Produces the dense datasets (point clouds, meshes, orthomosaics, subsurface anomaly maps) that the rest of the EM workflow then annotates, simplifies and reconstructs over. The natural home for the geophysicist, the topographic surveyor and the photogrammetrist alike."
 tools:
   - "3dsc"
   - "3dsc-metashape"

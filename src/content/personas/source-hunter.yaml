@@ -1,5 +1,5 @@
 name: "Source Hunter"
-alias: "Topo di biblioteca"
+alias: "The archive detective"
 emPhase: "data-collection"
 clusters: ["archaeologist"]
 order: 10
