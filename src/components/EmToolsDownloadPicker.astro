@@ -13,17 +13,17 @@
  * Blender compatibility per ABI column (NB: the "blender50" / "blender51"
  * suffix in filenames refers to the bundled Python wheels, not to the
  * minimum Blender):
- *   - "blender50" zip → Python 3.11 wheels → works on Blender 4.4 LTS
+ *   - "blender50" zip → Python 3.11 wheels → works on Blender 4.5 LTS
  *                       and Blender 5.0
  *   - "blender51" zip → Python 3.13 wheels → works on Blender 4.5 LTS
  *                       and Blender 5.1
  *
  * Mac Intel (pre-2020): Blender 5.x has no Intel build, so Intel users
- * must pair the `macosx-x64` zip with Blender 4.4 LTS or 4.5 LTS. The
+ * must pair the `macosx-x64` zip with Blender 4.5 LTS or 4.5 LTS. The
  * picker calls this out inline on the macOS Intel row.
  *
  * Pure HTML + CSS Grid, no client JS. Mobile-degrades to a single
- * column with per-button "Blender 4.4 / 5.0" badges so context is
+ * column with per-button "Blender 4.5 / 5.0" badges so context is
  * never lost.
  *
  * GoatCounter event-ids follow the existing `dl-em-tools-*` convention
@@ -85,7 +85,7 @@ const downloads: BuildRow[] = [
     goatOs: 'macos-x64',
     b50File: `em_tools-${RELEASE_TAG}-macosx-x64-blender50.zip`,
     b51File: `em_tools-${RELEASE_TAG}-macosx-x64-blender51.zip`,
-    note: 'Pair with Blender 4.4 or 4.5 LTS — Blender 5.x has no Intel build',
+    note: 'Pair with Blender 4.5 or 4.5 LTS — Blender 5.x has no Intel build',
   },
   {
     os: 'Windows',
@@ -104,12 +104,12 @@ const downloads: BuildRow[] = [
     </h2>
     <p class="em-picker__note">
       Pick the build matching your operating system and your installed
-      Blender. EM Tools 1.5.x works on <strong>Blender 4.4 LTS and later</strong>
+      Blender. EM Tools 1.5.x works on <strong>Blender 4.5 LTS and later</strong>
       — the two columns differ only in the bundled Python ABI:
-      <strong>Blender 4.4 LTS or 5.0</strong> share Python 3.11;
+      <strong>Blender 4.5 LTS or 5.0</strong> share Python 3.11;
       <strong>Blender 4.5 LTS or 5.1</strong> share Python 3.13. Pick the
       column whose Blender pair matches what's already on your machine.
-      Mac Intel users (pre-2020 Macs) need Blender 4.4 LTS or 4.5 LTS, since
+      Mac Intel users (pre-2020 Macs) need Blender 4.5 LTS or 4.5 LTS, since
       Blender 5.x ships no Intel build.
     </p>
   </div>
@@ -118,7 +118,7 @@ const downloads: BuildRow[] = [
     <!-- desktop column headers (hidden on mobile) -->
     <div class="em-picker__hcell em-picker__hcell--corner" aria-hidden="true"></div>
     <div class="em-picker__hcell" role="columnheader">
-      <span class="em-picker__bv">Blender 4.4 LTS / 5.0</span>
+      <span class="em-picker__bv">Blender 4.5 LTS / 5.0</span>
       <span class="em-picker__bvsub">Python 3.11 ABI</span>
     </div>
     <div class="em-picker__hcell" role="columnheader">
@@ -139,13 +139,13 @@ const downloads: BuildRow[] = [
             href={`${RELEASE_BASE}/${row.b50File}`}
             class="em-picker__btn"
             title={row.b50File}
-            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 4.4 LTS or 5.0`}
+            aria-label={`Download EM Tools ${version} for ${row.os} ${row.arch} on Blender 4.5 LTS or 5.0`}
             data-goatcounter-click={`dl-em-tools-v${version}-${row.goatOs}-blender50`}
           >
             <span class="em-picker__arrow" aria-hidden="true">⬇</span>
             <span class="em-picker__btn-label">
               <span class="em-picker__btn-main">
-                Download <span class="em-picker__btn-bver">· Blender 4.4 / 5.0</span>
+                Download <span class="em-picker__btn-bver">· Blender 4.5 / 5.0</span>
               </span>
               <span class="em-picker__btn-file">{row.b50File}</span>
             </span>

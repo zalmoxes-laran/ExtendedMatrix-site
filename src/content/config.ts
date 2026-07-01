@@ -217,7 +217,7 @@ const versions = defineCollection({
       is_preferred: z.boolean().default(false),
       releaseDate: z.coerce.date().optional(),
       eolDate: z.coerce.date().optional(),
-      blenderMin: z.string().optional(),    // "4.4"
+      blenderMin: z.string().optional(),    // "4.5"
       blenderTested: z.array(z.string()).default([]),
       blenderLts: z.string().optional(),    // "4.3" — only when status==='lts'
       // Optional disclosure for the Compatibility table: a single
