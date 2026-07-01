@@ -932,6 +932,46 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-style: italic;
   }
 
+  /* Face-visible "Golden Twelve" chip on cards that carry a
+     foundationLink. Small, gold, inline — sits under the tool
+     name so the reader spots the Blender-shortcut prerequisite
+     before opening the popover. Clicking opens the Zenodo card
+     directly. Hover just tinting; no need for card-open to see
+     the reference. */
+  .find-your-path .block__foundation-chip {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 1px 8px;
+    font-family: var(--fyp-font-mono, ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: #7a5a1a;
+    background: rgba(184, 137, 58, 0.14);
+    border: 1px solid rgba(184, 137, 58, 0.55);
+    border-radius: 999px;
+    text-decoration: none;
+    line-height: 1.4;
+    white-space: nowrap;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .find-your-path .block__foundation-chip:hover {
+    background: rgba(184, 137, 58, 0.85);
+    color: #fff;
+    text-decoration: none;
+  }
+  /* Spine cards (dark navy background) — swap to a gold-on-navy
+     variant so contrast holds. */
+  .find-your-path .block.is-spine .block__foundation-chip {
+    color: var(--gold-soft, #d9b46a);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(217, 180, 106, 0.6);
+  }
+  .find-your-path .block.is-spine .block__foundation-chip:hover {
+    background: var(--gold, #b8893a);
+    color: var(--navy-deep, #0e1a36);
+  }
+
   /* Active state */
   .find-your-path .block.is-active {
     border-color: var(--navy);
@@ -1789,9 +1829,23 @@ function renderBackbone() {
           }</p>`
         : '';
 
+      // On-face "Golden Twelve" tell — a tiny gold chip below the
+      // tool name for cards that carry a foundationLink. Makes the
+      // Blender-shortcut foundation visible without needing to open
+      // the popover. The popover still shows the same reference as
+      // a bigger pill, so the two surfaces reinforce each other.
+      const foundationChipHtml = block.foundationLink
+        ? `<a class="block__foundation-chip"
+              href="${block.foundationLink.url}"
+              target="_blank" rel="noopener"
+              data-goatcounter-click="picker_face_foundation_${id}"
+              title="Foundation reading: The Golden Twelve reference card (Blender shortcut families)">★ Golden Twelve</a>`
+        : '';
+
       blockEl.innerHTML = `
         <span class="block__title">${block.title}</span>
         <span class="block__tool">${block.tool}</span>
+        ${foundationChipHtml}
         <div class="block__pop">
           <strong>${block.title}</strong>
           <p>${block.microcopy}</p>

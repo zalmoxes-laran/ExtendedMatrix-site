@@ -166,11 +166,6 @@ const grouped = phases.map((ph) => ({
                     </ul>
                   </div>
                 )}
-                {p.data.source && (
-                  <p class="ps__card-source">
-                    <em>Source: {p.data.source}</em>
-                  </p>
-                )}
               </li>
             ))}
           </ul>
@@ -377,13 +372,6 @@ const grouped = phases.map((ph) => ({
   .ps__card-tools-list a:hover {
     border-color: var(--em-gold);
     color: var(--em-gold);
-  }
-
-  .ps__card-source {
-    margin: 8px 0 0;
-    font-size: 11px;
-    color: var(--em-text-muted);
-    line-height: 1.5;
   }
 
   /* Cross-ref footer */
