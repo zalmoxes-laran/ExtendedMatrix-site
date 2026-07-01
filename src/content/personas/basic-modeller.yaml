@@ -7,4 +7,3 @@ summary: "Builds proxy geometries on the photogrammetric model and assembles rec
 tools:
   - "em-tools"
   - "3dsc"
-source: "Demetrescu 2026, The Golden Twelve. Zenodo. doi:10.5281/zenodo.21068528 · companion paper in submission to DAACH"

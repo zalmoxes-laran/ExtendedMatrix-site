@@ -517,13 +517,17 @@ const blenderAddons = defineCollection({
 // documented in `.cowork-work/docs-restructure-2026-06-16.md`.
 
 // ─── Personas collection ─────────────────────────────────────────
-// The eight canonical professional figures involved in a complete
-// Extended Matrix project. Originally formalised as a "seven
-// figures" model in Demetrescu & Ferdani 2021 (Applied Sciences
-// 11(11):5206), the typology has since grown to eight — the
-// Storyteller is the most recent addition, codifying the
-// publication / dissemination role that the original 5-phase
-// method left implicit.
+// The eight professional figures involved in a complete Extended
+// Matrix project.
+//
+// NB (2026-07-01): the exact scholarly formalisation of this
+// typology is under review. Earlier drafts of the /personas page
+// attributed the "seven figures" origin to Demetrescu & Ferdani
+// 2021 (Applied Sciences 11(11):5206), but that claim is not
+// currently verifiable. The `source:` field on each persona yaml
+// has been left empty pending a confirmed reference; the page
+// content stays purely descriptive until the origin is nailed
+// down. Do not reintroduce attribution without a verified cite.
 //
 // The personas are not job titles — most EM projects compose them
 // across two or three real humans. The taxonomy is meant to make
@@ -571,9 +575,10 @@ const personas = defineCollection({
       // persona card.
       tools: z.array(z.string()).default([]),
       // Optional bibliographic anchor — a DOI, URL or short
-      // reference for the canonical definition of this persona
-      // (Demetrescu & Ferdani 2021 for figures 1-7; this site for
-      // the 8th).
+      // reference for the canonical definition of this persona.
+      // Currently unset on all eight files: the source attribution
+      // is under review (2026-07-01). Leave empty until a verified
+      // reference is available.
       source: z.string().optional(),
     }),
 });

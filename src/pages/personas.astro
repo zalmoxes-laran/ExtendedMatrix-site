@@ -5,17 +5,21 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 /**
- * Personas — the eight canonical professional figures of an
+ * Personas — the eight professional figures of an
  * Extended Matrix project.
  *
- * Originally formalised as seven figures in Demetrescu & Ferdani
- * 2021 (Applied Sciences 11(11):5206), the typology grew to eight
- * with the explicit Storyteller role. The personas are *not* job
- * titles — most real EM projects compose them across two or three
- * humans. The typology exists to make team composition explicit,
- * which matters for professional adoption: you can't scale a
- * project beyond a single researcher without naming the
- * responsibilities you're allocating.
+ * NB (2026-07-01): the exact scholarly formalisation of this
+ * typology is under review — earlier drafts of this page
+ * attributed it to Demetrescu & Ferdani 2021, but that claim is
+ * not currently verifiable. The `source:` field on each persona
+ * yaml has been removed pending a confirmed reference. Keep the
+ * page purely descriptive until the origin is nailed down.
+ *
+ * The personas are *not* job titles — most real EM projects
+ * compose them across two or three humans. The typology exists to
+ * make team composition explicit, which matters for professional
+ * adoption: you can't scale a project beyond a single researcher
+ * without naming the responsibilities you're allocating.
  *
  * This page is organised by the EM 5-phase method:
  *   1. Data Collection
@@ -64,19 +68,19 @@ const grouped = phases.map((ph) => ({
 
 <BaseLayout
   title="Team roles"
-  description="The eight canonical professional figures of an Extended Matrix project — stratigrapher, source hunter, survey specialist, IT specialist, EM drawer, basic modeller, advanced modeller, storyteller. The typology makes team composition explicit, so projects scale beyond a single researcher. Vertical domain specialists (ceramicists, epigraphists, geophysicists, topographic surveyors) sit inside these personas as subject-matter axes, not as separate figures."
+  description="Eight professional figures of an Extended Matrix project — stratigrapher, source hunter, survey specialist, IT specialist, EM drawer, basic modeller, advanced modeller, storyteller. The typology makes team composition explicit, so projects scale beyond a single researcher. Vertical domain specialists (ceramicists, epigraphists, geophysicists, topographic surveyors) sit inside these personas as subject-matter axes, not as separate figures."
 >
   <section class="ps">
     <div class="container">
       <span class="tag">Team roles</span>
       <h1>Eight figures, one EM project.</h1>
       <p class="ps__sub">
-        Extended Matrix projects compose <strong>eight canonical
-        professional figures</strong> across the five phases of the
-        method. The figures are not job titles — most projects
-        cover them with two or three real humans wearing several
-        hats. Naming them explicitly is what lets a project scale
-        beyond a single researcher.
+        Extended Matrix projects compose <strong>eight professional
+        figures</strong> across the five phases of the method. The
+        figures are not job titles — most projects cover them with
+        two or three real humans wearing several hats. Naming them
+        explicitly is what lets a project scale beyond a single
+        researcher.
       </p>
 
       <aside class="ps__intro">
@@ -101,17 +105,6 @@ const grouped = phases.map((ph) => ({
           owns a specific layer of the EM workflow, has a
           recognisable skill profile, and points at the tools they
           most often reach for.
-        </p>
-        <p>
-          Origin: the model was first formalised as seven figures
-          in
-          <a href="https://doi.org/10.3390/app11115206" target="_blank" rel="noopener">
-            Demetrescu &amp; Ferdani 2021
-          </a>
-          (Applied Sciences 11(11):5206). The Storyteller was added
-          later to give publication and dissemination their own
-          named owner — what the 5-phase method always implied but
-          never named.
         </p>
         <p class="ps__intro-verticals">
           <strong>Domain specialists</strong> — ceramicists,
