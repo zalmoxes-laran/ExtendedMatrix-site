@@ -13,7 +13,7 @@ alias: "The palimpsest reader"
 emPhase: "data-collection"
 clusters: ["archaeologist"]
 order: 5
-summary: "Reads the stratigraphic palimpsest across every surface it appears on: the excavation, the standing monument, the 3D survey, the documentary sources. Names stratigraphic units (SU), virtual stratigraphic units (USV), special finds (SF) and the relationships between them. The intellectual author of what the graph eventually encodes — and by extension the natural home of material-culture readings (ceramics, epigraphy, numismatics) that classify what the palimpsest contains."
+summary: "Reads the stratigraphic palimpsest on every surface it appears on — excavation, standing monument, 3D survey, documentary sources. Names SU, USV and SF nodes and their relationships. Intellectual author of what the graph encodes; also the natural home of material-culture readings (ceramics, epigraphy, numismatics)."
 tools:
   - "yed-palette"
   - "pyarchinit"

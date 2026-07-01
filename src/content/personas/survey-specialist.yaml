@@ -11,7 +11,7 @@ order: 30
 # feeds the graph as evidence. Domain specialists (a geophysicist,
 # a topographic surveyor, a photogrammetrist) all inhabit this
 # persona depending on the campaign.
-summary: "Plans and runs the on-site or in-lab capture of reality-based data — photogrammetry, structured-light scanning, total station, GNSS, drone flights, terrestrial LiDAR, and geophysical prospection (georadar, magnetometry, geoelectric). Produces the dense datasets (point clouds, meshes, orthomosaics, subsurface anomaly maps) that the rest of the EM workflow then annotates, simplifies and reconstructs over. The natural home for the geophysicist, the topographic surveyor and the photogrammetrist alike."
+summary: "Plans and runs on-site or in-lab capture of reality-based data — photogrammetry, structured-light, total station, GNSS, drone, LiDAR, geophysical prospection. Produces the datasets the rest of the EM workflow annotates and reconstructs over. Home for geophysicists, topographic surveyors and photogrammetrists."
 tools:
   - "3dsc"
   - "3dsc-metashape"

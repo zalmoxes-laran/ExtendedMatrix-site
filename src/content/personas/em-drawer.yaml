@@ -9,7 +9,7 @@ order: 50
 # they were just transcribing the stratigrapher's work; in
 # practice they are the crossroads where evidence and
 # interpretation come together as an authored artefact.
-summary: "Creates the Extended Matrix by fusing the source hunter's dossier with the stratigrapher's reading of the palimpsest — a single formally well-formed graph in yEd that wires stratigraphic and virtual stratigraphic nodes, attaches documents, extractors and combiners, and draws the paradata chains. The figure who actually writes EM as a language: the crossroads where evidence and interpretation become an authored artefact."
+summary: "Creates the Extended Matrix by fusing the source hunter's dossier with the stratigrapher's reading into a formally well-formed graph in yEd. Wires SU, USV and SF nodes, attaches documents, extractors and combiners, draws the paradata chains. The figure who writes EM as a language."
 tools:
   - "yed-palette"
   - "em-tools"
