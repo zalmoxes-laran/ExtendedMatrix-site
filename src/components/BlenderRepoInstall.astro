@@ -124,7 +124,7 @@ const OS_OPTS = [
     <h2 class="bri__title" id="bri-title">Install in Blender{channelHint}</h2>
     <p class="bri__sub">
       Drag a tool into the Blender window — Blender picks the build matching your
-      OS and Blender version (4.4+) and keeps it <strong>updated automatically</strong>.
+      OS and Blender version (4.5+) and keeps it <strong>updated automatically</strong>.
       {forceChannel === 'dev' && (
         <>
           {' '}This card serves the <strong>dev channel</strong>
@@ -155,7 +155,7 @@ const OS_OPTS = [
               </label>
               <label>Blender
                 <select class="bri-bl">
-                  <option value="blender50">4.4 – 5.0</option>
+                  <option value="blender50">4.5 – 5.0</option>
                   <option value="blender51">5.1 +</option>
                 </select>
               </label>
@@ -230,7 +230,7 @@ const OS_OPTS = [
     const update = () => {
       const url = builds[osSel.value]?.[blSel.value];
       if (url) {
-        const min = blSel.value === 'blender50' ? '4.4.0' : '5.1.0';
+        const min = blSel.value === 'blender50' ? '4.5.0' : '5.1.0';
         const max = blSel.value === 'blender50' ? '5.1.0' : '';
         let href = url + '?repository=' + repo + '&blender_version_min=' + min + '&platform=' + osSel.value;
         if (max) href += '&blender_version_max=' + max;

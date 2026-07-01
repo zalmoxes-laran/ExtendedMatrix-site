@@ -139,11 +139,19 @@ const ctaLabel: { download: string; install: string; open: string } = {
         </ul>
       </nav>
 
-      <div class="vp__head">
-        <span class="vp__num">EM {version.data.version}</span>
-        <span class={`vp__status v__status--${version.data.status}`}>{statusLabel[version.data.status]}</span>
-      </div>
-      <h1 class="vp__title">{version.data.title}</h1>
+      <!--
+        Double title dropped (2026-07-01). The previous layout showed
+        "EM 1.5" (small) + "LONG-TERM SUPPORT" pill on one row, then
+        the full "EM 1.5 — Long-Term Support" H1 immediately below —
+        three signals for one fact (the version chip strip above
+        already codes the status via its border variant). Merged: the
+        status pill sits inline with the H1, the small number row is
+        gone.
+      -->
+      <h1 class="vp__title">
+        {version.data.title}
+        <span class={`vp__status vp__status--inline v__status--${version.data.status}`}>{statusLabel[version.data.status]}</span>
+      </h1>
       <p class="vp__lede">{version.data.summary}</p>
 
       <!-- ── Compatibility table ─────────────────────────────── -->
@@ -654,18 +662,29 @@ const ctaLabel: { download: string; install: string; open: string } = {
   .vp__chip--legacy:not(.vp__chip--active)      { color: var(--em-text-muted); }
   .vp__chip--eol:not(.vp__chip--active)         { color: #a22; border-color: #fae0e0; }
 
-  .vp__head { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
-  .vp__num { font-family: var(--font-display); font-weight: 800; font-size: 28px; color: var(--em-navy); }
+  /* Status pill — retired as a standalone `.vp__head` row (2026-07-01)
+     and now rendered INLINE next to the H1 title via .vp__status--inline.
+     The `.vp__head` / `.vp__num` rules stay in place only in case a
+     future page reintroduces the compact row; they are unused as of
+     this commit. */
   .vp__status {
     font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
     padding: 3px 10px; border-radius: 2px;
+  }
+  .vp__status--inline {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 14px;
+    /* Optical alignment vs the H1 baseline — small nudge downward. */
+    position: relative;
+    top: -6px;
   }
   .v__status--lts        { color: var(--em-gold); background: var(--em-gold-tint); }
   .v__status--development{ color: var(--em-navy); background: var(--em-navy-tint); }
   .v__status--stable     { color: #2c5a2c; background: #d8ecd8; }
   .v__status--legacy     { color: #555;    background: #eee; }
   .v__status--eol        { color: #a22;    background: #fae0e0; }
-  .vp__title { margin: 12px 0 16px; }
+  .vp__title { margin: 18px 0 16px; }
   .vp__lede { color: var(--em-text); font-size: 17px; max-width: 720px; margin-bottom: 28px; }
 
   .vp__compat, .vp__prereq, .vp__lang, .vp__tools, .vp__install, .vp__body { margin-top: 40px; }
@@ -890,17 +909,22 @@ const ctaLabel: { download: string; install: string; open: string } = {
   }
 
   .vp__cluster-head {
-    margin-bottom: 14px;
+    /* More vertical breathing room between the cluster tag and the
+       lede/list below (2026-07-01 padding pass). */
+    margin-bottom: 20px;
   }
   .vp__cluster-tag {
     display: inline-block;
     font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     font-weight: 700;
-    padding: 4px 12px;
-    border-radius: 2px;
+    /* Pill inner padding bumped from 4px/12px to 8px/16px so the
+       cluster title (which is now longer — "Core · for everyone",
+       "For archaeologists" etc) sits with proper air around it. */
+    padding: 8px 16px;
+    border-radius: 3px;
   }
   .vp__cluster-tag--core           { color: var(--em-navy); background: rgba(184, 137, 58, 0.22); }
   .vp__cluster-tag--archaeologist  { color: var(--em-navy); background: var(--em-navy-tint); }
