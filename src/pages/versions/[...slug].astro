@@ -1210,76 +1210,17 @@ const ctaLabel: { download: string; install: string; open: string } = {
     color: var(--em-text-muted);
     font-style: italic;
   }
-  .vp__body :global(.emfig--placeholder .emfig__box) {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    padding: 18px;
-    background:
-      repeating-linear-gradient(
-        135deg,
-        rgba(184, 137, 58, 0.05) 0,
-        rgba(184, 137, 58, 0.05) 12px,
-        rgba(184, 137, 58, 0.10) 12px,
-        rgba(184, 137, 58, 0.10) 24px
-      ),
-      var(--em-gold-tint);
-    border: 2px dashed var(--em-gold);
-    border-radius: var(--radius-md);
-    color: var(--em-navy);
-    text-align: center;
-    box-sizing: border-box;
-  }
-  .vp__body :global(.emfig--placeholder[data-aspect="4x3"] .emfig__box) {
-    aspect-ratio: 4 / 3;
-  }
-  .vp__body :global(.emfig--placeholder[data-aspect="hero"] .emfig__box) {
-    aspect-ratio: 21 / 9;
-  }
-  .vp__body :global(.emfig--placeholder .emfig__label) {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--em-gold);
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid var(--em-gold);
-    padding: 4px 12px;
-    border-radius: 2px;
-  }
-  .vp__body :global(.emfig--placeholder .emfig__alt) {
-    font-size: 13px;
-    line-height: 1.55;
-    color: var(--em-navy);
-    max-width: 520px;
-    font-style: italic;
-    opacity: 0.85;
-  }
-  .vp__body :global(.emfig--placeholder .emfig__slot) {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--em-text-muted);
-    opacity: 0.7;
-    letter-spacing: 0.05em;
-  }
-  .vp__body :global(.emfig--placeholder figcaption::before) {
-    content: '↳ caption preview · ';
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--em-gold);
-    font-style: normal;
-    margin-right: 4px;
+  /* Placeholder figures — hidden on the live site (2026-07-01).
+     Previously rendered as loud dashed gold boxes with "image to
+     add" labels, which read to users as a broken site rather than
+     as editor tell. The <figure class="emfig emfig--placeholder">
+     markup is preserved in the .md sources so that when a real
+     screenshot arrives, the editor can flip the block to
+     <figure class="emfig"><img …/></figure> and the image will
+     render normally without needing to reintroduce placeholder
+     styles. Until then, the section reads as clean prose. */
+  .vp__body :global(.emfig--placeholder) {
+    display: none;
   }
 
   /* "What's new" axis sub-cards — used by the per-tool blocks */
