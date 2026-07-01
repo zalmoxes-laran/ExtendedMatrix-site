@@ -26,7 +26,9 @@ PyArchInit project can be brought into the Extended Matrix workflow
 as a connected auxiliary data source — referencing records live or
 baking them into the graph. Stratigraphic units, relationships and
 selected paradata authored in PyArchInit can be projected onto an
-s3dgraphy graph and exchanged with the rest of the EM Framework.
+s3dgraphy graph and exchanged with the rest of the EM Ecosystem.
+(PyArchInit sits in the third-party ring — outside the first-party
+EMF, connected via s3dgraphy.)
 
 EM does not require PyArchInit: an excavation can be managed with
 EM plus Excel spreadsheets alone. PyArchInit is one strong,

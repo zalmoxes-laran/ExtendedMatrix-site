@@ -8,6 +8,6 @@ cover: ../../assets/projects/2015_Sarmizegetusa.jpg
 coverAlt: "The Great Temple of Sarmizegetusa — virtual reconstruction"
 ---
 
-Stub migrated from extendedmatrix.org. The Great Temple of Sarmizegetusa is the **earliest case** where Extended Matrix was applied — making it both a historic and methodologically foundational project for the EM ecosystem.
+Stub migrated from extendedmatrix.org. The Great Temple of Sarmizegetusa is the **earliest case** where Extended Matrix was applied — making it both a historic and methodologically foundational project for the EM Ecosystem.
 
 > **Editors:** expand this page with the project description, partners, the foundational role of this case study, and references.

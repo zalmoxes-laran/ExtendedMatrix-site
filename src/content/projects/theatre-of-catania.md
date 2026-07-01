@@ -40,7 +40,7 @@ EM was the reconstruction-side backbone of the Catania pipeline. Two distinguish
 
 The final output of the task is not a single 3D model but a **4D virtualisation embedded in a Linked Open Data scenario**: the 3D reconstruction is published with multiple entry points — by place, by time period, by source dossier, by reconstructive hypothesis — so that a researcher can examine, compare and search the model from any of those angles. The underlying data model is aligned with CIDOC-CRM; the temporal and spatial dimensions are anchored to normative gazetteers (for place) and chronological frameworks (for time). What enters the cloud is therefore not just "a model of the theatre" but a **navigable knowledge graph in which the model is one published view**.
 
-## Why this case study mattered for the EM ecosystem
+## Why this case study mattered for the EM Ecosystem
 
 Catania was the first large-scale stress test of three things that have since become structural elements of the EM 1.5–1.6 lifecycle:
 
