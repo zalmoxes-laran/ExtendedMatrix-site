@@ -2,7 +2,7 @@
 name: "EM Folder Tree"
 role: "Canonical project structure"
 summary: "Canonical project folder tree for any Extended Matrix project — the `DosCO` document collection, sub-folders for graphs, exports, sources, and the `D.NN` document naming convention. Pencil-and-paper foundation; unzip into the project root before authoring nodes."
-docsUrl: "https://docs.extendedmatrix.org/en/1.5/learn_EM.html"
+docsUrl: "https://docs.extendedmatrix.org/projects/3DSC/en/1.7.0/reference/file-locations.html#folder-structure"
 repoUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/tree/EM_v1.5/07_FolderTree"
 licence: "CC-BY-SA 4.0"
 status: stable

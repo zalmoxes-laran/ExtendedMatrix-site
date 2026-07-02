@@ -72,6 +72,14 @@ const team = defineCollection({
       // Defaults to 'active' for backward compatibility.
       status: z.enum(['active', 'past', 'committee']).default('active'),
       bio: z.string().optional(),
+      // avatar: path to the OPTIMIZED thumbnail rendered on /team
+      // (320×320 WebP, ~10–30 KB per file). Convention:
+      //   ../../assets/team/<slug>.webp
+      // Full-resolution source photos live in
+      // src/assets/team/originals/ (kept for future editorial uses
+      // like per-member detail pages, re-crops, print, …). See
+      // src/assets/team/originals/README.md for the regeneration
+      // recipe.
       avatar: image().optional(),
       orcid: z.string().optional(),
       email: z.string().email().optional(),
