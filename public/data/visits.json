@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-02T07:14:17Z",
+  "fetched_at": "2026-07-03T09:20:20Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-02"
+    "end": "2026-07-03"
   },
-  "total": 1661,
-  "total_events": 527,
+  "total": 1702,
+  "total_events": 533,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1153
+      "count": 1180
     },
     {
       "code": "ES",
@@ -26,7 +26,7 @@
     {
       "code": "TR",
       "name": "Turkey",
-      "count": 49
+      "count": 50
     },
     {
       "code": "US",
@@ -54,6 +54,11 @@
       "count": 24
     },
     {
+      "code": "NL",
+      "name": "Netherlands",
+      "count": 23
+    },
+    {
       "code": "UZ",
       "name": "Uzbekistan",
       "count": 20
@@ -64,14 +69,14 @@
       "count": 15
     },
     {
-      "code": "NL",
-      "name": "Netherlands",
-      "count": 14
-    },
-    {
       "code": "KR",
       "name": "South Korea",
       "count": 10
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "count": 8
     },
     {
       "code": "GB",
@@ -79,8 +84,8 @@
       "count": 8
     },
     {
-      "code": "IE",
-      "name": "Ireland",
+      "code": "MX",
+      "name": "Mexico",
       "count": 7
     },
     {
@@ -89,18 +94,13 @@
       "count": 6
     },
     {
-      "code": "MX",
-      "name": "Mexico",
-      "count": 6
+      "code": "DZ",
+      "name": "Algeria",
+      "count": 5
     },
     {
       "code": "HK",
       "name": "Hong Kong",
-      "count": 4
-    },
-    {
-      "code": "HU",
-      "name": "Hungary",
       "count": 4
     },
     {
