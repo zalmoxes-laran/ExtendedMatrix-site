@@ -346,6 +346,19 @@ const tools = defineCollection({
       icon: image().optional(),
       docsUrl: z.string().url().optional(),
       repoUrl: z.string().url().optional(),
+      // Primary CTA verb for the tool page's landing button. Same enum
+      // as the version-page tool reference:
+      //   'download' → direct file download (a .zip / .xlsx arrives)
+      //   'install'  → in-app install (Blender drag&drop, pip, QGIS
+      //                plugin manager). NB: EM Tools and 3DSC render
+      //                the BlenderRepoInstall drag&drop component
+      //                instead of a plain button; for those two, the
+      //                `action` field is effectively unused because
+      //                the component overrides it.
+      //   'open'     → external landing page (web platform, docs-only
+      //                projects). Renders as "Open <tool> ↗".
+      // Defaults to 'download' for backward compatibility.
+      action: z.enum(['download', 'install', 'open']).default('download'),
       downloadUrl: z.string().url().optional(),
       // Bundled artifact served from /public/templates/ (e.g. an empty XLSX
       // template). When set, the tool page renders an extra "Download

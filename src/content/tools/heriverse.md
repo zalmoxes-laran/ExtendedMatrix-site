@@ -5,11 +5,27 @@ summary: "Heritage Science Metaverse — the web-based publication endpoint of t
 icon: ../../assets/tools/heriverse.png
 docsUrl: "https://docs.extendedmatrix.org/projects/heriverse/en/latest/"
 repoUrl: "https://github.com/StratiGraph-ECCCH/Heriverse"
+# Heriverse is a web platform — the CTA opens the beta-tester
+# runtime instance. Access is by invitation only for now: users
+# must request beta enrollment by emailing the project lead
+# (obfuscated on the page body to avoid spam bots). A public
+# enrollment form is coming; when the URL is known, swap the
+# email prompt for a link to the form.
+action: open
+downloadUrl: "https://strativerse-test.ispc.cnr.it/a/heriverse/scenes/"
 licence: "GPL-3.0"
 status: beta
 roles: [archaeologist, modeller, developer]
 order: 40
 ---
+
+> **Beta only — request access.** The runtime instance at
+> [strativerse-test.ispc.cnr.it](https://strativerse-test.ispc.cnr.it/a/heriverse/scenes/)
+> is currently open to beta testers only. To join the beta programme,
+> email **emanuel dot demetrescu at cnr dot it** (address obfuscated
+> to slow spam bots — replace *dot* with `.` and *at* with `@`). A
+> public enrollment form is in preparation and will replace this
+> email prompt once it goes live.
 
 ## What it is
 

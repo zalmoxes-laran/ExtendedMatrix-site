@@ -8,7 +8,11 @@ roles: [archaeologist]
 order: 90
 docsUrl: "https://osiris.itabc.cnr.it/scenebaker/index.php/projects/emviq/"
 repoUrl: "https://github.com/phoenixbf/emviq"
-downloadUrl: "https://github.com/phoenixbf/emviq"
+# EMviq is a legacy web viewer; it is not shipped as an installable
+# release. The CTA opens the project's landing page rather than
+# offering a misleading "Download latest" from GitHub.
+action: open
+downloadUrl: "https://osiris.itabc.cnr.it/scenebaker/index.php/projects/emviq/"
 ---
 
 ## Status

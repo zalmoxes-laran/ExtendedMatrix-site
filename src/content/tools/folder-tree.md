@@ -4,6 +4,12 @@ role: "Canonical project structure"
 summary: "Canonical project folder tree for any Extended Matrix project — the `DosCO` document collection, sub-folders for graphs, exports, sources, and the `D.NN` document naming convention. Pencil-and-paper foundation; unzip into the project root before authoring nodes."
 docsUrl: "https://docs.extendedmatrix.org/projects/3DSC/en/1.7.0/reference/file-locations.html#folder-structure"
 repoUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/tree/EM_v1.5/07_FolderTree"
+# Direct download of the zipped folder scaffold — bypasses GitHub's
+# missing /releases/latest on the parent ExtendedMatrix repo (which
+# ships palette + folder-tree + source-list from branch subfolders,
+# not from tagged releases). The link resolves to a real .zip on the
+# EM_v1.5 branch.
+downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/raw/refs/heads/EM_v1.5/07_FolderTree/EM_FolderTree_v1.5.zip"
 licence: "CC-BY-SA 4.0"
 status: stable
 roles: [archaeologist]

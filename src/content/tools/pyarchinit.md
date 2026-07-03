@@ -4,6 +4,12 @@ role: "QGIS plugin"
 summary: "QGIS plugin for archaeological data management with strong 2D GIS visualization of stratigraphic data. Connected to EM via s3Dgraphy as an auxiliary data source."
 docsUrl: "https://pyarchinit-api.readthedocs.io/en/latest/"
 repoUrl: "https://github.com/pyarchinit/pyarchinit"
+# PyArchInit is a QGIS plugin installed via QGIS's plugin manager,
+# not via a file download. The CTA opens the project's docs page
+# where installation instructions live. Third-party integration —
+# lives in /ecosystem/ as well.
+action: open
+downloadUrl: "https://pyarchinit-api.readthedocs.io/en/latest/"
 licence: "GPL-2.0"
 status: stable
 roles: [archaeologist]

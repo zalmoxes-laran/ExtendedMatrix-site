@@ -91,14 +91,29 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         // and skip the generic single-button download.
         const REPO_TOOL = ({ 'em-tools': 'em_tools', '3dsc': 'dsc_tools' })[toolSlug];
         const hasRepoInstall = !!REPO_TOOL;
+        // CTA verb + styling per tool.data.action. See schema comment
+        // in src/content/config.ts. EM Tools / 3DSC bypass this because
+        // hasRepoInstall renders BlenderRepoInstall instead.
+        const ctaLabel = {
+          download: '⬇ Download latest',
+          install:  '⇢ Install',
+          open:     '↗ Open',
+        }[tool.data.action] ?? '⬇ Download latest';
+        const ctaClass = {
+          download: 'tp__btn',
+          install:  'tp__btn tp__btn--install',
+          open:     'tp__btn tp__btn--open',
+        }[tool.data.action] ?? 'tp__btn';
         return (
           <>
             {hasRepoInstall && <BlenderRepoInstall only={REPO_TOOL} />}
             <div class="tp__links">
               {!hasRepoInstall && latestDownload && (
-                <a href={latestDownload} target="_blank" rel="noopener" class="tp__btn"
-                   data-goatcounter-click={`dl-${toolSlug}-latest`}>
-                  ⬇ Download latest
+                <a href={latestDownload} target={tool.data.action === 'open' ? undefined : '_blank'}
+                   rel={tool.data.action === 'open' ? undefined : 'noopener'}
+                   class={ctaClass}
+                   data-goatcounter-click={`cta-${toolSlug}-${tool.data.action}`}>
+                  {ctaLabel}
                 </a>
               )}
               {templateHref && (
@@ -107,7 +122,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
                   ⬇ Download template
                 </a>
               )}
-              {tool.data.docsUrl && <a href={tool.data.docsUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">Manual ↗</a>}
+              {tool.data.docsUrl && tool.data.docsUrl !== latestDownload && (
+                <a href={tool.data.docsUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost">Manual ↗</a>
+              )}
               {tool.data.repoUrl && (
                 <a href={tool.data.repoUrl} target="_blank" rel="noopener" class="tp__btn tp__btn--ghost"
                    data-goatcounter-click={`repo-${toolSlug}`}>
@@ -234,6 +251,19 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .tp__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
   .tp__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
   .tp__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
+  /* Action-variant CTA colours — mirror the /versions/ row-CTA
+     palette so a returning user recognises the verb at a glance.
+     Install → gold pieno (in-app flow), Open → gold ghost (external
+     landing). Download stays the navy default. */
+  .tp__btn--install { background: var(--em-gold); color: var(--em-bg); }
+  .tp__btn--install:hover { background: var(--em-navy); color: var(--em-bg); }
+  .tp__btn--open {
+    background: transparent;
+    color: var(--em-gold);
+    border: 1.5px solid var(--em-gold);
+    padding: 8.5px 16.5px;
+  }
+  .tp__btn--open:hover { background: var(--em-gold-tint); color: var(--em-gold); }
   .tp__lic { font-size: 12px; color: var(--em-text-muted); margin-left: auto; }
   .tp__hint {
     margin: -28px 0 36px;
