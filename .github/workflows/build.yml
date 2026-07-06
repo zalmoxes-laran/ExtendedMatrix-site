@@ -29,9 +29,15 @@ jobs:
           submodules: recursive
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        # v5+ runs on Node 24 natively (v4 targeted Node 20, which GitHub
+        # deprecated on 2026-Q3 — the runner was forcibly upgrading it to
+        # Node 24 anyway, triggering the "Node.js 20 is deprecated" warning
+        # on every build). Bumped 2026-07-06 to silence that warning and
+        # align with the current LTS. Node 22 (Jod) is the active LTS at
+        # the time of this bump.
+        uses: actions/setup-node@v5
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -41,7 +47,11 @@ jobs:
         run: npm run build
 
       - name: Upload build artifact
-        uses: actions/upload-pages-artifact@v3
+        # v5 (released 2026-04-10) uses actions/upload-artifact@v7
+        # underneath — the transitive dependency that triggered the
+        # "Node.js 20 is deprecated" warning on v3. Bumped alongside
+        # setup-node v5 and deploy-pages v5 in the 2026-07-06 pass.
+        uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -59,4 +69,5 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        # v5 runs on Node 24 natively (v4 targeted Node 20).
+        uses: actions/deploy-pages@v5
