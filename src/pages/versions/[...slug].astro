@@ -90,7 +90,10 @@ for (const t of version.data.tools) {
     toolName: entry?.data.name ?? t.slug,
     toolRole: entry?.data.role ?? '',
     toolRoles: entry?.data.roles ?? [],
-    toolDocs: entry?.data.docsUrl,
+    // Prefer the per-version manual URL if the version yaml overrides
+    // it (Heriverse 1.5/1.6 have distinct manuals); fall back to the
+    // tool's own docsUrl for tools whose manual is version-agnostic.
+    toolDocs: t.docsUrl ?? entry?.data.docsUrl,
     toolRepo: entry?.data.repoUrl,
     toolPage: `${B}/tools/${t.slug}/`,
     version: t.version,

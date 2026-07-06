@@ -3,7 +3,7 @@ name: "Heriverse"
 role: "Web platform"
 summary: "Heritage Science Metaverse — the web-based publication endpoint of the framework. Opens any EM-aware scene in a browser with paradata pop-ups, epoch switching and collaborative VR."
 icon: ../../assets/tools/heriverse.png
-docsUrl: "https://docs.extendedmatrix.org/projects/heriverse/en/latest/"
+docsUrl: "https://docs.extendedmatrix.org/projects/heriverse/en/1.5/"
 repoUrl: "https://github.com/StratiGraph-ECCCH/Heriverse"
 # Heriverse is a web platform — the CTA opens the beta-tester
 # runtime instance. Access is by invitation only: users request
@@ -42,5 +42,5 @@ to end users.
 - **Collaborate live** with voice chat and screen sharing.
 - Enter **VR mode** with a headset for immersive exploration.
 
-See the [Heriverse documentation](https://docs.extendedmatrix.org/projects/heriverse/en/latest/)
+See the [Heriverse documentation](https://docs.extendedmatrix.org/projects/heriverse/en/1.5/)
 for the user manual.

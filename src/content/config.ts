@@ -302,6 +302,17 @@ const versions = defineCollection({
                 { message: 'downloadUrl must be an absolute URL (https://…) or a root-relative path (/…)' }
               )
               .optional(),
+            // Optional per-version manual URL override. When set, the
+            // "manual ↗" chip on this row of the version page points
+            // here instead of the tool's own docsUrl. Rationale: some
+            // tools ship version-specific manuals (Heriverse en/1.5/
+            // vs en/1.6/, EM-tools en/1.5/ vs en/1.6/, …); the tool
+            // markdown carries the *default* / latest manual URL, and
+            // each version row can override to the release-paired
+            // manual. When unset (default), the version page falls
+            // back to the tool's docsUrl — backward-compatible for
+            // every existing row.
+            docsUrl: z.string().url().optional(),
             note: z.string().optional(),
           })
         )
