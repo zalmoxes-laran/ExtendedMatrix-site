@@ -1,0 +1,10 @@
+name: "Daniele Ferdani"
+role: "Contributor, 3D documentation and digital reconstruction workflows"
+affiliation: "CNR-ISPC (Rome)"
+status: "active"
+bio: "Senior Researcher at CNR-ISPC, co-author with Emanuel Demetrescu of the 2021 paper that formalised the Extended Matrix method. Specialist in 3D documentation and digital reconstruction of historical architecture and archaeological sites; contributes to EM through scientific visualisation and digital workflows for the documentation, interpretation and communication of cultural heritage."
+avatar: ../../assets/team/daniele-ferdani.webp
+# orcid: TBD — request the exact ORCID id from Daniele and paste it here
+# in the same "0000-0000-0000-0000" format as the other team files.
+email: "daniele.ferdani@cnr.it"
+order: 15
