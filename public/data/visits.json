@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-06T10:25:28Z",
+  "fetched_at": "2026-07-07T09:44:00Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-06"
+    "end": "2026-07-07"
   },
-  "total": 1805,
-  "total_events": 569,
+  "total": 1844,
+  "total_events": 573,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1221
+      "count": 1238
     },
     {
       "code": "ES",
@@ -21,7 +21,7 @@
     {
       "code": "BE",
       "name": "Belgium",
-      "count": 67
+      "count": 68
     },
     {
       "code": "TR",
@@ -41,16 +41,16 @@
     {
       "code": "US",
       "name": "United States",
-      "count": 36
-    },
-    {
-      "code": "AT",
-      "name": "Austria",
-      "count": 27
+      "count": 37
     },
     {
       "code": "FR",
       "name": "France",
+      "count": 28
+    },
+    {
+      "code": "AT",
+      "name": "Austria",
       "count": 27
     },
     {
@@ -67,6 +67,11 @@
       "code": "UZ",
       "name": "Uzbekistan",
       "count": 20
+    },
+    {
+      "code": "IN",
+      "name": "India",
+      "count": 11
     },
     {
       "code": "GB",
@@ -94,19 +99,14 @@
       "count": 6
     },
     {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "count": 6
+    },
+    {
       "code": "DZ",
       "name": "Algeria",
       "count": 5
-    },
-    {
-      "code": "SA",
-      "name": "Saudi Arabia",
-      "count": 5
-    },
-    {
-      "code": "CH",
-      "name": "Switzerland",
-      "count": 4
     }
   ]
 }
