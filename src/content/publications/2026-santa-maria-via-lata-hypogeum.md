@@ -8,7 +8,7 @@ url: "https://doi.org/10.2423/i22394303v16n1p37"
 pdfUrl: "http://www.sciresit.it/article/download/14059/12195"
 kind: application
 order: 0
-tagline: "Application of the Extended Matrix protocol to the diachronic reconstruction of fresco palimpsests in the Santa Maria in Via Lata hypogeum (Rome, 6th–11th centuries). Integrates TLS + photogrammetric survey with stratigraphic interpretation to link surviving masonry, detached fresco fragments and virtual stratigraphic units into a transparent evidential chain."
+tagline: "Extended Matrix applied to fresco palimpsests in the Santa Maria in Via Lata hypogeum (Rome, 6th–11th c.). TLS + photogrammetry + stratigraphic interpretation link masonry, detached fragments and virtual stratigraphic units into a transparent evidential chain."
 bibtex: |
   @article{Shuai2026_santaMariaViaLata,
     author  = {Shuai, Zhangliang and Bevilacqua, Marco Giorgio and Caroti, Gabriella and Piemonte, Andrea and Capriuoli, Federico and Bordi, Giulia},
