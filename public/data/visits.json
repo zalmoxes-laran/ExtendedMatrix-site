@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-08T08:30:45Z",
+  "fetched_at": "2026-07-09T09:41:38Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-08"
+    "end": "2026-07-09"
   },
-  "total": 1891,
-  "total_events": 588,
+  "total": 1907,
+  "total_events": 593,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1257
+      "count": 1268
     },
     {
       "code": "ES",
@@ -24,14 +24,14 @@
       "count": 68
     },
     {
+      "code": "GR",
+      "name": "Greece",
+      "count": 57
+    },
+    {
       "code": "TR",
       "name": "Turkey",
       "count": 53
-    },
-    {
-      "code": "GR",
-      "name": "Greece",
-      "count": 50
     },
     {
       "code": "PT",
@@ -41,22 +41,22 @@
     {
       "code": "US",
       "name": "United States",
-      "count": 37
+      "count": 39
     },
     {
       "code": "DE",
       "name": "Germany",
-      "count": 29
+      "count": 30
+    },
+    {
+      "code": "AT",
+      "name": "Austria",
+      "count": 28
     },
     {
       "code": "FR",
       "name": "France",
       "count": 28
-    },
-    {
-      "code": "AT",
-      "name": "Austria",
-      "count": 27
     },
     {
       "code": "NL",
@@ -71,7 +71,7 @@
     {
       "code": "GB",
       "name": "United Kingdom",
-      "count": 12
+      "count": 13
     },
     {
       "code": "IN",
@@ -94,6 +94,11 @@
       "count": 7
     },
     {
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "count": 7
+    },
+    {
       "code": "IL",
       "name": "Israel",
       "count": 6
@@ -102,11 +107,6 @@
       "code": "SA",
       "name": "Saudi Arabia",
       "count": 6
-    },
-    {
-      "code": "DZ",
-      "name": "Algeria",
-      "count": 5
     }
   ]
 }
