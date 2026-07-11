@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-10T09:37:28Z",
+  "fetched_at": "2026-07-11T07:58:06Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-10"
+    "end": "2026-07-11"
   },
-  "total": 1962,
-  "total_events": 609,
+  "total": 1994,
+  "total_events": 623,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1301
+      "count": 1311
     },
     {
       "code": "ES",
@@ -71,7 +71,7 @@
     {
       "code": "GB",
       "name": "United Kingdom",
-      "count": 15
+      "count": 16
     },
     {
       "code": "IN",
