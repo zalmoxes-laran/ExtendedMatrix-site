@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-15T08:12:40Z",
+  "fetched_at": "2026-07-16T08:15:24Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-15"
+    "end": "2026-07-16"
   },
-  "total": 2132,
-  "total_events": 648,
+  "total": 2150,
+  "total_events": 653,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1376
+      "count": 1387
     },
     {
       "code": "ES",
@@ -49,14 +49,14 @@
       "count": 42
     },
     {
+      "code": "FR",
+      "name": "France",
+      "count": 31
+    },
+    {
       "code": "AT",
       "name": "Austria",
       "count": 29
-    },
-    {
-      "code": "FR",
-      "name": "France",
-      "count": 28
     },
     {
       "code": "NL",
@@ -84,6 +84,11 @@
       "count": 14
     },
     {
+      "code": "JO",
+      "name": "Hashemite Kingdom of Jordan",
+      "count": 10
+    },
+    {
       "code": "KR",
       "name": "South Korea",
       "count": 10
@@ -102,11 +107,6 @@
       "code": "AE",
       "name": "United Arab Emirates",
       "count": 7
-    },
-    {
-      "code": "IL",
-      "name": "Israel",
-      "count": 6
     }
   ]
 }
