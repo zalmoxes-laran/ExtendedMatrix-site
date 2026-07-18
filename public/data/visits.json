@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-17T08:11:20Z",
+  "fetched_at": "2026-07-18T07:52:33Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-17"
+    "end": "2026-07-18"
   },
-  "total": 2192,
-  "total_events": 658,
+  "total": 2257,
+  "total_events": 696,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1407
+      "count": 1425
     },
     {
       "code": "ES",
@@ -19,14 +19,14 @@
       "count": 156
     },
     {
+      "code": "TR",
+      "name": "Turkey",
+      "count": 77
+    },
+    {
       "code": "GR",
       "name": "Greece",
       "count": 74
-    },
-    {
-      "code": "TR",
-      "name": "Turkey",
-      "count": 71
     },
     {
       "code": "BE",
@@ -36,7 +36,12 @@
     {
       "code": "US",
       "name": "United States",
-      "count": 50
+      "count": 58
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "count": 54
     },
     {
       "code": "DE",
@@ -44,14 +49,9 @@
       "count": 43
     },
     {
-      "code": "PT",
-      "name": "Portugal",
-      "count": 43
-    },
-    {
       "code": "FR",
       "name": "France",
-      "count": 32
+      "count": 35
     },
     {
       "code": "AT",
@@ -84,6 +84,16 @@
       "count": 14
     },
     {
+      "code": "TN",
+      "name": "Tunisia",
+      "count": 14
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "count": 13
+    },
+    {
       "code": "JO",
       "name": "Hashemite Kingdom of Jordan",
       "count": 10
@@ -94,19 +104,9 @@
       "count": 10
     },
     {
-      "code": "IE",
-      "name": "Ireland",
-      "count": 9
-    },
-    {
       "code": "MX",
       "name": "Mexico",
       "count": 8
-    },
-    {
-      "code": "AE",
-      "name": "United Arab Emirates",
-      "count": 7
     }
   ]
 }
