@@ -1,37 +1,37 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-20T09:16:17Z",
+  "fetched_at": "2026-07-21T08:31:12Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-20"
+    "end": "2026-07-21"
   },
-  "total": 2434,
-  "total_events": 721,
+  "total": 2642,
+  "total_events": 741,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1462
+      "count": 1487
     },
     {
       "code": "US",
       "name": "United States",
-      "count": 166
+      "count": 312
     },
     {
       "code": "ES",
       "name": "Spain",
-      "count": 158
+      "count": 181
     },
     {
       "code": "TR",
       "name": "Turkey",
-      "count": 78
+      "count": 84
     },
     {
       "code": "GR",
       "name": "Greece",
-      "count": 74
+      "count": 77
     },
     {
       "code": "BE",
@@ -44,6 +44,11 @@
       "count": 54
     },
     {
+      "code": "GB",
+      "name": "United Kingdom",
+      "count": 47
+    },
+    {
       "code": "DE",
       "name": "Germany",
       "count": 44
@@ -51,12 +56,7 @@
     {
       "code": "FR",
       "name": "France",
-      "count": 35
-    },
-    {
-      "code": "GB",
-      "name": "United Kingdom",
-      "count": 31
+      "count": 41
     },
     {
       "code": "AT",
@@ -66,12 +66,27 @@
     {
       "code": "NL",
       "name": "Netherlands",
-      "count": 28
+      "count": 29
     },
     {
       "code": "SG",
       "name": "Singapore",
-      "count": 22
+      "count": 26
+    },
+    {
+      "code": "CA",
+      "name": "Canada",
+      "count": 25
+    },
+    {
+      "code": "IN",
+      "name": "India",
+      "count": 23
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "count": 20
     },
     {
       "code": "UZ",
@@ -79,13 +94,8 @@
       "count": 20
     },
     {
-      "code": "CA",
-      "name": "Canada",
-      "count": 17
-    },
-    {
-      "code": "IN",
-      "name": "India",
+      "code": "MX",
+      "name": "Mexico",
       "count": 16
     },
     {
@@ -97,16 +107,6 @@
       "code": "IE",
       "name": "Ireland",
       "count": 13
-    },
-    {
-      "code": "JO",
-      "name": "Hashemite Kingdom of Jordan",
-      "count": 10
-    },
-    {
-      "code": "KR",
-      "name": "South Korea",
-      "count": 10
     }
   ]
 }
