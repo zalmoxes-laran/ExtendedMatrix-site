@@ -1,37 +1,42 @@
 {
   "schema": 1,
-  "fetched_at": "2026-07-21T08:31:12Z",
+  "fetched_at": "2026-07-22T08:30:49Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-07-21"
+    "end": "2026-07-22"
   },
-  "total": 2642,
-  "total_events": 741,
+  "total": 2991,
+  "total_events": 748,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1487
+      "count": 1494
     },
     {
       "code": "US",
       "name": "United States",
-      "count": 312
+      "count": 472
     },
     {
       "code": "ES",
       "name": "Spain",
-      "count": 181
+      "count": 190
     },
     {
       "code": "TR",
       "name": "Turkey",
-      "count": 84
+      "count": 87
     },
     {
       "code": "GR",
       "name": "Greece",
       "count": 77
+    },
+    {
+      "code": "GB",
+      "name": "United Kingdom",
+      "count": 69
     },
     {
       "code": "BE",
@@ -44,11 +49,6 @@
       "count": 54
     },
     {
-      "code": "GB",
-      "name": "United Kingdom",
-      "count": 47
-    },
-    {
       "code": "DE",
       "name": "Germany",
       "count": 44
@@ -56,7 +56,27 @@
     {
       "code": "FR",
       "name": "France",
-      "count": 41
+      "count": 42
+    },
+    {
+      "code": "CA",
+      "name": "Canada",
+      "count": 39
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "count": 35
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands",
+      "count": 33
+    },
+    {
+      "code": "SG",
+      "name": "Singapore",
+      "count": 33
     },
     {
       "code": "AT",
@@ -64,29 +84,19 @@
       "count": 30
     },
     {
-      "code": "NL",
-      "name": "Netherlands",
-      "count": 29
+      "code": "IN",
+      "name": "India",
+      "count": 27
     },
     {
-      "code": "SG",
-      "name": "Singapore",
+      "code": "MX",
+      "name": "Mexico",
       "count": 26
     },
     {
-      "code": "CA",
-      "name": "Canada",
-      "count": 25
-    },
-    {
-      "code": "IN",
-      "name": "India",
+      "code": "SE",
+      "name": "Sweden",
       "count": 23
-    },
-    {
-      "code": "PL",
-      "name": "Poland",
-      "count": 20
     },
     {
       "code": "UZ",
@@ -94,19 +104,9 @@
       "count": 20
     },
     {
-      "code": "MX",
-      "name": "Mexico",
-      "count": 16
-    },
-    {
-      "code": "TN",
-      "name": "Tunisia",
-      "count": 14
-    },
-    {
-      "code": "IE",
-      "name": "Ireland",
-      "count": 13
+      "code": "JP",
+      "name": "Japan",
+      "count": 15
     }
   ]
 }
