@@ -1,11 +1,11 @@
 {
   "schema": 1,
-  "fetched_at": "2026-08-02T08:25:23Z",
+  "fetched_at": "2026-08-03T09:47:46Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-08-02"
+    "end": "2026-08-03"
   },
-  "total": 3673,
+  "total": 3677,
   "total_events": 826,
   "countries": [
     {
@@ -31,7 +31,7 @@
     {
       "code": "GB",
       "name": "United Kingdom",
-      "count": 101
+      "count": 102
     },
     {
       "code": "GR",
@@ -56,7 +56,7 @@
     {
       "code": "PT",
       "name": "Portugal",
-      "count": 55
+      "count": 56
     },
     {
       "code": "CA",
