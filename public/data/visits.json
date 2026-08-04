@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-08-03T09:47:46Z",
+  "fetched_at": "2026-08-04T08:38:22Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-08-03"
+    "end": "2026-08-04"
   },
-  "total": 3677,
+  "total": 3689,
   "total_events": 826,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1622
+      "count": 1627
     },
     {
       "code": "US",
@@ -51,7 +51,7 @@
     {
       "code": "SG",
       "name": "Singapore",
-      "count": 58
+      "count": 61
     },
     {
       "code": "PT",
