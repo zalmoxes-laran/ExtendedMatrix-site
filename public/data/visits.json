@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-08-18T06:44:10Z",
+  "fetched_at": "2026-08-19T06:44:35Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-08-18"
+    "end": "2026-08-19"
   },
-  "total": 4017,
-  "total_events": 885,
+  "total": 4079,
+  "total_events": 913,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 1775
+      "count": 1781
     },
     {
       "code": "US",
@@ -21,7 +21,7 @@
     {
       "code": "ES",
       "name": "Spain",
-      "count": 237
+      "count": 238
     },
     {
       "code": "TR",
@@ -41,7 +41,12 @@
     {
       "code": "GR",
       "name": "Greece",
-      "count": 93
+      "count": 95
+    },
+    {
+      "code": "PT",
+      "name": "Portugal",
+      "count": 81
     },
     {
       "code": "SG",
@@ -54,9 +59,9 @@
       "count": 78
     },
     {
-      "code": "PT",
-      "name": "Portugal",
-      "count": 59
+      "code": "MX",
+      "name": "Mexico",
+      "count": 57
     },
     {
       "code": "AT",
@@ -79,11 +84,6 @@
       "count": 46
     },
     {
-      "code": "MX",
-      "name": "Mexico",
-      "count": 42
-    },
-    {
       "code": "IN",
       "name": "India",
       "count": 41
@@ -99,14 +99,14 @@
       "count": 34
     },
     {
-      "code": "JP",
-      "name": "Japan",
+      "code": "DZ",
+      "name": "Algeria",
       "count": 24
     },
     {
-      "code": "DZ",
-      "name": "Algeria",
-      "count": 23
+      "code": "JP",
+      "name": "Japan",
+      "count": 24
     }
   ]
 }
