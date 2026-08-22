@@ -37,5 +37,6 @@ The full user manual — tutorial, how-to recipes, interface reference and
 the rationale behind the design — is available on **Read the Docs**. See the
 [EMStudio tool page](/tools/emstudio) for the links.
 
-EMStudio is pre-release (1.6-dev): expect the interface and the feature set
-to keep moving. News of what is landing will appear here.
+EMStudio is developed within the **StratiGraph** project. It is pre-release
+(1.6-dev): expect the interface and the feature set to keep moving, and news of
+what is landing will appear here.
