@@ -2,7 +2,7 @@
 name: "EM Tools"
 role: "Blender add-on"
 summary: "Connect an Extended Matrix graph to 3D content inside Blender. Browse stratigraphic units, link proxies, drive visualisation by epoch and property, export to Heriverse and CSV."
-docsUrl: "https://docs.extendedmatrix.org/projects/EM-tools/en/latest/"
+docsUrl: "https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/"
 repoUrl: "https://github.com/zalmoxes-laran/EM-blender-tools"
 downloadUrl: "https://github.com/zalmoxes-laran/EM-blender-tools/releases/latest"
 licence: "GPL-3.0"
@@ -34,7 +34,7 @@ paradata.
 ## Installing
 
 The recommended path is through Blender's extension system. See the
-[installation guide](https://docs.extendedmatrix.org/projects/EM-tools/en/latest/installation.html)
+[installation guide](https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/installation.html)
 or pick the right `.zip` for your Blender + OS combo from the
 [GitHub Releases page](https://github.com/zalmoxes-laran/EM-blender-tools/releases).
 

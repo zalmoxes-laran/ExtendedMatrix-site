@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+// Last review of this notice. Bump when the substance changes.
+const lastReviewed = '2026-08-23';
+---
+
+<BaseLayout
+  title="AI usage notice"
+  description="How AI assistance is used in authoring extendedmatrix.org and the Extended Matrix documentation, in compliance with Article 50 of the EU AI Act (Regulation (EU) 2024/1689)."
+>
+  <section class="ai-usage">
+    <div class="container">
+      <span class="tag">AI usage</span>
+      <h1>AI usage notice.</h1>
+      <p class="ai-usage__lede">
+        This notice describes how AI tools are used in the authoring of
+        <strong>extendedmatrix.org</strong> and of the Extended Matrix
+        documentation hosted on Read the Docs, in line with the
+        transparency framework of the EU Artificial Intelligence Act
+        (Regulation (EU) 2024/1689 — "AI Act"), and in particular
+        Article 50 on transparency obligations for deployers of AI
+        systems.
+      </p>
+
+      <p class="ai-usage__meta">
+        Last reviewed: <time datetime={lastReviewed}>{lastReviewed}</time>.
+      </p>
+
+      <!-- ── Scope ─────────────────────────────────────── -->
+      <section class="block">
+        <h2>1 · Scope of this notice</h2>
+        <p>
+          This notice covers the content published on
+          <strong>extendedmatrix.org</strong> (this website) and on the
+          documentation subdomain <strong>docs.extendedmatrix.org</strong>,
+          including the manuals of Extended Matrix (the formal language),
+          EM Tools, 3D Survey Collection, Heriverse and related projects
+          hosted on Read the Docs.
+        </p>
+        <p>
+          It does <strong>not</strong> cover peer-reviewed articles and
+          conference papers published under third-party editorial
+          responsibility (journals, proceedings): those follow the AI
+          disclosure policy of the respective publisher, which we honour
+          at submission time.
+        </p>
+      </section>
+
+      <!-- ── How AI is used ───────────────────────────── -->
+      <section class="block">
+        <h2>2 · How AI tools are used in authoring</h2>
+        <p>
+          Large-language-model assistants (currently Anthropic's Claude,
+          via the Claude Code and Claude Cowork interfaces) are used as
+          an <em>assistive drafting and editing tool</em> in the
+          authoring workflow of this site and of the manuals. Typical
+          uses include drafting prose from bullet-point outlines,
+          rephrasing existing text, cross-checking terminology across
+          manuals, generating tabular summaries from source material,
+          and helping enforce editorial constraints (length caps,
+          heading structure, terminological consistency).
+        </p>
+        <p>
+          AI is <strong>not</strong> used to publish content directly.
+          Every text edit, whether produced ex novo or refined by the
+          assistant, is reviewed by a human author before it is
+          committed to the repository and pushed to the site. The
+          commit history of the source repositories is the audit trail
+          of that review.
+        </p>
+      </section>
+
+      <!-- ── Editorial responsibility ─────────────────── -->
+      <section class="block">
+        <h2>3 · Human review and editorial responsibility</h2>
+        <p>
+          Editorial responsibility for the content published on this
+          site and on the Extended Matrix documentation is held by
+          <strong>Emanuel Demetrescu</strong>, in personal research
+          capacity, with the collaboration of the Extended Matrix
+          contributors listed on the
+          <a href={`${B}/team`}>team page</a>. Every publication
+          decision — what to write, what to remove, what to endorse as
+          the project's position — is made by a human author with
+          subject-matter competence in the domains covered (Extended
+          Matrix, stratigraphy, virtual reconstruction, 3D
+          documentation, digital cultural heritage).
+        </p>
+        <p>
+          This satisfies the two cumulative conditions of the
+          human-review-and-editorial-responsibility exception provided
+          for in <strong>Article 50(4) of the AI Act</strong>: an
+          informed human deliberately examines the substance of the
+          content before publication, and a human person holds the
+          ultimate legal responsibility over its publication.
+        </p>
+      </section>
+
+      <!-- ── What we do not do ────────────────────────── -->
+      <section class="block">
+        <h2>4 · What this project does <em>not</em> do</h2>
+        <ul class="ai-usage__list">
+          <li>
+            We do not deploy an AI chatbot or conversational agent that
+            interacts directly with visitors: there is no LLM behind
+            the scenes answering questions on the site. Any such tool,
+            if introduced in the future, will be disclosed explicitly
+            at the point of interaction, as required by
+            Art. 50(1) of the AI Act.
+          </li>
+          <li>
+            We do not publish AI-generated deepfake imagery, synthetic
+            audio, or synthetic video, and we do not manipulate
+            photographs of real people to represent events that did not
+            occur (Art. 50(4), deepfake obligation).
+          </li>
+          <li>
+            We do not use AI to generate content on matters of public
+            interest (political, health, safety) outside of the
+            project's technical and scientific scope, and we do not
+            publish AI-drafted text without human review.
+          </li>
+        </ul>
+      </section>
+
+      <!-- ── Illustrations and figures ────────────────── -->
+      <section class="block">
+        <h2>5 · Illustrations, figures and screenshots</h2>
+        <p>
+          The vast majority of figures on this site and in the manuals
+          are <strong>screenshots of real software</strong> (EM Tools
+          in Blender, EMStudio, Heriverse, yEd), <strong>diagrams
+          authored by the contributors</strong>, or
+          <strong>photographs of real archaeological
+          contexts</strong>. Where an illustration has been generated
+          or substantially altered by an AI image tool, the caption
+          says so explicitly.
+        </p>
+      </section>
+
+      <!-- ── Code ─────────────────────────────────────── -->
+      <section class="block">
+        <h2>6 · Code and software artefacts</h2>
+        <p>
+          Some source code in the projects linked from this site (EM
+          Tools, EMStudio, 3D Survey Collection, s3Dgraphy, Heriverse)
+          is written with AI-assisted coding tools. As with prose, every
+          change is reviewed by a human maintainer before it is merged
+          and released. Where relevant, individual commits or pull
+          requests carry a co-authorship trailer identifying the
+          assistant. The AI Act's transparency obligations concern
+          published <em>content</em>, not the internal development
+          workflow of software; this section is included for
+          completeness, not because it is required by Article 50.
+        </p>
+      </section>
+
+      <!-- ── Feedback and corrections ─────────────────── -->
+      <section class="block">
+        <h2>7 · Corrections and feedback</h2>
+        <p>
+          If you spot a factual error, a mis-attribution, or a passage
+          that reads as AI-generated in a way that misrepresents the
+          project's position, please write to
+          <a href="mailto:emanuel.demetrescu@cnr.it">emanuel.demetrescu@cnr.it</a>
+          or open an issue on the
+          <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-site/issues" target="_blank" rel="noopener">site repository</a>.
+          The commit history of that repository is the public record of
+          every editorial decision made on this site.
+        </p>
+      </section>
+
+      <!-- ── Regulatory references ────────────────────── -->
+      <section class="block">
+        <h2>8 · Regulatory references</h2>
+        <ul class="ai-usage__list">
+          <li>
+            <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj" target="_blank" rel="noopener">Regulation (EU) 2024/1689 (AI Act)</a>
+            — full text on EUR-Lex.
+          </li>
+          <li>
+            <a href="https://artificialintelligenceact.eu/article/50/" target="_blank" rel="noopener">AI Act, Article 50</a>
+            — transparency obligations for providers and deployers of
+            certain AI systems.
+          </li>
+          <li>
+            <a href="https://digital-strategy.ec.europa.eu/en/policies/guidelines-ai-transparency-obligations" target="_blank" rel="noopener">European Commission — Guidelines on transparency obligations</a>
+            (the interpretive guidance the Commission published in 2026).
+          </li>
+        </ul>
+      </section>
+
+      <!-- ── Changes ──────────────────────────────────── -->
+      <section class="block">
+        <h2>9 · Changes to this notice</h2>
+        <p>
+          This notice may be updated when the authoring workflow
+          changes (new tools introduced, new categories of content
+          added, revised Commission guidance). The "last reviewed" date
+          at the top of this page reflects the latest substantive
+          update. The full revision history is available in the
+          <a href="https://github.com/zalmoxes-laran/ExtendedMatrix-site/commits/main/src/pages/ai-usage.astro" target="_blank" rel="noopener">site repository</a>.
+        </p>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ai-usage { padding: 80px 0 60px; }
+  .ai-usage h1 { margin: 14px 0 18px; }
+  .ai-usage__lede {
+    max-width: 760px;
+    color: var(--em-text);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .ai-usage__meta {
+    color: var(--em-text-muted);
+    font-size: 13px;
+    margin-bottom: 40px;
+  }
+  .ai-usage .block { margin-bottom: 36px; max-width: 760px; }
+  .ai-usage h2 { font-size: 19px; margin: 0 0 12px; color: var(--em-navy); }
+  .ai-usage p { line-height: 1.7; margin-bottom: 12px; }
+  .ai-usage a { color: var(--em-gold); }
+  .ai-usage code {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--em-navy-tint);
+    color: var(--em-navy);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+  .ai-usage__list {
+    list-style: disc;
+    padding-left: 22px;
+    margin: 8px 0 16px;
+  }
+  .ai-usage__list li {
+    margin-bottom: 8px;
+    line-height: 1.65;
+  }
+</style>
