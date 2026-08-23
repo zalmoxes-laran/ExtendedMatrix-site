@@ -1,7 +1,7 @@
 ---
 name: "EMStudio"
 role: "Desktop EM editor"
-summary: "The sovereign desktop editor for Extended Matrix: read and write em.json natively, interpret stratigraphy in the graph, declare provenance in the DTC, compare on the shelf, and read the graph as a narrative. In active development, paired with EM 1.6."
+summary: "Sovereign desktop editor for Extended Matrix and successor to yEd from 1.6. Reads and writes em.json natively, imports existing .graphml, and organises work across six task-shaped workspaces. In active development, paired with EM 1.6."
 docsUrl: "https://docs.extendedmatrix.org/projects/emstudio-doc/en/latest/"
 repoUrl: "https://github.com/zalmoxes-laran/EMStudio"
 downloadUrl: "https://github.com/zalmoxes-laran/EMStudio"
@@ -14,10 +14,13 @@ order: 15
 
 ## What it is
 
-**EMStudio** is the standalone editor for the Extended Matrix — the place where an
-EM graph is authored end to end, without Blender and without yEd. It reads and
-writes **`em.json`** natively, so the record is never round-tripped through a
-foreign format: the graph you edit is the graph on disk.
+**EMStudio** is the standalone editor for the Extended Matrix and, from EM 1.6,
+the **successor to yEd** for authoring the graph. It reads and writes
+**`em.json`** natively, so the record is never round-tripped through a foreign
+format: the graph you edit is the graph on disk. Existing **GraphML** files
+remain first-class — EMStudio opens them directly and translates the
+palette-based semantics into native `em.json` entities, so nothing that was
+authored in yEd is left behind.
 
 Where EM Tools lives inside Blender and drives a 3D scene, EMStudio is the
 **sovereign** editor: it owns the graph, the documentation corpus and the
@@ -67,3 +70,10 @@ Windows, Linux) are planned for **autumn 2026**. Because it is
 pre-release, expect the interface and the feature set to keep moving — the manual
 tracks the current state, and news of what is landing appears on the **News**
 page.
+
+**Editor transition.** From EM 1.6, EMStudio is the recommended editor for
+authoring the Extended Matrix. **yEd** remains fully supported for the entire
+**EM 1.5 LTS** line — it is not deprecated on 1.5, and the palette convention
+that formalised EM lives on there. The GraphML import path exists precisely to
+make the switch to 1.6 painless: open your `.graphml`, save as `.em.json`, keep
+going.
