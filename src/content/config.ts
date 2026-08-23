@@ -239,6 +239,14 @@ const versions = defineCollection({
       // repeat it are removed.
       blenderPinNote: z.string().optional(),
       yedRequirement: z.string().default('yEd 3.21 or later'),
+      // Whether this EM version still surfaces yEd as an authoring
+      // surface on the public version page. Legacy versions (≤1.5)
+      // used yEd as the graph editor via the palette convention;
+      // from 1.6 onwards EMStudio is the recommended editor and yEd
+      // references are removed from the version page. When false,
+      // the yEd row in the Compatibility box and the yEd prereq card
+      // in Prerequisites are hidden.
+      usesYed: z.boolean().default(true),
       // Direct download URLs for the *prerequisites* of this version
       blenderDownloadUrl: z.string().url().optional(),
       yedDownloadUrl: z.string().url().default('https://www.yworks.com/products/yed/download'),

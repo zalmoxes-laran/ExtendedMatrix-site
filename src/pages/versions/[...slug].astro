@@ -196,8 +196,12 @@ const ctaLabel: { download: string; install: string; open: string } = {
               </dd>
             </>
           )}
-          <dt>yEd</dt>
-          <dd>{version.data.yedRequirement}</dd>
+          {version.data.usesYed && (
+            <>
+              <dt>yEd</dt>
+              <dd>{version.data.yedRequirement}</dd>
+            </>
+          )}
           {version.data.supersededBy && (
             <>
               <dt>Superseded by</dt>
@@ -316,13 +320,15 @@ const ctaLabel: { download: string; install: string; open: string } = {
             <div class="prereq__desc">3D authoring environment. Free, GPL-3.</div>
             <span class="prereq__cta">Download from blender.org ↗</span>
           </a>
-          <a class="prereq" href={version.data.yedDownloadUrl} target="_blank" rel="noopener"
-             data-goatcounter-click={`dl-yed-${versionSlug}`}>
-            <div class="prereq__name">yEd</div>
-            <div class="prereq__ver">{version.data.yedRequirement}</div>
-            <div class="prereq__desc">Free graph editor used to author the EM `.graphml` file.</div>
-            <span class="prereq__cta">Download from yworks.com ↗</span>
-          </a>
+          {version.data.usesYed && (
+            <a class="prereq" href={version.data.yedDownloadUrl} target="_blank" rel="noopener"
+               data-goatcounter-click={`dl-yed-${versionSlug}`}>
+              <div class="prereq__name">yEd</div>
+              <div class="prereq__ver">{version.data.yedRequirement}</div>
+              <div class="prereq__desc">Free graph editor used to author the EM `.graphml` file.</div>
+              <span class="prereq__cta">Download from yworks.com ↗</span>
+            </a>
+          )}
         </div>
       </section>
 
