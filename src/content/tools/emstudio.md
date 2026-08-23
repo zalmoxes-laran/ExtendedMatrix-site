@@ -62,7 +62,8 @@ rationale behind the design — is on **Read the Docs**:
 
 EMStudio is developed within the **StratiGraph** project. It is in **active
 development** (1.6-dev), paired with **EM 1.6** and built on **s3Dgraphy 1.6**.
-English is the default interface language. Because it is
+English is the default interface language. Cross-platform binaries (macOS,
+Windows, Linux) are planned for **autumn 2026**. Because it is
 pre-release, expect the interface and the feature set to keep moving — the manual
 tracks the current state, and news of what is landing appears on the **News**
 page.

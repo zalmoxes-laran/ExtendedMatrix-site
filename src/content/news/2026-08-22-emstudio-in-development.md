@@ -38,5 +38,6 @@ the rationale behind the design — is available on **Read the Docs**. See the
 [EMStudio tool page](/tools/emstudio) for the links.
 
 EMStudio is developed within the **StratiGraph** project. It is pre-release
-(1.6-dev): expect the interface and the feature set to keep moving, and news of
+(1.6-dev): expect the interface and the feature set to keep moving. Cross-platform binaries for macOS, Windows and Linux are planned
+for **autumn 2026**; until then, development is open on the repository. News of
 what is landing will appear here.
