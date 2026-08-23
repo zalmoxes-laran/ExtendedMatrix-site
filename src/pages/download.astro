@@ -144,6 +144,49 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
            the chooser + the manual / offline-install fallback link
            at the bottom of the page. -->
 
+      <!-- ── Dev builds ─────────────────────────────────────────── -->
+      {/*
+        Pre-release binaries for the active development lines. Not
+        production-ready; each build may break the previous one. This
+        section is currently EMStudio-only (paired with EM 1.6); if
+        other tools open dev channels later, add sibling cards here.
+        Tag is hardcoded; the "All builds" link points at the GitHub
+        releases page so the truth is always one click away even when
+        this page lags behind.
+      */}
+      <section class="dlbeta">
+        <h2>Dev builds</h2>
+        <p class="dlbeta__sub">
+          Pre-release binaries from the active development lines. Not
+          production-ready — expect changes and breakage between builds.
+          Reserved for testers and contributors.
+        </p>
+        <div class="dlbeta__grid">
+          <a class="dlbeta__card"
+             href="https://github.com/zalmoxes-laran/EMStudio/releases"
+             target="_blank" rel="noopener"
+             data-goatcounter-click="dlbeta-emstudio">
+            <div class="dlbeta__head">
+              <span class="dlbeta__name">EMStudio</span>
+              <span class="dlbeta__tag">v1.6.0-dev.3</span>
+            </div>
+            <div class="dlbeta__role">Standalone EM editor · EM 1.6-dev</div>
+            <p class="dlbeta__desc">
+              The sovereign desktop editor for the Extended Matrix,
+              successor to yEd from EM 1.6. Cross-platform binaries
+              (macOS, Windows, Linux) are being cut through autumn 2026;
+              follow the releases page for the latest signed build. See the
+              <a href={`${B}/tools/emstudio/`}>EMStudio tool page</a> for
+              context.
+            </p>
+            <div class="dlbeta__foot">
+              <span class="dlbeta__lic">GPL-3.0 · alpha</span>
+              <span class="dlbeta__open">All builds on GitHub →</span>
+            </div>
+          </a>
+        </div>
+      </section>
+
       <!-- ── Tools strip ────────────────────────────────────────── -->
       <section class="dltools">
         <h2>Individual tools</h2>
@@ -324,6 +367,84 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
   /* "See all releases" link in body — informational, navy for AAA. */
   .dl__all a { color: var(--em-navy); font-weight: 600; }
+
+  /* ── Dev builds ────────────────────────────────────────── */
+  .dlbeta { margin-top: 60px; }
+  .dlbeta h2 { font-size: 28px; }
+  .dlbeta__sub { color: var(--em-text-muted); max-width: 720px; margin: 8px 0 22px; }
+  .dlbeta__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .dlbeta__card {
+    display: block;
+    padding: 22px 24px;
+    border: 1px solid var(--em-border);
+    border-left: 4px solid var(--em-gold);
+    border-radius: var(--radius-md);
+    /* Same "preview" wash as the language dev-strip, but muted:
+       these are binary snapshots, not a whole language line. */
+    background:
+      linear-gradient(
+        90deg,
+        var(--em-bg) 0%,
+        var(--em-gold-tint) 220%
+      );
+    color: var(--em-text);
+    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  }
+  .dlbeta__card:hover {
+    border-color: var(--em-gold);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 18px rgba(26,40,69,0.08);
+  }
+  .dlbeta__head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .dlbeta__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--em-navy);
+    font-size: 20px;
+  }
+  .dlbeta__tag {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--em-navy);
+    background: var(--em-gold-tint);
+    padding: 2px 8px;
+    border-radius: 2px;
+    letter-spacing: 0.02em;
+  }
+  .dlbeta__role {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--em-navy);
+    margin: 6px 0 10px;
+  }
+  .dlbeta__desc {
+    font-size: 14px;
+    color: var(--em-text);
+    line-height: 1.6;
+    margin: 0 0 14px;
+  }
+  .dlbeta__desc a { color: var(--em-navy); text-decoration: underline; text-decoration-color: var(--em-gold); }
+  .dlbeta__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-family: var(--font-mono);
+    color: var(--em-text-muted);
+  }
+  .dlbeta__open { color: var(--em-gold); font-weight: 600; }
+  .dlbeta__card:hover .dlbeta__open { color: var(--em-navy); }
 
   .dltools { margin-top: 80px; }
   .dltools h2 { font-size: 28px; }
