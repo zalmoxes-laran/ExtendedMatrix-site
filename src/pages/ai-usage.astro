@@ -14,8 +14,18 @@ const lastReviewed = '2026-08-23';
     <div class="container">
       <span class="tag">AI usage</span>
       <h1>AI usage notice.</h1>
+      <p class="ai-usage__prologue">
+        The Extended Matrix Framework has been in continuous
+        human-led development since 2015 — the year the EM formal
+        language was first published. The tools that make it usable —
+        EM Tools, 3D Survey Collection, s3Dgraphy and their peers —
+        are the accreted product of a decade of code, review,
+        teaching and fieldwork. This notice describes how AI
+        assistance is used <em>on top of that base</em>, in line
+        with Article 50 of the EU AI Act.
+      </p>
       <p class="ai-usage__lede">
-        This notice describes how AI tools are used in the authoring of
+        The notice covers the authoring of
         <strong>extendedmatrix.org</strong> and of the Extended Matrix
         documentation hosted on Read the Docs, in line with the
         transparency framework of the EU Artificial Intelligence Act
@@ -144,16 +154,32 @@ const lastReviewed = '2026-08-23';
       <section class="block">
         <h2>6 · Code and software artefacts</h2>
         <p>
-          Some source code in the projects linked from this site (EM
-          Tools, EMStudio, 3D Survey Collection, s3Dgraphy, Heriverse)
-          is written with AI-assisted coding tools. As with prose, every
-          change is reviewed by a human maintainer before it is merged
-          and released. Where relevant, individual commits or pull
-          requests carry a co-authorship trailer identifying the
-          assistant. The AI Act's transparency obligations concern
-          published <em>content</em>, not the internal development
-          workflow of software; this section is included for
-          completeness, not because it is required by Article 50.
+          The core libraries of the Extended Matrix Framework have
+          been in continuous development for roughly a decade under
+          human authorship. <strong>EM Tools</strong> (the Blender
+          add-on) traces its first commits to <strong>2015</strong>,
+          alongside the publication of the EM formal language;
+          <strong>3D Survey Collection</strong> and
+          <strong>s3Dgraphy</strong> consolidated later as
+          independent components of the same framework. Every release
+          on this decade-long line has been reviewed, cut and signed
+          by a human maintainer with domain competence, and the
+          public commit history of each repository is the audit trail.
+        </p>
+        <p>
+          AI-assisted coding tools have been introduced more recently
+          as an <em>additional productivity layer</em> on top of that
+          established base — not as its foundation. Assisted
+          contributions are integrated under the same maintainer
+          discipline that has governed the framework since inception:
+          every commit — assisted or not — is reviewed by a human
+          maintainer before it is merged and released, and where
+          relevant individual commits or pull requests carry a
+          co-authorship trailer identifying the assistant. The AI
+          Act's transparency obligations concern published
+          <em>content</em>, not the internal development workflow of
+          software; this section is included for completeness, not
+          because it is required by Article 50.
         </p>
       </section>
 
@@ -211,6 +237,17 @@ const lastReviewed = '2026-08-23';
 <style>
   .ai-usage { padding: 80px 0 60px; }
   .ai-usage h1 { margin: 14px 0 18px; }
+  .ai-usage__prologue {
+    max-width: 760px;
+    color: var(--em-text);
+    font-size: 17px;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    /* Subtle gold rule to mark the historical frame as a distinct
+       moment before the legal-framing lede that follows. */
+    border-left: 3px solid var(--em-gold);
+    padding-left: 14px;
+  }
   .ai-usage__lede {
     max-width: 760px;
     color: var(--em-text);

@@ -4,7 +4,7 @@ role: "Desktop EM editor"
 summary: "Sovereign desktop editor for Extended Matrix and successor to yEd from 1.6. Reads and writes em.json natively, imports existing .graphml, and organises work across six task-shaped workspaces. In active development, paired with EM 1.6."
 docsUrl: "https://docs.extendedmatrix.org/projects/emstudio-doc/en/1.6/"
 repoUrl: "https://github.com/zalmoxes-laran/EMStudio"
-downloadUrl: "https://github.com/zalmoxes-laran/EMStudio"
+downloadUrl: "https://github.com/zalmoxes-laran/EMStudio/releases"
 action: open
 licence: "GPL-3.0"
 status: alpha
