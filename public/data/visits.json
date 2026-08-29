@@ -1,12 +1,12 @@
 {
   "schema": 1,
-  "fetched_at": "2026-08-28T18:17:59Z",
+  "fetched_at": "2026-08-29T12:26:32Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-08-28"
+    "end": "2026-08-29"
   },
-  "total": 4420,
-  "total_events": 1007,
+  "total": 4452,
+  "total_events": 1016,
   "countries": [
     {
       "code": "IT",
@@ -61,7 +61,7 @@
     {
       "code": "MX",
       "name": "Mexico",
-      "count": 77
+      "count": 78
     },
     {
       "code": "CA",
@@ -89,19 +89,19 @@
       "count": 47
     },
     {
+      "code": "SE",
+      "name": "Sweden",
+      "count": 36
+    },
+    {
       "code": "NL",
       "name": "Netherlands",
       "count": 34
     },
     {
-      "code": "SE",
-      "name": "Sweden",
-      "count": 34
-    },
-    {
       "code": "DZ",
       "name": "Algeria",
-      "count": 32
+      "count": 33
     },
     {
       "code": "BR",
