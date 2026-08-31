@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-08-30T11:26:49Z",
+  "fetched_at": "2026-08-31T12:57:16Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-08-30"
+    "end": "2026-08-31"
   },
-  "total": 4478,
-  "total_events": 1026,
+  "total": 4501,
+  "total_events": 1034,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 2012
+      "count": 2028
     },
     {
       "code": "US",
@@ -21,7 +21,7 @@
     {
       "code": "ES",
       "name": "Spain",
-      "count": 266
+      "count": 301
     },
     {
       "code": "TR",
