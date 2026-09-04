@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-09-03T10:49:21Z",
+  "fetched_at": "2026-09-04T10:47:53Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-09-03"
+    "end": "2026-09-04"
   },
-  "total": 4655,
-  "total_events": 1074,
+  "total": 4680,
+  "total_events": 1077,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 2080
+      "count": 2110
     },
     {
       "code": "US",
@@ -41,7 +41,7 @@
     {
       "code": "GR",
       "name": "Greece",
-      "count": 100
+      "count": 102
     },
     {
       "code": "SG",
