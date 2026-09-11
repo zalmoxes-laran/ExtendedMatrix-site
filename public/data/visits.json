@@ -1,32 +1,32 @@
 {
   "schema": 1,
-  "fetched_at": "2026-09-10T10:49:58Z",
+  "fetched_at": "2026-09-11T10:45:43Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-09-10"
+    "end": "2026-09-11"
   },
-  "total": 4850,
-  "total_events": 1113,
+  "total": 4909,
+  "total_events": 1129,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 2180
+      "count": 2186
     },
     {
       "code": "US",
       "name": "United States",
-      "count": 746
+      "count": 748
     },
     {
       "code": "ES",
       "name": "Spain",
-      "count": 333
+      "count": 346
     },
     {
       "code": "MX",
       "name": "Mexico",
-      "count": 133
+      "count": 136
     },
     {
       "code": "TR",
@@ -54,14 +54,19 @@
       "count": 91
     },
     {
+      "code": "SG",
+      "name": "Singapore",
+      "count": 84
+    },
+    {
       "code": "FR",
       "name": "France",
       "count": 83
     },
     {
-      "code": "SG",
-      "name": "Singapore",
-      "count": 83
+      "code": "DE",
+      "name": "Germany",
+      "count": 62
     },
     {
       "code": "CA",
@@ -69,19 +74,14 @@
       "count": 61
     },
     {
-      "code": "DE",
-      "name": "Germany",
-      "count": 59
+      "code": "AT",
+      "name": "Austria",
+      "count": 55
     },
     {
       "code": "PL",
       "name": "Poland",
-      "count": 52
-    },
-    {
-      "code": "AT",
-      "name": "Austria",
-      "count": 49
+      "count": 53
     },
     {
       "code": "IN",
@@ -89,14 +89,14 @@
       "count": 47
     },
     {
+      "code": "NL",
+      "name": "Netherlands",
+      "count": 37
+    },
+    {
       "code": "SE",
       "name": "Sweden",
       "count": 36
-    },
-    {
-      "code": "NL",
-      "name": "Netherlands",
-      "count": 34
     },
     {
       "code": "DZ",
@@ -104,9 +104,9 @@
       "count": 33
     },
     {
-      "code": "BR",
-      "name": "Brazil",
-      "count": 26
+      "code": "AU",
+      "name": "Australia",
+      "count": 28
     }
   ]
 }
