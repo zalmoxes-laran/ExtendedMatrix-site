@@ -1,6 +1,7 @@
 ---
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import BlenderRepoInstall from '../../components/BlenderRepoInstall.astro';
 
 export async function getStaticPaths() {
   const versions = await getCollection('versions');
@@ -548,18 +549,34 @@ const ctaLabel: { download: string; install: string; open: string } = {
         );
       })()}
 
-      <!--
-        Install card removed from the version page (2026-06-30).
-        Previously this block embedded the BlenderRepoInstall
-        component on each version (channel=dev for development lines,
-        channel=stable for LTS / stable lines). Host editorial
-        decision: the drag-and-drop install belongs on the per-tool
-        page (/tools/em-tools/), not duplicated on every version
-        page. Symmetric with 3DSC, whose install card has always
-        lived only on /tools/3dsc/. The version page now relies on
-        the components-table row's "download" link, which routes
-        to the appropriate per-tool install anchor.
-      -->
+      {/*
+        THE INSTALL CARD, BACK ON DEVELOPMENT LINES ONLY (2026-09-16).
+
+        It was taken off every version page on 2026-06-30, on the
+        editorial principle that the drag-and-drop install belongs to
+        the tool and should not be duplicated per version. That
+        principle still holds for stable lines — /tools/em-tools/
+        serves the stable build and the version page needs nothing.
+
+        It does NOT hold for a development line, and the gap was
+        measured rather than argued: `/tools/em-tools/` renders the
+        card with channel='auto', which prefers stable, so it serves
+        1.5.5. Meanwhile blender.extendedmatrix.org/dev/index.json has
+        carried em_tools 1.6.0-dev.N — eight builds, every platform and
+        both Blender ABIs — with NO page on this site pointing at it.
+        This very page's own prose promised «the Install in Blender
+        (dev channel) card on this very page», which had not existed
+        for two and a half months.
+
+        So the rule is not «one card per tool» but: THE CARD GOES WHERE
+        THE TOOL PAGE CANNOT REACH. A development line is exactly that
+        place, and it is also the only one.
+      */}
+      {version.data.status === 'development' && (
+        <section class="vp__repo-install">
+          <BlenderRepoInstall only="em_tools" channel="dev" />
+        </section>
+      )}
 
       <!-- ── Install steps ───────────────────────────────────── -->
       {version.data.installSteps.length > 0 && (
