@@ -1,6 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
+import { latestGithubRelease } from '../lib/upstream';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+// LETTA, NON BATTUTA A MANO: questa striscia annunciava `v1.6.0-dev.3`
+// mentre la dev.10 era pubblicata da due ore. Se la lettura non riesce la
+// targhetta sparisce invece di mostrare un numero vecchio.
+const emstudioRel = await latestGithubRelease('zalmoxes-laran/EMStudio');
 
 const versions = (await getCollection('versions'))
   .sort((a, b) => b.data.order - a.data.order);
@@ -168,7 +174,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
              data-goatcounter-click="dlbeta-emstudio">
             <div class="dlbeta__head">
               <span class="dlbeta__name">EMStudio</span>
-              <span class="dlbeta__tag">v1.6.0-dev.3</span>
+              {emstudioRel && <span class="dlbeta__tag">{emstudioRel.tag}</span>}
             </div>
             <div class="dlbeta__role">Standalone EM editor · EM 1.6-dev</div>
             <p class="dlbeta__desc">

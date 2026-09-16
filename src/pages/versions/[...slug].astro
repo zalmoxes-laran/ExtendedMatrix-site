@@ -2,6 +2,7 @@
 import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlenderRepoInstall from '../../components/BlenderRepoInstall.astro';
+import { risolviVersioni, versioneMostrata, notaConVersione } from '../../lib/upstream';
 
 export async function getStaticPaths() {
   const versions = await getCollection('versions');
@@ -18,6 +19,10 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Stable id used for GoatCounter event-ids (e.g. "1-5").
 const versionSlug = version.id.replace(/\.md$/, '');
+
+// LE VERSIONI DEI COMPONENTI, LETTE E NON BATTUTE A MANO — il perché e
+// le fonti stanno in src/lib/upstream.ts.
+const versioniRisolte = await risolviVersioni(version.data.tools ?? []);
 
 // Version-switcher data ------------------------------------------------
 // The user reaches a version page through Find Your Path, the homepage
@@ -458,11 +463,11 @@ const ctaLabel: { download: string; install: string; open: string } = {
                     <strong>{t.toolName}</strong>
                   </a>
                   {t.version && (
-                    <span class="vp__cta-ver" title={`Version paired with EM ${version.data.version}`}>v{t.version}</span>
+                    <span class="vp__cta-ver" title={`Version paired with EM ${version.data.version}`}>v{versioneMostrata(t.version, versioniRisolte)}</span>
                   )}
                 </div>
                 {t.note && <div class="vp__cta-note" set:html={
-                  t.note
+                  notaConVersione(t.note, t.version, versioniRisolte)
                     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
                     .replace(/`(.+?)`/g, '<code>$1</code>')
                     .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')

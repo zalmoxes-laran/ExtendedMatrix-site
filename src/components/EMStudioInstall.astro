@@ -1,0 +1,145 @@
+---
+/**
+ * EMStudioInstall — scarica EMStudio, l'installatore giusto per il sistema.
+ *
+ * NON è un drag&drop. Quello di `BlenderRepoInstall` esiste perché Blender
+ * sa ricevere un link e installare un'estensione da sé; un'applicazione
+ * desktop no — si scarica un file e si apre. Copiare lì il gesto avrebbe
+ * significato copiare la forma senza la ragione.
+ *
+ * La versione e gli URL si LEGGONO dalle release di GitHub a build time
+ * (vedi src/lib/upstream.ts), così non c'è nessun numero da ricordare di
+ * aggiornare — che è il difetto per cui questo componente esiste.
+ *
+ * DEGRADA: se la lettura fallisce o non c'è nessuna release pubblicata, la
+ * card si riduce al link alla pagina delle release invece di sparire o di
+ * mostrare un bottone che non porta da nessuna parte.
+ */
+import { latestGithubRelease } from '../lib/upstream';
+
+interface Props { repo?: string; releasesUrl?: string }
+const {
+  repo = 'zalmoxes-laran/EMStudio',
+  releasesUrl = 'https://github.com/zalmoxes-laran/EMStudio/releases',
+} = Astro.props;
+
+const rel = await latestGithubRelease(repo);
+
+/**
+ * Dal nome del file al sistema operativo. Si riconosce per ESTENSIONE e per
+ * architettura, non per posizione nell'elenco: l'ordine degli asset lo
+ * decide GitHub e cambiarlo non deve cambiare cosa scarica un visitatore.
+ */
+const OS = [
+  { id: 'macos-arm64', label: 'macOS (Apple Silicon)', match: /aarch64.*\.dmg$|\.dmg$/ },
+  { id: 'windows-x64', label: 'Windows',               match: /x64.*setup\.exe$|\.msi$/ },
+  { id: 'linux-deb',   label: 'Linux (.deb)',          match: /\.deb$/ },
+  { id: 'linux-app',   label: 'Linux (AppImage)',      match: /\.AppImage$/ },
+] as const;
+
+const builds = OS.map((o) => {
+  const a = (rel?.assets ?? []).find((x) => o.match.test(x.name));
+  return { ...o, asset: a ?? null };
+}).filter((b) => b.asset);
+---
+
+{rel && builds.length > 0 ? (
+  <section class="emsi" id="install" aria-labelledby="emsi-title">
+    <div class="emsi__head">
+      <h2 class="emsi__title" id="emsi-title">Download EMStudio</h2>
+      <p class="emsi__sub">
+        Pick your system — the download is the installer for the current
+        build, read from the GitHub release when this page was built.
+      </p>
+    </div>
+
+    <div class="emsi__card">
+      <div class="emsi__name">
+        <strong>EMStudio</strong>
+        <span class="emsi__ver">{rel.version}</span>
+      </div>
+
+      <label class="emsi__lab" for="emsi-os">SYSTEM</label>
+      <select id="emsi-os" class="emsi__sel">
+        {builds.map((b) => (
+          <option value={b.asset!.url} data-size={b.asset!.size}>{b.label}</option>
+        ))}
+      </select>
+
+      <a id="emsi-dl" class="emsi__btn" href={builds[0].asset!.url}
+         data-goatcounter-click="dl-emstudio">⬇ Download</a>
+
+      <p class="emsi__note" id="emsi-mac">
+        <strong>macOS:</strong> the build is unsigned — the first launch needs a
+        right-click ▸ <em>Open</em>, or
+        <code>xattr -dr com.apple.quarantine /Applications/EMStudio.app</code>.
+      </p>
+      <p class="emsi__fallback">
+        Every build, including older ones —
+        <a href={rel.url} target="_blank" rel="noopener">release {rel.tag} ↗</a> ·
+        <a href={releasesUrl} target="_blank" rel="noopener">all releases ↗</a>
+      </p>
+    </div>
+  </section>
+) : (
+  <section class="emsi" id="install" aria-labelledby="emsi-title">
+    <div class="emsi__head">
+      <h2 class="emsi__title" id="emsi-title">Download EMStudio</h2>
+      <p class="emsi__sub">
+        No published build could be read when this page was built — pick the
+        installer for your system from
+        <a href={releasesUrl} target="_blank" rel="noopener">the releases page ↗</a>.
+      </p>
+    </div>
+  </section>
+)}
+
+<script>
+  // Il selettore cambia il bersaglio del bottone. Il valore dell'opzione È
+  // l'URL: nessuna tabella parallela da tenere allineata a mano, che è lo
+  // stesso difetto in scala piccola.
+  const sel = document.getElementById('emsi-os') as HTMLSelectElement | null;
+  const btn = document.getElementById('emsi-dl') as HTMLAnchorElement | null;
+  const mac = document.getElementById('emsi-mac');
+  const sync = () => {
+    if (!sel || !btn) return;
+    btn.href = sel.value;
+    if (mac) mac.hidden = !/\.dmg(\?|$)/.test(sel.value);
+  };
+  sel?.addEventListener('change', sync);
+  // Preseleziona il sistema di chi guarda, senza impedirgli di cambiarlo.
+  if (sel) {
+    const p = navigator.platform + ' ' + navigator.userAgent;
+    const want = /Mac/i.test(p) ? '.dmg' : /Win/i.test(p) ? '.exe' : /Linux/i.test(p) ? '.AppImage' : null;
+    if (want) {
+      const hit = [...sel.options].find((o) => o.value.includes(want));
+      if (hit) sel.value = hit.value;
+    }
+    sync();
+  }
+</script>
+
+<style>
+  .emsi { margin: 2rem 0; padding: 1.25rem 1.25rem 1rem; border: 1px solid var(--c-border, #e3e3e0);
+          border-radius: 10px; background: var(--c-surface-soft, #fafaf7); }
+  .emsi__title { margin: 0 0 .35rem; font-size: 1.25rem; }
+  .emsi__sub { margin: 0 0 1rem; color: var(--c-text-muted, #555); font-size: .95rem; }
+  .emsi__card { border: 1px solid var(--c-border, #e3e3e0); border-radius: 8px;
+                padding: 1rem; background: #fff; }
+  .emsi__name { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .75rem; }
+  .emsi__ver { font-family: var(--font-mono, monospace); font-size: .85rem;
+               background: var(--c-accent-soft, #f4efe2); padding: .1rem .45rem; border-radius: 4px; }
+  .emsi__lab { display: block; font-size: .72rem; letter-spacing: .06em;
+               color: var(--c-text-muted, #666); margin-bottom: .25rem; }
+  .emsi__sel { font: inherit; padding: .35rem .5rem; border-radius: 6px;
+               border: 1px solid var(--c-border, #ccc); max-width: 22rem; width: 100%; }
+  .emsi__btn { display: inline-block; margin-top: .9rem; padding: .55rem 1.1rem;
+               border-radius: 7px; border: 1px solid var(--c-border, #d6d2c4);
+               background: var(--c-accent-soft, #f4efe2); font-weight: 600;
+               text-decoration: none; color: inherit; }
+  .emsi__btn:hover { background: var(--c-accent, #e9dfc4); }
+  .emsi__note, .emsi__fallback { margin: .8rem 0 0; font-size: .85rem;
+                                 color: var(--c-text-muted, #555); }
+  .emsi__note code { font-size: .8rem; }
+  @media (max-width: 480px) { .emsi__sel { max-width: 100%; } }
+</style>
