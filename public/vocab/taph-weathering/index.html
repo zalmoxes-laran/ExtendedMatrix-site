@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bone weathering stages</title>
+<meta name="description" content="A six-stage ordinal SKOS vocabulary for bone surface weathering, after Behrensmeyer 1978.">
+<link rel="alternate" type="text/turtle" href="taph-weathering.ttl">
+<style>
+:root{--bg:#fdfcfa;--fg:#1c1a17;--muted:#6b645c;--line:#e2ddd5;--accent:#8a5a2b;--code:#f3efe9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19}}
+:root[data-theme="dark"]{--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);margin:0;padding:0 16px;
+ font:16px/1.65 Georgia,'Iowan Old Style',serif}
+main{max-width:44rem;margin:0 auto;padding:3rem 0 5rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .3rem}
+.sub{color:var(--muted);margin:0 0 2rem;font-style:italic}
+h2{font-size:1.15rem;margin:2.6rem 0 .8rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+article{margin:0 0 1.9rem}
+h3{font-size:1.02rem;margin:0 0 .25rem;font-weight:600}
+.n{display:inline-block;min-width:1.5rem;color:var(--accent);font-weight:700}
+.uri code{font-size:.76rem;color:var(--muted);background:none;padding:0;word-break:break-all}
+article p{margin:.3rem 0}
+.it{color:var(--muted);font-size:.93rem}
+code{background:var(--code);padding:.1rem .3rem;border-radius:3px;
+ font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em}
+a{color:var(--accent)}
+dl{margin:0} dt{font-weight:600;margin-top:.7rem;font-size:.92rem}
+dd{margin:.1rem 0 0;color:var(--muted);font-size:.92rem}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);
+ color:var(--muted);font-size:.86rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>Bone weathering stages</h1>
+  <p class="sub">A six-stage ordinal scale, after Behrensmeyer 1978 — an Extended Matrix vocabulary module.</p>
+
+  <p>This scale has been the working standard of taphonomy for nearly fifty years and
+  has never had an identifier: it exists as a table inside a 1978 paper. Checked in
+  September 2026, Getty AAT has no <em>weathering stage</em>, no <em>cut marks</em>,
+  no <em>gnawing</em>, no <em>trampling</em>; PACTOLS and TAABA carry
+  <em>taphonomy</em> with nothing under it. The discipline is named everywhere and
+  its objects nowhere. This module is the smallest useful repair.</p>
+
+  <p>The six stages are published scientific findings and are not themselves
+  copyrightable; Behrensmeyer's prose is. The definitions below are therefore
+  <strong>restatements, not transcriptions</strong>, and the source is cited on every
+  concept. For the original wording, go to the paper.</p>
+
+  <h2>Concepts</h2>
+      <article id="stage-0">
+        <h3><span class="n">0</span> Weathering stage 0</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/stage-0</code></p>
+        <p>Surface intact and greasy in appearance, with no cracking or flaking; soft tissue may still adhere.</p>
+        <p lang="it" class="it"><strong>Stadio di alterazione 0</strong> — Superficie integra e di aspetto untuoso, senza fessurazioni ne&#x27; sfaldature; puo&#x27; esserci ancora tessuto molle aderente.</p>
+      </article>
+      <article id="stage-1">
+        <h3><span class="n">1</span> Weathering stage 1</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/stage-1</code></p>
+        <p>First cracking appears, running parallel to the fibre structure of the bone; articular surfaces may show a mosaic pattern of fine cracks.</p>
+        <p lang="it" class="it"><strong>Stadio di alterazione 1</strong> — Compaiono le prime fessurazioni, parallele alla struttura fibrosa dell&#x27;osso; le superfici articolari possono mostrare un reticolo a mosaico di fessure sottili.</p>
+      </article>
+      <article id="stage-2">
+        <h3><span class="n">2</span> Weathering stage 2</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/stage-2</code></p>
+        <p>The outermost layers of compact bone begin to flake away, usually along existing cracks; flakes are thin and still partly attached, and cracking has deepened.</p>
+        <p lang="it" class="it"><strong>Stadio di alterazione 2</strong> — Gli strati piu&#x27; esterni dell&#x27;osso compatto cominciano a sfaldarsi, di norma lungo le fessure gia&#x27; presenti; le scaglie sono sottili e ancora in parte aderenti, e le fessurazioni si sono approfondite.</p>
+      </article>
+      <article id="stage-3">
+        <h3><span class="n">3</span> Weathering stage 3</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/stage-3</code></p>
+        <p>Patches of rough, uniformly altered compact bone appear, with a fibrous texture; alteration penetrates roughly one to one and a half millimetres and the original surface is no longer preserved in those patches.</p>
+        <p lang="it" class="it"><strong>Stadio di alterazione 3</strong> — Compaiono chiazze di osso compatto ruvido e alterato in modo uniforme, di tessitura fibrosa; l&#x27;alterazione penetra all&#x27;incirca uno-un millimetro e mezzo e in quelle chiazze la superficie originaria non e&#x27; piu&#x27; conservata.</p>
+      </article>
+      <article id="stage-4">
+        <h3><span class="n">4</span> Weathering stage 4</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/stage-4</code></p>
+        <p>The whole surface is coarsely fibrous and rough; splinters are loose and detach easily, and the alteration reaches the inner cavities of the bone.</p>
+        <p lang="it" class="it"><strong>Stadio di alterazione 4</strong> — L&#x27;intera superficie e&#x27; grossolanamente fibrosa e ruvida; le schegge sono mobili e si staccano con facilita&#x27;, e l&#x27;alterazione raggiunge le cavita&#x27; interne dell&#x27;osso.</p>
+      </article>
+      <article id="stage-5">
+        <h3><span class="n">5</span> Weathering stage 5</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/stage-5</code></p>
+        <p>The bone is disintegrating in place into large splinters; the original shape of the element may no longer be determinable.</p>
+        <p lang="it" class="it"><strong>Stadio di alterazione 5</strong> — L&#x27;osso si sta disgregando in posto in schegge grandi; la forma originaria dell&#x27;elemento puo&#x27; non essere piu&#x27; determinabile.</p>
+      </article>
+
+  <h2>Using it</h2>
+  <dl>
+    <dt>Namespace</dt>
+    <dd><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/</code></dd>
+    <dt>Serialisation</dt>
+    <dd><a href="taph-weathering.ttl">taph-weathering.ttl</a> (SKOS, Turtle) — labels and definitions in English and Italian</dd>
+    <dt>Version</dt>
+    <dd>0.1.0</dd>
+    <dt>Licence</dt>
+    <dd>CC BY 4.0</dd>
+    <dt>Attribution</dt>
+    <dd>Extended Matrix — vocabulary originated in StratiGraph WP3 (CNR-ISPC)</dd>
+    <dt>Source</dt>
+    <dd>Behrensmeyer, A. K. 1978. Taphonomic and ecologic information from bone weathering. <em>Paleobiology</em> 4(2): 150–162.</dd>
+  </dl>
+
+  <h2>Alignment</h2>
+  <p>Each stage carries a proposed <code>skos:broadMatch</code> to Getty AAT
+  <code>300054115</code> (weathering). Proposed, not verified: the alignments say
+  what we think, marked as ours, until someone with standing in the vocabulary
+  confirms or rejects them. A match that nobody has checked should never be
+  served as though it had been.</p>
+
+  <footer>
+    Part of the <a href="https://extendedmatrix.org">Extended Matrix</a> ecosystem.
+    Source of truth: <a href="https://github.com/StratiGraph-ECCCH/stratigraph-templates">stratigraph-templates</a>.
+  </footer>
+</main>
+</body>
+</html>
