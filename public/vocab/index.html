@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Vocabulary modules</title>
+<meta name="description" content="SKOS vocabulary modules originated and maintained in the Extended Matrix ecosystem.">
+<style>
+:root{--bg:#fdfcfa;--fg:#1c1a17;--muted:#6b645c;--line:#e2ddd5;--accent:#8a5a2b;--code:#f3efe9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19}}
+:root[data-theme="dark"]{--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);margin:0;padding:0 16px;font:16px/1.65 Georgia,'Iowan Old Style',serif}
+main{max-width:44rem;margin:0 auto;padding:3rem 0 5rem}
+h1{font-size:1.9rem;margin:0 0 .3rem}
+.sub{color:var(--muted);margin:0 0 2rem;font-style:italic}
+h2{font-size:1.1rem;margin:2.4rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+code{background:var(--code);padding:.1rem .3rem;border-radius:3px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;word-break:break-all}
+a{color:var(--accent)}
+p{margin:.5rem 0}
+.meta{color:var(--muted);font-size:.9rem}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.86rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>Vocabulary modules</h1>
+  <p class="sub">Small controlled vocabularies the Extended Matrix ecosystem originates and maintains.</p>
+
+  <p>These are modules, not a thesaurus. Each one exists because something we
+  need to record has no identifier anywhere &mdash; checked, not assumed &mdash; and each
+  is kept small enough that one person can be answerable for it. Where a term
+  already lives in Getty, PeriodO or a national standard, we point at theirs
+  instead of restating it: declaring beats copying, and a vocabulary nobody
+  else maintains is a vocabulary that rots.</p>
+
+  <p>Alignments to external vocabularies are published as proposals and marked
+  as such until someone with standing in the target vocabulary confirms them. A
+  match nobody has checked is never served as though it had been.</p>
+
+  <h2>taph-weathering</h2>
+  <p><a href="taph-weathering/">Bone weathering stages</a> &mdash; the six-stage ordinal
+  scale after Behrensmeyer 1978, in English and Italian. Version 0.1.0, CC BY 4.0.</p>
+  <p class="meta"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/</code></p>
+
+  <footer>
+    Part of the <a href="/">Extended Matrix</a> ecosystem.
+    Sources on <a href="https://github.com/StratiGraph-ECCCH/stratigraph-templates">GitHub</a>.
+  </footer>
+</main>
+</body>
+</html>
