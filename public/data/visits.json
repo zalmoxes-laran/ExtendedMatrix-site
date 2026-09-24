@@ -1,22 +1,22 @@
 {
   "schema": 1,
-  "fetched_at": "2026-09-23T10:57:12Z",
+  "fetched_at": "2026-09-24T11:16:35Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-09-23"
+    "end": "2026-09-24"
   },
-  "total": 5329,
-  "total_events": 1242,
+  "total": 5370,
+  "total_events": 1257,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 2329
+      "count": 2344
     },
     {
       "code": "US",
       "name": "United States",
-      "count": 771
+      "count": 772
     },
     {
       "code": "ES",
@@ -26,7 +26,7 @@
     {
       "code": "MX",
       "name": "Mexico",
-      "count": 159
+      "count": 163
     },
     {
       "code": "TR",
