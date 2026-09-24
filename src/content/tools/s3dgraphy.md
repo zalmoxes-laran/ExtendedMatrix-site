@@ -2,7 +2,7 @@
 name: "s3dgraphy"
 role: "Python library"
 summary: "The computational core of the EM Framework. Reads, writes, validates and converts EM graphs (GraphML / JSON), enforces the data model, and powers every other tool in the framework."
-docsUrl: "https://docs.extendedmatrix.org/projects/s3dgraphy/"
+docsUrl: "https://docs.extendedmatrix.org/projects/s3dgraphy/en/v1.5/"
 repoUrl: "https://github.com/zalmoxes-laran/s3dgraphy"
 # s3dgraphy is a Python library; the primary user flow is `pip install
 # s3dgraphy` (not a zip download). CTA verb = install, target = PyPI
