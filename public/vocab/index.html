@@ -6,19 +6,30 @@
 <title>Vocabulary modules</title>
 <meta name="description" content="SKOS vocabulary modules originated and maintained in the Extended Matrix ecosystem.">
 <style>
-:root{--bg:#fdfcfa;--fg:#1c1a17;--muted:#6b645c;--line:#e2ddd5;--accent:#8a5a2b;--code:#f3efe9}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19}}
-:root[data-theme="dark"]{--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19}
+:root{--bg:#fdfcfa;--fg:#1c1a17;--muted:#6b645c;--line:#e2ddd5;--accent:#8a5a2b;--code:#f3efe9;--warn:#8a3b2b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19;--warn:#e0957f}}
+:root[data-theme="dark"]{--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19;--warn:#e0957f}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);margin:0;padding:0 16px;font:16px/1.65 Georgia,'Iowan Old Style',serif}
 main{max-width:44rem;margin:0 auto;padding:3rem 0 5rem}
-h1{font-size:1.9rem;margin:0 0 .3rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .3rem}
 .sub{color:var(--muted);margin:0 0 2rem;font-style:italic}
-h2{font-size:1.1rem;margin:2.4rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+h2{font-size:1.15rem;margin:2.6rem 0 .8rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+article{margin:0 0 1.9rem}
+h3{font-size:1.02rem;margin:0 0 .25rem;font-weight:600}
+.n{display:inline-block;min-width:1.5rem;color:var(--accent);font-weight:700}
+.uri code{font-size:.76rem;color:var(--muted);background:none;padding:0;word-break:break-all}
+article p{margin:.3rem 0}
+.it,.src{color:var(--muted);font-size:.93rem}
+.src{font-size:.82rem}
+.labels{color:var(--muted);font-size:.86rem}
+.note{border-left:3px solid var(--warn);padding:.2rem 0 .2rem .8rem;color:var(--muted);font-size:.93rem}
 code{background:var(--code);padding:.1rem .3rem;border-radius:3px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;word-break:break-all}
 a{color:var(--accent)}
 p{margin:.5rem 0}
 .meta{color:var(--muted);font-size:.9rem}
+dl{margin:0} dt{font-weight:600;margin-top:.7rem;font-size:.92rem}
+dd{margin:.1rem 0 0;color:var(--muted);font-size:.92rem}
 footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.86rem}
 </style>
 </head>
@@ -34,14 +45,39 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
   instead of restating it: declaring beats copying, and a vocabulary nobody
   else maintains is a vocabulary that rots.</p>
 
+  <p>Some modules stand in, provisionally, for a list that a national standard
+  prescribes but has not yet published in machine-readable form. On the day the
+  issuing institution publishes its own, an alignment is added and the institution's
+  terms take precedence.</p>
+
   <p>Alignments to external vocabularies are published as proposals and marked
   as such until someone with standing in the target vocabulary confirms them. A
   match nobody has checked is never served as though it had been.</p>
 
   <h2>taph-weathering</h2>
-  <p><a href="taph-weathering/">Bone weathering stages</a> &mdash; the six-stage ordinal
-  scale after Behrensmeyer 1978, in English and Italian. Version 0.1.0, CC BY 4.0.</p>
+  <p><a href="taph-weathering/">Bone weathering stages (Behrensmeyer 1978)</a> &mdash; 6 concepts.
+  Version 0.1.0, CC BY 4.0.</p>
   <p class="meta"><code>https://w3id.org/extendedmatrix/vocab/taph-weathering/</code></p>
+  <h2>us-affidabilita</h2>
+  <p><a href="us-affidabilita/">Stratigraphic reliability (US sheet, Extended Matrix)</a> &mdash; 4 concepts.
+  Version 0.1.0, CC BY 4.0.</p>
+  <p class="meta"><code>https://w3id.org/extendedmatrix/vocab/us-affidabilita/</code></p>
+  <h2>us-colore</h2>
+  <p><a href="us-colore/">Colour of the deposit (US sheet, Extended Matrix)</a> &mdash; 20 concepts.
+  Version 0.1.0, CC BY 4.0.</p>
+  <p class="meta"><code>https://w3id.org/extendedmatrix/vocab/us-colore/</code></p>
+  <h2>us-consistenza</h2>
+  <p><a href="us-consistenza/">Consistency of the deposit (US sheet, Extended Matrix)</a> &mdash; 6 concepts.
+  Version 0.1.0, CC BY 4.0.</p>
+  <p class="meta"><code>https://w3id.org/extendedmatrix/vocab/us-consistenza/</code></p>
+  <h2>us-definizione</h2>
+  <p><a href="us-definizione/">Definition of the stratigraphic unit (US sheet, Extended Matrix)</a> &mdash; 36 concepts.
+  Version 0.1.0, CC BY 4.0.</p>
+  <p class="meta"><code>https://w3id.org/extendedmatrix/vocab/us-definizione/</code></p>
+  <h2>us-stato-conservazione</h2>
+  <p><a href="us-stato-conservazione/">State of preservation of the unit (US sheet, Extended Matrix)</a> &mdash; 6 concepts.
+  Version 0.1.0, CC BY 4.0.</p>
+  <p class="meta"><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/</code></p>
 
   <footer>
     Part of the <a href="/">Extended Matrix</a> ecosystem.

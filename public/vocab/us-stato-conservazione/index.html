@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>State of preservation of the unit (US sheet, Extended Matrix)</title>
+<meta name="description" content="An ordinal scale for the STATE OF PRESERVATION box of a stratigraphic unit sheet (ICCD US 2021), gathered from the PyArchInit thesaurus.">
+<link rel="alternate" type="text/turtle" href="us-stato-conservazione.ttl">
+<style>
+:root{--bg:#fdfcfa;--fg:#1c1a17;--muted:#6b645c;--line:#e2ddd5;--accent:#8a5a2b;--code:#f3efe9;--warn:#8a3b2b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19;--warn:#e0957f}}
+:root[data-theme="dark"]{--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19;--warn:#e0957f}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);margin:0;padding:0 16px;font:16px/1.65 Georgia,'Iowan Old Style',serif}
+main{max-width:44rem;margin:0 auto;padding:3rem 0 5rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .3rem}
+.sub{color:var(--muted);margin:0 0 2rem;font-style:italic}
+h2{font-size:1.15rem;margin:2.6rem 0 .8rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+article{margin:0 0 1.9rem}
+h3{font-size:1.02rem;margin:0 0 .25rem;font-weight:600}
+.n{display:inline-block;min-width:1.5rem;color:var(--accent);font-weight:700}
+.uri code{font-size:.76rem;color:var(--muted);background:none;padding:0;word-break:break-all}
+article p{margin:.3rem 0}
+.it,.src{color:var(--muted);font-size:.93rem}
+.src{font-size:.82rem}
+.labels{color:var(--muted);font-size:.86rem}
+.note{border-left:3px solid var(--warn);padding:.2rem 0 .2rem .8rem;color:var(--muted);font-size:.93rem}
+code{background:var(--code);padding:.1rem .3rem;border-radius:3px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;word-break:break-all}
+a{color:var(--accent)}
+p{margin:.5rem 0}
+.meta{color:var(--muted);font-size:.9rem}
+dl{margin:0} dt{font-weight:600;margin-top:.7rem;font-size:.92rem}
+dd{margin:.1rem 0 0;color:var(--muted);font-size:.92rem}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.86rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>State of preservation of the unit (US sheet, Extended Matrix)</h1>
+  <p class="sub">Stato di conservazione dell&#x27;unità (scheda US, Extended Matrix) — an Extended Matrix vocabulary module.</p>
+
+  <p>An ordinal scale for the STATE OF PRESERVATION box of a stratigraphic unit sheet (ICCD US 2021), gathered from the PyArchInit thesaurus.</p>
+  <p class="note">Only the labels in the source language come from the sources. Labels marked with * (en, ro, el, es, pl, he, de) were drafted with the module and nobody has verified them yet: usable now, to be corrected after review.</p>
+
+  <h2>Concepts</h2>
+      <article id="ottimo">
+        <h3><span class="n">1</span> excellent*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/ottimo</code></p>
+        <p>The unit survives whole or nearly so, with no alteration that impairs its reading.</p>
+        <p lang="it" class="it"><strong>ottimo</strong> — L&#x27;unità è conservata per intero o quasi, senza alterazioni che ne compromettano la lettura.</p>
+        <p class="labels"><span lang="de">ausgezeichnet</span> <small>(de*)</small> · <span lang="el">εξαιρετική</span> <small>(el*)</small> · <span lang="es">excelente</span> <small>(es*)</small> · <span lang="he" dir=rtl>מצוין</span> <small>(he*)</small> · <span lang="pl">bardzo dobry</span> <small>(pl*)</small> · <span lang="ro">excelent</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit thesaurus, tipologia 2.12 «Stato di conservazione» (pyarchinit_thesaurus_sigle, nome_tabella US): sigle CO, Ott «Ottimo»</p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_conservazione «Ottimo»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>https://github.com/dainst/idai-field/blob/4b5c1e2c3c499d4bd125d0eda61cc6f5c94ffcd4/core/config/Library/Valuelists/Valuelists.json#Building-condition-default/sehr%20gut</code> (idai-field-building-condition-default)</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>conservation_state:excellent</code> (s3dgraphy-qualia-values)</p>
+      </article>
+      <article id="buono">
+        <h3><span class="n">2</span> good*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/buono</code></p>
+        <p>The unit survives for the most part; its gaps do not prevent its reading.</p>
+        <p lang="it" class="it"><strong>buono</strong> — L&#x27;unità è conservata in gran parte; le lacune non ne impediscono la lettura.</p>
+        <p class="labels"><span lang="de">gut</span> <small>(de*)</small> · <span lang="el">καλή</span> <small>(el*)</small> · <span lang="es">bueno</span> <small>(es*)</small> · <span lang="he" dir=rtl>טוב</span> <small>(he*)</small> · <span lang="pl">dobry</span> <small>(pl*)</small> · <span lang="ro">bun</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit thesaurus, tipologia 2.12 «Stato di conservazione» (pyarchinit_thesaurus_sigle, nome_tabella US): sigle CB, Buo «Buono»</p>
+        <p class="src">Source: PyArchInit, tabs/codici_it.html (tabella dei codici del thesaurus, colonna Esempi): 2.12, esempio «Buono»</p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_conservazione «Buono»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>https://github.com/dainst/idai-field/blob/4b5c1e2c3c499d4bd125d0eda61cc6f5c94ffcd4/core/config/Library/Valuelists/Valuelists.json#Building-condition-default/gut</code> (idai-field-building-condition-default)</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>conservation_state:good</code> (s3dgraphy-qualia-values)</p>
+      </article>
+      <article id="discreto">
+        <h3><span class="n">3</span> fair*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/discreto</code></p>
+        <p>The unit survives in part; it can be read, with gaps.</p>
+        <p lang="it" class="it"><strong>discreto</strong> — L&#x27;unità è conservata in parte; la lettura è possibile ma lacunosa.</p>
+        <p class="labels"><span lang="de">mäßig</span> <small>(de*)</small> · <span lang="el">μέτρια</span> <small>(el*)</small> · <span lang="es">regular</span> <small>(es*)</small> · <span lang="he" dir=rtl>סביר</span> <small>(he*)</small> · <span lang="pl">dostateczny</span> <small>(pl*)</small> · <span lang="ro">acceptabil</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit thesaurus, tipologia 2.12 «Stato di conservazione» (pyarchinit_thesaurus_sigle, nome_tabella US): sigla Dis «Discreto»</p>
+        <p class="src">Source: PyArchInit, tabs/codici_it.html (tabella dei codici del thesaurus, colonna Esempi): 2.12, esempio «Discreto»</p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_conservazione «Discreto»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>https://github.com/dainst/idai-field/blob/4b5c1e2c3c499d4bd125d0eda61cc6f5c94ffcd4/core/config/Library/Valuelists/Valuelists.json#Building-condition-default/mittel</code> (idai-field-building-condition-default)</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>conservation_state:fair</code> (s3dgraphy-qualia-values)</p>
+      </article>
+      <article id="insufficiente">
+        <h3><span class="n">4</span> insufficient*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/insufficiente</code></p>
+        <p>Too little of the unit survives for a complete reading.</p>
+        <p lang="it" class="it"><strong>insufficiente</strong> — L&#x27;unità è conservata troppo poco per una lettura completa.</p>
+        <p class="labels"><span lang="de">unzureichend</span> <small>(de*)</small> · <span lang="el">ανεπαρκής</span> <small>(el*)</small> · <span lang="es">insuficiente</span> <small>(es*)</small> · <span lang="he" dir=rtl>בלתי מספק</span> <small>(he*)</small> · <span lang="pl">niedostateczny</span> <small>(pl*)</small> · <span lang="ro">insuficient</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit thesaurus, tipologia 2.12 «Stato di conservazione» (pyarchinit_thesaurus_sigle, nome_tabella US): sigla Ins «Insufficiente»</p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_conservazione «Insufficiente»</p>
+      </article>
+      <article id="scarso">
+        <h3><span class="n">5</span> poor*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/scarso</code></p>
+        <p>Few parts of the unit remain; its reading is largely conjectural.</p>
+        <p lang="it" class="it"><strong>scarso</strong> — Dell&#x27;unità restano poche parti; la lettura è in larga misura congetturale.</p>
+        <p class="labels"><span lang="de">schlecht</span> <small>(de*)</small> · <span lang="el">κακή</span> <small>(el*)</small> · <span lang="es">escaso</span> <small>(es*)</small> · <span lang="he" dir=rtl>ירוד</span> <small>(he*)</small> · <span lang="pl">słaby</span> <small>(pl*)</small> · <span lang="ro">slab</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit thesaurus, tipologia 2.12 «Stato di conservazione» (pyarchinit_thesaurus_sigle, nome_tabella US): sigle CS, Sca «Scarso»</p>
+        <p class="src">Source: PyArchInit, tabs/codici_it.html (tabella dei codici del thesaurus, colonna Esempi): 2.12, esempio «Scarso»</p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_conservazione «Scarso»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>https://github.com/dainst/idai-field/blob/4b5c1e2c3c499d4bd125d0eda61cc6f5c94ffcd4/core/config/Library/Valuelists/Valuelists.json#Building-condition-default/schlecht</code> (idai-field-building-condition-default)</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>conservation_state:poor</code> (s3dgraphy-qualia-values)</p>
+      </article>
+      <article id="pessimo">
+        <h3><span class="n">6</span> very poor*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/pessimo</code></p>
+        <p>Only minimal traces of the unit remain.</p>
+        <p lang="it" class="it"><strong>pessimo</strong> — Dell&#x27;unità restano tracce minime.</p>
+        <p class="labels"><span lang="de">sehr schlecht</span> <small>(de*)</small> · <span lang="el">πολύ κακή</span> <small>(el*)</small> · <span lang="es">pésimo</span> <small>(es*)</small> · <span lang="he" dir=rtl>גרוע מאוד</span> <small>(he*)</small> · <span lang="pl">bardzo zły</span> <small>(pl*)</small> · <span lang="ro">foarte slab</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit thesaurus, tipologia 2.12 «Stato di conservazione» (pyarchinit_thesaurus_sigle, nome_tabella US): sigla CP «Pessimo»</p>
+        <p class="src">Source: PyArchInit, tabs/codici_it.html (tabella dei codici del thesaurus, colonna Esempi): 2.12, esempio «Pessimo»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>https://github.com/dainst/idai-field/blob/4b5c1e2c3c499d4bd125d0eda61cc6f5c94ffcd4/core/config/Library/Valuelists/Valuelists.json#Building-condition-default/sehr%20schlecht</code> (idai-field-building-condition-default)</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>conservation_state:very_poor</code> (s3dgraphy-qualia-values)</p>
+      </article>
+
+  <h2>Using it</h2>
+  <dl>
+    <dt>Namespace</dt>
+    <dd><code>https://w3id.org/extendedmatrix/vocab/us-stato-conservazione/</code></dd>
+    <dt>Serialisation</dt>
+    <dd><a href="us-stato-conservazione.ttl">us-stato-conservazione.ttl</a> (SKOS, Turtle) — 6 concepts; labels in English, Italiano, Deutsch, Ελληνικά, Español, עברית, Polski, Română</dd>
+    <dt>Version</dt>
+    <dd>0.1.0</dd>
+    <dt>Licence</dt>
+    <dd>CC BY 4.0</dd>
+    <dt>Attribution</dt>
+    <dd>Extended Matrix — vocabolario originato in StratiGraph WP3 (CNR-ISPC). Termini raccolti dal thesaurus e dall&#x27;interfaccia di PyArchInit (progetto pyArchInit, GPL); definizioni riformulate, non trascritte.</dd>
+    <dt>Published from</dt>
+    <dd><a href="https://github.com/StratiGraph-ECCCH/stratigraph-templates">stratigraph-templates</a>, <code>vocabularies/skos/us-stato-conservazione.ttl</code>, commit <code>8bf9723</code></dd>
+  </dl>
+
+  <h2>Alignments</h2>
+  <p>10 alignments declared, 0 verified. Every alignment
+  not marked verified is a proposal: it says what we think, marked as ours, until someone with standing
+  in the target vocabulary confirms or rejects it. A match nobody has checked is never served as though it had been.</p>
+
+  <footer>
+    Part of the <a href="https://extendedmatrix.org">Extended Matrix</a> ecosystem.
+    Source of truth: <a href="https://github.com/StratiGraph-ECCCH/stratigraph-templates">stratigraph-templates</a>. <a href="../">All modules</a>.
+  </footer>
+</main>
+</body>
+</html>

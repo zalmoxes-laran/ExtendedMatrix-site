@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stratigraphic reliability (US sheet, Extended Matrix)</title>
+<meta name="description" content="An ordinal scale for the STRATIGRAPHIC RELIABILITY box of a stratigraphic unit sheet (ICCD US 2021), gathered from PyArchInit; aligned to the Extended Matrix certainty_level qualia.">
+<link rel="alternate" type="text/turtle" href="us-affidabilita.ttl">
+<style>
+:root{--bg:#fdfcfa;--fg:#1c1a17;--muted:#6b645c;--line:#e2ddd5;--accent:#8a5a2b;--code:#f3efe9;--warn:#8a3b2b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19;--warn:#e0957f}}
+:root[data-theme="dark"]{--bg:#16150f;--fg:#ece7de;--muted:#9c948a;--line:#332f28;--accent:#d7a76a;--code:#221f19;--warn:#e0957f}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);margin:0;padding:0 16px;font:16px/1.65 Georgia,'Iowan Old Style',serif}
+main{max-width:44rem;margin:0 auto;padding:3rem 0 5rem}
+h1{font-size:1.9rem;line-height:1.2;margin:0 0 .3rem}
+.sub{color:var(--muted);margin:0 0 2rem;font-style:italic}
+h2{font-size:1.15rem;margin:2.6rem 0 .8rem;padding-bottom:.3rem;border-bottom:1px solid var(--line)}
+article{margin:0 0 1.9rem}
+h3{font-size:1.02rem;margin:0 0 .25rem;font-weight:600}
+.n{display:inline-block;min-width:1.5rem;color:var(--accent);font-weight:700}
+.uri code{font-size:.76rem;color:var(--muted);background:none;padding:0;word-break:break-all}
+article p{margin:.3rem 0}
+.it,.src{color:var(--muted);font-size:.93rem}
+.src{font-size:.82rem}
+.labels{color:var(--muted);font-size:.86rem}
+.note{border-left:3px solid var(--warn);padding:.2rem 0 .2rem .8rem;color:var(--muted);font-size:.93rem}
+code{background:var(--code);padding:.1rem .3rem;border-radius:3px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;word-break:break-all}
+a{color:var(--accent)}
+p{margin:.5rem 0}
+.meta{color:var(--muted);font-size:.9rem}
+dl{margin:0} dt{font-weight:600;margin-top:.7rem;font-size:.92rem}
+dd{margin:.1rem 0 0;color:var(--muted);font-size:.92rem}
+footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:var(--muted);font-size:.86rem}
+</style>
+</head>
+<body>
+<main>
+  <h1>Stratigraphic reliability (US sheet, Extended Matrix)</h1>
+  <p class="sub">Affidabilità stratigrafica (scheda US, Extended Matrix) — an Extended Matrix vocabulary module.</p>
+
+  <p>An ordinal scale for the STRATIGRAPHIC RELIABILITY box of a stratigraphic unit sheet (ICCD US 2021), gathered from PyArchInit; aligned to the Extended Matrix certainty_level qualia.</p>
+  <p class="note">Only the labels in the source language come from the sources. Labels marked with * (en, ro, el, es, pl, he, de) were drafted with the module and nobody has verified them yet: usable now, to be corrected after review.</p>
+
+  <h2>Concepts</h2>
+      <article id="ottima">
+        <h3><span class="n">1</span> excellent*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-affidabilita/ottima</code></p>
+        <p>The unit and its relationships were observed in full and without ambiguity.</p>
+        <p lang="it" class="it"><strong>ottima</strong> — L&#x27;unità e i suoi rapporti sono stati osservati per intero e senza ambiguità.</p>
+        <p class="labels"><span lang="de">sehr gut</span> <small>(de*)</small> · <span lang="el">εξαιρετική</span> <small>(el*)</small> · <span lang="es">excelente</span> <small>(es*)</small> · <span lang="he" dir=rtl>מצוינת</span> <small>(he*)</small> · <span lang="pl">bardzo dobra</span> <small>(pl*)</small> · <span lang="ro">excelentă</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_affidabilita «Ottima»</p>
+        <p class="src">Source: PyArchInit, docs/tutorials/it/03_scheda_us.md: «Affidabilita&#x27; — Ottima»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>certainty_level:certain</code> (s3dgraphy-qualia-values)</p>
+      </article>
+      <article id="buona">
+        <h3><span class="n">2</span> good*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-affidabilita/buona</code></p>
+        <p>The unit and its relationships were mostly observed; minor uncertainties remain.</p>
+        <p lang="it" class="it"><strong>buona</strong> — L&#x27;unità e i suoi rapporti sono stati osservati in gran parte; restano incertezze minori.</p>
+        <p class="labels"><span lang="de">gut</span> <small>(de*)</small> · <span lang="el">καλή</span> <small>(el*)</small> · <span lang="es">buena</span> <small>(es*)</small> · <span lang="he" dir=rtl>טובה</span> <small>(he*)</small> · <span lang="pl">dobra</span> <small>(pl*)</small> · <span lang="ro">bună</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_affidabilita «Buona»</p>
+        <p class="src">Source: PyArchInit, docs/tutorials/it/03_scheda_us.md: «Affidabilita&#x27; — Buona»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>certainty_level:highly_probable</code> (s3dgraphy-qualia-values)</p>
+      </article>
+      <article id="discreta">
+        <h3><span class="n">3</span> fair*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-affidabilita/discreta</code></p>
+        <p>Observation was partial: some relationships are inferred rather than seen.</p>
+        <p lang="it" class="it"><strong>discreta</strong> — L&#x27;osservazione è stata parziale: alcuni rapporti sono dedotti e non visti.</p>
+        <p class="labels"><span lang="de">mäßig</span> <small>(de*)</small> · <span lang="el">μέτρια</span> <small>(el*)</small> · <span lang="es">regular</span> <small>(es*)</small> · <span lang="he" dir=rtl>סבירה</span> <small>(he*)</small> · <span lang="pl">dostateczna</span> <small>(pl*)</small> · <span lang="ro">acceptabilă</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_affidabilita «Discreta»</p>
+        <p class="src">Source: PyArchInit, docs/tutorials/it/03_scheda_us.md: «Affidabilita&#x27; — Discreta»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>certainty_level:probable</code> (s3dgraphy-qualia-values)</p>
+      </article>
+      <article id="scarsa">
+        <h3><span class="n">4</span> poor*</h3>
+        <p class="uri"><code>https://w3id.org/extendedmatrix/vocab/us-affidabilita/scarsa</code></p>
+        <p>Observation was insufficient (partial excavation, disturbance, gaps in the record): the unit and its relationships are uncertain.</p>
+        <p lang="it" class="it"><strong>scarsa</strong> — L&#x27;osservazione è stata insufficiente (scavo parziale, disturbi, documentazione lacunosa): unità e rapporti sono incerti.</p>
+        <p class="labels"><span lang="de">gering</span> <small>(de*)</small> · <span lang="el">χαμηλή</span> <small>(el*)</small> · <span lang="es">escasa</span> <small>(es*)</small> · <span lang="he" dir=rtl>נמוכה</span> <small>(he*)</small> · <span lang="pl">słaba</span> <small>(pl*)</small> · <span lang="ro">slabă</span> <small>(ro*)</small></p>
+        <p class="src">Source: PyArchInit, gui/ui/US_USM.ui (voci predefinite della casella): comboBox_affidabilita «Scarso» (sic, al maschile)</p>
+        <p class="src">Source: PyArchInit, docs/tutorials/it/03_scheda_us.md: «Affidabilita&#x27; — Scarso»</p>
+        <p class="src">Proposed <code>skos:closeMatch</code> → <code>certainty_level:doubtful</code> (s3dgraphy-qualia-values)</p>
+      </article>
+
+  <h2>Using it</h2>
+  <dl>
+    <dt>Namespace</dt>
+    <dd><code>https://w3id.org/extendedmatrix/vocab/us-affidabilita/</code></dd>
+    <dt>Serialisation</dt>
+    <dd><a href="us-affidabilita.ttl">us-affidabilita.ttl</a> (SKOS, Turtle) — 4 concepts; labels in English, Italiano, Deutsch, Ελληνικά, Español, עברית, Polski, Română</dd>
+    <dt>Version</dt>
+    <dd>0.1.0</dd>
+    <dt>Licence</dt>
+    <dd>CC BY 4.0</dd>
+    <dt>Attribution</dt>
+    <dd>Extended Matrix — vocabolario originato in StratiGraph WP3 (CNR-ISPC). Termini raccolti dal thesaurus e dall&#x27;interfaccia di PyArchInit (progetto pyArchInit, GPL); definizioni riformulate, non trascritte.</dd>
+    <dt>Published from</dt>
+    <dd><a href="https://github.com/StratiGraph-ECCCH/stratigraph-templates">stratigraph-templates</a>, <code>vocabularies/skos/us-affidabilita.ttl</code>, commit <code>8bf9723</code></dd>
+  </dl>
+
+  <h2>Alignments</h2>
+  <p>4 alignments declared, 0 verified. Every alignment
+  not marked verified is a proposal: it says what we think, marked as ours, until someone with standing
+  in the target vocabulary confirms or rejects it. A match nobody has checked is never served as though it had been.</p>
+
+  <footer>
+    Part of the <a href="https://extendedmatrix.org">Extended Matrix</a> ecosystem.
+    Source of truth: <a href="https://github.com/StratiGraph-ECCCH/stratigraph-templates">stratigraph-templates</a>. <a href="../">All modules</a>.
+  </footer>
+</main>
+</body>
+</html>
