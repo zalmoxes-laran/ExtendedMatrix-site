@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Jru8YOplzlo8qKwHROlMTK6Vf1U2DV57ViXHTKjIPo0='; style-src 'sha256-EubMDMPV5F5ruXbxqca7RT19olJ3WY/zkFofwfv8ytY='; img-src 'none'; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>EMStudio · ORCID</title>
+<!--
+  The page ORCID sends the browser back to after «Sign in with ORCID» from
+  EMStudio DESKTOP (https://extendedmatrix.org/orcid/callback/, the redirect URI
+  registered for the client APP-DBYSPGP676HKN8OE).
+
+  ORCID answers in the FRAGMENT (implicit flow: #id_token=…&state=…, or
+  #error=…), which never reaches this server or its logs. The page takes it off
+  the address first, then hands it to the app through its private scheme,
+  org.extendedmatrix.emstudio:/orcid-return#…, where EMStudio checks it
+  (ORCID's signature, issuer, audience, expiry, and the nonce only that
+  window holds). If the scheme does not open (an app not installed, a browser
+  that asks first), the same answer is shown as a code to paste in EMStudio.
+
+  It keeps NOTHING: no storage, no cookie, no request, no analytics — it lives
+  in public/ and not as an Astro page precisely so that no layout script ever
+  runs beside a token. The CSP admits only the script and the style below, BY
+  HASH: change either and the page stops working until the two hashes in the
+  CSP are recomputed (sha256, base64, of the exact text between the tags):
+    python3 -c "import re,hashlib,base64,sys;s=open(sys.argv[1]).read();[print(t,base64.b64encode(hashlib.sha256(re.search(f'<{t}>(.*?)</{t}>',s,re.S).group(1).encode()).digest()).decode()) for t in ('script','style')]" public/orcid/callback/index.html
+-->
+<style>
+:root{--bg:#f7f5f0;--fg:#1f1d1a;--mute:#6b665d;--line:#d9d3c7;--accent:#a6762a;--card:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1a18;--fg:#ece8df;--mute:#a59f93;--line:#3a3732;--accent:#d9a54a;--card:#24221f}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:16px}
+main{max-width:34rem;width:100%;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:24px}
+h1{font-size:1.2rem;margin:0 0 .5rem}
+p{margin:.5rem 0;color:var(--mute)}
+button{font:inherit;border-radius:6px;border:1px solid var(--accent);padding:.45rem .9rem;cursor:pointer}
+#back{background:var(--accent);color:#fff;margin:.75rem 0}
+#copy{background:transparent;color:var(--fg)}
+textarea{width:100%;height:6.5rem;font:12px/1.4 ui-monospace,Menlo,monospace;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px;resize:vertical;word-break:break-all}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title">EMStudio · ORCID</h1>
+  <p id="lead"></p>
+  <div id="answer" hidden>
+    <button id="back" type="button"></button>
+    <p id="pasteHint"></p>
+    <textarea id="code" readonly spellcheck="false" aria-labelledby="pasteHint"></textarea>
+    <p><button id="copy" type="button"></button> <span id="copied"></span></p>
+    <p id="close"></p>
+  </div>
+</main>
+<script>
+(function () {
+  "use strict";
+  var SCHEME = "org.extendedmatrix.emstudio:";
+  var it = /^it\b/i.test(navigator.language || "");
+  var T = it ? {
+    lead: "ORCID ha risposto. Sto tornando a EMStudio…",
+    none: "Questa pagina riceve la risposta di ORCID quando si entra con ORCID da EMStudio desktop. Qui non è arrivata nessuna risposta: riavvia l'accesso da EMStudio.",
+    back: "Torna a EMStudio",
+    paste: "Se EMStudio non si è aperto da solo, copia questo codice e incollalo in EMStudio, in «Chi sei» › «Incolla la risposta di ORCID»:",
+    copy: "Copia", copied: "copiato",
+    close: "Puoi chiudere questa scheda."
+  } : {
+    lead: "ORCID answered. Going back to EMStudio…",
+    none: "This page receives ORCID's answer when you sign in with ORCID from EMStudio desktop. No answer arrived here: start the sign-in again from EMStudio.",
+    back: "Back to EMStudio",
+    paste: "If EMStudio did not open by itself, copy this code and paste it in EMStudio, in «Who you are» › «Paste ORCID's answer»:",
+    copy: "Copy", copied: "copied",
+    close: "You can close this tab."
+  };
+  if (it) document.documentElement.lang = "it";
+  var $ = function (id) { return document.getElementById(id); };
+
+  // 1 · the answer, read, and taken off the address BEFORE anything else
+  var hash = (location.hash || "").replace(/^#/, "");
+  try { history.replaceState(null, "", location.pathname); } catch (e) { /* nothing to undo */ }
+
+  if (!/(^|&)(id_token|error)=/.test(hash)) {
+    $("lead").textContent = T.none;
+    return;
+  }
+  // 2 · to the app, in the fragment again (never the query: it must not reach
+  // anybody's server on the way)
+  var target = SCHEME + "/orcid-return#" + hash;
+  $("lead").textContent = T.lead;
+  $("back").textContent = T.back;
+  $("pasteHint").textContent = T.paste;
+  $("code").value = "#" + hash;
+  $("copy").textContent = T.copy;
+  $("close").textContent = T.close;
+  $("answer").hidden = false;
+  var jump = function () { location.replace(target); };
+  $("back").addEventListener("click", jump);
+  $("copy").addEventListener("click", function () {
+    var done = function () { $("copied").textContent = T.copied; };
+    $("code").select();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText($("code").value).then(done, function () { try { document.execCommand("copy"); done(); } catch (e) {} });
+    } else { try { document.execCommand("copy"); done(); } catch (e) {} }
+  });
+  jump();
+})();
+</script>
+</body>
+</html>
