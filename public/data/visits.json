@@ -1,22 +1,22 @@
 {
   "schema": 1,
-  "fetched_at": "2026-10-02T12:01:55Z",
+  "fetched_at": "2026-10-03T11:14:29Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-10-02"
+    "end": "2026-10-03"
   },
-  "total": 5605,
-  "total_events": 1311,
+  "total": 5616,
+  "total_events": 1315,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 2457
+      "count": 2465
     },
     {
       "code": "US",
       "name": "United States",
-      "count": 783
+      "count": 784
     },
     {
       "code": "ES",
@@ -36,7 +36,7 @@
     {
       "code": "GB",
       "name": "United Kingdom",
-      "count": 128
+      "count": 129
     },
     {
       "code": "BE",
