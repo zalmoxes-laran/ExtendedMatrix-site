@@ -44,6 +44,14 @@ jobs:
         run: npm ci || npm install
 
       - name: Type-check & build
+        # src/lib/upstream.ts reads versions and installers from the GitHub
+        # API at build time. Without a token the limit is 60 requests/hour
+        # per IP, shared across runners: on 2026-10-13 that read failed and
+        # /tools/emstudio/ went live without its download section. The
+        # token (contents: read, above) raises it to 1000/hour. With CI=true
+        # (set by Actions) a source that cannot be read fails this step.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
 
       - name: Upload build artifact
