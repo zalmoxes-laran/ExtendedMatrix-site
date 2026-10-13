@@ -11,16 +11,20 @@
  * (vedi src/lib/upstream.ts), così non c'è nessun numero da ricordare di
  * aggiornare — che è il difetto per cui questo componente esiste.
  *
- * DEGRADA: se la lettura fallisce o non c'è nessuna release pubblicata, la
- * card si riduce al link alla pagina delle release invece di sparire o di
- * mostrare un bottone che non porta da nessuna parte.
+ * DEGRADA SOLO IN LOCALE: se la lettura fallisce o nessun asset è un
+ * installatore riconosciuto, in locale la card si riduce al link alla
+ * pagina delle release; in CI la build si ferma (vedi `segnalaFonte`),
+ * perché il 13-10-2026 quel ramo di riserva è andato online al posto del
+ * download.
  */
-import { latestGithubRelease } from '../lib/upstream';
+import {
+  latestGithubRelease, segnalaFonte, EMSTUDIO_REPO, EMSTUDIO_RELEASES_URL,
+} from '../lib/upstream';
 
 interface Props { repo?: string; releasesUrl?: string }
 const {
-  repo = 'zalmoxes-laran/EMStudio',
-  releasesUrl = 'https://github.com/zalmoxes-laran/EMStudio/releases',
+  repo = EMSTUDIO_REPO,
+  releasesUrl = EMSTUDIO_RELEASES_URL,
 } = Astro.props;
 
 const rel = await latestGithubRelease(repo);
@@ -41,6 +45,10 @@ const builds = OS.map((o) => {
   const a = (rel?.assets ?? []).find((x) => o.match.test(x.name));
   return { ...o, asset: a ?? null };
 }).filter((b) => b.asset);
+
+// Una lettura fallita o senza release è già segnalata in `upstream.ts`; qui
+// resta il caso di una release che c'è ma non ha niente da scaricare.
+if (rel && !builds.length) segnalaFonte(`${repo} ${rel.tag}: nessun asset riconosciuto come installatore (${rel.assets.map((a) => a.name).join(', ') || 'nessun asset'})`);
 ---
 
 {rel && builds.length > 0 ? (

@@ -22,20 +22,62 @@
  * workflow che pubblica chiama `build.yml` del repo del sito, che ha già
  * `workflow_dispatch`.
  *
- * DEGRADA INVECE DI ROMPERE. Ogni lettura che fallisce torna `null` e chi
- * chiama mostra ciò che ha (l'etichetta letterale, il link alla pagina
- * delle release). Un sito che non costruisce perché GitHub ha singhiozzato
- * è peggio di un numero assente.
+ * IN LOCALE DEGRADA, IN CI SI FERMA. Il 13-10-2026 la build delle 06:46Z
+ * ha pubblicato /tools/emstudio/ SENZA download — nemmeno quello della
+ * versione prima — perché GitHub aveva risposto non-2xx a una build senza
+ * credenziali e `json()` lo trasformava in un `null` muto. La pagina vuota
+ * è andata online e nessun controllo è diventato rosso.
+ *
+ * Ora ogni lettura che fallisce lo SCRIVE nel log con l'URL, lo stato HTTP
+ * e la ragione (limite esaurito, 404, rete…). In locale resta un avviso e
+ * chi chiama mostra ciò che ha; in CI (`CI=true`, che Actions imposta da
+ * sé) la build fallisce, così il sito pubblicato resta quello di prima
+ * invece di essere sostituito da uno peggiore.
  */
 
 export interface GhAsset { name: string; url: string; size: number }
 export interface GhRelease { tag: string; version: string; assets: GhAsset[]; url: string }
 
-async function json(url: string, init?: RequestInit): Promise<any | null> {
+/** Il repo di EMStudio, in un posto solo: componente, tabella e link. */
+export const EMSTUDIO_REPO = 'ExtendedMatrix/EMStudio';
+export const EMSTUDIO_RELEASES_URL = `https://github.com/${EMSTUDIO_REPO}/releases`;
+
+/** Una fonte non letta: avviso in locale, errore che ferma la build in CI. */
+export function segnalaFonte(msg: string): void {
+  const testo = `[upstream] ${msg}`;
+  if (process.env.CI) throw new Error(`${testo}\n(in CI una fonte non letta ferma la build: meglio il sito di ieri che una pagina vuota)`);
+  console.warn(`${testo} — in locale si continua con il ramo di riserva`);
+}
+
+// Una lettura per URL e per build: ogni pagina /tools/* e /versions/* risolve
+// la stessa tabella, e senza memoria la stessa release si chiederebbe a
+// GitHub decine di volte — consumando proprio il limite che la fa fallire.
+const letture = new Map<string, Promise<any | null>>();
+
+function json(url: string, init?: RequestInit): Promise<any | null> {
+  if (!letture.has(url)) letture.set(url, leggi(url, init));
+  return letture.get(url)!;
+}
+
+async function leggi(url: string, init?: RequestInit): Promise<any | null> {
+  let r: Response;
   try {
-    const r = await fetch(url, init);
-    return r.ok ? await r.json() : null;
-  } catch { return null; }
+    r = await fetch(url, init);
+  } catch (e: any) {
+    segnalaFonte(`GET ${url} → errore di rete: ${e?.cause?.code ?? e?.message ?? e}`);
+    return null;
+  }
+  if (r.ok) return await r.json();
+  // La ragione: GitHub la scrive in `message` e segnala il limite con
+  // `x-ratelimit-remaining: 0`; per gli altri basta lo stato.
+  let ragione = r.statusText;
+  try { ragione = (await r.json())?.message ?? ragione; } catch { /* corpo non JSON */ }
+  if (r.headers.get('x-ratelimit-remaining') === '0') {
+    const reset = Number(r.headers.get('x-ratelimit-reset'));
+    ragione = `limite di richieste esaurito${reset ? ` (riparte alle ${new Date(reset * 1000).toISOString()})` : ''} — ${ragione}`;
+  }
+  segnalaFonte(`GET ${url} → HTTP ${r.status}: ${ragione}`);
+  return null;
 }
 
 /** La versione più alta di un pacchetto nell'indice di un repo Blender. */
@@ -87,8 +129,10 @@ export async function pypiVersion(pkg: string, line?: string): Promise<string | 
  * indicarla darebbe un bottone che porta a una pagina vuota.
  */
 export async function latestGithubRelease(repo: string): Promise<GhRelease | null> {
-  // In Actions c'è GITHUB_TOKEN e alza il limite da 60 a 1000 richieste
-  // l'ora; in locale non c'è e le due chiamate stanno dentro i 60.
+  // In Actions `build.yml` passa GITHUB_TOKEN e il limite sale da 60 a 1000
+  // richieste l'ora; senza, i 60 sono per indirizzo e condivisi fra i
+  // runner, ed è così che il 13-10-2026 la lettura è fallita. In locale le
+  // poche chiamate stanno dentro i 60.
   const token = process.env.GITHUB_TOKEN;
   const rels = await json(`https://api.github.com/repos/${repo}/releases?per_page=20`, {
     headers: {
@@ -96,9 +140,12 @@ export async function latestGithubRelease(repo: string): Promise<GhRelease | nul
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },
   });
-  if (!Array.isArray(rels)) return null;
+  if (!Array.isArray(rels)) return null;   // già segnalato da json()
   const live = rels.filter((r: any) => !r.draft);
-  if (!live.length) return null;
+  if (!live.length) {
+    segnalaFonte(`${repo}: nessuna release pubblicata (solo bozze o nessuna)`);
+    return null;
+  }
   live.sort((a: any, b: any) => comparePep440(a.tag_name, b.tag_name));
   const r = live.at(-1);
   return {
@@ -126,7 +173,7 @@ export const FONTI_VERSIONE: Record<string, () => Promise<string | null>> = {
   'dsc-tools-dev': () => blenderRepoVersion('dsc_tools', 'dev'),
   's3dgraphy-dev': () => pypiVersion('s3dgraphy', '1.6.0.dev'),
   's3dgraphy':     () => pypiVersion('s3dgraphy'),
-  'emstudio':      () => latestGithubRelease('zalmoxes-laran/EMStudio').then((r) => r?.version ?? null),
+  'emstudio':      () => latestGithubRelease(EMSTUDIO_REPO).then((r) => r?.version ?? null),
 };
 
 /** Legge una volta sola ogni fonte citata da un elenco di componenti. */

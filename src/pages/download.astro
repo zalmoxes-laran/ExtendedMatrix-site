@@ -1,12 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
-import { latestGithubRelease } from '../lib/upstream';
+import { latestGithubRelease, EMSTUDIO_REPO, EMSTUDIO_RELEASES_URL } from '../lib/upstream';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 // LETTA, NON BATTUTA A MANO: questa striscia annunciava `v1.6.0-dev.3`
 // mentre la dev.10 era pubblicata da due ore. Se la lettura non riesce la
 // targhetta sparisce invece di mostrare un numero vecchio.
-const emstudioRel = await latestGithubRelease('zalmoxes-laran/EMStudio');
+const emstudioRel = await latestGithubRelease(EMSTUDIO_REPO);
 
 const versions = (await getCollection('versions'))
   .sort((a, b) => b.data.order - a.data.order);
@@ -169,7 +169,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         </p>
         <div class="dlbeta__grid">
           <a class="dlbeta__card"
-             href="https://github.com/zalmoxes-laran/EMStudio/releases"
+             href={EMSTUDIO_RELEASES_URL}
              target="_blank" rel="noopener"
              data-goatcounter-click="dlbeta-emstudio">
             <div class="dlbeta__head">
