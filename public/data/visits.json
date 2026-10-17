@@ -1,17 +1,17 @@
 {
   "schema": 1,
-  "fetched_at": "2026-10-16T10:53:56Z",
+  "fetched_at": "2026-10-17T10:16:41Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-10-16"
+    "end": "2026-10-17"
   },
-  "total": 6041,
-  "total_events": 1435,
+  "total": 6070,
+  "total_events": 1442,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 2676
+      "count": 2707
     },
     {
       "code": "US",
@@ -21,12 +21,12 @@
     {
       "code": "ES",
       "name": "Spain",
-      "count": 441
+      "count": 443
     },
     {
       "code": "MX",
       "name": "Mexico",
-      "count": 210
+      "count": 211
     },
     {
       "code": "TR",
@@ -36,7 +36,7 @@
     {
       "code": "GB",
       "name": "United Kingdom",
-      "count": 131
+      "count": 132
     },
     {
       "code": "BE",
@@ -54,13 +54,13 @@
       "count": 103
     },
     {
-      "code": "DE",
-      "name": "Germany",
-      "count": 100
-    },
-    {
       "code": "SG",
       "name": "Singapore",
+      "count": 103
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
       "count": 100
     },
     {
