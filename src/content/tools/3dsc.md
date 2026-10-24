@@ -27,6 +27,8 @@ EM Tools.
 - Level-of-detail (LOD) pipeline producing proxies suitable for
   annotation.
 - Metadata propagation across LOD levels.
+- Orthogonal views for the drawing plates, which enter CAD at their
+  real size, with the world file alongside.
 - Direct integration with EM Tools.
 
 See the [3DSC documentation](https://docs.extendedmatrix.org/projects/3DSC/en/latest/)
