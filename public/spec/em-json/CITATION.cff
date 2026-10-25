@@ -1,4 +1,4 @@
-# PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/CITATION.cff, commit 9d15531. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.
+# PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/CITATION.cff, commit 13d3706. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.
 cff-version: 1.2.0
 message: "If you use or implement the em.json format, please cite this specification."
 type: standard
@@ -7,15 +7,20 @@ abstract: >-
   Specification of em.json, the document format of the Extended Matrix: a
   container of graphs (stratigraphic units, their relations in time, the
   paradata of reconstructions, 3D resources, layout), with its JSON Schemas and
-  a conformance suite. Editor's Draft.
+  a conformance suite.
 version: "1.1"
-date-released: "2026-10-24"
+date-released: "2026-10-25"
 authors:
   - family-names: Demetrescu
     given-names: Emanuel
     orcid: "https://orcid.org/0000-0002-5065-7970"
     affiliation: "CNR-ISPC, Istituto di Scienze del Patrimonio Culturale"
     email: emanuel.demetrescu@cnr.it
+doi: "10.5281/zenodo.23642465"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.23642464"
+    description: "Concept DOI: all versions of the specification"
 url: "https://w3id.org/extendedmatrix/spec/em-json/"
 repository-code: "https://github.com/ExtendedMatrix/s3Dgraphy"
 license: CC-BY-4.0

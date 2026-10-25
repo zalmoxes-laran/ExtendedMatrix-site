@@ -26,11 +26,11 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
 </style>
 </head>
 <body>
-<!-- PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/SPEC.md, commit 9d15531. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart. -->
+<!-- PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/SPEC.md, commit 13d3706. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart. -->
 <main>
-<p class="source">PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/SPEC.md, commit 9d15531. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.</p>
+<p class="source">PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/SPEC.md, commit 13d3706. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.</p>
 <h1 id="emjson--the-extended-matrix-document-format">em.json — the Extended Matrix document format</h1>
-<p><strong>Version 1.1 · Editor's Draft · 24 October 2026</strong></p>
+<p><strong>Version 1.1 · Release · 25 October 2026</strong></p>
 <table>
 <thead>
 <tr>
@@ -64,8 +64,12 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
 <td>Text: <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Schemas and examples: <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a></td>
 </tr>
 <tr>
+<td>DOI</td>
+<td>This version: <a href="https://doi.org/10.5281/zenodo.23642465">10.5281/zenodo.23642465</a> · all versions: <a href="https://doi.org/10.5281/zenodo.23642464">10.5281/zenodo.23642464</a></td>
+</tr>
+<tr>
 <td>Status</td>
-<td><strong>Editor's Draft.</strong> Stable enough to implement; it becomes a Release when the editor has reread it and it is deposited with a DOI.</td>
+<td><strong>Release.</strong> Reread by the editor and deposited with a DOI on Zenodo. Later changes enter the Editor's Draft (§10).</td>
 </tr>
 </tbody>
 </table>
@@ -73,8 +77,25 @@ footer{margin-top:3rem;padding-top:1rem;border-top:1px solid var(--line);color:v
 <p>An em.json file holds the work of an Extended Matrix study: the stratigraphic
 units and their relations in time, the sources and the reasoning behind every
 reconstruction (the <em>paradata</em>), the 3D models and documents they refer to, and
-how the whole is drawn. It is the file that EMStudio saves, that EM Tools for
-Blender writes, that Heriverse and the StratiGraph server read.</p>
+how the whole is drawn.</p>
+<p>Four things are distinct, and the rest of this document depends on keeping
+them apart:</p>
+<ul>
+<li><strong>Extended Matrix</strong> is a formal language. It represents the concepts of a
+stratigraphic and reconstructive reading with a layout, a logic of the flow
+of time and graphic elements of its own, and it rests on precise algorithms
+that propagate information between portions of the graph, following the
+principles of virtual historical reconstruction.</li>
+<li><strong>The content of a Matrix</strong> is formalized as a <strong>property graph</strong>, mapped
+deterministically onto a triplestore.</li>
+<li><strong>em.json</strong> is the <strong>container</strong> of that property graph. This document
+specifies it.</li>
+<li><strong>s3Dgraphy</strong> is the library through which the tools read and write it.</li>
+</ul>
+<p>The tools read and write the same file, each with its own metaphor for the
+content: EM Tools for Blender, EMStudio, Heriverse, StratiField and its field
+chatbot, and the StratiGraph server, where several people work on it together
+in shared rooms.</p>
 <p>It is the point where these tools meet. That is why it is specified here, in a
 document separate from any one program: whoever reads and writes em.json can
 work with all of them.</p>
@@ -110,7 +131,9 @@ kept in the graph of its source and addressed as «graph → node».</p>
 <p>The types and their fields are not listed in this specification. They belong to
 the <strong>EM datamodel</strong> — the node datamodel, the connections datamodel and the
 qualia vocabulary — which evolves on its own rhythm and is mapped to CIDOC CRM
-and its extensions. Every file says which versions of the datamodel it follows.
+and its extensions. Among them is CRMem, the extension of the CIDOC family that
+declares the concepts of argued reconstruction absent from the other models: in
+this chain it is a target of the mapping, not the datamodel itself. Every file says which versions of the datamodel it follows.
 This keeps the format stable while the vocabulary grows.</p>
 <h3 id="23-edges">2.3 Edges</h3>
 <p>An edge has an <strong>identifier</strong>, a <strong>type</strong> (the relation, as the connections
@@ -148,6 +171,19 @@ wrote it (<code>generator</code>, <code>last_editor</code>), which datamodel and
 follows, and may carry the study's <code>title</code>, <code>description</code>, <code>visibility</code> and,
 for a landscape, the <code>composition</code> (the studies it cites). A separate top-level
 <code>version</code> counts the revisions of the <em>work</em> (not of the format).</p>
+<p><strong>Profiles (optional).</strong> A file whose content uses the types or the
+vocabularies of a community profile declares it in <code>header.profiles</code>, a list
+of <code>{&quot;iri&quot;: …, &quot;version&quot;: …}</code> — the identity of each profile and the version
+the file was written with:</p>
+<pre><code class="language-json">&quot;profiles&quot;: [{&quot;iri&quot;: &quot;https://example.org/em-profiles/example-toolmarks&quot;, &quot;version&quot;: &quot;0.1.0&quot;}]
+</code></pre>
+<p>The key is additive: a reader that does not know it ignores it (§3.1), a
+reader that knows it may say which profiles it lacks, and a missing profile
+is never a reason to refuse a file. A profile has its own version, independent
+of <code>header.version</code> and of the datamodel versions (§5). What a profile
+contains, and how a node or an edge of a profile type carries what a reader
+without the profile needs to draw it as the core type it specialises, is in
+the <a href="https://github.com/ExtendedMatrix/vocabularies/blob/main/profiles/SPEC.md">EM Profiles specification</a>.</p>
 <h2 id="3-reading">3. Reading</h2>
 <p>A conforming reader:</p>
 <ol>
@@ -213,7 +249,7 @@ EMStudio, EM Tools, Heriverse, the StratiGraph server) never write them.</p>
 (<code>em.v1.1.schema.json</code> for the container; <code>em.v1.schema.json</code> for the flat 1.0
 form) and its edges join nodes of their own graph.</li>
 <li>A <strong>reader</strong> conforms when it reads every file of the conformance suite
-(<a href="https://github.com/ExtendedMatrix/s3Dgraphy/tree/9d15531/spec/em-json/conformance"><code>conformance/</code></a> beside this document) and obtains the expected result. It may
+(<a href="https://github.com/ExtendedMatrix/s3Dgraphy/tree/13d3706/spec/em-json/conformance"><code>conformance/</code></a> beside this document) and obtains the expected result. It may
 add, for each graph, the default geo-position node its datamodel creates, and
 nothing else.</li>
 <li>A <strong>writer</strong> conforms when what it writes validates, and when reading and
@@ -225,9 +261,12 @@ legacy 1.0 flat file; a file with keys nobody knows.</p>
 <h2 id="8-identifiers">8. Identifiers</h2>
 <p>The specification and its schemas are identified by persistent IRIs under
 <code>https://w3id.org/extendedmatrix/</code>, which resolve to the Extended Matrix site.
-In files and in prose the short prefix <strong><code>em:</code></strong> stands for the Extended
-Matrix ontology, <code>https://w3id.org/em/ontology#</code> (CRMem): <code>em:hasSubEpoch</code> is
-<code>https://w3id.org/em/ontology#hasSubEpoch</code>. Short in the files, long and
+In files and in prose the short prefix <strong><code>em:</code></strong> stands for the namespace of the
+EM terms, <code>https://w3id.org/em/ontology#</code>: <code>em:hasSubEpoch</code> is
+<code>https://w3id.org/em/ontology#hasSubEpoch</code>. The EM datamodel — nodes,
+connections, qualia — is the formal language of Extended Matrix. Its terms map
+to CIDOC CRM and its extensions, among them CRMem, the extension that declares
+the concepts of argued reconstruction absent from the CIDOC family. Short in the files, long and
 canonical in the world.</p>
 <h2 id="9-examples">9. Examples</h2>
 <p>The smallest document — one graph, two units, one relation:</p>
@@ -273,7 +312,7 @@ canonical in the world.</p>
   ]
 }
 </code></pre>
-<p>Complete files are in <a href="https://github.com/ExtendedMatrix/s3Dgraphy/tree/9d15531/spec/em-json/conformance"><code>conformance/</code></a>.</p>
+<p>Complete files are in <a href="https://github.com/ExtendedMatrix/s3Dgraphy/tree/13d3706/spec/em-json/conformance"><code>conformance/</code></a>.</p>
 <h2 id="10-how-to-propose-a-change">10. How to propose a change</h2>
 <p>Open an issue on the s3Dgraphy repository with the label <code>em-json</code>, or write to
 the editor. Say what you need to carry and show a file. The editor decides;
@@ -283,18 +322,22 @@ could not read is not accepted without a new major, and a new major is the
 last resort.</p>
 <h2 id="11-changes">11. Changes</h2>
 <ul>
-<li><strong>1.1 — 24 October 2026 (Editor's Draft).</strong> First written specification. The
+<li><strong>1.1 — 25 October 2026 (Release; Editor's Draft from 24 October).</strong> First written specification. The
 container (in use since 13 August 2026) becomes the form of the file; the flat
 form of 1.0 stays readable. Optional blocks described: per-graph layout,
 shelf, DTC corpus, periodizations and horizons, links between graphs, the
 version of the work, landscape composition. Rule «readers ignore unknown keys»
-and the <code>x-</code> prefix for extensions. Policy of the two version numbers.</li>
+and the <code>x-</code> prefix for extensions. Policy of the two version numbers.
+Added on 25 October 2026, optional and additive: <code>header.profiles</code>, the
+community profiles a file uses (§2.7). At release: §1 distinguishes the
+language, the property graph, the container and the library; §2.2 and §8 place
+CRMem among the targets of the mapping.</li>
 <li><strong>1.0 — 11 July 2026.</strong> Schema of the flat form (<code>header</code> + <code>graph</code> +
 <code>layout</code>), frozen with EMStudio's first save format.</li>
 </ul>
 <h2 id="12-how-to-cite">12. How to cite</h2>
 <p>Demetrescu, E. (ed.) (2026). <em>em.json — the Extended Matrix document format</em>,
-version 1.1. CNR-ISPC. https://w3id.org/extendedmatrix/spec/em-json/</p>
+version 1.1. CNR-ISPC. https://doi.org/10.5281/zenodo.23642465</p>
 
 <footer>Part of the <a href="https://extendedmatrix.org">Extended Matrix</a> ecosystem.
 Editor: Emanuel Demetrescu (CNR-ISPC). Text CC BY 4.0; schemas and examples CC0 1.0.</footer>

@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://w3id.org/extendedmatrix/schemas/em.v1.1.schema.json",
-  "$comment": "PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/em.v1.1.schema.json, commit 9d15531. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.",
+  "$comment": "PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/em.v1.1.schema.json, commit 13d3706. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.",
   "title": "em.json 1.1 — the Extended Matrix container",
   "description": "An em.json document is a CONTAINER: a header and one or more graphs, each with its nodes, edges and, optionally, its layout. Special members (the shelf, the DTC corpus, the periodizations) are graphs marked by data.em_collection. Readers MUST ignore keys they do not know; writers of the official tools never write keys prefixed 'x-', which are reserved to third-party extensions. The flat single-graph form of 1.0 ({header, graph}) is described by em.v1.schema.json and is still read by every conforming reader. Specification: https://w3id.org/extendedmatrix/spec/em-json/ — editor Emanuel Demetrescu (CNR-ISPC). This schema is dedicated to the public domain (CC0 1.0).",
   "type": "object",

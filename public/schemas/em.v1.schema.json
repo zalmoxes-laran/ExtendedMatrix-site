@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://w3id.org/em/schemas/em.v1.schema.json",
-  "$comment": "PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/em.v1.schema.json, commit 9d15531. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.",
+  "$comment": "PUBLISHED COPY. Source of truth: https://github.com/ExtendedMatrix/s3Dgraphy, spec/em-json/em.v1.schema.json, commit 13d3706. Do not edit it here: edit it there and republish (spec/em-json/tools/publish_site.py), or the two drift apart.",
   "title": ".em.json v1 (FROZEN 2026-07-11)",
   "description": "Extended Matrix native document: header + FLAT graph (nodes[]/edges[]) + optional layout. Reference implementation: s3Dgraphy emjson_exporter/emjson_importer. Consumers MUST ignore unknown top-level keys.",
   "type": "object",
