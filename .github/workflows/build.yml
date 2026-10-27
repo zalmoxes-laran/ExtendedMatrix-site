@@ -10,6 +10,12 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  # The ontology and em.json pages are regenerated from s3Dgraphy at every
+  # build (step «Republish CRMem and em.json» below). This schedule makes a
+  # change in s3Dgraphy reach the site within six hours even when nothing is
+  # pushed here.
+  schedule:
+    - cron: '17 */6 * * *'
 
 permissions:
   contents: read
@@ -27,6 +33,37 @@ jobs:
           # included here as a git submodule (vendor/blenderaddons4ch). The
           # prebuild sync copies its data into the content collection.
           submodules: recursive
+
+      # ── CRMem and em.json, republished from their source ────────────────
+      # The ontology page (public/ontology/) and the em.json specification
+      # (public/spec/em-json/, public/schemas/) are copies of what lives in
+      # s3Dgraphy. Regenerating them here, from the published line, keeps the
+      # site from drifting behind (on 2026-10-27 the ontology page was four
+      # versions old). The copies committed in this repository stay as the
+      # fallback: if s3Dgraphy cannot be read, the build goes on with them.
+      - name: Checkout s3Dgraphy (source of the ontology and em.json pages)
+        uses: actions/checkout@v5
+        continue-on-error: true
+        with:
+          repository: ExtendedMatrix/s3Dgraphy
+          ref: s3dgraphy_v1.6dev
+          path: _s3dgraphy
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        continue-on-error: true
+        with:
+          python-version: '3.11'
+
+      - name: Republish CRMem and em.json
+        continue-on-error: true
+        run: |
+          python -m pip install --quiet 'rdflib>=7.0'
+          PYTHONPATH=_s3dgraphy/src python -m s3dgraphy.tools.ontology_html --out public/ontology
+          python _s3dgraphy/spec/em-json/tools/publish_site.py .
+          head -2 public/ontology/em.ttl
+          rm -rf _s3dgraphy
 
       - name: Setup Node
         # v5+ runs on Node 24 natively (v4 targeted Node 20, which GitHub
