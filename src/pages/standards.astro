@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<BaseLayout
+  title="Standards"
+  description="The open standards of Extended Matrix: the CRMem ontology, the em.json file format and the SKOS vocabularies, with their permanent identifiers."
+>
+  <section class="std">
+    <div class="container">
+      <span class="tag">Standards</span>
+      <h1>What Extended Matrix publishes for reuse.</h1>
+      <p class="std__lede">
+        Three pieces are meant to be reused outside our own tools: the
+        ontology that says what the Extended Matrix asserts, the file format
+        that carries a study, and the controlled vocabularies the method
+        originates. Each has a permanent identifier under
+        <code>w3id.org/extendedmatrix</code>, a human-readable page and a
+        machine-readable form.
+      </p>
+
+      <div class="std__grid">
+        <article class="std__card">
+          <h2>CRMem — the ontology</h2>
+          <p>
+            The Extended Matrix extension of CIDOC CRM: the terms the method
+            needs that the CIDOC CRM family does not provide, above all the
+            virtual stratigraphic units and the reasoning that supports them.
+            Every class sits beneath a class of the reference family.
+          </p>
+          <ul>
+            <li><a href={`${B}/ontology/`}>Classes &amp; properties declarations</a></li>
+            <li><a href={`${B}/ontology/em.ttl`}>Turtle</a> · <a href={`${B}/ontology/em.rdf`}>RDF/XML</a></li>
+            <li><a href="https://docs.extendedmatrix.org/projects/s3dgraphy/en/v1.6/crmem.html" target="_blank" rel="noopener">What it contains and why</a></li>
+          </ul>
+          <p class="std__pid">Permanent URI: <code>https://w3id.org/extendedmatrix/ontology</code></p>
+        </article>
+
+        <article class="std__card">
+          <h2>em.json — the file format</h2>
+          <p>
+            The container of an Extended Matrix study: the stratigraphic graph,
+            its sources and paradata, its resources and the versions it is
+            consistent with. The same file is read and written by s3dgraphy and
+            by every tool of the ecosystem.
+          </p>
+          <ul>
+            <li><a href={`${B}/spec/em-json/`}>Specification</a></li>
+            <li><a href={`${B}/schemas/`}>JSON schemas</a></li>
+            <li><a href="https://doi.org/10.5281/zenodo.23642464" target="_blank" rel="noopener">Citable release on Zenodo</a></li>
+          </ul>
+          <p class="std__pid">Permanent URI: <code>https://w3id.org/extendedmatrix/spec/em-json</code></p>
+        </article>
+
+        <article class="std__card">
+          <h2>Vocabularies</h2>
+          <p>
+            Small controlled vocabularies in SKOS that the Extended Matrix
+            originates and maintains, each with a human-readable page and its
+            Turtle serialisation. Licensed CC BY 4.0 unless a module states
+            otherwise.
+          </p>
+          <ul>
+            <li><a href={`${B}/vocab/`}>All modules</a></li>
+          </ul>
+          <p class="std__pid">Permanent URI: <code>https://w3id.org/extendedmatrix/vocab/</code></p>
+        </article>
+      </div>
+
+      <p class="std__note">
+        Browsers that open a permanent URI reach the page; software that asks
+        for RDF reaches the serialisation. The pages are generated from the
+        sources in <a href="https://github.com/ExtendedMatrix/s3Dgraphy" target="_blank" rel="noopener">s3dgraphy</a>
+        and in the vocabularies repository, so what you read is what the tools use.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .std { padding: 3rem 0 4rem; }
+  .std__lede { max-width: 46em; font-size: 1.05rem; }
+  .std__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem; margin: 2rem 0; }
+  .std__card { border: 1px solid rgba(0,0,0,.12); border-radius: 10px; padding: 1.25rem 1.4rem; }
+  .std__card h2 { font-size: 1.2rem; margin: 0 0 .6rem; }
+  .std__card ul { padding-left: 1.1rem; margin: .8rem 0; }
+  .std__card li { margin: .25rem 0; }
+  .std__pid { font-size: .85rem; opacity: .8; word-break: break-all; }
+  .std__note { max-width: 46em; font-size: .95rem; opacity: .85; }
+</style>
