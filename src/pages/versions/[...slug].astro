@@ -714,7 +714,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     position: relative;
     top: -8px;
   }
-  .v__status--lts        { color: var(--em-gold); background: var(--em-gold-tint); }
+  .v__status--lts        { color: var(--em-gold-ink); background: var(--em-gold-tint); }
   .v__status--development{ color: var(--em-navy); background: var(--em-navy-tint); }
   .v__status--stable     { color: #2c5a2c; background: #d8ecd8; }
   .v__status--legacy     { color: #555;    background: #eee; }
@@ -739,7 +739,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
   .vp__lang-head h2 { margin: 0; }
   .vp__lang-tag {
     font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
-    color: var(--em-gold); background: rgba(255,255,255,0.65);
+    color: var(--em-gold-ink); background: rgba(255,255,255,0.65);
     /* Bumped from 3px/10px — title-adjacent pill was too compressed
        against the "Core language" H2. (2026-07-01) */
     padding: 7px 14px; border-radius: 3px; border: 1px solid var(--em-gold);
@@ -765,7 +765,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     position: absolute;
     left: 0;
     top: 6px;
-    color: var(--em-gold);
+    color: var(--em-gold-ink);
     font-size: 11px;
   }
   .vp__lang-links { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -798,7 +798,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     padding: 3px 10px;
     border-radius: 2px;
   }
-  .vp__flag--foundation .vp__flag-tag { color: var(--em-gold); background: rgba(255, 255, 255, 0.7); }
+  .vp__flag--foundation .vp__flag-tag { color: var(--em-gold-ink); background: rgba(255, 255, 255, 0.7); }
   .vp__flag-doi {
     font-family: var(--font-mono);
     font-size: 12px;
@@ -817,7 +817,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     line-height: 1.55;
     margin: 0 0 14px;
   }
-  .vp__flag-note a { color: var(--em-gold); }
+  .vp__flag-note a { color: var(--em-gold-ink); }
   .vp__flag-actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
   .vp__dl {
@@ -842,7 +842,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
   }
   .vp__pin-details > summary {
     cursor: pointer;
-    color: var(--em-gold);
+    color: var(--em-gold-ink);
     font-weight: 600;
     list-style: none;
     display: inline-flex;
@@ -887,9 +887,9 @@ const ctaLabel: { download: string; install: string; open: string } = {
   }
   .prereq:hover { border-color: var(--em-gold); text-decoration: none; }
   .prereq__name { font-family: var(--font-display); font-weight: 700; font-size: 18px; color: var(--em-navy); }
-  .prereq__ver { font-family: var(--font-mono); font-size: 12px; color: var(--em-gold); margin: 2px 0 8px; }
+  .prereq__ver { font-family: var(--font-mono); font-size: 12px; color: var(--em-gold-ink); margin: 2px 0 8px; }
   .prereq__desc { font-size: 13px; color: var(--em-text-muted); line-height: 1.5; margin-bottom: 10px; }
-  .prereq__cta { color: var(--em-gold); font-weight: 600; font-size: 13px; }
+  .prereq__cta { color: var(--em-gold-ink); font-weight: 600; font-size: 13px; }
 
   /* Tools — clustered by primary role.
      Each cluster is its own visual card with a left accent bar that
@@ -984,7 +984,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
   /* Star on the Core items inside the Core cluster. */
   .vp__star {
     display: inline-block;
-    color: var(--em-gold);
+    color: var(--em-gold-ink);
     font-size: 14px;
     margin-right: 4px;
     vertical-align: baseline;
@@ -1021,7 +1021,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     color: var(--em-navy);
     font-weight: 600;
   }
-  .vp__not-sure a:hover { color: var(--em-gold); }
+  .vp__not-sure a:hover { color: var(--em-gold-ink); }
 
   /* Tools — row-CTA list (replaces the previous 6-column matrix on
      2026-06-30). Each tool is a horizontal row:
@@ -1070,7 +1070,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     gap: 8px;
   }
   .vp__cta-name a { color: var(--em-navy); }
-  .vp__cta-name a:hover { color: var(--em-gold); }
+  .vp__cta-name a:hover { color: var(--em-gold-ink); }
   .vp__cta-name strong { font-size: 15px; }
   .vp__cta-ver {
     font-family: var(--font-mono);
@@ -1096,7 +1096,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     border-radius: 2px;
   }
   .vp__cta-note a { color: var(--em-navy); text-decoration: underline; }
-  .vp__cta-note a:hover { color: var(--em-gold); }
+  .vp__cta-note a:hover { color: var(--em-gold-ink); }
 
   /* Primary CTA pill — the focal point of every row. */
   .vp__cta-btn {
@@ -1125,13 +1125,13 @@ const ctaLabel: { download: string; install: string; open: string } = {
   .vp__cta-btn--install:hover { background: #0e1a36; }
   .vp__cta-btn--open {
     background: transparent;
-    color: var(--em-gold) !important;
+    color: var(--em-gold-ink) !important;
     border: 1.5px solid var(--em-gold);
     padding: 5.5px 14.5px;
   }
   .vp__cta-btn--open:hover {
     background: var(--em-gold-tint);
-    color: var(--em-gold) !important;
+    color: var(--em-gold-ink) !important;
   }
 
   /* Manual chip — secondary action, muted. */
@@ -1147,7 +1147,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     white-space: nowrap;
     transition: border-color 0.12s var(--ease), color 0.12s var(--ease);
   }
-  .vp__cta-chip:hover { border-color: var(--em-gold); color: var(--em-gold); text-decoration: none; }
+  .vp__cta-chip:hover { border-color: var(--em-gold); color: var(--em-gold-ink); text-decoration: none; }
 
   /* GitHub icon — tertiary, just identifies the source-code link. */
   .vp__cta-icon {
@@ -1161,7 +1161,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     transition: color 0.15s var(--ease), background 0.15s var(--ease);
   }
   .vp__cta-icon:hover {
-    color: var(--em-gold);
+    color: var(--em-gold-ink);
     background: var(--em-gold-tint);
     text-decoration: none;
   }
@@ -1318,7 +1318,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
     font-weight: 700;
     letter-spacing: 0.10em;
     text-transform: uppercase;
-    color: var(--em-gold);
+    color: var(--em-gold-ink);
     background: var(--em-gold-tint);
     border: 1px solid var(--em-gold);
     padding: 2px 8px;

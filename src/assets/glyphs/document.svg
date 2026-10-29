@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  The EM document: a sheet with a folded corner (yEd palette: BPMN data object, 35 x 55).
+  Three layers, and the ROLE of each is part of the drawing (em_visual_rules 2d_glyphs._roles):
+    1. the sheet            - paper
+    2. the outline          - border: a consumer restyles it from document_variant_styles
+                              (width = Canonical / Instance, colour = geometry-axis variant).
+                              Its stroke-width 0.5 is the Instance width (border_width 1.0).
+    3. the fold             - ink, always a hairline: it is a fold, not a border.
+  Redrawn 2026-10-02 from the author's file WITHOUT changing a pixel: the outline was an
+  expanded stroke (a filled ring), which nobody can thicken; it is now the stroke itself.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16.11 25.34">
+  <polygon fill="#fff" points="15.86 25.09 .25 25.09 .25 .25 9.87 .25 15.86 6.4"/>
+  <polygon data-role="border" fill="none" stroke="#000" stroke-width="0.5" points="15.86 25.09 .25 25.09 .25 .25 9.87 .25 15.86 6.4"/>
+  <polyline fill="none" stroke="#000" stroke-width="0.25" points="9.875 .25 9.875 6.395 15.86 6.395"/>
+</svg>

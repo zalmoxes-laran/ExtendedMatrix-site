@@ -1,0 +1,11 @@
+---
+/** One EM glyph from the sprite. Sizes default to the glyph's own ratio. */
+interface Props { name: 'US' | 'USVs' | 'USVn' | 'SF' | 'doc' | 'ext' | 'comb' | 'prop' | 'br'; w?: number; h?: number; title?: string }
+const R: Record<string, [number, number]> = { US: [30, 15], USVs: [31, 14], USVn: [32, 14], SF: [30, 15], doc: [13, 20], ext: [20, 20], comb: [20, 20], prop: [30, 13], br: [16, 16] };
+const { name, title } = Astro.props;
+const w = Astro.props.w ?? R[name][0];
+const h = Astro.props.h ?? R[name][1];
+---
+<svg class="em-glyph" width={w} height={h} viewBox={`0 0 ${w} ${h}`} role={title ? 'img' : undefined} aria-hidden={title ? undefined : 'true'} aria-label={title}>
+  <use href={`#g-${name}`} width={w} height={h} preserveAspectRatio="none" />
+</svg>

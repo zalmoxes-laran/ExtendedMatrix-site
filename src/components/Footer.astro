@@ -1,103 +1,91 @@
 ---
+/**
+ * Footer: four named columns (Learn, Get, Project, Community) instead of a
+ * single row of fifteen links (audit H9). Licences and privacy sit in the
+ * legal line underneath.
+ */
+import logoMark from '../assets/logo_mark.svg';
 const year = new Date().getFullYear();
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+const ext = { target: '_blank', rel: 'noopener' };
 ---
 
 <footer class="em-footer">
   <div class="em-footer__inner">
-    <div>
-      <div class="em-footer__brand">
-        Extended<span class="em-footer__brand-emph">Matrix</span>
+    <div class="em-footer__cols">
+      <div class="em-footer__about">
+        <a href={`${B}/`} class="em-footer__brand" aria-label="Extended Matrix home">
+          <img src={logoMark.src} alt="" width="16" height="27" />
+          <span>Extended<span>Matrix</span></span>
+        </a>
+        <p>A formal language for archaeological reasoning, developed at CNR-ISPC since 2015.</p>
       </div>
-      <p class="em-footer__author">
-        E. Demetrescu — CNR-ISPC, Rome — © {year}
-      </p>
-      <p class="em-footer__legal">
-        Site content licensed
-        <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>
-        · Code under GPL-3.0 unless noted ·
-        <a href={`${B}/privacy`}>Privacy</a> ·
-        <a href={`${B}/privacy#cookies`}>Cookies</a> ·
-        <a href={`${B}/ai-usage`}>AI usage</a>
-      </p>
+      <div>
+        <h2>Learn</h2>
+        <ul>
+          <li><a href={`${B}/start`}>Start here</a></li>
+          <li><a href={`${B}/find-your-path`}>Find your path</a></li>
+          <li><a href={`${B}/personas`}>Team roles</a></li>
+          <li><a href="https://docs.extendedmatrix.org" {...ext}>Language manual ↗</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Get</h2>
+        <ul>
+          <li><a href={`${B}/download`}>Download</a></li>
+          <li><a href={`${B}/versions`}>All versions</a></li>
+          <li><a href={`${B}/tools`}>Tools</a></li>
+          <li><a href={`${B}/blender-addons`}>Blender add-ons</a></li>
+          <li><a href={`${B}/code`}>Source code</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Project</h2>
+        <ul>
+          <li><a href={`${B}/about`}>About</a></li>
+          <li><a href={`${B}/team`}>Team</a></li>
+          <li><a href={`${B}/projects`}>Projects</a></li>
+          <li><a href={`${B}/publications`}>Publications</a></li>
+          <li><a href={`${B}/cite`}>How to cite</a></li>
+          <li><a href={`${B}/standards`}>Standards</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>Community</h2>
+        <ul>
+          <li><a href={`${B}/community`}>EM Hour &amp; meetings</a></li>
+          <li><a href={`${B}/news`}>News</a></li>
+          <li><a href={`${B}/events`}>Events</a></li>
+          <li><a href="https://dev.extendedmatrix.org/" {...ext}>Development tracker ↗</a></li>
+          <li><a href="https://t.me/UserGroupEM" {...ext}>Telegram ↗</a></li>
+          <li><a href="https://zenodo.org/communities/extendedmatrix" {...ext}>Zenodo ↗</a></li>
+        </ul>
+      </div>
     </div>
-    <div class="em-footer__links">
-      <a href={`${B}/about`}>About</a>
-      <a href={`${B}/team`}>Team</a>
-      <a href={`${B}/personas`}>Team roles</a>
-      <a href={`${B}/tools`}>Tools</a>
-      <a href={`${B}/blender-addons`}>Blender add-ons</a>
-      <a href={`${B}/versions`}>Versions</a>
-      <a href={`${B}/publications`}>Publications</a>
-      <a href={`${B}/cite`}>Cite</a>
-      <a href={`${B}/standards`}>Standards</a>
-      <a href={`${B}/find-your-path`}>Find your path</a>
-      <a href={`${B}/news`}>News</a>
-      <a href={`${B}/events`}>Events</a>
-      <a href={`${B}/stats`}>Stats</a>
-      <a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Docs</a>
-      <a href="https://github.com/topics/extendedmatrix" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://zenodo.org/communities/extendedmatrix" target="_blank" rel="noopener">Zenodo</a>
-      <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Telegram</a>
+    <div class="em-footer__legal">
+      <span>© {year} E. Demetrescu — CNR-ISPC, Rome</span>
+      <span>Content <a href="https://creativecommons.org/licenses/by-nc/4.0/" {...ext}>CC BY-NC 4.0</a> · code GPL-3.0 unless noted</span>
+      <a href={`${B}/privacy`}>Privacy</a>
+      <a href={`${B}/privacy#cookies`}>Cookies</a>
+      <a href={`${B}/ai-usage`}>AI usage</a>
+      <a href={`${B}/stats`}>Site statistics</a>
+      <a href={`${B}/status.json`}>status.json</a>
     </div>
   </div>
 </footer>
 
 <style>
-  .em-footer {
-    background: var(--em-navy);
-    color: var(--em-bg);
-    padding: 40px 0;
-    margin-top: 80px;
-  }
-  .em-footer__inner {
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 0 var(--gutter);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 24px;
-  }
-  .em-footer__brand {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 17px;
-    color: var(--em-bg);
-  }
-  .em-footer__brand-emph { color: var(--em-gold); font-weight: 400; }
-  .em-footer__author {
-    font-size: 13px;
-    margin-top: 4px;
-    color: rgba(255, 255, 255, 0.7);
-  }
-  .em-footer__legal {
-    font-size: 12px;
-    margin-top: 6px;
-    color: rgba(255, 255, 255, 0.55);
-    line-height: 1.6;
-  }
-  .em-footer__legal a {
-    color: rgba(255, 255, 255, 0.85);
-    text-decoration: underline;
-    text-decoration-color: rgba(255, 255, 255, 0.3);
-  }
-  .em-footer__legal a:hover {
-    color: var(--em-gold);
-    text-decoration-color: var(--em-gold);
-  }
-  .em-footer__links {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-  }
-  .em-footer__links a {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.85);
-  }
-  .em-footer__links a:hover {
-    color: var(--em-gold);
-    text-decoration: none;
-  }
+  .em-footer { background: var(--em-bg-warm); border-top: 1px solid var(--em-border); padding: 48px 0 28px; margin-top: 80px; }
+  .em-footer__inner { max-width: var(--max-width); margin: 0 auto; padding: 0 var(--gutter); }
+  .em-footer__cols { display: grid; grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)); gap: 28px; }
+  .em-footer__brand { display: inline-flex; align-items: center; gap: 9px; color: var(--em-navy); font: 700 1.05rem/1 var(--font-display); }
+  .em-footer__brand span span { font-weight: 400; }
+  .em-footer__brand img { width: 16px; height: auto; }
+  .em-footer__about p { margin-top: 12px; font-size: 0.86rem; color: var(--em-text-muted); max-width: 30ch; line-height: 1.6; }
+  .em-footer h2 { font: 600 0.7rem var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--em-text-faint); margin-bottom: 10px; }
+  .em-footer ul { list-style: none; display: grid; gap: 7px; font-size: 0.88rem; }
+  .em-footer ul a { color: var(--em-navy); }
+  .em-footer__legal { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--em-border); display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.78rem; color: var(--em-text-faint); }
+  .em-footer__legal a { color: var(--em-text-muted); text-decoration: underline; text-underline-offset: 2px; }
+  @media (max-width: 860px) { .em-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); } .em-footer__about { grid-column: 1 / -1; } }
 </style>

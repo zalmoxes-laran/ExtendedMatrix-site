@@ -3,38 +3,57 @@
    Palette: official 2022 brand pack (navy + ochre gold on white)
    ============================================================ */
 
-/* @font-face declarations for Inter + Manrope are emitted inline
-   from src/layouts/BaseLayout.astro so they can resolve the
-   GitHub Pages BASE_URL correctly (/ExtendedMatrix-site/fonts/...).
-   Files live in public/fonts/. */
+/* @font-face for Sora (text) and Comfortaa (display) is emitted inline from
+   src/layouts/BaseLayout.astro so the URLs resolve BASE_URL. Files are
+   self-hosted in public/fonts/ (SIL OFL): no request ever reaches Google.
+
+   Palette: the 2022 brand manual (EM_BrandIdentity2.pdf), the same values
+   EMStudio and the CRMem / em.json pages use. The old variable names are
+   kept so every page moves to the manual at once. */
 
 :root {
-  /* Brand colours */
-  --em-navy:        #1a2845;
-  --em-navy-soft:   #2d3a55;
-  --em-navy-tint:   #e8ebf2;
-  --em-gold:        #b8893a;
-  --em-gold-soft:   #c39b51;
-  --em-gold-tint:   #f5ecd9;
+  /* Brand colours — manual 2022 */
+  --em-navy:        #073763;   /* Blu Oltremare: ink, wordmark, headings */
+  --em-navy-soft:   #0d4a82;
+  --em-navy-tint:   #e4eef8;
+  --em-gold:        #bf9000;   /* Ocra: a FILL or a rule, the one primary action */
+  --em-gold-soft:   #d1a21a;
+  --em-gold-tint:   #f7efd8;
+  --em-gold-ink:    #8a6800;   /* ochre as TEXT: 5:1 on white (#bf9000 is 2.8:1) */
+  --em-aqua:        #d9e9f7;   /* Acqua marina: info grounds, hover */
+  --em-charcoal:    #1d1d1b;   /* text on ochre */
 
   /* Surfaces */
-  --em-bg:          #ffffff;
-  --em-bg-warm:     #fafaf7;
-  --em-text:        #1a1a1a;
-  --em-text-muted:  #5a6b7a;
-  --em-border:      #e5e2db;
+  --em-bg:          #fcfcfc;   /* Bianco sporco */
+  --em-bg-warm:     #f2f5f9;   /* ground for alternate sections */
+  --em-surface:     #ffffff;
+  --em-text:        #0e1d2e;
+  --em-text-muted:  #485666;
+  --em-text-faint:  #6a7684;
+  --em-border:      #dde4ec;
+  --em-border-strong: #a6b1bd;
+
+  /* Language colours (s3Dgraphy em_visual_rules): never restyled */
+  --lang-us:        #9b3333;
+  --lang-usvs:      #248fe7;
+  --lang-usvn:      #31792d;
+  --lang-provenance:#ffa500;
+  --lang-png-tab:   #ffcc99;
+  --lang-group:     #f5f5f5;
+  --lang-epoch:     #009933;
 
   /* Typography */
-  --font-sans:    'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+  --font-sans:    'Sora', system-ui, -apple-system, BlinkMacSystemFont,
                   'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-  --font-display: 'Manrope', var(--font-sans);
-  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+  --font-display: 'Comfortaa', 'Sora', system-ui, sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Layout */
-  --max-width:    1100px;
-  --gutter:       32px;
+  --max-width:    1160px;
+  --gutter:       clamp(16px, 4vw, 40px);
   --radius-sm:    4px;
   --radius-md:    8px;
+  --radius-lg:    10px;
 
   /* Motion */
   --ease:         cubic-bezier(0.4, 0, 0.2, 1);
@@ -59,7 +78,7 @@ a {
   text-decoration: none;
   transition: color 0.2s var(--ease);
 }
-a:hover { color: var(--em-gold); }
+a:hover { color: var(--em-gold-ink); }
 
 /* Skip-to-content link (WCAG 2.4.1 Bypass Blocks). Visually hidden
    off-screen by default; becomes visible on keyboard focus so Tab
@@ -96,7 +115,9 @@ h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--em-navy);
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
 }
 
 h1 { font-size: clamp(2rem, 4vw, 3rem); }
@@ -203,17 +224,24 @@ main > section { padding: 48px 0; }
 
 /* ── Tag / pill ──────────────────────────────────────────── */
 
+/* Eyebrow: an ochre rule and small capitals, no pill (audit H5). The rule
+   is ochre as a fill; the letters are the dark ochre, which reads at 5:1. */
 .tag {
-  display: inline-block;
-  padding: 3px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  font-family: var(--font-sans);
   font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--em-gold);
-  background: var(--em-gold-tint);
-  border-radius: 2px;
+  color: var(--em-gold-ink);
+  background: none;
+  border-radius: 0;
 }
+.tag::before { content: ""; flex: none; width: 28px; height: 2px; background: var(--em-gold); }
 
 /* ── Role badges (archaeologist / modeller / developer) ─── */
 .role-badge {
@@ -231,3 +259,12 @@ main > section { padding: 48px 0; }
 .role-badge--archaeologist { color: #5a4a3a; border-color: #c5b59d; background: #f5f0e6; }
 .role-badge--modeller      { color: #2c3e50; border-color: #b8c2cc; background: #eef2f6; }
 .role-badge--developer     { color: #2c5a2c; border-color: #b3d6b3; background: #e9f3e9; }
+
+/* Arrowheads of the EM matrix drawings (markers live in the glyph sprite) */
+.mx-ah { fill: #24292f; }
+.mx-ahp { fill: var(--lang-provenance); }
+.mx-ahd { fill: #1d1d1b; }
+
+/* Placeholder figures («image to add») are notes for the authors: the
+   public never sees them (audit D6). */
+.emfig--placeholder { display: none !important; }
