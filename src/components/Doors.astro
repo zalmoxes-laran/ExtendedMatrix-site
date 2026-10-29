@@ -1,0 +1,49 @@
+---
+/**
+ * The three doors (archaeologist, 3D modeller, developer), shared by the
+ * home page and /start (audit S1). Each door shows the glyphs of the work
+ * it is about and the first three things to do.
+ */
+import Glyph from './Glyph.astro';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+const DOORS = [
+  { g: ['US', 'doc'] as const, t: 'Sources, stratigraphy, reconstruction', w: 'archaeologists, heritage scholars, students',
+    s: ['Read the five-step method in the <a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">language manual</a>.',
+        'Draw your first matrix: on paper, in yEd with the EM palette, or in EMStudio.',
+        'Register your sources in <code>source_list.xlsx</code>.'],
+    go: [`${B}/download/?role=archaeologist`, 'Tools for archaeologists'] },
+  { g: ['USVs', 'USVn'] as const, t: '3D models annotated with EM data', w: '3D artists, modellers, technical archaeologists',
+    s: ['Install EM Tools in Blender, by drag and drop.', 'Link proxies to stratigraphic units and follow the intermediate tutorial.', 'Publish the scene to the web with Heriverse.'],
+    go: [`${B}/download/?role=modeller`, 'Tools for 3D modellers'] },
+  { g: ['ext', 'comb'] as const, t: 'Extend, integrate, contribute', w: 'developers and tool builders',
+    s: ['<code>pip install s3dgraphy</code> and open the README.', 'Read the <a href="' + B + '/standards">open standards</a>: CRMem, em.json, the vocabularies.', 'Open an issue, or join the monthly dev meeting.'],
+    go: [`${B}/download/?role=developer`, 'Tools for developers'] },
+];
+---
+<div class="doors">
+  {DOORS.map((d) => (
+    <div class="door">
+      <div class="door__g">{d.g.map((n) => <Glyph name={n} w={n === 'ext' || n === 'comb' ? 24 : 40} h={n === 'ext' || n === 'comb' ? 24 : 20} />)}</div>
+      <div>
+        <h3>{d.t}</h3>
+        <p class="door__who">For {d.w}</p>
+      </div>
+      <ol>{d.s.map((x) => <li><span set:html={x} /></li>)}</ol>
+      <a class="door__go" href={d.go[0]}>{d.go[1]} <span aria-hidden="true">→</span></a>
+    </div>
+  ))}
+</div>
+<style>
+  .doors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin-top: 36px; }
+  @media (max-width: 860px) { .doors { grid-template-columns: minmax(0, 1fr); } }
+  .door { display: grid; grid-template-rows: auto auto 1fr auto; gap: 14px; background: var(--em-surface); border: 1px solid var(--em-border); border-radius: var(--radius-lg); padding: 24px; min-width: 0; }
+  .door__g { display: flex; gap: 8px; align-items: center; height: 26px; }
+  .door h3 { font-size: 1.25rem; }
+  .door__who { font-size: 0.82rem; color: var(--em-text-faint); margin-top: 4px; }
+  .door ol { list-style: none; counter-reset: s; display: grid; gap: 10px; font-size: 0.9rem; line-height: 1.55; }
+  .door li { counter-increment: s; display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+  .door li::before { content: counter(s); font: 600 0.72rem var(--font-mono); color: var(--em-gold-ink); border: 1px solid var(--em-border-strong); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
+  .door :global(code) { font: 500 0.82em var(--font-mono); background: var(--em-bg-warm); border: 1px solid var(--em-border); border-radius: 4px; padding: 0 4px; }
+  .door :global(a) { text-decoration: underline; text-underline-offset: 2px; }
+  .door__go { border-top: 1px solid var(--em-border); padding-top: 12px; font-weight: 600; text-decoration: none !important; }
+</style>

@@ -1,0 +1,66 @@
+---
+/**
+ * Support windows of the EM lines, drawn to one time scale (audit V1):
+ * release → end of support, the Blender pin beside each bar, a dashed line
+ * for today. Dates come from the versions collection; nothing is typed here.
+ */
+import { getCollection } from 'astro:content';
+interface Props { variant?: 'band' | 'page'; rows?: number }
+const { variant = 'page', rows } = Astro.props;
+const all = (await getCollection('versions')).sort((a, b) => (b.data.order ?? 0) - (a.data.order ?? 0));
+const yr = (d: Date) => d.getFullYear() + (d.getMonth() + d.getDate() / 31) / 12;
+const now = new Date();
+const today = yr(now);
+// a line without its own release date starts where it is announced; one without an end runs to its successor
+const list = all.map((v, i) => {
+  const d = v.data;
+  const start = d.releaseDate ? yr(d.releaseDate) : 2026.4;
+  const newer = all.slice(0, i).reverse().find((x) => x.data.releaseDate);
+  const end = d.eolDate ? yr(d.eolDate) : d.releaseDate ? (newer?.data.releaseDate ? yr(newer.data.releaseDate) : today) : null;
+  const state = !d.releaseDate ? 'dev' : d.eolDate && d.eolDate >= now ? 'lts' : 'old';
+  const pin = d.blenderLts ? `Blender ${d.blenderLts} LTS` : d.blenderMin ? `Blender ${d.blenderMin}+` : d.usesYed ? 'yEd' : '';
+  return { v: d.version, start, end, state, pin };
+}).slice(0, rows ?? 99);
+const x0 = 2015, x1 = 2029.6, W = 900, L = 70, R = variant === 'page' ? 120 : 20, H = 28;
+const X = (t: number) => L + ((t - x0) / (x1 - x0)) * (W - L - R);
+const h = list.length * H + 36;
+const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
+---
+<div class={`tl tl--${variant}`}>
+  <svg viewBox={`0 0 ${W} ${h}`} role="img" aria-label="Support window of each Extended Matrix line, from release to end of support">
+    {years.map((y) => (<g><line class="gr" x1={X(y)} x2={X(y)} y1="6" y2={h - 22} /><text class="ax" x={X(y)} y={h - 8} text-anchor="middle">{y}</text></g>))}
+    {list.map((r, i) => {
+      const y = 10 + i * H; const e = r.end ?? x1 - 0.1;
+      return (<g>
+        <text class="lb" x={L - 12} y={y + H / 2 + 3} text-anchor="end">EM {r.v}</text>
+        <rect class={`b-${r.state}`} x={X(r.start)} y={y + 6} width={Math.max(4, X(e) - X(r.start))} height={H - 12} rx="3" />
+        {variant === 'page' && r.pin && <text class="pin" x={X(e) + 6} y={y + H / 2 + 3}>{r.pin}</text>}
+      </g>);
+    })}
+    <line class="now" x1={X(today)} x2={X(today)} y1="2" y2={h - 22} />
+    <text class="nowt" x={X(today) + 5} y={h - 26}>today</text>
+  </svg>
+</div>
+<style>
+  .tl { overflow-x: auto; }
+  .tl svg { display: block; min-width: 600px; width: 100%; height: auto; }
+  .tl .ax { font: 10px var(--font-mono); }
+  .tl .lb { font: 600 11px var(--font-sans); }
+  .tl .pin { font: 9.5px var(--font-mono); }
+  .tl .nowt { font: 600 10px var(--font-sans); }
+  .tl .now { stroke-width: 1.4; stroke-dasharray: 3 3; }
+  .tl--page .ax, .tl--page .pin { fill: var(--em-text-faint); }
+  .tl--page .gr { stroke: var(--em-border); }
+  .tl--page .lb, .tl--page .nowt { fill: var(--em-text); }
+  .tl--page .now { stroke: var(--em-text); }
+  .tl--page .b-lts { fill: var(--em-gold); }
+  .tl--page .b-dev { fill: var(--em-navy); opacity: 0.35; }
+  .tl--page .b-old { fill: var(--em-text-faint); opacity: 0.35; }
+  .tl--band .ax { fill: #9fb7d3; }
+  .tl--band .gr { stroke: rgba(255, 255, 255, 0.1); }
+  .tl--band .lb, .tl--band .nowt { fill: #eef3f9; }
+  .tl--band .now { stroke: #ffffff; }
+  .tl--band .b-lts { fill: #e3b43a; }
+  .tl--band .b-dev { fill: #a5dcff; opacity: 0.55; }
+  .tl--band .b-old { fill: #9fb7d3; opacity: 0.4; }
+</style>

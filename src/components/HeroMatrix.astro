@@ -1,0 +1,142 @@
+---
+/**
+ * The opening of the site: a small, real Extended Matrix (audit H1).
+ *
+ * Three epochs as swimlanes, newest on top; stratigraphic edges point
+ * down (earlier is lower); a structural virtual unit (USVs 110) rebuilds
+ * the missing elevation of a wall, and its paradata group carries the
+ * chain property → combiner → extractors → documents. Every node is drawn
+ * with the official glyph of its type. Hover, focus or tap a node and the
+ * caption says what it is; on the virtual unit the whole chain lights up.
+ *
+ * The drawing is complete without JavaScript; the script only adds the
+ * reading aid.
+ */
+type N = { gl: string; x: number; y: number; w: number; h: number; l?: string; s?: string; k: string; light?: boolean; info: string };
+const NODES: Record<string, N> = {
+  us100: { gl: 'US', x: 110, y: 78, w: 100, h: 40, l: 'US 100', s: 'collapse', k: 'US', info: '<b>US 100 · stratigraphic unit.</b> The collapse layer. It lies over everything below it, so it is later: earlier is lower.' },
+  usv110: { gl: 'USVs', x: 110, y: 196, w: 110, h: 40, l: 'USVs 110', s: 'rebuilt wall', k: 'USVs', light: true, info: '<b>USVs 110 · structural virtual unit.</b> The part of the wall that is no longer there. It is drawn because a chain of evidence justifies it: follow the orange line.' },
+  usm101: { gl: 'US', x: 110, y: 276, w: 100, h: 40, l: 'USM 101', s: 'brick wall', k: 'US', info: '<b>USM 101 · masonry unit.</b> What survives of the wall, 1.2 m high. The reconstruction above it rests on this.' },
+  us102: { gl: 'US', x: 52, y: 410, w: 92, h: 38, l: 'US 102', s: 'floor', k: 'US', info: '<b>US 102 · stratigraphic unit.</b> The cocciopesto floor, earlier than the wall.' },
+  us103: { gl: 'US', x: 170, y: 410, w: 92, h: 38, l: 'US 103', s: 'trench fill', k: 'US', info: '<b>US 103 · stratigraphic unit.</b> The fill of the foundation trench.' },
+  prop: { gl: 'prop', x: 465, y: 110, w: 132, h: 34, l: 'height', s: '4.2 m', k: 'Property', info: '<b>Property · height 4.2 m.</b> The value the reconstruction uses. It combines two readings of the evidence.' },
+  comb: { gl: 'comb', x: 465, y: 192, w: 34, h: 34, k: 'Combiner', info: '<b>Combiner.</b> Puts two extracted values together into one argument: the brick module and the comparison.' },
+  ext1: { gl: 'ext', x: 405, y: 272, w: 32, h: 32, k: 'Extractor', info: '<b>Extractor · D.03.1.</b> Reads one fact from the photo: the brick module.' },
+  ext2: { gl: 'ext', x: 525, y: 272, w: 32, h: 32, k: 'Extractor', info: '<b>Extractor · D.07.1.</b> Reads one fact from the comparison: the ratio between height and thickness.' },
+  doc1: { gl: 'doc', x: 405, y: 356, w: 26, h: 40, l: 'D.03', s: 'stamp photo', k: 'Document', info: '<b>Document D.03.</b> The photo of the brick stamp. Every reconstruction ends on a document you can open.' },
+  doc2: { gl: 'doc', x: 525, y: 356, w: 26, h: 40, l: 'D.07', s: 'Ostia, comparison', k: 'Document', info: '<b>Document D.07.</b> A published parallel from Ostia, registered in source_list.xlsx.' },
+};
+const EDGES: Array<[string, string, 's' | 'p' | 'd']> = [
+  ['us100', 'usv110', 's'], ['usv110', 'usm101', 's'], ['usm101', 'us102', 's'], ['usm101', 'us103', 's'],
+  ['usv110', 'prop', 'p'], ['prop', 'comb', 'd'], ['comb', 'ext1', 'd'], ['comb', 'ext2', 'd'], ['ext1', 'doc1', 'd'], ['ext2', 'doc2', 'd'],
+];
+const CHAIN = ['usv110', 'prop', 'comb', 'ext1', 'ext2', 'doc1', 'doc2'];
+
+function node(id: string, n: N): string {
+  const x = n.x - n.w / 2, y = n.y - n.h / 2;
+  const t = n.light ? 't2' : 't1';
+  const open = `<g class="nd" tabindex="0" role="button" aria-label="${n.k}${n.l ? ' ' + n.l : ''}" data-n="${id}">`;
+  if (n.gl === 'doc') return `${open}<rect class="ring" x="${x - 5}" y="${y - 5}" width="${n.w + 10}" height="${n.h + 10}" rx="6"/><use href="#g-doc" x="${x}" y="${y}" width="${n.w}" height="${n.h}"/><text x="${n.x}" y="${y + n.h + 14}" text-anchor="middle" class="t1">${n.l}</text><text x="${n.x}" y="${y + n.h + 26}" text-anchor="middle" class="sm lbl">${n.s}</text></g>`;
+  if (n.gl === 'prop') return `${open}<rect class="ring" x="${x - 4}" y="${y - 4}" width="${n.w + 8}" height="${n.h + 8}" rx="8"/><use href="#g-prop" x="${x}" y="${y}" width="${n.w}" height="${n.h}" preserveAspectRatio="none"/><text x="${n.x}" y="${n.y + 4}" text-anchor="middle" class="t1">${n.l} · ${n.s}</text></g>`;
+  const ring = n.gl === 'ext' || n.gl === 'comb'
+    ? `<circle class="ring" cx="${n.x}" cy="${n.y}" r="${n.w / 2 + 5}"/>`
+    : `<rect class="ring" x="${x - 5}" y="${y - 5}" width="${n.w + 10}" height="${n.h + 10}" rx="4"/>`;
+  const lab = n.l ? `<text x="${n.x}" y="${n.y - 2}" text-anchor="middle" class="${t}">${n.l}</text><text x="${n.x}" y="${n.y + 11}" text-anchor="middle" class="sm ${t}">${n.s}</text>` : '';
+  return `${open}${ring}<use href="#g-${n.gl}" x="${x}" y="${y}" width="${n.w}" height="${n.h}" preserveAspectRatio="none"/>${lab}</g>`;
+}
+function edge([a, b, t]: [string, string, string], i: number): string {
+  const A = NODES[a], B = NODES[b];
+  let d: string, cls: string, mk: string;
+  if (t === 's') {
+    const x1 = A.x + (B.x < A.x - 20 ? -25 : B.x > A.x + 20 ? 25 : 0), y1 = A.y + A.h / 2, x2 = B.x, y2 = B.y - B.h / 2 - 2;
+    d = `M${x1} ${y1} C${x1} ${(y1 + y2) / 2} ${x2} ${(y1 + y2) / 2} ${x2} ${y2}`; cls = 'e'; mk = 'ah';
+  } else if (t === 'p') {
+    const x1 = A.x + A.w / 2, y1 = A.y, x2 = B.x - B.w / 2 - 3, y2 = B.y;
+    d = `M${x1} ${y1} C${x1 + 60} ${y1} ${x2 - 60} ${y2} ${x2} ${y2}`; cls = 'p'; mk = 'ahp';
+  } else {
+    const y1 = A.y + A.h / 2, y2 = B.y - B.h / 2 - 3;
+    d = `M${A.x} ${y1} C${A.x} ${(y1 + y2) / 2} ${B.x} ${(y1 + y2) / 2} ${B.x} ${y2}`; cls = 'pd'; mk = 'ahd';
+  }
+  return `<path class="${cls} draw" data-e="${a}-${b}" style="animation-delay:${(t === 's' ? 0.2 + i * 0.15 : 1.1 + i * 0.12).toFixed(2)}s" d="${d}" marker-end="url(#${mk})"/>`;
+}
+const lanes: Array<[string, string, number, number, string]> = [
+  ['Late antique & modern', 'IV–XX c.', 0, 150, 'a'], ['Imperial', 'I–III c. AD', 150, 340, 'b'], ['Late Republican', 'II–I c. BC', 340, 470, 'a'],
+];
+const svg = `
+${lanes.map(([n, d, y0, y1, c]) => `<rect class="lane-${c}" x="0" y="${y0}" width="318" height="${y1 - y0}"/><rect class="lane-rule" x="0" y="${y0}" width="3" height="${y1 - y0}"/><text class="lane-t" x="308" y="${y0 + 18}" text-anchor="end">${n}</text><text class="lane-d" x="308" y="${y0 + 31}" text-anchor="end">${d}</text>`).join('')}
+<text class="col" x="12" y="18">MATRIX</text>
+<rect class="grp" x="336" y="40" width="252" height="410" rx="2"/><rect class="grp-hd" x="336" y="40" width="252" height="22"/><text class="grp-t" x="346" y="55">USVs110_PD · paradata</text>
+<text class="col" x="500" y="18">EVIDENCE</text>
+${EDGES.map(edge).join('')}
+${Object.entries(NODES).map(([k, n]) => node(k, n)).join('')}`;
+const info = Object.fromEntries(Object.entries(NODES).map(([k, n]) => [k, { k: n.k, info: n.info }]));
+---
+
+<figure class="mx" data-mx data-info={JSON.stringify(info)} data-chain={JSON.stringify(CHAIN)}>
+  <svg viewBox="0 0 600 470" role="img" aria-label="A small Extended Matrix: three epochs, a virtual unit that rebuilds a wall, and the chain of evidence behind it" set:html={svg} />
+  <figcaption class="mxcap" data-cap aria-live="polite">
+    <span><b>Read it from the reconstruction down to the evidence.</b> Hover or tap a node: every virtual unit ends on a document you can open.</span>
+  </figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mx]').forEach((mx) => {
+    const info = JSON.parse(mx.dataset.info || '{}');
+    const chain: string[] = JSON.parse(mx.dataset.chain || '[]');
+    const cap = mx.querySelector<HTMLElement>('[data-cap]')!;
+    const rest = cap.innerHTML;
+    const show = (id: string) => {
+      const lit = new Set([id, ...(chain.includes(id) ? chain : [])]);
+      mx.classList.add('trace');
+      mx.querySelectorAll<SVGGElement>('.nd').forEach((g) => g.classList.toggle('lit', lit.has(g.dataset.n!)));
+      mx.querySelectorAll<SVGPathElement>('[data-e]').forEach((e) => {
+        const [a, b] = e.dataset.e!.split('-');
+        e.classList.toggle('lit', (lit.has(a) && lit.has(b)) || a === id || b === id);
+      });
+      cap.innerHTML = `<span>${info[id].info}</span>`;
+    };
+    const clear = () => { mx.classList.remove('trace'); mx.querySelectorAll('.lit').forEach((e) => e.classList.remove('lit')); cap.innerHTML = rest; };
+    mx.querySelectorAll<SVGGElement>('.nd').forEach((g) => {
+      const id = g.dataset.n!;
+      g.addEventListener('mouseenter', () => show(id));
+      g.addEventListener('focus', () => show(id));
+      g.addEventListener('click', () => show(id));
+      g.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') { e.preventDefault(); show(id); } });
+    });
+    mx.addEventListener('mouseleave', clear);
+  });
+</script>
+
+<style>
+  .mx { position: relative; margin: 0; background: var(--em-surface); border: 1px solid var(--em-border); border-radius: 14px; padding: 10px 10px 0; box-shadow: 0 18px 40px -24px rgba(7, 55, 99, 0.35); }
+  .mx svg { display: block; width: 100%; height: auto; }
+  .mxcap { display: flex; gap: 10px; align-items: flex-start; min-height: 64px; padding: 10px 8px 12px; border-top: 1px solid var(--em-border); font-size: 0.86rem; line-height: 1.55; color: var(--em-text-muted); }
+  .mxcap :global(b) { color: var(--em-text); }
+  .mx :global(.lane-a) { fill: #eef3f9; }
+  .mx :global(.lane-b) { fill: #f8fafc; }
+  .mx :global(.lane-rule) { fill: var(--lang-epoch); }
+  .mx :global(.lane-t) { font: 600 10.5px var(--font-sans); fill: var(--em-navy); }
+  .mx :global(.lane-d) { font: 10px var(--font-mono); fill: var(--em-text-faint); }
+  .mx :global(.col) { font: 600 9px var(--font-sans); letter-spacing: 0.12em; fill: var(--em-text-faint); }
+  .mx :global(.grp) { fill: var(--lang-group); stroke: #1d1d1b; stroke-width: 1; stroke-dasharray: 4 3; }
+  .mx :global(.grp-hd) { fill: var(--lang-png-tab); }
+  .mx :global(.grp-t) { font: 600 10px var(--font-sans); fill: #4a2a00; }
+  .mx :global(.nd) { cursor: pointer; outline: none; transition: opacity 0.2s; }
+  .mx :global(.nd text) { font: 600 10.5px var(--font-sans); pointer-events: none; }
+  .mx :global(.nd .t1) { fill: #1d1d1b; }
+  .mx :global(.nd .t2) { fill: #ffffff; }
+  .mx :global(.nd .sm) { font-weight: 400; font-size: 9.5px; }
+  .mx :global(.nd .lbl) { fill: #3a3f46; }
+  .mx :global(.nd .ring) { fill: none; stroke: var(--em-gold); stroke-width: 3; opacity: 0; transition: opacity 0.2s; }
+  .mx :global(.nd:hover .ring), .mx :global(.nd:focus-visible .ring), .mx :global(.nd.lit .ring) { opacity: 1; }
+  .mx :global(.e) { fill: none; stroke: #24292f; stroke-width: 1.5; }
+  .mx :global(.p) { fill: none; stroke: var(--lang-provenance); stroke-width: 1.8; stroke-dasharray: 5 4; }
+  .mx :global(.pd) { fill: none; stroke: #1d1d1b; stroke-width: 1.1; }
+  .mx :global(.draw) { stroke-dasharray: 260; stroke-dashoffset: 260; animation: mxdraw 0.9s ease-out forwards; }
+  .mx :global(.p.draw) { stroke-dasharray: 5 4; stroke-dashoffset: 0; animation: mxfade 0.6s ease-out both; }
+  .mx:global(.trace) :global(.nd:not(.lit)) { opacity: 0.35; }
+  .mx:global(.trace) :global(.e:not(.lit)), .mx:global(.trace) :global(.pd:not(.lit)) { opacity: 0.25; }
+  @keyframes mxdraw { to { stroke-dashoffset: 0; } }
+  @keyframes mxfade { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .mx :global(.draw) { animation: none; stroke-dasharray: none; stroke-dashoffset: 0; } .mx :global(.p.draw) { stroke-dasharray: 5 4; } }
+</style>
