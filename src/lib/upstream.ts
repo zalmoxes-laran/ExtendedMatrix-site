@@ -183,10 +183,10 @@ export async function risolviVersioni(
   const chiavi = new Set<string>();
   for (const c of componenti) {
     const m = /^auto:(.+)$/.exec(String(c?.version ?? ''));
-    if (m && FONTI_VERSIONE[m[1]]) chiavi.add(m[1]);
+    if (m && fonte(m[1])) chiavi.add(m[1]);
   }
   const coppie = await Promise.all(
-    [...chiavi].map(async (k) => [k, await FONTI_VERSIONE[k]()] as const));
+    [...chiavi].map(async (k) => [k, await fonte(k)!()] as const));
   return new Map(coppie);
 }
 
@@ -206,4 +206,61 @@ export function notaConVersione(
   nota: string, v: unknown, risolte: Map<string, string | null>,
 ): string {
   return String(nota ?? '').replaceAll('{version}', versioneMostrata(v, risolte));
+}
+
+/**
+ * CANALI GENERICI, oltre ai nomi brevi di FONTI_VERSIONE.
+ *
+ * Una riga di versione dichiara DA DOVE si legge, non il numero:
+ *   auto:blender:em_tools:dev      ultima versione nel repo Blender (dev | stable)
+ *   auto:pypi:s3dgraphy:1.6.0.dev  ultima versione su PyPI, opzionalmente su una linea
+ *   auto:github:ExtendedMatrix/EMStudio   ultima release GitHub non bozza
+ * Così una nuova linea (1.7, 1.8…) non chiede di toccare questo file.
+ */
+export function fonte(chiave: string): (() => Promise<string | null>) | null {
+  if (FONTI_VERSIONE[chiave]) return FONTI_VERSIONE[chiave];
+  const [tipo, a, b] = chiave.split(':');
+  if (tipo === 'blender' && a) return () => blenderRepoVersion(a, b === 'stable' ? 'stable' : 'dev');
+  if (tipo === 'pypi' && a) return () => pypiVersion(a, b || undefined);
+  if (tipo === 'github' && a) return () => latestGithubRelease(a).then((r) => r?.version ?? null);
+  return null;
+}
+
+/** Da dove viene un numero, in parole: si mostra accanto alla versione. */
+export function descriviFonte(v: unknown): string | null {
+  const m = /^auto:(.+)$/.exec(String(v ?? ''));
+  if (!m) return null;
+  const k = m[1];
+  const nomi: Record<string, string> = {
+    'em-tools-dev': 'Blender repo · dev', 'em-tools': 'Blender repo · stable',
+    'dsc-tools-dev': 'Blender repo · dev', 's3dgraphy-dev': 'PyPI · pre-release',
+    's3dgraphy': 'PyPI', 'emstudio': 'GitHub release',
+  };
+  if (nomi[k]) return nomi[k];
+  const [tipo, , b] = k.split(':');
+  if (tipo === 'blender') return `Blender repo · ${b === 'stable' ? 'stable' : 'dev'}`;
+  if (tipo === 'pypi') return b ? 'PyPI · pre-release' : 'PyPI';
+  if (tipo === 'github') return 'GitHub release';
+  return null;
+}
+
+export interface BlenderBuild { version: string; platform: string; blenderMin?: string; blenderMax?: string; url: string; size?: number }
+
+/**
+ * Tutte le build di un pacchetto nel repo Blender, con piattaforma e
+ * intervallo di Blender: il selettore OS × Blender si popola da qui invece
+ * che da una tabella scritta a mano.
+ */
+export async function blenderRepoBuilds(id: string, channel: 'stable' | 'dev'): Promise<BlenderBuild[]> {
+  const base = 'https://blender.extendedmatrix.org';
+  const idx = await json(channel === 'dev' ? `${base}/dev/index.json` : `${base}/index.json`);
+  const righe = (idx?.data ?? []).filter((e: any) => e.id === id);
+  if (!righe.length) return [];
+  const ultima = righe.map((e: any) => String(e.version)).sort(comparePep440).at(-1);
+  return righe.filter((e: any) => String(e.version) === ultima).flatMap((e: any) =>
+    (e.platforms?.length ? e.platforms : ['any']).map((p: string) => ({
+      version: String(e.version), platform: p,
+      blenderMin: e.blender_version_min, blenderMax: e.blender_version_max,
+      url: e.archive_url, size: e.archive_size,
+    })));
 }

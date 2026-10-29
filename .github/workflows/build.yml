@@ -16,6 +16,12 @@ on:
   # pushed here.
   schedule:
     - cron: '17 */6 * * *'
+  # A release of any EM tool rebuilds the site at once, so the version it
+  # shows is the one just published. Each tool's release workflow ends with
+  # a repository_dispatch of type «em-release» towards this repository
+  # (the snippet is in docs/RELEASE-PROPAGATION.md).
+  repository_dispatch:
+    types: [em-release]
 
 permissions:
   contents: read
@@ -90,6 +96,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
+
+      - name: Coherence check (warnings in the log, see scripts/check-coherence.mjs)
+        run: node scripts/check-coherence.mjs
 
       - name: Upload build artifact
         # v5 (released 2026-04-10) uses actions/upload-artifact@v7

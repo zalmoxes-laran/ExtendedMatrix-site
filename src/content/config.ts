@@ -281,6 +281,9 @@ const versions = defineCollection({
           z.object({
             slug: z.string(), // ref to a tools collection entry
             version: z.string().optional(),
+            // A short qualifier shown under the version pill («still valid in 1.5»),
+            // so the version itself stays a bare number.
+            versionNote: z.string().optional(),
             status: z.enum(['included', 'optional', 'deprecated', 'removed']).default('included'),
             // Action verb for the primary CTA button — different tools
             // are reached in fundamentally different ways and the label

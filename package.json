@@ -11,7 +11,8 @@
     "astro": "astro",
     "sync:addons": "node scripts/sync-addons.mjs",
     "predev": "npm run sync:addons",
-    "prebuild": "npm run sync:addons"
+    "prebuild": "npm run sync:addons",
+    "check:coherence": "node scripts/check-coherence.mjs"
   },
   "dependencies": {
     "astro": "^5.0.0",
