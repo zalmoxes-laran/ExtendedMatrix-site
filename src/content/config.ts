@@ -235,6 +235,10 @@ const versions = defineCollection({
         date: z.coerce.date(),
         note: z.string().optional(),
       })).default([]),
+      // Blender release the line was built on (key of src/lib/blender.ts).
+      // When the line never declared an end of support, the timeline runs it
+      // to the end of support of this Blender.
+      blenderRef: z.string().optional(),
       blenderMin: z.string().optional(),    // "4.5"
       blenderTested: z.array(z.string()).default([]),
       blenderLts: z.string().optional(),    // "4.3" — only when status==='lts'

@@ -5,6 +5,7 @@
  * for today. Dates come from the versions collection; nothing is typed here.
  */
 import { getCollection } from 'astro:content';
+import { blenderRef } from '../lib/blender';
 interface Props { variant?: 'band' | 'page'; rows?: number }
 const { variant = 'page', rows } = Astro.props;
 const all = (await getCollection('versions')).sort((a, b) => (b.data.order ?? 0) - (a.data.order ?? 0));
@@ -33,23 +34,27 @@ const list = all.map((v, i) => {
     ? [{ k: 'dev', from: start, to: yr(ms[0].date) }, ...ms.filter((m) => m.phase !== 'stable').map((m, j) => ({ k: m.phase, from: yr(m.date), to: yr((ms[ms.indexOf(m) + 1] ?? m).date) }))]
     : [];
   const stableAt = ms.find((m) => m.phase === 'stable');
-  const open = d.status !== 'development' && !d.eolDate; // end of support never declared
-  const end = d.status === 'development' ? (stableAt ? yr(stableAt.date) : null) : d.eolDate ? yr(d.eolDate) : Math.min((nextStart ?? newerStart ?? today) + 1.2, today);
+  // a line that never declared its end of support follows its reference Blender
+  const ref = blenderRef(d.blenderRef);
+  const refEol = ref ? yr(new Date(ref.eol)) : null;
+  const estimated = d.status !== 'development' && !d.eolDate;
+  const end = d.status === 'development' ? (stableAt ? yr(stableAt.date) : null) : d.eolDate ? yr(d.eolDate) : refEol ?? nextStart ?? newerStart ?? today;
+  // after the planned stable release, the support window it will have
+  const planned = d.status === 'development' && stableAt && refEol ? { from: yr(stableAt.date), to: refEol } : null;
   const state = d.status === 'development' ? 'dev' : d.eolDate && d.eolDate >= now ? 'lts' : 'old';
-  const pin = d.blenderLts ? `Blender ${d.blenderLts} LTS` : d.blenderMin ? `Blender ${d.blenderMin}+` : '';
+  const pin = ref && (estimated || planned) ? ref.label : d.blenderLts ? `Blender ${d.blenderLts} LTS` : d.blenderMin ? `Blender ${d.blenderMin}+` : '';
   const fmt = (x: Date) => x.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
-  const span = open ? `released ${Math.floor(start)}` : phases.length ? ['development from ' + Math.floor(start), ...ms.map((m) => `${m.phase} ${fmt(m.date)}${m.note ? ` (${m.note})` : ''}`)].join(' · ') : `${Math.floor(start)}–${end === null ? 'in development' : state === 'lts' ? `supported to ${d.eolDate!.getFullYear()}` : Math.floor(end)}`;
-  return { v: d.version, start, end, state, pin, span, open, phases, stable: stableAt ? yr(stableAt.date) : null };
+  const span = estimated ? `${Math.floor(start)}–${Math.floor(end!)} · estimated: follows ${ref ? `${ref.label}, supported to ${fmt(new Date(ref.eol))}` : 'its successor'}` : phases.length ? ['development from ' + Math.floor(start), ...ms.map((m) => `${m.phase} ${fmt(m.date)}${m.note ? ` (${m.note})` : ''}`), ...(planned && ref ? [`support to ${fmt(new Date(ref.eol))}, following the ${ref.label}`] : [])].join(' · ') : `${Math.floor(start)}–${end === null ? 'in development' : state === 'lts' ? `supported to ${d.eolDate!.getFullYear()}` : Math.floor(end)}`;
+  return { v: d.version, start, end: planned ? planned.to : end, state, pin, span, planned, phases, stable: stableAt ? yr(stableAt.date) : null };
 }).slice(0, rows ?? 99);
-const x0 = 2015, x1 = 2029.6, W = 900, L = 70, R = 120, H = 28;
+const x0 = 2015, x1 = 2030.4, W = 900, L = 70, R = 120, H = 28;
 const X = (t: number) => L + ((t - x0) / (x1 - x0)) * (W - L - R);
 const h = list.length * H + 36;
 const PH: Record<string, string> = { dev: 'dev', alpha: 'α', beta: 'β' };
-const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
+const years = Array.from({ length: 16 }, (_, i) => 2015 + i);
 ---
 <div class={`tl tl--${variant}`}>
   <svg viewBox={`0 0 ${W} ${h}`} role="img" aria-label="Support window of each Extended Matrix line, from release to end of support">
-    <defs><linearGradient id={`fade-${variant}`} x1="0" x2="1" y1="0" y2="0"><stop class="fs0" offset="0" /><stop class="fs1" offset="0.55" /><stop class="fs2" offset="1" /></linearGradient></defs>
     {years.map((y) => (<g><line class="gr" x1={X(y)} x2={X(y)} y1="6" y2={h - 22} /><text class="ax" x={X(y)} y={h - 8} text-anchor="middle">{y}</text></g>))}
     {list.map((r, i) => {
       const y = 10 + i * H; const e = r.end ?? x1 - 0.1;
@@ -60,17 +65,20 @@ const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
             <rect class={`b-dev ph-${ph.k}`} x={X(ph.from)} y={y + 6} width={Math.max(2, X(ph.to) - X(ph.from) - 1.5)} height={H - 12} rx="3"><title>EM {r.v} · {r.span}</title></rect>
             <text class="phl" x={(X(ph.from) + X(ph.to)) / 2} y={y + H / 2 + 3} text-anchor="middle">{PH[ph.k]}</text>
           </g>))}
+          {r.planned && <rect class="b-plan" x={X(r.planned.from) + 6} y={y + 6} width={X(r.planned.to) - X(r.planned.from) - 6} height={H - 12} rx="3"><title>EM {r.v} · {r.span}</title></rect>}
           {r.stable && <g><path class="ph-st" d={`M${X(r.stable)} ${y + 4} l6 ${H / 2 - 4} l-6 ${H / 2 - 4} l-6 ${-(H / 2 - 4)} z`}><title>EM {r.v} stable · planned</title></path></g>}
-        </g>) :         (<rect class={`b-${r.state}`} style={r.open ? `fill:url(#fade-${variant})` : undefined} x={X(r.start)} y={y + 6} width={Math.max(4, X(e) - X(r.start))} height={H - 12} rx="3"><title>EM {r.v} · {r.span}{r.pin ? ` · ${r.pin}` : ''}</title></rect>)}
-        {r.pin && <text class="pin" x={X(e) + (r.stable ? 12 : 6)} y={y + H / 2 + 3}>{r.pin}</text>}
+        </g>) :         (<rect class={`b-${r.state}`} x={X(r.start)} y={y + 6} width={Math.max(4, X(e) - X(r.start))} height={H - 12} rx="3"><title>EM {r.v} · {r.span}{r.pin ? ` · ${r.pin}` : ''}</title></rect>)}
+        {r.pin && <text class="pin" x={X(e) + 6} y={y + H / 2 + 3}>{r.pin}</text>}
       </g>);
     })}
     <line class="now" x1={X(today)} x2={X(today)} y1="2" y2={h - 22} />
     <text class="nowt" x={X(today) + 5} y={h - 26}>today</text>
   </svg>
+  <p class="tl__note">Lines that never declared an end of support run to the end of support of the Blender they were built on. EM 1.6 will follow the next Blender LTS, expected July 2027.</p>
 </div>
 <style>
   .tl { overflow-x: auto; }
+  .tl__note { font-size: 0.74rem; margin-top: 6px; opacity: .8; }
   .tl svg { display: block; min-width: 600px; width: 100%; height: auto; }
   .tl .ax { font: 10px var(--font-mono); }
   .tl .lb { font: 600 11px var(--font-sans); }
@@ -87,8 +95,9 @@ const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
   .tl--band .ax { fill: #9fb7d3; }
   .tl--band .gr { stroke: rgba(255, 255, 255, 0.1); }
   .tl--band .pin { fill: #9fb7d3; }
-  .tl--page .fs0, .tl--page .fs1 { stop-color: var(--em-text-faint); } .tl--page .fs2 { stop-color: var(--em-text-faint); stop-opacity: 0; }
-  .tl--band .fs0, .tl--band .fs1 { stop-color: #9fb7d3; } .tl--band .fs2 { stop-color: #9fb7d3; stop-opacity: 0; }
+  .tl .b-plan { fill: none; stroke-width: 1.4; stroke-dasharray: 4 3; }
+  .tl--band .b-plan { stroke: #e3b43a; }
+  .tl--page .b-plan { stroke: var(--em-gold); }
   .tl .phl { font: 600 9px var(--font-sans); }
   .tl--band .ph-alpha { opacity: .72; } .tl--band .ph-beta { opacity: .9; }
   .tl--band .phl { fill: #0b2440; } .tl--band .ph-st { fill: #e3b43a; }
