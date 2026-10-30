@@ -4,7 +4,6 @@
  * single row of fifteen links (audit H9). Licences and privacy sit in the
  * legal line underneath.
  */
-import logoMark from '../assets/logo_mark.svg';
 const year = new Date().getFullYear();
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 const ext = { target: '_blank', rel: 'noopener' };
@@ -15,7 +14,7 @@ const ext = { target: '_blank', rel: 'noopener' };
     <div class="em-footer__cols">
       <div class="em-footer__about">
         <a href={`${B}/`} class="em-footer__brand" aria-label="Extended Matrix home">
-          <img src={logoMark.src} alt="" width="16" height="27" />
+          <svg viewBox="0 0 140 240" width="16" height="27" aria-hidden="true"><use href="#mark" /></svg>
           <span>Extended<span>Matrix</span></span>
         </a>
         <p>A formal language for archaeological reasoning, developed at CNR-ISPC since 2015.</p>
@@ -80,7 +79,7 @@ const ext = { target: '_blank', rel: 'noopener' };
   .em-footer__cols { display: grid; grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr)); gap: 28px; }
   .em-footer__brand { display: inline-flex; align-items: center; gap: 9px; color: var(--em-navy); font: 700 1.05rem/1 var(--font-display); }
   .em-footer__brand span span { font-weight: 400; }
-  .em-footer__brand img { width: 16px; height: auto; }
+  .em-footer__brand svg { width: 16px; height: auto; }
   .em-footer__about p { margin-top: 12px; font-size: 0.86rem; color: var(--em-text-muted); max-width: 30ch; line-height: 1.6; }
   .em-footer h2 { font: 600 0.7rem var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--em-text-faint); margin-bottom: 10px; }
   .em-footer ul { list-style: none; display: grid; gap: 7px; font-size: 0.88rem; }

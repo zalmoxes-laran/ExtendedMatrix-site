@@ -161,7 +161,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
         .pointRadius((d) => 0.3 + d.size * 0.5)
         .pointColor((d) => d.color)
         .pointLabel((d) => `
-          <div style="background:#fff; color:#1a2940; padding:6px 10px;
+          <div style="background:var(--em-surface); color: var(--em-text); padding:6px 10px;
                       border-radius:6px; font-family:Sora,sans-serif;
                       font-size:13px; box-shadow:0 4px 14px rgba(0,0,0,0.2);">
             <strong>${COUNTRY_FLAG(d.code)} ${d.name}</strong><br/>

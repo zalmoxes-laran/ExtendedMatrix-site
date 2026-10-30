@@ -264,7 +264,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     --navy:        var(--em-navy);
     --navy-soft:   var(--em-navy-soft);
     --navy-tint:   var(--em-navy-tint);
-    --navy-deep:   #0a1429;
+    --navy-deep:   var(--em-text);   /* ink; dark fills use --em-navy-fill */
     --gold:        var(--em-gold);
     --gold-soft:   var(--em-gold-soft);
     --gold-tint:   var(--em-gold-tint);
@@ -272,9 +272,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     --fyp-bg-warm: var(--em-bg-warm);
     --fyp-text:    var(--em-text);
     --fyp-text-muted: var(--em-text-muted);
-    --fyp-text-faint: #97a3b0;
+    --fyp-text-faint: var(--em-text-faint);
     --fyp-border:  var(--em-border);
-    --fyp-border-strong: #cdc9bf;
+    --fyp-border-strong: var(--em-border-strong);
     --fyp-warn:    #b4530b;
     --fyp-warn-tint: #fff3e0;
     --fyp-shadow-sm: 0 1px 2px rgba(26,40,69,0.04), 0 1px 1px rgba(26,40,69,0.03);
@@ -431,7 +431,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     font-weight: 600;
     transition: all .25s var(--fyp-ease);
   }
-  .find-your-path .progress__dot--active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .find-your-path .progress__dot--active { background: var(--em-navy-fill); color: #fff; border-color: var(--navy); }
   .find-your-path .progress__dot--done   { background: var(--gold); color: #fff; border-color: var(--gold); }
   .find-your-path .progress__bar {
     flex: 0 0 24px;
@@ -569,7 +569,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .find-your-path .card__title { color: var(--navy); font-weight: 600; font-size: 15px; line-height: 1.3; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .find-your-path .card__desc  { color: var(--fyp-text-muted); font-size: 13px; line-height: 1.45; }
   .find-your-path .card[aria-pressed="true"] {
-    background: var(--navy);
+    background: var(--em-navy-fill);
     border-color: var(--navy);
     box-shadow: var(--fyp-shadow-md);
   }
@@ -603,7 +603,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   }
   .find-your-path .card--in-dev:hover { border-color: var(--fyp-warn); }
   .find-your-path .card--in-dev .card__title { color: var(--navy-soft); }
-  .find-your-path .card--in-dev[aria-pressed="true"] { background: var(--navy); border-style: solid; }
+  .find-your-path .card--in-dev[aria-pressed="true"] { background: var(--em-navy-fill); border-style: solid; }
   .find-your-path .badge-coming {
     display: inline-block;
     padding: 1px 7px;
@@ -646,9 +646,9 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     gap: 8px;
     text-decoration: none;
   }
-  .find-your-path .btn-fyp--primary { background: var(--navy); color: #fff; }
+  .find-your-path .btn-fyp--primary { background: var(--em-navy-fill); color: #fff; }
   .find-your-path .btn-fyp--primary:hover:not(:disabled) {
-    background: var(--navy-soft);
+    background: var(--em-navy-fill-hover);
     transform: translateY(-1px);
     box-shadow: var(--fyp-shadow-md);
     color: #fff;
@@ -711,7 +711,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     left: 2px;
     width: 20px;
     height: 20px;
-    background: #fff;
+    background: var(--em-surface);
     border-radius: 50%;
     transition: transform .2s var(--fyp-ease);
     box-shadow: 0 1px 3px rgba(0,0,0,0.18);
@@ -746,7 +746,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .find-your-path .chip {
     display: inline-block;
     padding: 2px 9px;
-    background: #fff;
+    background: var(--em-surface);
     color: var(--navy);
     border: 1px solid var(--navy-tint);
     border-radius: 100px;
@@ -802,7 +802,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       display: flex;
       align-items: baseline;
       gap: 10px;
-      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-soft) 100%);
+      background: linear-gradient(180deg, var(--em-navy-fill) 0%, var(--em-navy-fill-hover) 100%);
       color: #fff;
       padding: 8px 12px;
       border-radius: var(--fyp-radius-sm);
@@ -833,7 +833,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     min-width: 0;
   }
   .find-your-path .phase-head {
-    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-soft) 100%);
+    background: linear-gradient(180deg, var(--em-navy-fill) 0%, var(--em-navy-fill-hover) 100%);
     color: #fff;
     padding: 10px 12px;
     border-radius: var(--fyp-radius-sm);
@@ -989,7 +989,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
   /* Spine / always-on EM core */
   .find-your-path .block.is-spine {
-    background: linear-gradient(180deg, var(--navy) 0%, var(--navy-deep) 100%);
+    background: linear-gradient(180deg, var(--em-navy-fill) 0%, var(--em-navy-fill-hover) 100%);
     border-color: var(--gold);
     border-width: 2px;
     box-shadow: 0 4px 16px rgba(26,40,69,0.18);
@@ -1156,7 +1156,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     border-radius: 3px;
     border: 1.5px solid var(--fyp-border);
   }
-  .find-your-path .legend__swatch--spine { background: var(--navy); border-color: var(--gold); border-width: 2px; }
+  .find-your-path .legend__swatch--spine { background: var(--em-navy-fill); border-color: var(--gold); border-width: 2px; }
   .find-your-path .legend__swatch--active { background: var(--navy-tint); border-color: var(--navy); }
   .find-your-path .legend__swatch--inactive { background: var(--fyp-bg); border-color: var(--fyp-border-strong); opacity: 0.4; }
   .find-your-path .legend__swatch--coming { background: transparent; border-style: dashed; border-color: var(--fyp-border-strong); }

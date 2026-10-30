@@ -142,13 +142,13 @@ const playlistEmbed = event.data.videoPlaylist ? ytEmbed(event.data.videoPlaylis
   .ep__cover img { width: 100%; height: auto; display: block; }
   .ep__links { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 32px; }
   .ep__btn {
-    background: var(--em-navy); color: var(--em-bg);
+    background: var(--em-navy-fill); color: var(--em-on-navy);
     padding: 10px 18px; border-radius: var(--radius-sm);
     font-weight: 600; font-size: 14px;
   }
-  .ep__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
+  .ep__btn:hover { background: var(--em-gold); color: var(--em-on-navy); text-decoration: none; }
   .ep__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
-  .ep__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
+  .ep__btn--ghost:hover { background: var(--em-navy-fill); color: var(--em-on-navy); }
 
   .ep__embed {
     position: relative;

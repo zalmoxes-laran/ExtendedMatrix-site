@@ -22,6 +22,9 @@
   --em-gold-ink:    #8a6800;   /* ochre as TEXT: 5:1 on white (#bf9000 is 2.8:1) */
   --em-aqua:        #d9e9f7;   /* Acqua marina: info grounds, hover */
   --em-charcoal:    #1d1d1b;   /* text on ochre */
+  --em-navy-fill:   #073763;   /* ultramarine as a FILL: bands, buttons (stays dark in dark mode) */
+  --em-navy-fill-hover: #0d4a82;
+  --em-on-navy:     #fcfcfc;   /* text on a navy fill */
 
   /* Surfaces */
   --em-bg:          #fcfcfc;   /* Bianco sporco */
@@ -57,6 +60,44 @@
 
   /* Motion */
   --ease:         cubic-bezier(0.4, 0, 0.2, 1);
+  color-scheme: light;
+}
+
+/* ── Dark theme ─────────────────────────────────────────────────
+   Follows the system setting; the theme button in the navigation can
+   force light or dark (data-theme on <html>, remembered per browser).
+   Ultramarine splits in two roles: --em-navy is INK (headings, links:
+   light in dark mode) and --em-navy-fill is a SURFACE (bands, buttons:
+   stays deep blue). The language colours never change. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --em-navy: #bcd2ec; --em-navy-soft: #d4e3f4; --em-navy-tint: #17283d;
+    --em-navy-fill: #0d3a66; --em-navy-fill-hover: #15508a;
+    --em-gold: #e3b43a; --em-gold-soft: #f0c95a; --em-gold-tint: #2e2611; --em-gold-ink: #e8bd4c;
+    --em-aqua: #17283d;
+    --em-bg: #0b1420; --em-bg-warm: #0f1a28; --em-surface: #142030;
+    --em-text: #e8eef5; --em-text-muted: #aebbcb; --em-text-faint: #8695a8;
+    --em-border: #24344a; --em-border-strong: #4a5c73;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --em-navy: #bcd2ec; --em-navy-soft: #d4e3f4; --em-navy-tint: #17283d;
+  --em-navy-fill: #0d3a66; --em-navy-fill-hover: #15508a;
+  --em-gold: #e3b43a; --em-gold-soft: #f0c95a; --em-gold-tint: #2e2611; --em-gold-ink: #e8bd4c;
+  --em-aqua: #17283d;
+  --em-bg: #0b1420; --em-bg-warm: #0f1a28; --em-surface: #142030;
+  --em-text: #e8eef5; --em-text-muted: #aebbcb; --em-text-faint: #8695a8;
+  --em-border: #24344a; --em-border-strong: #4a5c73;
+}
+/* Islands that stay on paper in both themes: the EM drawings, whose
+   language colours are designed for white. */
+.em-paper {
+  color-scheme: light;
+  --em-surface: #ffffff; --em-bg-warm: #f2f5f9; --em-text: #0e1d2e; --em-text-muted: #485666;
+  --em-text-faint: #6a7684; --em-border: #dde4ec; --em-navy: #073763; --em-gold-ink: #8a6800; --em-gold: #bf9000;
+  color: var(--em-text);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -91,7 +132,7 @@ a:hover { color: var(--em-gold-ink); }
   left: 0;
   z-index: 1000;
   padding: 10px 18px;
-  background: var(--em-navy);
+  background: var(--em-navy-fill);
   color: #ffffff;
   font-family: var(--font-sans);
   font-size: 14px;
@@ -192,12 +233,12 @@ main > section { padding: 48px 0; }
 }
 
 .btn-primary {
-  background: var(--em-navy);
-  color: var(--em-bg);
+  background: var(--em-navy-fill);
+  color: var(--em-on-navy);
 }
 .btn-primary:hover {
-  background: var(--em-navy-soft);
-  color: var(--em-bg);
+  background: var(--em-navy-fill-hover);
+  color: var(--em-on-navy);
   text-decoration: none;
 }
 
@@ -207,18 +248,18 @@ main > section { padding: 48px 0; }
   border-color: var(--em-navy);
 }
 .btn-ghost:hover {
-  background: var(--em-navy);
-  color: var(--em-bg);
+  background: var(--em-navy-fill);
+  color: var(--em-on-navy);
   text-decoration: none;
 }
 
 .btn-gold {
   background: var(--em-gold);
-  color: var(--em-bg);
+  color: var(--em-on-navy);
 }
 .btn-gold:hover {
   background: var(--em-gold-soft);
-  color: var(--em-bg);
+  color: var(--em-on-navy);
   text-decoration: none;
 }
 
@@ -256,8 +297,8 @@ main > section { padding: 48px 0; }
   margin-right: 4px;
   white-space: nowrap;
 }
-.role-badge--archaeologist { color: #5a4a3a; border-color: #c5b59d; background: #f5f0e6; }
-.role-badge--modeller      { color: #2c3e50; border-color: #b8c2cc; background: #eef2f6; }
+.role-badge--archaeologist { color: var(--em-text-muted); border-color: #c5b59d; background: #f5f0e6; }
+.role-badge--modeller      { color: var(--em-text); border-color: #b8c2cc; background: #eef2f6; }
 .role-badge--developer     { color: #2c5a2c; border-color: #b3d6b3; background: #e9f3e9; }
 
 /* Arrowheads of the EM matrix drawings (markers live in the glyph sprite) */
@@ -268,3 +309,9 @@ main > section { padding: 48px 0; }
 /* Placeholder figures («image to add») are notes for the authors: the
    public never sees them (audit D6). */
 .emfig--placeholder { display: none !important; }
+
+/* In dark mode the black glyph bodies (USVs, USVn, BR) get a faint light
+   halo, so their shape reads on the dark ground; colours stay the language's. */
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .em-glyph { filter: drop-shadow(0 0 0.6px rgba(255,255,255,.9)); } }
+:root[data-theme="dark"] .em-glyph { filter: drop-shadow(0 0 0.6px rgba(255,255,255,.9)); }
+.em-paper .em-glyph { filter: none !important; }

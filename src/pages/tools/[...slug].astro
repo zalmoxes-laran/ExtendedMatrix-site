@@ -238,7 +238,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .tp__status--stable  { color: #2c5a2c; background: #d8ecd8; }
   .tp__status--beta    { color: var(--em-navy); background: var(--em-navy-tint); }
   .tp__status--alpha   { color: #8a5a14; background: #fae6c8; }
-  .tp__status--planned { color: #555; background: #eee; }
+  .tp__status--planned { color: var(--em-text-muted); background: var(--em-bg-warm); }
   .tp__role {
     font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em;
     color: var(--em-gold-ink); font-weight: 600; margin: 6px 0 8px;
@@ -259,19 +259,19 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     margin-bottom: 40px;
   }
   .tp__btn {
-    background: var(--em-navy); color: var(--em-bg);
+    background: var(--em-navy-fill); color: var(--em-on-navy);
     padding: 10px 18px; border-radius: var(--radius-sm);
     font-weight: 600; font-size: 14px;
   }
-  .tp__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
+  .tp__btn:hover { background: var(--em-gold); color: var(--em-on-navy); text-decoration: none; }
   .tp__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
-  .tp__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
+  .tp__btn--ghost:hover { background: var(--em-navy-fill); color: var(--em-on-navy); }
   /* Action-variant CTA colours — mirror the /versions/ row-CTA
      palette so a returning user recognises the verb at a glance.
      Install → gold pieno (in-app flow), Open → gold ghost (external
      landing). Download stays the navy default. */
-  .tp__btn--install { background: var(--em-gold); color: var(--em-bg); }
-  .tp__btn--install:hover { background: var(--em-navy); color: var(--em-bg); }
+  .tp__btn--install { background: var(--em-gold); color: var(--em-on-navy); }
+  .tp__btn--install:hover { background: var(--em-navy-fill); color: var(--em-on-navy); }
   .tp__btn--open {
     background: transparent;
     color: var(--em-gold-ink);

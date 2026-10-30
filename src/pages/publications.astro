@@ -282,8 +282,8 @@ const sections: SectionDef[] = [
     border: 1px solid var(--em-border);
   }
   .pubs__toc a:hover {
-    background: var(--em-navy);
-    color: var(--em-bg);
+    background: var(--em-navy-fill);
+    color: var(--em-on-navy);
     border-color: var(--em-navy);
     text-decoration: none;
   }
@@ -336,7 +336,7 @@ const sections: SectionDef[] = [
     background: var(--em-navy-tint); color: var(--em-navy);
   }
   .pub__chip--featured { background: var(--em-gold-tint); color: var(--em-gold-ink); }
-  .pub__chip--project { background: #ecf3ff; color: #1a4380; }
+  .pub__chip--project { background: #ecf3ff; color: var(--em-navy); }
   .pub__chip--thesis { background: #fdf3e2; color: #8a5a14; }
   /*
    * Version-flag chip — papers that anchor a specific EM release per
@@ -345,8 +345,8 @@ const sections: SectionDef[] = [
    * you cite when you use features the release introduced.
    */
   .pub__chip--versionflag {
-    background: var(--em-navy);
-    color: var(--em-bg);
+    background: var(--em-navy-fill);
+    color: var(--em-on-navy);
     font-weight: 700;
   }
   .pub__title {
@@ -366,7 +366,7 @@ const sections: SectionDef[] = [
     border: 1px solid var(--em-border);
     padding: 4px 10px; border-radius: var(--radius-sm);
   }
-  .pub__link:hover { background: var(--em-navy); color: var(--em-bg); text-decoration: none; }
+  .pub__link:hover { background: var(--em-navy-fill); color: var(--em-on-navy); text-decoration: none; }
   .pub__bibtex { font-size: 13px; }
   .pub__bibtex summary {
     cursor: pointer; font-weight: 600; color: var(--em-text-muted);
@@ -386,15 +386,15 @@ const sections: SectionDef[] = [
   .pubs__share {
     margin-top: 24px;
     padding: 28px;
-    background: var(--em-navy);
-    color: var(--em-bg);
+    background: var(--em-navy-fill);
+    color: var(--em-on-navy);
     border-radius: var(--radius-md);
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: 24px;
   }
-  .pubs__share h3 { color: var(--em-bg); font-size: 20px; margin: 0 0 6px; }
+  .pubs__share h3 { color: var(--em-on-navy); font-size: 20px; margin: 0 0 6px; }
   .pubs__share p { color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6; margin: 0; max-width: 60ch; }
   .pubs__share em { color: var(--em-gold-ink); font-style: normal; font-weight: 600; }
   .pubs__share-cta { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -410,12 +410,12 @@ const sections: SectionDef[] = [
   .pubs__share-btn:hover { background: var(--em-bg); color: var(--em-navy); text-decoration: none; }
   .pubs__share-btn--ghost {
     background: transparent;
-    color: var(--em-bg);
+    color: var(--em-on-navy);
     border: 1px solid rgba(255,255,255,0.4);
   }
   .pubs__share-btn--ghost:hover {
     background: rgba(255,255,255,0.08);
-    color: var(--em-bg);
+    color: var(--em-on-navy);
     border-color: var(--em-gold);
   }
 

@@ -28,6 +28,10 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Theme chosen with the navigation button (light / dark), applied before
+         the first paint so the page never flashes the other theme. -->
+    <script is:inline>try{var t=localStorage.getItem('em-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t;}catch(e){}</script>
     <link rel="icon" type="image/svg+xml" href={`${B}/favicon.svg`} />
     <link rel="canonical" href={Astro.url.toString()} />
     <title>{fullTitle}</title>

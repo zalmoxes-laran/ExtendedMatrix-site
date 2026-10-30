@@ -72,7 +72,7 @@ ${Object.entries(NODES).map(([k, n]) => node(k, n)).join('')}`;
 const info = Object.fromEntries(Object.entries(NODES).map(([k, n]) => [k, { k: n.k, info: n.info }]));
 ---
 
-<figure class="mx" data-mx data-info={JSON.stringify(info)} data-chain={JSON.stringify(CHAIN)}>
+<figure class="mx em-paper" data-mx data-info={JSON.stringify(info)} data-chain={JSON.stringify(CHAIN)}>
   <svg viewBox="0 0 600 470" role="img" aria-label="A small Extended Matrix: three epochs, a virtual unit that rebuilds a wall, and the chain of evidence behind it" set:html={svg} />
   <figcaption class="mxcap" data-cap aria-live="polite">
     <span><b>Read it from the reconstruction down to the evidence.</b> Hover or tap a node: every virtual unit ends on a document you can open.</span>

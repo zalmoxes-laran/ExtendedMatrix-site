@@ -205,8 +205,8 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
     text-decoration: none;
   }
   .filter-chip[aria-current="true"] {
-    background: var(--em-navy);
-    color: var(--em-bg);
+    background: var(--em-navy-fill);
+    color: var(--em-on-navy);
     border-color: var(--em-navy);
   }
 
@@ -247,7 +247,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
   .card__status--stable  { color: #2c5a2c; background: #d8ecd8; }
   .card__status--beta    { color: var(--em-navy); background: var(--em-navy-tint); }
   .card__status--alpha   { color: #8a5a14; background: #fae6c8; }
-  .card__status--planned { color: #555; background: #eee; }
+  .card__status--planned { color: var(--em-text-muted); background: var(--em-bg-warm); }
   .card__role {
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
     /* Informational role label ("Web platform", "Survey pipeline", …)

@@ -380,7 +380,7 @@ const versionChips = allVersions
     text-decoration: none;
   }
   .vp__chip--active {
-    background: var(--em-navy);
+    background: var(--em-navy-fill);
     color: #fff;
     border-color: var(--em-navy);
     cursor: default;
@@ -417,7 +417,7 @@ const versionChips = allVersions
   .v__status--lts        { color: var(--em-gold-ink); background: var(--em-gold-tint); }
   .v__status--development{ color: var(--em-navy); background: var(--em-navy-tint); }
   .v__status--stable     { color: #2c5a2c; background: #d8ecd8; }
-  .v__status--legacy     { color: #555;    background: #eee; }
+  .v__status--legacy     { color: var(--em-text-muted);    background: var(--em-bg-warm); }
   .v__status--eol        { color: #a22;    background: #fae0e0; }
   .vp__title { margin: 18px 0 16px; }
   .vp__lede { color: var(--em-text); font-size: 17px; max-width: 720px; margin-bottom: 28px; }
@@ -439,7 +439,7 @@ const versionChips = allVersions
   .vp__lang-head h2 { margin: 0; }
   .vp__lang-tag {
     font-size: 11px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase;
-    color: var(--em-gold-ink); background: rgba(255,255,255,0.65);
+    color: var(--em-gold-ink); background: var(--em-surface);
     /* Bumped from 3px/10px — title-adjacent pill was too compressed
        against the "Core language" H2. (2026-07-01) */
     padding: 7px 14px; border-radius: 3px; border: 1px solid var(--em-gold);
@@ -670,8 +670,8 @@ const versionChips = allVersions
   .vp__cluster-tag--core           { color: var(--em-navy); background: rgba(184, 137, 58, 0.22); }
   .vp__cluster-tag--archaeologist  { color: var(--em-navy); background: var(--em-navy-tint); }
   .vp__cluster-tag--modeller       { color: var(--em-navy); background: var(--em-navy-tint); }
-  .vp__cluster-tag--developer      { color: #333;          background: #e8e8e8; }
-  .vp__cluster-tag--other          { color: #666;          background: #f0f0ed; }
+  .vp__cluster-tag--developer      { color: var(--em-text);          background: var(--em-bg-warm); }
+  .vp__cluster-tag--other          { color: var(--em-text-muted);          background: #f0f0ed; }
 
   .vp__cluster-lede {
     margin: 8px 0 18px;
@@ -806,7 +806,7 @@ const versionChips = allVersions
     font-size: 13px;
     border-radius: 999px;
     background: var(--em-gold);
-    color: var(--em-bg) !important;
+    color: var(--em-on-navy) !important;
     text-decoration: none;
     white-space: nowrap;
     transition: background 0.12s var(--ease), transform 0.12s var(--ease);
@@ -820,7 +820,7 @@ const versionChips = allVersions
      Install = navy (signals "in-app flow"), Open = ghost gold
      (signals "go elsewhere, this isn't an install"). */
   .vp__cta-btn--install {
-    background: var(--em-navy);
+    background: var(--em-navy-fill);
   }
   .vp__cta-btn--install:hover { background: #0e1a36; }
   .vp__cta-btn--open {
@@ -894,8 +894,8 @@ const versionChips = allVersions
     top: 12px;
     width: 28px;
     height: 28px;
-    background: var(--em-navy);
-    color: var(--em-bg);
+    background: var(--em-navy-fill);
+    color: var(--em-on-navy);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -915,17 +915,17 @@ const versionChips = allVersions
 
   /* Buttons */
   .vp__btn {
-    background: var(--em-navy);
-    color: var(--em-bg);
+    background: var(--em-navy-fill);
+    color: var(--em-on-navy);
     padding: 12px 20px;
     border-radius: var(--radius-sm);
     font-weight: 600;
     font-size: 14px;
     transition: background 0.2s var(--ease);
   }
-  .vp__btn:hover { background: var(--em-gold); color: var(--em-bg); text-decoration: none; }
+  .vp__btn:hover { background: var(--em-gold); color: var(--em-on-navy); text-decoration: none; }
   .vp__btn--ghost { background: transparent; color: var(--em-navy); border: 1px solid var(--em-navy); }
-  .vp__btn--ghost:hover { background: var(--em-navy); color: var(--em-bg); }
+  .vp__btn--ghost:hover { background: var(--em-navy-fill); color: var(--em-on-navy); }
 
   .vp__body :global(h2) { margin-top: 32px; font-size: 22px; }
   .vp__body :global(h3) { margin-top: 24px; font-size: 18px; }
@@ -1065,7 +1065,7 @@ const versionChips = allVersions
   .vp__chip { font-family: var(--font-mono) !important; }
   .vp__chip--recommended { border-color: var(--em-gold) !important; }
   .vp__chip--dev { border-style: dashed !important; }
-  .vp__chip--active { background: var(--em-navy) !important; color: #fff !important; border-color: var(--em-navy) !important; }
+  .vp__chip--active { background: var(--em-navy-fill) !important; color: #fff !important; border-color: var(--em-navy) !important; }
   .vp__tools h2 { margin-bottom: 16px; }
   /* the indent fix: the language box keeps its inner padding (a broader
      `.vp section { padding: 0 }` was flattening it to the border) */
