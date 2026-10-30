@@ -173,7 +173,7 @@
     <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
     <rdfs:label xml:lang="en">Extended Matrix Ontology</rdfs:label>
     <dcterms:title xml:lang="en">Extended Matrix Ontology</dcterms:title>
-    <dcterms:creator>Emanuele Demetrescu</dcterms:creator>
+    <dcterms:creator>Emanuel Demetrescu</dcterms:creator>
     <dcterms:license rdf:resource="https://creativecommons.org/licenses/by/4.0/"/>
     <dcterms:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2026-05-23</dcterms:issued>
     <owl:versionInfo>1.6.22</owl:versionInfo>
