@@ -249,8 +249,7 @@ const foundation = (await getCollection('versions')).find((v) => v.data.flagPape
 </script>
 
 <style>
-  .hero { padding: clamp(40px, 6vw, 76px) 0 clamp(32px, 4vw, 52px); border-bottom: 1px solid var(--em-border);
-    background: repeating-linear-gradient(90deg, transparent 0 59px, rgba(221, 228, 236, 0.45) 59px 60px), var(--em-bg); }
+  .hero { padding: clamp(40px, 6vw, 76px) 0 clamp(32px, 4vw, 52px); border-bottom: 1px solid var(--em-border); background: var(--em-bg); }
   .hero__in { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: clamp(24px, 4vw, 56px); align-items: center; }
   @media (max-width: 900px) { .hero__in { grid-template-columns: minmax(0, 1fr); } }
   .hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.35rem); line-height: 1.06; margin-top: 16px; }
