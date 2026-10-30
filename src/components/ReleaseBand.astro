@@ -7,11 +7,14 @@
  */
 import { manifesto, meseAnno } from '../lib/releases';
 import SupportTimeline from './SupportTimeline.astro';
+import { getCollection } from 'astro:content';
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 const m = await manifesto();
 const order = ['recommended', 'dev', 'legacy'];
 const lines = m.lines.filter((l) => order.includes(l.state)).sort((a, b) => order.indexOf(a.state) - order.indexOf(b.state));
 const v = (l: typeof lines[number], slug: string) => l.components.find((c) => c.slug === slug)?.version;
+const fmt = (x: Date) => x.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+const plan = new Map((await getCollection('versions')).map((x) => [x.data.version, (x.data.milestones ?? []).filter((m) => +m.date > Date.now())]));
 const built = new Date(m.built).toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
 ---
 <section class="band">
@@ -27,6 +30,7 @@ const built = new Date(m.built).toISOString().slice(0, 16).replace('T', ' ') + '
           <dl>
             <dt>Blender</dt><dd>{l.blenderLts ? `${l.blenderLts} LTS` : l.blenderMin ? `${l.blenderMin}+` : '—'}</dd>
             {l.eolDate && <><dt>Supported to</dt><dd>{meseAnno(l.eolDate)}</dd></>}
+            {(plan.get(l.version) ?? []).map((ms) => <><dt>{ms.phase[0].toUpperCase() + ms.phase.slice(1)}</dt><dd>{fmt(ms.date)}{ms.note && <small> · {ms.note}</small>}</dd></>)}
             {v(l, 'em-tools') && <><dt>EM Tools</dt><dd>{v(l, 'em-tools')}</dd></>}
             {v(l, 'emstudio') && <><dt>EMStudio</dt><dd>{v(l, 'emstudio')}</dd></>}
           </dl>

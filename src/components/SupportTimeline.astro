@@ -21,21 +21,29 @@ const today = yr(now);
 // a line without its own release date starts where it is announced; one without an end runs to its successor
 const list = all.map((v, i) => {
   const d = v.data;
-  const start = d.releaseDate ? yr(d.releaseDate) : d.status === 'development' ? 2026.45 : softwareYear.get(d.version) ?? (d.flagPaper?.year ? d.flagPaper.year + 0.5 : 2015.5);
+  const start = d.releaseDate ? yr(d.releaseDate) : d.status === 'development' ? (all.find((x) => x.data.releaseDate && x.data.status !== 'development')?.data.releaseDate ? yr(all.find((x) => x.data.releaseDate && x.data.status !== 'development')!.data.releaseDate!) : today) : softwareYear.get(d.version) ?? (d.flagPaper?.year ? d.flagPaper.year + 0.5 : 2015.5);
   const newer = all.slice(0, i).reverse().find((x) => x.data.releaseDate);
   const newerStart = newer?.data.releaseDate ? yr(newer.data.releaseDate) : undefined;
   const nextOlder = all[i - 1];
   const nextStart = nextOlder && nextOlder.data.status !== 'development'
     ? (nextOlder.data.releaseDate ? yr(nextOlder.data.releaseDate) : softwareYear.get(nextOlder.data.version)) : undefined;
-  const end = d.status === 'development' ? null : d.eolDate ? yr(d.eolDate) : nextStart ?? newerStart ?? today;
+  const ms = (d.milestones ?? []).slice().sort((a, b) => +a.date - +b.date);
+  // phases of a line in development: dev → alpha → beta → stable
+  const phases = d.status === 'development' && ms.length
+    ? [{ k: 'dev', from: start, to: yr(ms[0].date) }, ...ms.filter((m) => m.phase !== 'stable').map((m, j) => ({ k: m.phase, from: yr(m.date), to: yr((ms[ms.indexOf(m) + 1] ?? m).date) }))]
+    : [];
+  const stableAt = ms.find((m) => m.phase === 'stable');
+  const end = d.status === 'development' ? (stableAt ? yr(stableAt.date) : null) : d.eolDate ? yr(d.eolDate) : nextStart ?? newerStart ?? today;
   const state = d.status === 'development' ? 'dev' : d.eolDate && d.eolDate >= now ? 'lts' : 'old';
   const pin = d.blenderLts ? `Blender ${d.blenderLts} LTS` : d.blenderMin ? `Blender ${d.blenderMin}+` : d.usesYed ? 'yEd' : '';
-  const span = `${Math.floor(start)}–${end === null ? 'in development' : state === 'lts' ? `supported to ${d.eolDate!.getFullYear()}` : Math.floor(end)}`;
-  return { v: d.version, start, end, state, pin, span };
+  const fmt = (x: Date) => x.toLocaleDateString('en-GB', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  const span = phases.length ? ['development from ' + Math.floor(start), ...ms.map((m) => `${m.phase} ${fmt(m.date)}${m.note ? ` (${m.note})` : ''}`)].join(' · ') : `${Math.floor(start)}–${end === null ? 'in development' : state === 'lts' ? `supported to ${d.eolDate!.getFullYear()}` : Math.floor(end)}`;
+  return { v: d.version, start, end, state, pin, span, phases, stable: stableAt ? yr(stableAt.date) : null };
 }).slice(0, rows ?? 99);
 const x0 = 2015, x1 = 2029.6, W = 900, L = 70, R = 120, H = 28;
 const X = (t: number) => L + ((t - x0) / (x1 - x0)) * (W - L - R);
 const h = list.length * H + 36;
+const PH: Record<string, string> = { dev: 'dev', alpha: 'α', beta: 'β' };
 const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
 ---
 <div class={`tl tl--${variant}`}>
@@ -45,8 +53,14 @@ const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
       const y = 10 + i * H; const e = r.end ?? x1 - 0.1;
       return (<g>
         <text class="lb" x={L - 12} y={y + H / 2 + 3} text-anchor="end">EM {r.v}</text>
-        <rect class={`b-${r.state}`} x={X(r.start)} y={y + 6} width={Math.max(4, X(e) - X(r.start))} height={H - 12} rx="3"><title>EM {r.v} · {r.span}{r.pin ? ` · ${r.pin}` : ''}</title></rect>
-        {r.pin && <text class="pin" x={X(e) + 6} y={y + H / 2 + 3}>{r.pin}</text>}
+{r.phases.length ? (<g>
+          {r.phases.map((ph) => (<g>
+            <rect class={`b-dev ph-${ph.k}`} x={X(ph.from)} y={y + 6} width={Math.max(2, X(ph.to) - X(ph.from) - 1.5)} height={H - 12} rx="3"><title>EM {r.v} · {r.span}</title></rect>
+            <text class="phl" x={(X(ph.from) + X(ph.to)) / 2} y={y + H / 2 + 3} text-anchor="middle">{PH[ph.k]}</text>
+          </g>))}
+          {r.stable && <g><path class="ph-st" d={`M${X(r.stable)} ${y + 4} l6 ${H / 2 - 4} l-6 ${H / 2 - 4} l-6 ${-(H / 2 - 4)} z`}><title>EM {r.v} stable · planned</title></path></g>}
+        </g>) :         (<rect class={`b-${r.state}`} x={X(r.start)} y={y + 6} width={Math.max(4, X(e) - X(r.start))} height={H - 12} rx="3"><title>EM {r.v} · {r.span}{r.pin ? ` · ${r.pin}` : ''}</title></rect>)}
+        {r.pin && <text class="pin" x={X(e) + (r.stable ? 12 : 6)} y={y + H / 2 + 3}>{r.pin}</text>}
       </g>);
     })}
     <line class="now" x1={X(today)} x2={X(today)} y1="2" y2={h - 22} />
@@ -71,6 +85,11 @@ const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
   .tl--band .ax { fill: #9fb7d3; }
   .tl--band .gr { stroke: rgba(255, 255, 255, 0.1); }
   .tl--band .pin { fill: #9fb7d3; }
+  .tl .phl { font: 600 9px var(--font-sans); }
+  .tl--band .ph-alpha { opacity: .72; } .tl--band .ph-beta { opacity: .9; }
+  .tl--band .phl { fill: #0b2440; } .tl--band .ph-st { fill: #e3b43a; }
+  .tl--page .ph-alpha { opacity: .55; } .tl--page .ph-beta { opacity: .75; }
+  .tl--page .phl { fill: var(--em-text); } .tl--page .ph-st { fill: var(--em-gold); }
   .tl--band .lb, .tl--band .nowt { fill: #eef3f9; }
   .tl--band .now { stroke: #ffffff; }
   .tl--band .b-lts { fill: #e3b43a; }

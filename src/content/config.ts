@@ -227,6 +227,14 @@ const versions = defineCollection({
       is_preferred: z.boolean().default(false),
       releaseDate: z.coerce.date().optional(),
       eolDate: z.coerce.date().optional(),
+      // Planned phases of a line still in development. Development itself
+      // starts when the previous line is released; each milestone opens a
+      // phase that lasts until the next one. Drawn on the support timeline.
+      milestones: z.array(z.object({
+        phase: z.enum(['alpha', 'beta', 'stable']),
+        date: z.coerce.date(),
+        note: z.string().optional(),
+      })).default([]),
       blenderMin: z.string().optional(),    // "4.5"
       blenderTested: z.array(z.string()).default([]),
       blenderLts: z.string().optional(),    // "4.3" — only when status==='lts'
