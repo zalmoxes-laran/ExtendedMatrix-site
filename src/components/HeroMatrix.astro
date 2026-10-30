@@ -14,11 +14,11 @@
  */
 type N = { gl: string; x: number; y: number; w: number; h: number; l?: string; s?: string; k: string; light?: boolean; info: string };
 const NODES: Record<string, N> = {
-  us100: { gl: 'US', x: 110, y: 78, w: 100, h: 40, l: 'US 100', s: 'collapse', k: 'US', info: '<b>US 100 · stratigraphic unit.</b> The collapse layer. It lies over everything below it, so it is later: earlier is lower.' },
-  usv110: { gl: 'USVs', x: 110, y: 196, w: 110, h: 40, l: 'USVs 110', s: 'rebuilt wall', k: 'USVs', light: true, info: '<b>USVs 110 · structural virtual unit.</b> The part of the wall that is no longer there. It is drawn because a chain of evidence justifies it: follow the orange line.' },
-  usm101: { gl: 'US', x: 110, y: 276, w: 100, h: 40, l: 'USM 101', s: 'brick wall', k: 'US', info: '<b>USM 101 · masonry unit.</b> What survives of the wall, 1.2 m high. The reconstruction above it rests on this.' },
-  us102: { gl: 'US', x: 52, y: 410, w: 92, h: 38, l: 'US 102', s: 'floor', k: 'US', info: '<b>US 102 · stratigraphic unit.</b> The cocciopesto floor, earlier than the wall.' },
-  us103: { gl: 'US', x: 170, y: 410, w: 92, h: 38, l: 'US 103', s: 'trench fill', k: 'US', info: '<b>US 103 · stratigraphic unit.</b> The fill of the foundation trench.' },
+  us100: { gl: 'US', x: 80, y: 80, w: 100, h: 40, l: 'US 100', s: 'collapse', k: 'US', info: '<b>US 100 · stratigraphic unit.</b> The collapse layer. It lies over the floor, so it is later: earlier is lower.' },
+  us102: { gl: 'US', x: 80, y: 210, w: 96, h: 40, l: 'US 102', s: 'floor', k: 'US', info: '<b>US 102 · stratigraphic unit.</b> The cocciopesto floor. It abuts the wall, so it is later than the wall.' },
+  usv110: { gl: 'USVs', x: 228, y: 210, w: 110, h: 40, l: 'USVs 110', s: 'rebuilt wall', k: 'USVs', light: true, info: '<b>USVs 110 · structural virtual unit.</b> The part of the wall that is no longer there. It rests on the surviving wall; no real layer rests on a virtual unit. It is drawn because a chain of evidence justifies it: follow the orange line.' },
+  usm101: { gl: 'US', x: 150, y: 298, w: 100, h: 40, l: 'USM 101', s: 'brick wall', k: 'US', info: '<b>USM 101 · masonry unit.</b> What survives of the wall, 1.2 m high. The floor abuts it; the reconstruction rests on it.' },
+  us103: { gl: 'US', x: 150, y: 412, w: 104, h: 38, l: 'US 103', s: 'levelling layer', k: 'US', info: '<b>US 103 · stratigraphic unit.</b> The levelling layer the wall is built on: earlier than the wall.' },
   prop: { gl: 'prop', x: 465, y: 110, w: 132, h: 34, l: 'height', s: '4.2 m', k: 'Property', info: '<b>Property · height 4.2 m.</b> The value the reconstruction uses. It combines two readings of the evidence.' },
   comb: { gl: 'comb', x: 465, y: 192, w: 34, h: 34, k: 'Combiner', info: '<b>Combiner.</b> Puts two extracted values together into one argument: the brick module and the comparison.' },
   ext1: { gl: 'ext', x: 405, y: 272, w: 32, h: 32, k: 'Extractor', info: '<b>Extractor · D.03.1.</b> Reads one fact from the photo: the brick module.' },
@@ -27,7 +27,7 @@ const NODES: Record<string, N> = {
   doc2: { gl: 'doc', x: 525, y: 356, w: 26, h: 40, l: 'D.07', s: 'Ostia, comparison', k: 'Document', info: '<b>Document D.07.</b> A published parallel from Ostia, registered in source_list.xlsx.' },
 };
 const EDGES: Array<[string, string, 's' | 'p' | 'd']> = [
-  ['us100', 'usv110', 's'], ['usv110', 'usm101', 's'], ['usm101', 'us102', 's'], ['usm101', 'us103', 's'],
+  ['us100', 'us102', 's'], ['us102', 'usm101', 's'], ['usv110', 'usm101', 's'], ['usm101', 'us103', 's'],
   ['usv110', 'prop', 'p'], ['prop', 'comb', 'd'], ['comb', 'ext1', 'd'], ['comb', 'ext2', 'd'], ['ext1', 'doc1', 'd'], ['ext2', 'doc2', 'd'],
 ];
 const CHAIN = ['usv110', 'prop', 'comb', 'ext1', 'ext2', 'doc1', 'doc2'];

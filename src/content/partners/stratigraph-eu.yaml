@@ -6,4 +6,5 @@ url: "https://stratigraph.eu"
 country: "EU"
 order: 1
 logo: ../../assets/logos/stratigraph-dark.png
+logoDark: ../../assets/logos/stratigraph-offwhite.png
 logoAlt: "ECHOES + StratiGraph European project logo"

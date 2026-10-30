@@ -30,9 +30,10 @@ const list = all.map((v, i) => {
   const end = d.status === 'development' ? null : d.eolDate ? yr(d.eolDate) : nextStart ?? newerStart ?? today;
   const state = d.status === 'development' ? 'dev' : d.eolDate && d.eolDate >= now ? 'lts' : 'old';
   const pin = d.blenderLts ? `Blender ${d.blenderLts} LTS` : d.blenderMin ? `Blender ${d.blenderMin}+` : d.usesYed ? 'yEd' : '';
-  return { v: d.version, start, end, state, pin };
+  const span = `${Math.floor(start)}–${end === null ? 'in development' : state === 'lts' ? `supported to ${d.eolDate!.getFullYear()}` : Math.floor(end)}`;
+  return { v: d.version, start, end, state, pin, span };
 }).slice(0, rows ?? 99);
-const x0 = 2015, x1 = 2029.6, W = 900, L = 70, R = variant === 'page' ? 120 : 20, H = 28;
+const x0 = 2015, x1 = 2029.6, W = 900, L = 70, R = 120, H = 28;
 const X = (t: number) => L + ((t - x0) / (x1 - x0)) * (W - L - R);
 const h = list.length * H + 36;
 const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
@@ -44,8 +45,8 @@ const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
       const y = 10 + i * H; const e = r.end ?? x1 - 0.1;
       return (<g>
         <text class="lb" x={L - 12} y={y + H / 2 + 3} text-anchor="end">EM {r.v}</text>
-        <rect class={`b-${r.state}`} x={X(r.start)} y={y + 6} width={Math.max(4, X(e) - X(r.start))} height={H - 12} rx="3" />
-        {variant === 'page' && r.pin && <text class="pin" x={X(e) + 6} y={y + H / 2 + 3}>{r.pin}</text>}
+        <rect class={`b-${r.state}`} x={X(r.start)} y={y + 6} width={Math.max(4, X(e) - X(r.start))} height={H - 12} rx="3"><title>EM {r.v} · {r.span}{r.pin ? ` · ${r.pin}` : ''}</title></rect>
+        {r.pin && <text class="pin" x={X(e) + 6} y={y + H / 2 + 3}>{r.pin}</text>}
       </g>);
     })}
     <line class="now" x1={X(today)} x2={X(today)} y1="2" y2={h - 22} />
@@ -69,6 +70,7 @@ const years = Array.from({ length: 15 }, (_, i) => 2015 + i);
   .tl--page .b-old { fill: var(--em-text-faint); opacity: 0.35; }
   .tl--band .ax { fill: #9fb7d3; }
   .tl--band .gr { stroke: rgba(255, 255, 255, 0.1); }
+  .tl--band .pin { fill: #9fb7d3; }
   .tl--band .lb, .tl--band .nowt { fill: #eef3f9; }
   .tl--band .now { stroke: #ffffff; }
   .tl--band .b-lts { fill: #e3b43a; }

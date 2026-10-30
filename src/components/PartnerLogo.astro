@@ -1,0 +1,13 @@
+---
+/**
+ * A partner logo in both themes: the official version on light grounds,
+ * the white-on-dark version (logoDark) when the page is dark. Logos with
+ * no dark version sit on a light plate in the dark theme.
+ */
+interface Props { logo: { src: string }; logoDark?: { src: string }; alt: string; class?: string }
+const { logo, logoDark, alt } = Astro.props;
+const cls = Astro.props.class ?? '';
+---
+{logoDark
+  ? <><img src={logo.src} alt={alt} class={`${cls} logo-l`} loading="lazy" /><img src={logoDark.src} alt={alt} class={`${cls} logo-d`} loading="lazy" /></>
+  : <img src={logo.src} alt={alt} class={`${cls} logo-plate`} loading="lazy" />}

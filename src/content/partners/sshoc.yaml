@@ -7,4 +7,5 @@ url: "https://sshoc.eu"
 country: "EU"
 order: 3
 logo: ../../assets/logos/SSHOC_project.png
+logoDark: ../../assets/logos/SSHOC_project-white.png
 logoAlt: "SSHOC EU project logo"

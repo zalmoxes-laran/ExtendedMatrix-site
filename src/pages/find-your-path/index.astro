@@ -597,8 +597,8 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
       45deg,
       var(--fyp-bg-warm),
       var(--fyp-bg-warm) 6px,
-      #f3f1ea 6px,
-      #f3f1ea 12px
+      color-mix(in srgb, var(--fyp-bg-warm) 75%, var(--em-border)) 6px,
+      color-mix(in srgb, var(--fyp-bg-warm) 75%, var(--em-border)) 12px
     );
   }
   .find-your-path .card--in-dev:hover { border-color: var(--fyp-warn); }

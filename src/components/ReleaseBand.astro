@@ -34,10 +34,10 @@ const built = new Date(m.built).toISOString().slice(0, 16).replace('T', ' ') + '
         </div>
       ))}
     </div>
-    <div class="band__tl"><SupportTimeline variant="band" rows={4} /></div>
+    <div class="band__tl"><SupportTimeline variant="band" /></div>
     <p class="band__src">
-      <span>Blender extension repository</span><span>PyPI</span><span>GitHub Releases</span><span>built {built}</span>
-      <a href={`${B}/status.json`}>status.json</a>
+      <b class="band__srch">Versions read from</b><span>Blender extension repository</span><span>PyPI</span><span>GitHub Releases</span><span>built {built}</span>
+      <a href={`${B}/status.json`} title="The same version data as JSON: the manuals' version banner and EMStudio's update check read this file">Machine-readable feed (status.json)</a>
     </p>
   </div>
 </section>
@@ -67,4 +67,5 @@ const built = new Date(m.built).toISOString().slice(0, 16).replace('T', ' ') + '
   .band__src { margin-top: 14px; font-size: 0.76rem; color: #b9cbe0; display: flex; gap: 6px 16px; flex-wrap: wrap; }
   .band__src span::before { content: "●"; color: #8ee0a4; margin-right: 6px; font-size: 0.6rem; vertical-align: 2px; }
   .band__src a { color: #f1d27c; }
+  .band__srch { font-weight: 600; color: #eef3f9; }
 </style>

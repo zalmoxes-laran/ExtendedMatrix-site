@@ -8,4 +8,5 @@ url: "https://www.ispc.cnr.it"
 country: "IT"
 order: 1
 logo: ../../assets/logos/CNRISPC.png
+logoDark: ../../assets/logos/CNRISPC-white.png
 logoAlt: "CNR-ISPC logo"

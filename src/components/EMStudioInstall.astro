@@ -128,26 +128,26 @@ if (rel && !builds.length) segnalaFonte(`${repo} ${rel.tag}: nessun asset ricono
 </script>
 
 <style>
-  .emsi { margin: 2rem 0; padding: 1.25rem 1.25rem 1rem; border: 1px solid var(--c-border, #e3e3e0);
-          border-radius: 10px; background: var(--c-surface-soft, #fafaf7); }
+  .emsi { margin: 2rem 0; padding: 1.25rem 1.25rem 1rem; border: 1px solid var(--em-border);
+          border-radius: 10px; background: var(--em-bg-warm); }
   .emsi__title { margin: 0 0 .35rem; font-size: 1.25rem; }
-  .emsi__sub { margin: 0 0 1rem; color: var(--c-text-muted, #555); font-size: .95rem; }
-  .emsi__card { border: 1px solid var(--c-border, #e3e3e0); border-radius: 8px;
+  .emsi__sub { margin: 0 0 1rem; color: var(--em-text-muted); font-size: .95rem; }
+  .emsi__card { border: 1px solid var(--em-border); border-radius: 8px;
                 padding: 1rem; background: var(--em-surface); }
   .emsi__name { display: flex; align-items: baseline; gap: .6rem; margin-bottom: .75rem; }
   .emsi__ver { font-family: var(--font-mono, monospace); font-size: .85rem;
-               background: var(--c-accent-soft, #f4efe2); padding: .1rem .45rem; border-radius: 4px; }
+               background: var(--em-gold-tint); padding: .1rem .45rem; border-radius: 4px; }
   .emsi__lab { display: block; font-size: .72rem; letter-spacing: .06em;
-               color: var(--c-text-muted, #666); margin-bottom: .25rem; }
-  .emsi__sel { font: inherit; padding: .35rem .5rem; border-radius: 6px;
-               border: 1px solid var(--c-border, #ccc); max-width: 22rem; width: 100%; }
+               color: var(--em-text-muted); margin-bottom: .25rem; }
+  .emsi__sel { font: inherit; padding: .35rem .5rem; border-radius: 6px; background: var(--em-surface); color: var(--em-text);
+               border: 1px solid var(--em-border); max-width: 22rem; width: 100%; }
   .emsi__btn { display: inline-block; margin-top: .9rem; padding: .55rem 1.1rem;
-               border-radius: 7px; border: 1px solid var(--c-border, #d6d2c4);
-               background: var(--c-accent-soft, #f4efe2); font-weight: 600;
-               text-decoration: none; color: inherit; }
-  .emsi__btn:hover { background: var(--c-accent, #e9dfc4); }
+               border-radius: 7px; border: 1px solid var(--em-border);
+               background: var(--em-gold-tint); font-weight: 600;
+               text-decoration: none; color: var(--em-text); }
+  .emsi__btn:hover { background: var(--em-gold); }
   .emsi__note, .emsi__fallback { margin: .8rem 0 0; font-size: .85rem;
-                                 color: var(--c-text-muted, #555); }
+                                 color: var(--em-text-muted); }
   .emsi__note code { font-size: .8rem; }
   @media (max-width: 480px) { .emsi__sel { max-width: 100%; } }
 </style>

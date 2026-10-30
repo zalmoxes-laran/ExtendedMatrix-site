@@ -113,6 +113,8 @@ const partners = defineCollection({
       note: z.string().optional(),
       logo: image().optional(),
       logoAlt: z.string().optional(),
+      // white-on-dark version of the logo, shown in the dark theme
+      logoDark: image().optional(),
       url: z.string().url().optional(),
       country: z.string().optional(),
       order: z.number().default(0),

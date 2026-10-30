@@ -315,3 +315,15 @@ main > section { padding: 48px 0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .em-glyph { filter: drop-shadow(0 0 0.6px rgba(255,255,255,.9)); } }
 :root[data-theme="dark"] .em-glyph { filter: drop-shadow(0 0 0.6px rgba(255,255,255,.9)); }
 .em-paper .em-glyph { filter: none !important; }
+
+/* Partner logos: official version on light, white-on-dark version on dark;
+   a logo without a dark version sits on a light plate. */
+.logo-d { display: none !important; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .logo-l { display: none !important; }
+  :root:not([data-theme="light"]) .logo-d { display: block !important; }
+  :root:not([data-theme="light"]) .logo-plate { background: #fcfcfc; padding: 6px 10px; border-radius: 6px; box-sizing: content-box; }
+}
+:root[data-theme="dark"] .logo-l { display: none !important; }
+:root[data-theme="dark"] .logo-d { display: block !important; }
+:root[data-theme="dark"] .logo-plate { background: #fcfcfc; padding: 6px 10px; border-radius: 6px; box-sizing: content-box; }
