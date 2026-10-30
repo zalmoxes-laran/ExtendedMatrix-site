@@ -1,325 +1,52 @@
 ---
+/**
+ * Start here (audit S1): one page with the three doors, the fourth for
+ * whoever leads a project, and the guided path as the next step. The
+ * doors are the same component the home page uses.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Doors from '../components/Doors.astro';
+import Glyph from '../components/Glyph.astro';
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
-<BaseLayout
-  title="Start here"
-  description="Three guided entry points into Extended Matrix — pick the one that fits your work."
->
-  <section class="start">
+<BaseLayout title="Start here" description="Pick the door that matches your work: archaeologist, 3D modeller or developer, plus the team roles for whoever leads a project.">
+  <section class="sh">
     <div class="container">
       <span class="tag">Start here</span>
-      <h1 class="start__title">Pick your entry point.</h1>
-      <p class="start__sub">
-        Extended Matrix is a method (the formal language), a framework (a
-        family of open-source tools), and a community. Three short paths
-        below — each leads you straight to where the work happens.
-      </p>
-
-      <div class="paths">
-        <article class="path">
-          <header>
-            <span class="path__num">1</span>
-            <h2>Sources, stratigraphy, reconstruction</h2>
-            <p class="path__who">For archaeologists, heritage scholars, students.</p>
-          </header>
-          <p>
-            Begin with the formal language: it is what you will read, write
-            and discuss when reasoning about evidence. Pencil and paper are
-            enough to start.
-          </p>
-          <ol class="path__steps">
-            <li>
-              Read the <a href="https://docs.extendedmatrix.org/en/1.5/learn_EM.html" target="_blank" rel="noopener">
-                Learn EM</a> guide.
-            </li>
-            <li>
-              Walk through <a href="https://docs.extendedmatrix.org/en/1.5/stratigraphic_nodes.html" target="_blank" rel="noopener">
-                stratigraphic nodes</a> and <a href="https://docs.extendedmatrix.org/en/1.5/paradata_nodes.html" target="_blank" rel="noopener">
-                paradata nodes</a>.
-            </li>
-            <li>
-              Hands-on: <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/tutorials/12-install-yed-blender.html" target="_blank" rel="noopener">
-                install yEd with the EM palette</a> and draw your first graph.
-            </li>
-          </ol>
-          <p class="path__cross">
-            <a href={`${B}/tools/#archaeologist`}>→ Tools for archaeologists</a>
-          </p>
-        </article>
-
-        <article class="path">
-          <header>
-            <span class="path__num">2</span>
-            <h2>3D models annotated with EM data</h2>
-            <p class="path__who">For 3D artists, modellers, technical-archaeologists.</p>
-          </header>
-          <p>
-            Bring an existing graph into Blender, link proxies to stratigraphic
-            units, drive visualisation by epoch and property, export to the
-            web.
-          </p>
-          <ol class="path__steps">
-            <li>
-              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/installation.html" target="_blank" rel="noopener">
-                Install EM Tools</a> (Blender extension).
-            </li>
-            <li>
-              Follow <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/tutorials/13-first-matrix-creation.html" target="_blank" rel="noopener">
-                creating your first matrix</a>, then the
-              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/tutorials/index.html" target="_blank" rel="noopener">
-                intermediate tutorial track</a>.
-            </li>
-            <li>
-              Publish to the web with <a href="https://docs.extendedmatrix.org/projects/heriverse/en/1.5/" target="_blank" rel="noopener">
-                Heriverse</a>.
-            </li>
-          </ol>
-          <p class="path__cross">
-            <a href={`${B}/tools/#modeller`}>→ Tools for 3D modellers</a>
-          </p>
-        </article>
-
-        <article class="path">
-          <header>
-            <span class="path__num">3</span>
-            <h2>Extend, integrate, contribute</h2>
-            <p class="path__who">For developers and tool-builders.</p>
-          </header>
-          <p>
-            EM is implemented as a Python knowledge-graph library
-            (<code>s3dgraphy</code>) you can plug into any platform — Revit,
-            3ds Max, Unity, Unreal, custom pipelines.
-          </p>
-          <ol class="path__steps">
-            <li>
-              <code>pip install s3dgraphy</code> and read the
-              <a href="https://github.com/zalmoxes-laran/s3dgraphy" target="_blank" rel="noopener">
-                repository README</a>.
-            </li>
-            <li>
-              For the Blender add-on, see
-              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/development_setup.html" target="_blank" rel="noopener">
-                development setup</a> and
-              <a href="https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/api_reference.html" target="_blank" rel="noopener">
-                API reference</a>.
-            </li>
-            <li>
-              Open an issue or join the
-              <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Telegram group</a>.
-            </li>
-          </ol>
-          <p class="path__cross">
-            <a href={`${B}/tools/#developer`}>→ Tools for developers</a>
-          </p>
-        </article>
+      <h1>Pick the door that matches your work.</h1>
+      <p class="sub">Extended Matrix is a method (the formal language), a framework (open-source tools) and a community. Each door leads to the first three things to do.</p>
+      <Doors />
+      <div class="lead4">
+        <div class="lead4__g"><Glyph name="br" w={22} h={22} /></div>
+        <div>
+          <h2>Leading a project or a team?</h2>
+          <p>EM projects combine <strong>eight professional figures</strong>: stratigrapher, source hunter, survey specialist, IT specialist, EM drawer, basic and advanced modeller, storyteller. Most teams cover them with two or three people wearing several hats. Naming the figures is what lets a project grow beyond a single researcher.</p>
+          <a href={`${B}/personas/`}>See the eight team roles <span aria-hidden="true">→</span></a>
+        </div>
       </div>
-
-      <!--
-        Fourth path — for project leads / coordinators thinking
-        about team composition rather than personal entry. Visually
-        narrower than the three primary cards above (it's a meta-
-        path), but linked from the same "paths" rhythm so the user
-        sees it as a real choice rather than a footer afterthought.
-      -->
-      <article class="path path--meta">
-        <header>
-          <span class="path__num">4</span>
-          <h2>Building a team or scoping a project</h2>
-          <p class="path__who">For project leads, coordinators, supervisors.</p>
-        </header>
-        <p>
-          Extended Matrix projects compose <strong>eight
-          professional figures</strong> — stratigrapher, source
-          hunter, survey specialist, IT specialist, EM drawer,
-          basic modeller, advanced modeller, storyteller. Most
-          projects cover them with two or three real humans wearing
-          several hats. Naming the figures explicitly is what lets
-          a project scale beyond a single researcher.
-        </p>
-        <p class="path__cross">
-          <a href={`${B}/personas/`}>→ See the eight team roles</a>
-        </p>
-      </article>
-
-      <section class="cta-find-path" aria-labelledby="cta-find-path-title">
-        <h2 id="cta-find-path-title">Ready to begin your own project?</h2>
-        <p>
-          Tell us what you have and what you want, and we'll show you the
-          tools and steps you need.
-        </p>
-        <a href={`${B}/find-your-path/`} class="btn btn-gold">Find your path →</a>
-      </section>
-
-      <p class="start__foot">
-        Still unsure?
-        <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Ask the community →</a>
-      </p>
+      <div class="path">
+        <div>
+          <h2>Not sure yet?</h2>
+          <p>Tell us what you have (written sources, drawings, photos, a 3D survey, tables) and what you want to obtain: the guided path shows the tools and the steps.</p>
+        </div>
+        <a href={`${B}/find-your-path/`} class="btn btn-gold">Find your path</a>
+      </div>
+      <p class="ask">Questions? <a href="https://t.me/UserGroupEM" target="_blank" rel="noopener">Ask the community on Telegram ↗</a></p>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .start { padding: 80px 0 60px; }
-  .start__title { margin: 14px 0 18px; }
-  .start__sub {
-    max-width: 640px;
-    color: var(--em-text-muted);
-    font-size: 17px;
-    margin-bottom: 56px;
-  }
-  .paths {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-  .path {
-    border: 1px solid var(--em-border);
-    border-radius: var(--radius-md);
-    padding: 32px 32px 28px;
-    background: var(--em-bg);
-  }
-  .path header {
-    display: grid;
-    grid-template-columns: 56px 1fr;
-    column-gap: 20px;
-    align-items: center;
-    margin-bottom: 14px;
-  }
-  .path__num {
-    grid-row: span 2;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--em-gold-tint);
-    color: var(--em-gold-ink);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 24px;
-    font-weight: 800;
-  }
-  .path header h2 {
-    font-size: 22px;
-    margin: 0;
-  }
-  .path__who {
-    grid-column: 2;
-    margin: 4px 0 0;
-    color: var(--em-text-muted);
-    font-size: 13px;
-    font-style: italic;
-  }
-  .path > p {
-    margin: 8px 0 16px;
-    color: var(--em-text);
-  }
-  .path__steps {
-    list-style: none;
-    counter-reset: step;
-    padding-left: 0;
-  }
-  .path__steps li {
-    counter-increment: step;
-    position: relative;
-    padding: 8px 0 8px 38px;
-    border-top: 1px dashed var(--em-border);
-    font-size: 14px;
-    color: var(--em-text);
-  }
-  .path__steps li:first-child { border-top: none; }
-  .path__steps li::before {
-    content: counter(step);
-    position: absolute;
-    left: 0;
-    top: 9px;
-    width: 24px;
-    height: 24px;
-    background: var(--em-navy);
-    color: var(--em-bg);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    font-weight: 700;
-  }
-  .path__cross {
-    margin: 14px 0 0;
-    padding-top: 12px;
-    border-top: 1px solid var(--em-border);
-    font-size: 13px;
-  }
-  .path__cross a {
-    color: var(--em-gold-ink);
-    font-weight: 600;
-  }
-  .start__foot {
-    text-align: center;
-    margin-top: 56px;
-    color: var(--em-text-muted);
-  }
-  .start__foot a {
-    font-weight: 600;
-    color: var(--em-gold-ink);
-  }
-
-  /* Meta-path — fourth card surfaced for project leads thinking
-     about team composition rather than personal entry. Sits
-     between the three primary paths and the find-your-path CTA.
-     Quieter visual style (dashed border, gold tint) so it reads
-     as a meta-step, not as a fourth peer to the three. */
-  .path--meta {
-    margin-top: 28px;
-    background: var(--em-bg-warm);
-    border-style: dashed;
-    border-color: var(--em-gold);
-  }
-  .path--meta header {
-    background: transparent;
-    border-bottom: 1px dashed var(--em-gold);
-  }
-  .path--meta .path__num {
-    background: var(--em-gold);
-    color: var(--em-bg);
-  }
-
-  /* CTA band — bridge to /find-your-path/ */
-  .cta-find-path {
-    margin: 64px -32px 0;
-    padding: 48px 32px;
-    background:
-      radial-gradient(120% 200% at 100% 0%, rgba(184,137,58,0.22) 0%, transparent 55%),
-      linear-gradient(135deg, var(--em-navy) 0%, var(--em-navy-soft) 100%);
-    color: var(--em-bg);
-    border-radius: var(--radius-md);
-    text-align: center;
-    box-shadow: 0 12px 32px rgba(26,40,69,0.18);
-  }
-  .cta-find-path h2 {
-    color: var(--em-bg);
-    margin: 0 0 12px;
-    font-size: clamp(1.4rem, 2.4vw, 1.8rem);
-  }
-  .cta-find-path p {
-    max-width: 560px;
-    margin: 0 auto 22px;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.55;
-  }
-  .cta-find-path .btn-gold:hover {
-    background: var(--em-bg);
-    color: var(--em-navy);
-  }
-
-  @media (min-width: 800px) {
-    .paths { grid-template-columns: repeat(3, 1fr); }
-    .cta-find-path { margin: 64px 0 0; }
-  }
-  @media (max-width: 480px) {
-    .cta-find-path { margin: 56px -16px 0; padding: 36px 20px; }
-  }
+  .sh { padding: clamp(40px, 6vw, 64px) 0 24px; }
+  .sh h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); margin-top: 16px; }
+  .sub { color: var(--em-text-muted); max-width: 62ch; margin-top: 12px; }
+  .lead4 { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; margin-top: 22px; padding: 24px; border: 1px dashed var(--em-border-strong); border-radius: var(--radius-lg); background: var(--em-surface); }
+  .lead4 h2, .path h2 { font-size: 1.25rem; }
+  .lead4 p, .path p { margin-top: 8px; color: var(--em-text-muted); max-width: 70ch; }
+  .lead4 a { display: inline-block; margin-top: 12px; font-weight: 600; }
+  .path { display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; margin-top: 22px; padding: 28px; border-radius: var(--radius-lg); background: var(--em-gold-tint); }
+  .btn-gold { color: var(--em-charcoal) !important; }
+  .ask { margin-top: 20px; color: var(--em-text-muted); }
+  .ask a { font-weight: 600; }
 </style>

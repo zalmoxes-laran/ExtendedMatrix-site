@@ -1,64 +1,50 @@
 ---
+/**
+ * All versions (audit V1, V2): a support timeline drawn to scale above a
+ * plain list. The state of each line comes from the manifest, computed
+ * from its dates.
+ */
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-
-const all = (await getCollection('versions'))
-  .sort((a, b) => b.data.order - a.data.order);
+import SupportTimeline from '../../components/SupportTimeline.astro';
+import { manifesto, meseAnno } from '../../lib/releases';
 
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
-
-const statusLabel: Record<string, string> = {
-  development: 'In development',
-  stable: 'Stable',
-  lts: 'Long-Term Support',
-  legacy: 'Legacy',
-  eol: 'End of life',
-};
+const all = (await getCollection('versions')).sort((a, b) => b.data.order - a.data.order);
+const m = await manifesto();
+const st = (slug: string) => m.lines.find((l) => l.slug === slug);
 ---
 
-<BaseLayout
-  title="Versions"
-  description="All Extended Matrix versions — current, LTS, legacy and end-of-life. Pick the one that matches your project."
->
-  <section class="versions">
+<BaseLayout title="Versions" description="Every Extended Matrix release: the recommended Long-Term Support line, the legacy line still supported, the development line and the archive.">
+  <section class="vh">
     <div class="container">
       <span class="tag">All versions</span>
       <h1>Every Extended Matrix release.</h1>
-      <p class="versions__sub">
-        Two release lines run in parallel: <strong>LTS</strong> for
-        production stability, <strong>development</strong> for new
-        features. Older releases stay available for projects that need
-        to be reopened.
-      </p>
-
+      <p class="sub">Two lines run in parallel: a Long-Term Support line for production and a development line for what comes next. Older releases stay available for projects that need to be reopened.</p>
+      <div class="tlbox"><SupportTimeline variant="page" /></div>
+    </div>
+  </section>
+  <section class="vbody">
+    <div class="container">
       <ul class="vlist">
         {all.map((v) => {
-          // A non-preferred LTS is still LTS for support purposes, but
-          // for new projects the preferred line is the right entry
-          // point. Surface that distinction in the status pill.
-          const isPreferred = v.data.is_preferred === true;
-          const statusText =
-            v.data.status === 'lts' && !isPreferred
-              ? 'Legacy LTS'
-              : statusLabel[v.data.status];
+          const slug = v.id.replace(/\.md$/, '');
+          const l = st(slug);
+          const d = v.data;
+          const meta = [
+            d.releaseDate ? `Released ${meseAnno(d.releaseDate.toISOString().slice(0, 10))}` : l?.state === 'dev' ? 'No release date yet' : null,
+            d.blenderLts ? `Blender ${d.blenderLts} LTS` : d.blenderMin ? `Blender ${d.blenderMin}+` : d.usesYed ? 'yEd 3.21+' : null,
+            d.eolDate ? `Supported to ${meseAnno(d.eolDate.toISOString().slice(0, 10))}` : null,
+          ].filter(Boolean);
           return (
-            <li class={`v v--${v.data.status}${isPreferred ? ' v--preferred' : ''}`}>
-              <a href={`${B}/versions/${v.id.replace(/\.md$/, '')}/`}>
-                <div class="v__head">
-                  <span class="v__num">EM {v.data.version}</span>
-                  <span class={`v__status v__status--${v.data.status}`}>{statusText}</span>
-                  {isPreferred && (
-                    <span class="v__starthere">Start here</span>
-                  )}
+            <li>
+              <a class="vrow" href={`${B}/versions/${slug}/`}>
+                <span class="vn">{d.version}</span>
+                <div>
+                  <b>{d.title}{l && <span class={`badge badge--${l.state}`}>{l.label}</span>}</b>
+                  <p>{d.summary}</p>
                 </div>
-                <h2 class="v__title">{v.data.title}</h2>
-                <p class="v__summary">{v.data.summary}</p>
-                <ul class="v__meta">
-                  {v.data.releaseDate && <li>Released {v.data.releaseDate.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' })}</li>}
-                  {v.data.blenderMin && <li>Blender {v.data.blenderMin}{v.data.blenderLts ? ' LTS' : '+'}</li>}
-                  {v.data.eolDate && <li>EOL {v.data.eolDate.getFullYear()}</li>}
-                  {v.data.supersededBy && <li>Superseded by {v.data.supersededBy}</li>}
-                </ul>
+                <div class="meta">{meta.map((x) => <span>{x}</span>)}</div>
               </a>
             </li>
           );
@@ -69,101 +55,20 @@ const statusLabel: Record<string, string> = {
 </BaseLayout>
 
 <style>
-  .versions { padding: 80px 0 60px; }
-  .versions h1 { margin: 14px 0 18px; }
-  .versions__sub {
-    max-width: 720px;
-    color: var(--em-text-muted);
-    font-size: 17px;
-    margin-bottom: 48px;
-  }
-  .vlist {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: grid;
-    gap: 16px;
-  }
-  .v {
-    border: 1px solid var(--em-border);
-    border-left-width: 4px;
-    border-radius: var(--radius-md);
-    background: var(--em-bg);
-    transition: border-color 0.2s var(--ease);
-  }
-  .v:hover { border-color: var(--em-gold); }
-  .v a { display: block; padding: 22px 26px; color: inherit; }
-  .v a:hover { text-decoration: none; }
-  .v--lts { border-left-color: var(--em-gold); }
-  .v--development { border-left-color: var(--em-navy); }
-  .v--stable { border-left-color: #5a9a5a; }
-  .v--legacy { border-left-color: #aaa; }
-  .v--eol { border-left-color: #c44; opacity: 0.7; }
-  /* Preferred — subtle gold inset so the recommended starting point
-     is unambiguous without overpowering the others. */
-  .v--preferred {
-    box-shadow: 0 0 0 1px var(--em-gold-tint) inset;
-    background: linear-gradient(90deg, var(--em-gold-tint) 0%, var(--em-bg) 28%);
-  }
-  .v__head {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-  .v__num {
-    font-family: var(--font-display);
-    font-weight: 800;
-    font-size: 22px;
-    color: var(--em-navy);
-  }
-  .v__status {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 3px 10px;
-    border-radius: 2px;
-  }
-  .v__status--lts        { color: var(--em-gold-ink); background: var(--em-gold-tint); }
-  .v__status--development{ color: var(--em-navy); background: var(--em-navy-tint); }
-  .v__status--stable     { color: #2c5a2c; background: #d8ecd8; }
-  .v__status--legacy     { color: #555;    background: #eee; }
-  .v__status--eol        { color: #a22;    background: #fae0e0; }
-  /* Non-preferred LTS gets a calmer pill — same shape as the legacy
-     pill so the visual hierarchy reads "preferred LTS > legacy LTS". */
-  .v--lts:not(.v--preferred) .v__status--lts {
-    color: #6b6b6b;
-    background: #efefef;
-  }
-  .v__starthere {
-    display: inline-block;
-    font-family: var(--font-display);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--em-bg);
-    background: var(--em-gold);
-    padding: 3px 10px;
-    border-radius: 2px;
-  }
-  .v__title {
-    font-size: 17px;
-    margin: 0 0 6px;
-    color: var(--em-text);
-    font-weight: 600;
-  }
-  .v__summary { color: var(--em-text); font-size: 14px; line-height: 1.6; margin: 0 0 10px; }
-  .v__meta {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px 22px;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    color: var(--em-text-muted);
-  }
+  .vh { padding: clamp(40px, 6vw, 64px) 0 24px; }
+  .vh h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); margin-top: 16px; }
+  .sub { color: var(--em-text-muted); max-width: 62ch; margin-top: 12px; }
+  .tlbox { margin-top: 28px; border: 1px solid var(--em-border); border-radius: var(--radius-lg); background: var(--em-surface); padding: 16px; }
+  .vbody { padding-bottom: 24px; }
+  .vlist { list-style: none; border-top: 1px solid var(--em-border); margin-top: 12px; }
+  .vrow { display: grid; grid-template-columns: 90px minmax(0, 1fr) 230px; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--em-border); align-items: baseline; color: var(--em-text); }
+  .vrow:hover b { color: var(--em-navy); text-decoration: underline; text-underline-offset: 3px; }
+  @media (max-width: 760px) { .vrow { grid-template-columns: minmax(0, 1fr); gap: 6px; } }
+  .vn { font: 700 1.6rem var(--font-display); color: var(--em-navy); }
+  .vrow b { font-weight: 600; font-size: 1.02rem; }
+  .vrow p { font-size: 0.9rem; color: var(--em-text-muted); margin-top: 4px; line-height: 1.55; }
+  .meta { display: grid; gap: 2px; font: 0.76rem/1.6 var(--font-mono); color: var(--em-text-faint); }
+  .badge { font: 600 0.62rem var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; border-radius: 4px; padding: 3px 6px; margin-left: 10px; vertical-align: 2px; background: var(--em-bg-warm); color: var(--em-text-muted); border: 1px solid var(--em-border); white-space: nowrap; }
+  .badge--recommended { background: var(--em-gold); color: var(--em-charcoal); border-color: var(--em-gold); }
+  .badge--dev { background: var(--em-aqua); color: var(--em-navy); border-color: var(--em-aqua); }
 </style>

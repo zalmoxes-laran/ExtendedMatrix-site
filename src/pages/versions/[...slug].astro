@@ -1,8 +1,8 @@
 ---
-import { getCollection, getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import BlenderRepoInstall from '../../components/BlenderRepoInstall.astro';
-import { risolviVersioni, versioneMostrata, notaConVersione } from '../../lib/upstream';
+import ComponentTable from '../../components/ComponentTable.astro';
+import { manifesto } from '../../lib/releases';
 
 export async function getStaticPaths() {
   const versions = await getCollection('versions');
@@ -19,10 +19,12 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 // Stable id used for GoatCounter event-ids (e.g. "1-5").
 const versionSlug = version.id.replace(/\.md$/, '');
+const M = await manifesto();
+const line = M.lines.find((l) => l.slug === versionSlug);
+const stateOf = (slug: string) => M.lines.find((l) => l.slug === slug)?.state ?? 'archived';
 
 // LE VERSIONI DEI COMPONENTI, LETTE E NON BATTUTE A MANO — il perché e
 // le fonti stanno in src/lib/upstream.ts.
-const versioniRisolte = await risolviVersioni(version.data.tools ?? []);
 
 // Version-switcher data ------------------------------------------------
 // The user reaches a version page through Find Your Path, the homepage
@@ -49,74 +51,6 @@ const versionChips = allVersions
     return 0;
   });
 
-const statusLabel: Record<string, string> = {
-  development: 'In development',
-  stable: 'Stable',
-  lts: 'Long-Term Support',
-  legacy: 'Legacy',
-  eol: 'End of life',
-};
-
-// Resolve tool entries referenced by this version
-type ToolRow = {
-  slug: string;
-  toolName: string;
-  toolRole: string;
-  toolRoles: ('archaeologist' | 'modeller' | 'developer')[];
-  toolDocs: string | undefined;
-  toolRepo: string | undefined;          // ← GitHub link from tool collection entry
-  toolPage: string;
-  version: string | undefined;
-  // action — verb for the primary CTA pill. See schema in
-  // src/content/config.ts. The Status column was retired in the
-  // 2026-06-30 audit (every row was "included" in practice); the
-  // visual hierarchy is now driven by the action verb instead.
-  action: 'download' | 'install' | 'open';
-  downloadUrl: string | undefined;
-  downloadHref: string | undefined;     // base-prefixed for internal paths
-  downloadIsExternal: boolean;
-  note: string | undefined;
-};
-
-const toolRows: ToolRow[] = [];
-for (const t of version.data.tools) {
-  const entry = await getEntry('tools', t.slug);
-  const rawDl = t.downloadUrl ?? entry?.data.downloadUrl;
-  // Root-relative paths (e.g. "/tools/em-tools/#download") point at on-site
-  // landing pages — prefix the base so the link resolves under the
-  // /ExtendedMatrix-site/ preview path AND on the bare production domain.
-  const isExternal = !!rawDl && /^(https?:|mailto:|tel:)/i.test(rawDl);
-  const downloadHref = !rawDl
-    ? undefined
-    : isExternal
-      ? rawDl
-      : `${B}${rawDl}`;
-  toolRows.push({
-    slug: t.slug,
-    toolName: entry?.data.name ?? t.slug,
-    toolRole: entry?.data.role ?? '',
-    toolRoles: entry?.data.roles ?? [],
-    // Prefer the per-version manual URL if the version yaml overrides
-    // it (Heriverse 1.5/1.6 have distinct manuals); fall back to the
-    // tool's own docsUrl for tools whose manual is version-agnostic.
-    toolDocs: t.docsUrl ?? entry?.data.docsUrl,
-    toolRepo: entry?.data.repoUrl,
-    toolPage: `${B}/tools/${t.slug}/`,
-    version: t.version,
-    action: t.action,
-    downloadUrl: rawDl,
-    downloadHref,
-    downloadIsExternal: isExternal,
-    note: t.note,
-  });
-}
-
-// Verb metadata for the CTA pill. Keyed by ToolRow.action.
-const ctaLabel: { download: string; install: string; open: string } = {
-  download: 'Download ↓',
-  install:  'Install →',
-  open:     'Open ↗',
-};
 ---
 
 <BaseLayout
@@ -140,8 +74,8 @@ const ctaLabel: { download: string; install: string; open: string } = {
           {versionChips.map((vc) => (
             <li>
               {vc.slug === versionSlug
-                ? <span class={`vp__chip vp__chip--active vp__chip--${vc.status}`} aria-current="page">EM {vc.label}</span>
-                : <a class={`vp__chip vp__chip--${vc.status}`} href={`${B}/versions/${vc.slug}/`}
+                ? <span class={`vp__chip vp__chip--active vp__chip--${stateOf(vc.slug)}`} aria-current="page">EM {vc.label}</span>
+                : <a class={`vp__chip vp__chip--${stateOf(vc.slug)}`} href={`${B}/versions/${vc.slug}/`}
                      data-goatcounter-click={`vp-switch-${vc.slug}`}>EM {vc.label}</a>}
             </li>
           ))}
@@ -159,7 +93,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
       -->
       <h1 class="vp__title">
         {version.data.title}
-        <span class={`vp__status vp__status--inline v__status--${version.data.status}`}>{statusLabel[version.data.status]}</span>
+        {line && !version.data.title.toLowerCase().includes(line.label.split(' · ')[0].toLowerCase()) && <span class={`vp__state vp__state--${line.state}`}>{line.label}</span>}
       </h1>
       <p class="vp__lede">{version.data.summary}</p>
 
@@ -239,7 +173,7 @@ const ctaLabel: { download: string; install: string; open: string } = {
         {version.data.languageFeatures.length > 0 && (
           <ul class="vp__features">
             {version.data.languageFeatures.map((f) => (
-              <li>{f}</li>
+              <li set:html={f.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/`(.+?)`/g, '<code>$1</code>')} />
             ))}
           </ul>
         )}
@@ -338,248 +272,14 @@ const ctaLabel: { download: string; install: string; open: string } = {
         </div>
       </section>
 
-      <!-- ── Tools by role cluster ─────────────────────────────
-           The flat tools table used to be daunting for first-time
-           visitors: 8-10 entries with no editorial guidance about
-           which to download first. Replaced with three role-bound
-           clusters that mirror the /start triad (archaeologist /
-           modeller / developer) plus a "starred" marker on the
-           Core items every project needs regardless of role
-           (palette, source list, folder tree). Each cluster is its
-           own visually distinct box; tools appear in their PRIMARY
-           role cluster (first entry of the `roles` array), with
-           role-badges still visible so multi-role tools are
-           discoverable from any angle. Cross-ref to Find Your Path
-           at the bottom of the section.
-      -->
-      {toolRows.length > 0 && (() => {
-        // Group tools by primary role (first entry of t.toolRoles).
-        // Tools without any role fall into a fourth "Other" bucket
-        // at the bottom — present here only as a safety net.
-        const CORE_SLUGS = new Set(['yed-palette', 'source-list-xlsx', 'folder-tree']);
-        // NB on the syntax used here: the Astro template parser
-        // (inside this `{(() => { ... })()}` expression) mistakes
-        // TypeScript generic-prefix forms (Record-of-comma,
-        // Array-of-brace, etc.) for JSX tag opens and fails the
-        // build with cascading parse errors. So this block uses
-        // object literals instead of Record generics, and an
-        // explicit switch instead of a generic-cast lookup. Same
-        // end-state for the TS checker, zero parser ambiguity.
-        const buckets: {
-          core: typeof toolRows;
-          archaeologist: typeof toolRows;
-          modeller: typeof toolRows;
-          developer: typeof toolRows;
-          other: typeof toolRows;
-        } = {
-          core: [],
-          archaeologist: [],
-          modeller: [],
-          developer: [],
-          other: [],
-        };
-        // Multi-role tools (EM Tools = archaeologist+modeller,
-        // Heriverse = archaeologist+modeller+developer, …) appear in
-        // EVERY cluster they belong to rather than only their first
-        // role. This avoids the misleading visual asymmetry where a
-        // tool with role-badges shown ([archaeologist, modeller]) is
-        // physically present in only one of the two clusters. Host
-        // editorial decision (2026-06-30): tags > containers when a
-        // tool genuinely spans roles.
-        //
-        // Core items (palette, source-list, folder-tree) are the
-        // foundation every project needs regardless of role. They
-        // get extracted into a dedicated "Core" cluster at the top
-        // (decision 2026-06-30) and skipped from the per-role
-        // buckets so they don't double-render. Without this, the
-        // palette would land inside "For archaeologists" — true but
-        // misleading, since modellers and developers also need it.
-        for (const t of toolRows) {
-          if (CORE_SLUGS.has(t.slug)) {
-            buckets.core.push(t);
-            continue;
-          }
-          const roles = (t.toolRoles && t.toolRoles.length > 0)
-            ? t.toolRoles
-            : ['other'];
-          for (const r of roles) {
-            switch (r) {
-              case 'archaeologist': buckets.archaeologist.push(t); break;
-              case 'modeller':      buckets.modeller.push(t);      break;
-              case 'developer':     buckets.developer.push(t);     break;
-              default:              buckets.other.push(t);
-            }
-          }
-        }
-        // Cluster metadata (label, lede, modifier class for styling).
-        // Type uses the postfix-array form to avoid the Astro parser
-        // ambiguity (see comment above).
-        const clusters: { key: keyof typeof buckets; label: string; lede: string; mod: string }[] = [
-          {
-            key: 'core',
-            label: 'Core · for everyone',
-            lede: 'The foundation every EM project needs, regardless of whether you intend to model in 3D, develop on top of the graph, or simply read the matrix on paper. Start here, then add the role-specific clusters below as the work calls for them.',
-            mod: 'core',
-          },
-          {
-            key: 'archaeologist',
-            label: 'For archaeologists',
-            lede: 'Adds the archaeologist-facing tools on top of Core: graph authoring in Blender, stratigraphic database integrations, source dossier management.',
-            mod: 'archaeologist',
-          },
-          {
-            key: 'modeller',
-            label: 'For 3D modellers',
-            lede: 'Reach for these once your matrix is in good shape and you need to attach proxies to a photogrammetric model or run a survey pipeline.',
-            mod: 'modeller',
-          },
-          {
-            key: 'developer',
-            label: 'For developers',
-            lede: 'Lower-level libraries and tooling for anyone extending Extended Matrix or building integrations.',
-            mod: 'developer',
-          },
-        ];
-
-        // Row-CTA renderer — replaces the previous 6-column matrix
-        // (2026-06-30 audit). Each tool becomes a single horizontal
-        // row with:
-        //   • left block — name + optional role + version chip + note
-        //   • right block — primary action pill (Download/Install/
-        //     Open, label driven by `action`) + small Manual chip +
-        //     GitHub icon
-        // Reads as a checklist of CTAs rather than a data table.
-        // Status column dropped entirely (it was always "included").
-        const renderRow = (t: typeof toolRows[number]) => {
-          const isCore = CORE_SLUGS.has(t.slug);
-          return (
-            <li class={isCore ? 'vp__cta-row vp__cta-row--core' : 'vp__cta-row'}>
-              <div class="vp__cta-meta">
-                <div class="vp__cta-name">
-                  <a href={t.toolPage}>
-                    {isCore && (
-                      <span class="vp__star" aria-label="Core item — recommended for every project">★</span>
-                    )}
-                    <strong>{t.toolName}</strong>
-                  </a>
-                  {t.version && (
-                    <span class="vp__cta-ver" title={`Version paired with EM ${version.data.version}`}>v{versioneMostrata(t.version, versioniRisolte)}</span>
-                  )}
-                </div>
-                {t.note && <div class="vp__cta-note" set:html={
-                  notaConVersione(t.note, t.version, versioniRisolte)
-                    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-                    .replace(/`(.+?)`/g, '<code>$1</code>')
-                    .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-                } />}
-              </div>
-              <div class="vp__cta-actions">
-                {t.downloadHref && (
-                  <a href={t.downloadHref}
-                     class={`vp__cta-btn vp__cta-btn--${t.action}`}
-                     target={t.downloadIsExternal ? '_blank' : undefined}
-                     rel={t.downloadIsExternal ? 'noopener' : undefined}
-                     data-goatcounter-click={`dl-${t.slug}-${versionSlug}`}>
-                    {ctaLabel[t.action]}
-                  </a>
-                )}
-                {t.toolDocs && t.toolDocs !== t.downloadHref && (
-                  <a href={t.toolDocs} target="_blank" rel="noopener" class="vp__cta-chip"
-                     title={`${t.toolName} manual`}>manual ↗</a>
-                )}
-                {t.toolRepo && (
-                  <a href={t.toolRepo} target="_blank" rel="noopener"
-                     class="vp__cta-icon"
-                     aria-label={`${t.toolName} source code on GitHub`}
-                     title="Source code on GitHub"
-                     data-goatcounter-click={`repo-${t.slug}-${versionSlug}`}>
-                    <svg viewBox="0 0 24 24" width="18" height="18"
-                         fill="currentColor" aria-hidden="true">
-                      <path d="M12 .5C5.4.5 0 5.9 0 12.5c0 5.3 3.4 9.8 8.2 11.4.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.9 2.9 1.4 3.6 1 .1-.8.4-1.4.8-1.7-2.7-.3-5.4-1.3-5.4-5.9 0-1.3.5-2.4 1.3-3.2-.1-.3-.6-1.6.1-3.3 0 0 1-.3 3.3 1.2 1-.3 2-.4 3-.4s2 .1 3 .4c2.3-1.5 3.3-1.2 3.3-1.2.7 1.7.3 3 .1 3.3.8.9 1.3 2 1.3 3.2 0 4.6-2.7 5.6-5.4 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.8-1.6 8.2-6.2 8.2-11.4C24 5.9 18.6.5 12 .5z"/>
-                    </svg>
-                  </a>
-                )}
-              </div>
-            </li>
-          );
-        };
-
-        return (
-          <section class="vp__tools">
-            <h2>Tools shipping with this version</h2>
-            <p class="vp__tools-intro">
-              <strong>If you're new to EM</strong>, start with the
-              <strong>Core · for everyone</strong> cluster — these
-              three items are the foundation every project needs,
-              regardless of role. Then pick up the archaeologist,
-              modeller or developer clusters only when the work
-              calls for them.
-            </p>
-            {clusters.map((c) => buckets[c.key].length > 0 && (
-              <section class={`vp__cluster vp__cluster--${c.mod}`}>
-                <header class="vp__cluster-head">
-                  <span class={`vp__cluster-tag vp__cluster-tag--${c.mod}`}>{c.label}</span>
-                </header>
-                <p class="vp__cluster-lede">{c.lede}</p>
-                <ul class="vp__cta-list">{buckets[c.key].map(renderRow)}</ul>
-              </section>
-            ))}
-            {buckets.other.length > 0 && (
-              <section class="vp__cluster vp__cluster--other">
-                <header class="vp__cluster-head">
-                  <span class="vp__cluster-tag vp__cluster-tag--other">Other</span>
-                </header>
-                <ul class="vp__cta-list">{buckets.other.map(renderRow)}</ul>
-              </section>
-            )}
-
-            <!--
-              Cross-ref to Find Your Path — the other half of the
-              decision loop. Find Your Path picks tools by what
-              the user wants to do; this page picks them by which
-              version they want to pin to. The two surfaces feed
-              each other.
-            -->
-            <aside class="vp__not-sure">
-              <h3>Not sure which tools you need?</h3>
-              <p>
-                Walk through <a href={`${B}/find-your-path/`}>Find your path</a> —
-                pick the materials you already have and the outcome you want, and
-                the picker maps the project to the right combination of EM
-                language artefacts and tools. Then come back here for the right
-                version of each.
-              </p>
-            </aside>
-          </section>
-        );
-      })()}
-
-      {/*
-        THE INSTALL CARD, BACK ON DEVELOPMENT LINES ONLY (2026-09-16).
-
-        It was taken off every version page on 2026-06-30, on the
-        editorial principle that the drag-and-drop install belongs to
-        the tool and should not be duplicated per version. That
-        principle still holds for stable lines — /tools/em-tools/
-        serves the stable build and the version page needs nothing.
-
-        It does NOT hold for a development line, and the gap was
-        measured rather than argued: `/tools/em-tools/` renders the
-        card with channel='auto', which prefers stable, so it serves
-        1.5.5. Meanwhile blender.extendedmatrix.org/dev/index.json has
-        carried em_tools 1.6.0-dev.N — eight builds, every platform and
-        both Blender ABIs — with NO page on this site pointing at it.
-        This very page's own prose promised «the Install in Blender
-        (dev channel) card on this very page», which had not existed
-        for two and a half months.
-
-        So the rule is not «one card per tool» but: THE CARD GOES WHERE
-        THE TOOL PAGE CANNOT REACH. A development line is exactly that
-        place, and it is also the only one.
-      */}
-      {version.data.status === 'development' && (
-        <section class="vp__repo-install">
-          <BlenderRepoInstall only="em_tools" channel="dev" />
+      <!-- ── Components (audit D2–D5) ──────────────────────────
+           One row per tool, read from the release manifest; the
+           detail of each row opens the real installer (the dev-channel
+           drag-and-drop card for a development line included). -->
+      {line && (
+        <section class="vp__tools">
+          <h2>Components of EM {version.data.version}</h2>
+          <ComponentTable line={line} />
         </section>
       )}
 
@@ -1355,4 +1055,19 @@ const ctaLabel: { download: string; install: string; open: string } = {
       flex-wrap: wrap;
     }
   }
+
+  /* line state, from the manifest */
+  .vp__state { display: inline-block; margin-left: 14px; vertical-align: 0.45em; font: 600 0.66rem/1 var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; border-radius: 4px; padding: 5px 8px; }
+  .vp__state--recommended { background: var(--em-gold); color: var(--em-charcoal); }
+  .vp__state--legacy { background: var(--em-bg-warm); color: var(--em-text-muted); border: 1px solid var(--em-border); }
+  .vp__state--dev { background: var(--em-aqua); color: var(--em-navy); }
+  .vp__state--archived { background: var(--em-bg-warm); color: var(--em-text-faint); border: 1px solid var(--em-border); }
+  .vp__chip { font-family: var(--font-mono) !important; }
+  .vp__chip--recommended { border-color: var(--em-gold) !important; }
+  .vp__chip--dev { border-style: dashed !important; }
+  .vp__chip--active { background: var(--em-navy) !important; color: #fff !important; border-color: var(--em-navy) !important; }
+  .vp__tools h2 { margin-bottom: 16px; }
+  /* the indent fix: the language box keeps its inner padding (a broader
+     `.vp section { padding: 0 }` was flattening it to the border) */
+  .vp .vp__lang { padding: clamp(22px, 4vw, 40px) clamp(18px, 4vw, 44px); }
 </style>

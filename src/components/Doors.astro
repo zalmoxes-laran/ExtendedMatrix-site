@@ -5,18 +5,28 @@
  * it is about and the first three things to do.
  */
 import Glyph from './Glyph.astro';
+import { manifesto } from '../lib/releases';
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Manual links follow the recommended line, read from the manifest.
+const v = (await manifesto()).recommended?.version ?? '1.5';
+const D = `https://docs.extendedmatrix.org/en/${v}`;
+const T = `https://docs.extendedmatrix.org/projects/EM-tools/en/${v}`;
+const x = (href: string, text: string) => `<a href="${href}" target="_blank" rel="noopener">${text}</a>`;
 const DOORS = [
   { g: ['US', 'doc'] as const, t: 'Sources, stratigraphy, reconstruction', w: 'archaeologists, heritage scholars, students',
-    s: ['Read the five-step method in the <a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">language manual</a>.',
-        'Draw your first matrix: on paper, in yEd with the EM palette, or in EMStudio.',
-        'Register your sources in <code>source_list.xlsx</code>.'],
+    s: [`Read ${x(`${D}/learn_EM.html`, 'Learn EM')}: the method on paper, no software needed.`,
+        `Walk through the ${x(`${D}/stratigraphic_nodes.html`, 'stratigraphic nodes')} and the ${x(`${D}/paradata_nodes.html`, 'paradata nodes')}.`,
+        `Draw your first graph: ${x(`${T}/tutorials/12-install-yed-blender.html`, 'yEd with the EM palette')}, or EMStudio from 1.6.`],
     go: [`${B}/download/?role=archaeologist`, 'Tools for archaeologists'] },
   { g: ['USVs', 'USVn'] as const, t: '3D models annotated with EM data', w: '3D artists, modellers, technical archaeologists',
-    s: ['Install EM Tools in Blender, by drag and drop.', 'Link proxies to stratigraphic units and follow the intermediate tutorial.', 'Publish the scene to the web with Heriverse.'],
+    s: [`${x(`${T}/installation.html`, 'Install EM Tools')} in Blender, by drag and drop.`,
+        `Follow ${x(`${T}/tutorials/13-first-matrix-creation.html`, 'your first matrix')}, then the ${x(`${T}/tutorials/index.html`, 'intermediate tutorials')}.`,
+        `Publish the scene to the web with ${x(`https://docs.extendedmatrix.org/projects/heriverse/en/${v}/`, 'Heriverse')}.`],
     go: [`${B}/download/?role=modeller`, 'Tools for 3D modellers'] },
   { g: ['ext', 'comb'] as const, t: 'Extend, integrate, contribute', w: 'developers and tool builders',
-    s: ['<code>pip install s3dgraphy</code> and open the README.', 'Read the <a href="' + B + '/standards">open standards</a>: CRMem, em.json, the vocabularies.', 'Open an issue, or join the monthly dev meeting.'],
+    s: ['<code>pip install s3dgraphy</code> and read the ' + x('https://github.com/ExtendedMatrix/s3Dgraphy', 'README') + '.',
+        `Read the <a href="${B}/standards/">open standards</a> (CRMem, em.json, vocabularies) and the ${x(`${T}/api_reference.html`, 'API reference')}.`,
+        'Open an issue, or join the ' + x('https://t.me/UserGroupEM', 'Telegram group') + ' and the monthly dev meeting.'],
     go: [`${B}/download/?role=developer`, 'Tools for developers'] },
 ];
 ---
