@@ -1,515 +1,160 @@
 ---
+/**
+ * Download. Choose a line, then take what your work needs (audit D1–D5).
+ * Lines, states, dates and versions all come from the release manifest;
+ * the three tables are rendered at build time and the selector only shows
+ * one of them. `?line=1-6` and `?role=modeller` open the page on a choice.
+ */
 import { getCollection } from 'astro:content';
-import { latestGithubRelease, EMSTUDIO_REPO, EMSTUDIO_RELEASES_URL } from '../lib/upstream';
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-// LETTA, NON BATTUTA A MANO: questa striscia annunciava `v1.6.0-dev.3`
-// mentre la dev.10 era pubblicata da due ore. Se la lettura non riesce la
-// targhetta sparisce invece di mostrare un numero vecchio.
-const emstudioRel = await latestGithubRelease(EMSTUDIO_REPO);
-
-const versions = (await getCollection('versions'))
-  .sort((a, b) => b.data.order - a.data.order);
-
-// Preferred — the version we want new projects to start from. Driven by
-// the `is_preferred: true` flag in the version frontmatter, with a
-// graceful fallback to the most recent LTS / stable.
-const preferred = versions.find((v) => v.data.is_preferred)
-  ?? versions.find((v) => v.data.status === 'lts')
-  ?? versions.find((v) => v.data.status === 'stable');
-
-// Legacy LTS — a still-supported LTS line that is no longer preferred
-// for new projects (e.g. 1.4 once 1.5 takes over). May be undefined if
-// only a single LTS line exists.
-const legacyLts = versions.find(
-  (v) => v.data.status === 'lts' && v.id !== preferred?.id,
-);
-
-// Active development line — the next iteration after the preferred LTS.
-const development = versions.find((v) => v.data.status === 'development');
-
-const tools = (await getCollection('tools'))
-  .sort((a, b) => a.data.order - b.data.order);
+import ComponentTable from '../components/ComponentTable.astro';
+import { manifesto, meseAnno } from '../lib/releases';
 
 const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+const m = await manifesto();
+const shown = ['recommended', 'dev', 'legacy'];
+const lines = m.lines.filter((l) => shown.includes(l.state)).sort((a, b) => shown.indexOf(a.state) - shown.indexOf(b.state));
+const first = lines[0];
+const tools = (await getCollection('tools')).sort((a, b) => a.data.order - b.data.order);
+const blender = (l: typeof first) => (l.blenderLts ? `${l.blenderLts} LTS` : l.blenderMin ? `${l.blenderMin}+` : '—');
 ---
 
 <BaseLayout
   title="Download"
-  description="Download Extended Matrix — the formal language palette for yEd, the EM Tools Blender add-on, the s3dgraphy library and the rest of the framework. Pick the version that matches your project."
+  description="Download Extended Matrix: choose a line (LTS or development) and get the yEd palette, EMStudio, EM Tools for Blender, s3dgraphy and the rest of the framework."
 >
-  <section class="dl">
+  <section class="dl-head">
     <div class="container">
       <span class="tag">Download</span>
       <h1>Get Extended Matrix.</h1>
-      <p class="dl__sub">
-        Two LTS lines run in parallel — the <strong>preferred</strong>
-        line for new projects, and an outgoing LTS that stays supported
-        so legacy projects can finish on their original combination of
-        Blender + EM. The <strong>development</strong> line is where the
-        next iteration is taking shape.
-      </p>
+      <p class="sub">Choose a line, then take what your work needs. Every version number on this page is read from where the tool is published.</p>
 
-      <!-- ── Quick chooser ──────────────────────────────────────── -->
-      <div class="chooser">
-        {preferred && (
-          <a class="chooser__card chooser__card--preferred"
-             href={`${B}/versions/${preferred.id.replace(/\.md$/, '')}/`}
-             data-goatcounter-click={`chooser-preferred-${preferred.id.replace(/\.md$/, '')}`}>
-            <div class="chooser__badge chooser__badge--preferred">Start here · LTS</div>
-            <h2>EM {preferred.data.version}</h2>
-            <p>{preferred.data.summary}</p>
-            <ul class="chooser__meta">
-              <li><strong>Blender:</strong> {preferred.data.blenderLts ?? preferred.data.blenderMin}{preferred.data.blenderLts ? ' LTS' : '+'}</li>
-              <li><strong>yEd:</strong> {preferred.data.yedRequirement}</li>
-              {preferred.data.eolDate && <li><strong>Supported until:</strong> {preferred.data.eolDate.getFullYear()}</li>}
-            </ul>
-            <span class="chooser__cta">Open the {preferred.data.version} page →</span>
-          </a>
-        )}
-
-        {legacyLts && (
-          <a class="chooser__card chooser__card--legacy"
-             href={`${B}/versions/${legacyLts.id.replace(/\.md$/, '')}/`}
-             data-goatcounter-click={`chooser-legacy-${legacyLts.id.replace(/\.md$/, '')}`}>
-            <div class="chooser__badge chooser__badge--legacy">Legacy · LTS</div>
-            <h2>EM {legacyLts.data.version}</h2>
-            <p>{legacyLts.data.summary}</p>
-            <ul class="chooser__meta">
-              <li><strong>Blender:</strong> {legacyLts.data.blenderLts ?? legacyLts.data.blenderMin} LTS</li>
-              <li><strong>yEd:</strong> {legacyLts.data.yedRequirement}</li>
-              {legacyLts.data.eolDate && <li><strong>Supported until:</strong> {legacyLts.data.eolDate.getFullYear()}</li>}
-            </ul>
-            <span class="chooser__cta">Open the {legacyLts.data.version} page →</span>
-          </a>
-        )}
+      <div class="lsel" role="radiogroup" aria-label="EM line" data-lsel>
+        {lines.map((l) => (
+          <button type="button" role="radio" class="lopt" data-line={l.slug} aria-checked={l === first ? 'true' : 'false'}>
+            <b>EM {l.version}</b>
+            <span>{l.state === 'recommended' ? 'Recommended · LTS' : l.state === 'dev' ? 'In development' : `Legacy · to ${meseAnno(l.eolDate)}`}</span>
+          </button>
+        ))}
       </div>
 
-      {/*
-        ── Look-ahead strip ──────────────────────────────────────
-        Compact card for the active development line (1.6+). Visually
-        distinct from the two LTS cards above: smaller, horizontal,
-        with a "rocket leaving the EM hourglass" mark to signal
-        leading-edge work. Links out to the dev tracker for details.
-      */}
-      {development && (
-        <a
-          class="dev-strip"
-          href={`${B}/versions/${development.id.replace(/\.md$/, '')}/`}
-          data-goatcounter-click={`chooser-development-${development.id.replace(/\.md$/, '')}`}
-        >
-          {/* SVG: a small rocket lifting diagonally out of the EM
-              hourglass mark. Composed in EM palette (navy + gold).
-              Inspired by the EM logo (src/assets/logo_mark.svg) —
-              the hourglass silhouette is rendered faintly as a
-              backdrop and the rocket exits its top funnel. */}
-          <svg class="dev-strip__rocket" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <g class="dev-strip__hg" opacity="0.22">
-              <rect x="22" y="40" width="20" height="2.2" fill="var(--em-navy)" />
-              <path d="M 24 42 L 40 42 L 32 56 Z" fill="var(--em-navy)" />
-              <path d="M 32 56 L 24 70 L 40 70 Z" fill="var(--em-navy)" />
-              <rect x="22" y="69.8" width="20" height="2.2" fill="var(--em-navy)" />
-            </g>
-            <g class="dev-strip__r" transform="translate(35 50) rotate(-40)">
-              <circle cx="-4" cy="0" r="2" fill="var(--em-gold)" opacity="0.55" />
-              <circle cx="-10" cy="0" r="1.6" fill="var(--em-gold)" opacity="0.38" />
-              <circle cx="-16" cy="0" r="1.2" fill="var(--em-gold)" opacity="0.22" />
-              <circle cx="-22" cy="0" r="0.8" fill="var(--em-gold)" opacity="0.12" />
-              <path d="M 4 -5 L 0 -9 L 0 -1 Z" fill="var(--em-navy)" />
-              <path d="M 4 5 L 0 9 L 0 1 Z" fill="var(--em-navy)" />
-              <rect x="4" y="-5" width="22" height="10" rx="2" fill="var(--em-navy)" />
-              <circle cx="13" cy="0" r="2.5" fill="var(--em-gold-tint)" stroke="var(--em-gold)" stroke-width="1" />
-              <path d="M 26 -5 L 36 0 L 26 5 Z" fill="var(--em-gold)" />
-            </g>
-          </svg>
-          <div class="dev-strip__body">
-            <div class="dev-strip__head">
-              <span class="dev-strip__title">EM {development.data.version} · in development</span>
-              <span class="dev-strip__arrow">→</span>
-            </div>
-            <p class="dev-strip__sub">
-              Look ahead at upcoming features on the EM development
-              tracker.
+      {lines.map((l) => (
+        <div class="lsum" data-line-panel={l.slug} hidden={l !== first}>
+          <div>
+            <p>{l.summary}</p>
+            {l.state === 'dev' && m.recommended && (
+              <p class="banner"><b>{l.version} is a development line.</b> Builds are real and installable; formats can still change before the release. For production work use <a href={`${B}/download/?line=${m.recommended.slug}`} data-line-link={m.recommended.slug}>EM {m.recommended.version} LTS</a>.</p>
+            )}
+            {l.state === 'legacy' && m.recommended && (
+              <p class="banner banner--gold"><b>For projects already authored on {l.version}.</b> New projects start from <a href={`${B}/download/?line=${m.recommended.slug}`} data-line-link={m.recommended.slug}>EM {m.recommended.version}</a>.</p>
+            )}
+            <p class="prereq">
+              <span><b>Blender</b> <i>{blender(l)}</i></span>
+              {l.yed ? <span><b>yEd</b> <i>{l.yed.replace(/^yEd /, '')}</i></span> : <span><b>Editor</b> <i>EMStudio, below</i></span>}
             </p>
           </div>
-        </a>
-      )}
-
-      <p class="dl__all">
-        Looking for an older release? See <a href={`${B}/versions/`}>all versions →</a>
-      </p>
-
-      <!-- The drag-and-drop "Install in Blender" card used to live
-           here, alongside the version chooser. It was duplicated on
-           the version detail pages (e.g. /versions/1-6/ for the dev
-           channel) and on the individual tool pages (/tools/em-tools/,
-           /tools/3dsc/), which created confusion: same UI in three
-           places, with the version page being the most specific
-           context. Editorial decision (2026-06-29): the card lives on
-           the per-tool and per-version pages only; /download/ keeps
-           the chooser + the manual / offline-install fallback link
-           at the bottom of the page. -->
-
-      <!-- ── Dev builds ─────────────────────────────────────────── -->
-      {/*
-        Pre-release binaries for the active development lines. Not
-        production-ready; each build may break the previous one. This
-        section is currently EMStudio-only (paired with EM 1.6); if
-        other tools open dev channels later, add sibling cards here.
-        Tag is hardcoded; the "All builds" link points at the GitHub
-        releases page so the truth is always one click away even when
-        this page lags behind.
-      */}
-      <section class="dlbeta">
-        <h2>Dev builds</h2>
-        <p class="dlbeta__sub">
-          Pre-release binaries from the active development lines. Not
-          production-ready — expect changes and breakage between builds.
-          Reserved for testers and contributors.
-        </p>
-        <div class="dlbeta__grid">
-          <a class="dlbeta__card"
-             href={EMSTUDIO_RELEASES_URL}
-             target="_blank" rel="noopener"
-             data-goatcounter-click="dlbeta-emstudio">
-            <div class="dlbeta__head">
-              <span class="dlbeta__name">EMStudio</span>
-              {emstudioRel && <span class="dlbeta__tag">{emstudioRel.tag}</span>}
-            </div>
-            <div class="dlbeta__role">Standalone EM editor · EM 1.6-dev</div>
-            <p class="dlbeta__desc">
-              The sovereign desktop editor for the Extended Matrix,
-              successor to yEd from EM 1.6. Cross-platform binaries
-              (macOS, Windows, Linux) are being cut through autumn 2026;
-              follow the releases page for the latest signed build. See the
-              <a href={`${B}/tools/emstudio/`}>EMStudio tool page</a> for
-              context.
-            </p>
-            <div class="dlbeta__foot">
-              <span class="dlbeta__lic">GPL-3.0 · alpha</span>
-              <span class="dlbeta__open">All builds on GitHub →</span>
-            </div>
-          </a>
+          <dl>
+            <dt>Status</dt><dd>{l.label}</dd>
+            {l.releaseDate && <><dt>Released</dt><dd>{l.releaseDate}</dd></>}
+            {l.eolDate && <><dt>Supported to</dt><dd>{l.eolDate}</dd></>}
+            {l.docsUrl && <><dt>Manual</dt><dd><a href={l.docsUrl} target="_blank" rel="noopener">{l.docsUrl.replace('https://', '').replace(/\/$/, '')}</a></dd></>}
+            <dt>Release page</dt><dd><a href={`${B}/versions/${l.slug}/`}>EM {l.version} →</a></dd>
+          </dl>
         </div>
-      </section>
+      ))}
+    </div>
+  </section>
 
-      <!-- ── Tools strip ────────────────────────────────────────── -->
-      <section class="dltools">
-        <h2>Individual tools</h2>
-        <p class="dltools__sub">
-          The framework is modular — each component has its own repository,
-          docs and download page.
-        </p>
-        <div class="dltools__grid">
-          {tools.map((t) => (
-            <a class="dltools__card"
-               href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}
-               data-goatcounter-click={`dltools-${t.id.replace(/\.md$/, '')}`}>
-              <div class="dltools__name">{t.data.name}</div>
-              <div class="dltools__role">{t.data.role}</div>
-              <p class="dltools__desc">{t.data.summary}</p>
-              <div class="dltools__foot">
-                <span class="dltools__lic">{t.data.licence}</span>
-                <span class="dltools__open">Open →</span>
-              </div>
-            </a>
-          ))}
+  <section class="dl-body">
+    <div class="container">
+      <div class="roles" role="group" aria-label="Show what I need as" data-roles>
+        <span class="roles__t">Show me what I need as</span>
+        {[['all', 'Everyone'], ['archaeologist', 'Archaeologist'], ['modeller', '3D modeller'], ['developer', 'Developer']].map(([k, t]) => (
+          <button type="button" class="rchip" data-role={k} aria-pressed={k === 'all' ? 'true' : 'false'}>{t}</button>
+        ))}
+      </div>
+      {lines.map((l) => (
+        <div data-line-panel={l.slug} hidden={l !== first}>
+          <ComponentTable line={l} />
         </div>
-      </section>
+      ))}
+      <p class="older">Older lines and their pinned components are on <a href={`${B}/versions/`}>all versions</a>. Add-ons for Blender that are not part of EM are on <a href={`${B}/blender-addons/`}>Blender add-ons</a>.</p>
+
+      <h2 class="all__h">Every tool, one by one</h2>
+      <p class="sub">Each component has its own page, repository and manual.</p>
+      <ul class="all">
+        {tools.map((t) => (
+          <li>
+            <a href={`${B}/tools/${t.id.replace(/\.md$/, '')}/`}><b>{t.data.name}</b><span>{t.data.role}</span></a>
+            <small>{t.data.status !== 'stable' ? t.data.status : t.data.licence}</small>
+          </li>
+        ))}
+      </ul>
     </div>
   </section>
 </BaseLayout>
 
+<script>
+  const lsel = document.querySelector<HTMLElement>('[data-lsel]');
+  const roles = document.querySelector<HTMLElement>('[data-roles]');
+  const params = new URLSearchParams(location.search);
+  function showLine(slug: string) {
+    if (!lsel?.querySelector(`[data-line="${slug}"]`)) return;
+    lsel.querySelectorAll<HTMLElement>('[data-line]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.line === slug)));
+    document.querySelectorAll<HTMLElement>('[data-line-panel]').forEach((p) => { p.hidden = p.dataset.linePanel !== slug; });
+  }
+  function showRole(role: string) {
+    roles?.querySelectorAll<HTMLElement>('[data-role]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.role === role)));
+    document.querySelectorAll<HTMLElement>('.ct__row').forEach((r) => {
+      const rs = (r.dataset.roles ?? '').split(' ');
+      r.classList.toggle('is-dim', role !== 'all' && !rs.includes(role) && !rs.includes('core'));
+    });
+  }
+  lsel?.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLElement>('[data-line]');
+    if (b) { showLine(b.dataset.line!); history.replaceState(null, '', `?line=${b.dataset.line}`); }
+  });
+  document.querySelectorAll<HTMLAnchorElement>('[data-line-link]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); showLine(a.dataset.lineLink!); }));
+  roles?.addEventListener('click', (e) => { const b = (e.target as HTMLElement).closest<HTMLElement>('[data-role]'); if (b) showRole(b.dataset.role!); });
+  if (params.get('line')) showLine(params.get('line')!);
+  if (params.get('role')) showRole(params.get('role')!);
+</script>
+
 <style>
-  .dl { padding: 80px 0 60px; }
-  .dl h1 { margin: 14px 0 18px; }
-  .dl__sub { color: var(--em-text-muted); max-width: 720px; font-size: 17px; margin-bottom: 48px; }
-
-  .chooser {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 22px;
-  }
-  .chooser__card {
-    display: block;
-    border: 1px solid var(--em-border);
-    border-radius: var(--radius-md);
-    padding: 28px 28px 24px;
-    background: var(--em-bg);
-    color: var(--em-text);
-    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease);
-  }
-  .chooser__card:hover {
-    border-color: var(--em-gold);
-    text-decoration: none;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 18px rgba(26,40,69,0.08);
-  }
-  .chooser__card--preferred {
-    border-left: 4px solid var(--em-gold);
-    /* Subtle gold accent so the preferred line is unambiguous without
-       overpowering the legacy card. */
-    box-shadow: 0 0 0 1px var(--em-gold-tint) inset;
-  }
-  .chooser__card--preferred:hover {
-    /* Compose the inset accent with the regular hover lift. */
-    box-shadow:
-      0 0 0 1px var(--em-gold-tint) inset,
-      0 4px 18px rgba(26,40,69,0.08);
-  }
-  .chooser__card--legacy { border-left: 4px solid #aaa; }
-  .chooser__badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 3px 10px;
-    border-radius: 2px;
-    margin-bottom: 12px;
-  }
-  .chooser__badge--preferred {
-    /* WCAG: gold #b8893a on gold-tint #f5ecd9 is 2.69:1 — fails even
-       the 3:1 large-text / UI-component threshold. Navy on gold-tint
-       is 12.9:1 — well into AAA. Keeps the gold "warm" badge feel
-       via the background; the text becomes legible. */
-    color: var(--em-navy);
-    background: var(--em-gold-tint);
-  }
-  .chooser__badge--legacy {
-    color: #555;
-    background: #eee;
-  }
-  .chooser__card h2 { font-size: 28px; margin: 4px 0 8px; }
-  .chooser__card p { color: var(--em-text); margin-bottom: 14px; line-height: 1.6; }
-  .chooser__meta {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 16px;
-    font-size: 13px;
-    color: var(--em-text-muted);
-    display: grid;
-    gap: 4px;
-  }
-  .chooser__cta {
-    /* Same a11y pattern as team.astro: text carrying primary info
-       (here the "Download EM Tools 1.5.4 ↓" call-to-action) goes to
-       navy for AAA contrast. Gold is reserved for decorative
-       accents — borders, hover, footer chip-links. */
-    color: var(--em-navy);
-    font-weight: 600;
-    font-size: 14px;
-  }
-
-  /* ── Look-ahead strip (1.6 dev) ───────────────────────────── */
-  .dev-strip {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-top: 22px;
-    padding: 14px 22px 14px 16px;
-    border: 1px solid var(--em-border);
-    border-radius: var(--radius-md);
-    /* Aerial gradient — navy hint on the left fading to a warm gold
-       wash on the right, kept light so the card reads as "preview"
-       rather than a peer of the LTS cards above. */
-    background:
-      linear-gradient(
-        90deg,
-        var(--em-navy-tint) 0%,
-        var(--em-bg) 45%,
-        var(--em-gold-tint) 100%
-      );
-    color: var(--em-text);
-    text-decoration: none;
-    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
-  }
-  .dev-strip:hover {
-    border-color: var(--em-gold);
-    text-decoration: none;
-    box-shadow: 0 4px 18px rgba(26,40,69,0.08);
-  }
-  .dev-strip__rocket {
-    flex: 0 0 auto;
-    width: 64px;
-    height: 64px;
-    transition: transform 0.35s var(--ease);
-  }
-  /* On hover, the rocket lifts diagonally — the takeoff micro-animation. */
-  .dev-strip:hover .dev-strip__rocket {
-    transform: translate(4px, -4px);
-  }
-  .dev-strip__body { flex: 1 1 auto; min-width: 0; }
-  .dev-strip__head {
-    display: flex;
-    align-items: baseline;
-    gap: 10px;
-  }
-  .dev-strip__title {
-    font-family: var(--font-display);
-    font-weight: 700;
-    color: var(--em-navy);
-    font-size: 17px;
-  }
-  .dev-strip__arrow {
-    color: var(--em-gold-ink);
-    font-weight: 700;
-    transition: transform 0.2s var(--ease);
-  }
-  .dev-strip:hover .dev-strip__arrow {
-    transform: translateX(3px);
-  }
-  .dev-strip__sub {
-    margin: 4px 0 0;
-    font-size: 13px;
-    color: var(--em-text-muted);
-    line-height: 1.5;
-  }
-
-  .dl__all {
-    margin: 32px 0 0;
-    color: var(--em-text-muted);
-    font-size: 14px;
-  }
-  /* "See all releases" link in body — informational, navy for AAA. */
-  .dl__all a { color: var(--em-navy); font-weight: 600; }
-
-  /* ── Dev builds ────────────────────────────────────────── */
-  .dlbeta { margin-top: 60px; }
-  .dlbeta h2 { font-size: 28px; }
-  .dlbeta__sub { color: var(--em-text-muted); max-width: 720px; margin: 8px 0 22px; }
-  .dlbeta__grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-  .dlbeta__card {
-    display: block;
-    padding: 22px 24px;
-    border: 1px solid var(--em-border);
-    border-left: 4px solid var(--em-gold);
-    border-radius: var(--radius-md);
-    /* Same "preview" wash as the language dev-strip, but muted:
-       these are binary snapshots, not a whole language line. */
-    background:
-      linear-gradient(
-        90deg,
-        var(--em-bg) 0%,
-        var(--em-gold-tint) 220%
-      );
-    color: var(--em-text);
-    transition: border-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
-  }
-  .dlbeta__card:hover {
-    border-color: var(--em-gold);
-    text-decoration: none;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 18px rgba(26,40,69,0.08);
-  }
-  .dlbeta__head {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .dlbeta__name {
-    font-family: var(--font-display);
-    font-weight: 700;
-    color: var(--em-navy);
-    font-size: 20px;
-  }
-  .dlbeta__tag {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    color: var(--em-navy);
-    background: var(--em-gold-tint);
-    padding: 2px 8px;
-    border-radius: 2px;
-    letter-spacing: 0.02em;
-  }
-  .dlbeta__role {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--em-navy);
-    margin: 6px 0 10px;
-  }
-  .dlbeta__desc {
-    font-size: 14px;
-    color: var(--em-text);
-    line-height: 1.6;
-    margin: 0 0 14px;
-  }
-  .dlbeta__desc a { color: var(--em-navy); text-decoration: underline; text-decoration-color: var(--em-gold); }
-  .dlbeta__foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    color: var(--em-text-muted);
-  }
-  .dlbeta__open { color: var(--em-gold-ink); font-weight: 600; }
-  .dlbeta__card:hover .dlbeta__open { color: var(--em-navy); }
-
-  .dltools { margin-top: 80px; }
-  .dltools h2 { font-size: 28px; }
-  .dltools__sub { color: var(--em-text-muted); max-width: 600px; margin: 8px 0 28px; }
-  .dltools__grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-  }
-  .dltools__card {
-    display: block;
-    padding: 22px 24px;
-    border: 1px solid var(--em-border);
-    border-radius: var(--radius-md);
-    background: var(--em-bg);
-    color: var(--em-text);
-    transition: border-color 0.2s var(--ease);
-  }
-  .dltools__card:hover { border-color: var(--em-gold); text-decoration: none; }
-  .dltools__name {
-    font-family: var(--font-display);
-    font-weight: 700;
-    color: var(--em-navy);
-    font-size: 17px;
-  }
-  .dltools__role {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    /* Same shape as .card__role on tools/ + .member__role on team:
-       informational badge → navy. */
-    color: var(--em-navy);
-    margin: 4px 0 10px;
-  }
-  .dltools__desc {
-    font-size: 13px;
-    color: var(--em-text);
-    line-height: 1.55;
-    margin: 0 0 14px;
-  }
-  .dltools__foot {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 12px;
-    font-family: var(--font-mono);
-    color: var(--em-text-muted);
-  }
-  /* Footer chip-link ("Open →") — same pattern as ORCID/EMAIL chips
-     on team.astro: small accent label at the bottom of a card. Stays
-     gold by editorial choice; its function as a link is reinforced
-     by position, weight and the chip-like context. */
-  .dltools__open { color: var(--em-gold-ink); font-weight: 600; }
-  .dltools__card:hover .dltools__open { color: var(--em-navy); }
-
-  @media (max-width: 800px) {
-    .chooser { grid-template-columns: 1fr; }
-    .dltools__grid { grid-template-columns: 1fr; }
-    .dev-strip { padding: 12px 16px 12px 12px; }
-    .dev-strip__rocket { width: 52px; height: 52px; }
-  }
+  .dl-head { padding: clamp(40px, 6vw, 64px) 0 8px; }
+  .dl-head h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); margin-top: 16px; }
+  .sub { color: var(--em-text-muted); max-width: 62ch; margin-top: 12px; }
+  .lsel { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+  .lopt { display: grid; gap: 2px; text-align: left; border: 1px solid var(--em-border-strong); background: var(--em-surface); border-radius: 10px; padding: 10px 18px 11px; cursor: pointer; color: var(--em-text); min-width: 180px; font: inherit; }
+  .lopt b { font: 700 1.08rem var(--font-display); color: var(--em-navy); }
+  .lopt span { font-size: 0.78rem; color: var(--em-text-muted); }
+  .lopt[aria-checked='true'] { border-color: var(--em-gold); box-shadow: inset 0 0 0 1px var(--em-gold); background: var(--em-gold-tint); }
+  .lsum { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 28px; margin-top: 22px; padding: 24px; border: 1px solid var(--em-border); border-radius: var(--radius-lg); background: var(--em-surface); }
+  .lsum[hidden] { display: none; }
+  @media (max-width: 760px) { .lsum { grid-template-columns: minmax(0, 1fr); } }
+  .lsum p { color: var(--em-text-muted); font-size: 0.94rem; }
+  .lsum dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; font-size: 0.86rem; align-content: start; }
+  .lsum dt { color: var(--em-text-faint); }
+  .lsum dd { font-family: var(--font-mono); font-size: 0.82rem; overflow-wrap: anywhere; }
+  .banner { margin-top: 14px; padding: 12px 16px; border-radius: 10px; background: var(--em-aqua); color: var(--em-text) !important; font-size: 0.9rem !important; }
+  .banner--gold { background: var(--em-gold-tint); }
+  .banner a { font-weight: 600; text-decoration: underline; }
+  .prereq { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .prereq span { display: inline-flex; gap: 8px; align-items: center; border: 1px solid var(--em-border); border-radius: 999px; padding: 4px 12px; font-size: 0.84rem; background: var(--em-bg); color: var(--em-text); }
+  .prereq i { font: normal 0.76rem var(--font-mono); color: var(--em-text-faint); }
+  .dl-body { padding: 8px 0 24px; }
+  .roles { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin: 34px 0 14px; }
+  .roles__t { font: 600 0.7rem var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--em-text-faint); margin-right: 8px; }
+  .rchip { border: 1px solid var(--em-border-strong); background: var(--em-surface); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 0.84rem; cursor: pointer; color: var(--em-text); }
+  .rchip[aria-pressed='true'] { background: var(--em-navy); border-color: var(--em-navy); color: #ffffff; }
+  [data-line-panel][hidden] { display: none; }
+  .older { margin-top: 18px; font-size: 0.9rem; color: var(--em-text-muted); }
+  .older a { text-decoration: underline; text-underline-offset: 2px; }
+  .all__h { margin-top: 64px; font-size: 1.5rem; }
+  .all { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 0 28px; margin-top: 18px; border-top: 1px solid var(--em-border); }
+  .all li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--em-border); }
+  .all a { display: grid; }
+  .all b { font-weight: 600; }
+  .all span { font-size: 0.8rem; color: var(--em-text-muted); }
+  .all small { font: 0.72rem var(--font-mono); color: var(--em-text-faint); white-space: nowrap; }
 </style>

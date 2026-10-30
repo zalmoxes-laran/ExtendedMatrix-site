@@ -36,8 +36,10 @@
  * <details> for anyone who can't drag.
  */
 type Channel = 'stable' | 'dev' | 'auto';
-interface Props { only?: string; channel?: Channel; }
-const { only, channel: forceChannel = 'auto' } = Astro.props;
+/** `compact`: only the drag-and-drop block, for a row of the component table
+ *  (the row already says what the tool is). */
+interface Props { only?: string; channel?: Channel; compact?: boolean }
+const { only, channel: forceChannel = 'auto', compact = false } = Astro.props;
 
 const REPO = 'https://blender.extendedmatrix.org';
 const STABLE = `${REPO}/index.json`;
@@ -119,8 +121,8 @@ const OS_OPTS = [
 ];
 ---
 
-<section class="bri" id="install" aria-labelledby="bri-title">
-  <div class="bri__head">
+<section class={compact ? 'bri bri--compact' : 'bri'} id={compact ? undefined : 'install'} aria-labelledby={compact ? undefined : 'bri-title'}>
+  {!compact && <div class="bri__head">
     <h2 class="bri__title" id="bri-title">Install in Blender{channelHint}</h2>
     <p class="bri__sub">
       Drag a tool into the Blender window — Blender picks the build matching your
@@ -135,15 +137,15 @@ const OS_OPTS = [
         </>
       )}
     </p>
-  </div>
+  </div>}
 
   <div class={tools.length > 1 ? 'bri__tools' : 'bri__tools bri__tools--single'}>
     {tools.map((t) => (
       <div class="bri__tool" data-builds={JSON.stringify(t.builds)} data-repo={t.repoUrl}>
-        <div class="bri__toolname">
+        {!compact && <div class="bri__toolname">
           {t.name}{t.version && <span class="bri__toolver">{t.version}</span>}
-        </div>
-        <p class="bri__toolsum">{t.summary}</p>
+        </div>}
+        {!compact && <p class="bri__toolsum">{t.summary}</p>}
 
         {t.hasBuilds ? (
           <>
@@ -198,13 +200,16 @@ const OS_OPTS = [
     ))}
   </div>
 
-  <p class="bri__offline">
+  {!compact && <p class="bri__offline">
     <strong>Manual / offline install</strong> (advanced, no auto-updates): pick the
     zip for your OS &amp; Blender version from the GitHub release —
     {tools.map((t, i) => (
       <>{i > 0 && ' · '}<a href={t.releases} target="_blank" rel="noopener">{t.name} ↗</a></>
     ))}.
-  </p>
+  </p>}
+  {compact && tools[0] && (
+    <p class="bri__offline">Manual / offline install, without auto-updates: the zip for your system is on the <a href={tools[0].releases} target="_blank" rel="noopener">GitHub release ↗</a>.</p>
+  )}
 </section>
 
 <script>
@@ -291,4 +296,9 @@ const OS_OPTS = [
   .bri__offline a { font-weight: 600; }
 
   @media (max-width: 640px) { .bri { padding: 18px 16px; } .bri__tools { grid-template-columns: 1fr; } }
+</style>
+
+<style>
+  .bri--compact { padding: 0 !important; margin: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+  .bri--compact .bri__tool { border: 0 !important; padding: 0 !important; background: none !important; box-shadow: none !important; }
 </style>

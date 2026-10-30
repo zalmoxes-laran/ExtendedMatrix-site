@@ -1,0 +1,164 @@
+---
+/**
+ * The components of one EM line, one row per tool (audit D2–D5).
+ *
+ * ONE grid for every row and for the detail that opens under it: the
+ * detail sits in the column of the name, so the indents are right by
+ * construction. Every tool appears once, with its roles as labels; the
+ * role filter (on /download) dims what you do not need instead of
+ * repeating rows. One button per row says the action. The version pill is
+ * a bare number, with its source or qualifier underneath.
+ */
+import type { Linea, Componente } from '../lib/releases';
+import BlenderRepoInstall from './BlenderRepoInstall.astro';
+import EMStudioInstall from './EMStudioInstall.astro';
+
+interface Props { line: Linea; idPrefix?: string }
+const { line, idPrefix = `c${line.slug}` } = Astro.props;
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const MONO: Record<string, string> = {
+  'yed-palette': 'yEd', 'source-list-xlsx': 'xlsx', 'folder-tree': 'D.NN', 'em-tools': 'EMt', 's3dgraphy': 's3D',
+  '3dsc': '3DSC', '3dsc-metashape': 'MS', 'heriverse': 'HV', 'emstudio': 'EMS', 'emviq': 'VIQ', 'pyarchinit': 'pyA',
+};
+const ROLE: Record<string, string> = { core: 'For everyone', archaeologist: 'Archaeologist', modeller: '3D modeller', developer: 'Developer' };
+const ORDER = ['core', 'archaeologist', 'modeller', 'developer'];
+const rolesOf = (c: Componente) => (c.core ? ['core'] : c.roles);
+const rows = [...line.components].sort((a, b) => {
+  if (a.slug === 'emstudio') return -1;
+  if (b.slug === 'emstudio') return 1;
+  return ORDER.indexOf(rolesOf(a)[0] ?? 'developer') - ORDER.indexOf(rolesOf(b)[0] ?? 'developer');
+});
+
+/** Inline markdown of the notes: **bold**, *italic*, `code`, [text](url). */
+const md = (s = '') => s
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+  .replace(/`([^`]+)`/g, '<code>$1</code>')
+  .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+  .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+  .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, u) => `<a href="${u.startsWith('/') ? B + u : u}"${u.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${t}</a>`);
+const note = (c: Componente) => md((c.note ?? '').replaceAll('{version}', c.version ?? ''));
+
+const repoId = (c: Componente) => (c.source?.startsWith('Blender repo') ? (c.slug === 'em-tools' ? 'em_tools' : c.slug === '3dsc' ? 'dsc_tools' : null) : null);
+const channel = (c: Componente) => (c.source?.includes('dev') ? 'dev' : 'stable') as 'dev' | 'stable';
+const LABEL: Record<string, string> = { install: 'Install', download: 'Download', open: 'Open', pip: 'Install with pip', app: 'Get the app' };
+const fileName = (u?: string) => (u ? decodeURIComponent(u.split('/').pop() ?? '') : '');
+---
+
+<div class="ct" data-ct>
+  <div class="ct__head">Components of EM {line.version}<span>{rows.length} items · one row each</span></div>
+  {rows.map((c) => {
+    const id = `${idPrefix}-${c.slug}`;
+    const rid = repoId(c);
+    const direct = (c.action === 'download' || c.action === 'open') && c.downloadUrl;
+    return (
+      <div class="ct__row" data-roles={rolesOf(c).join(' ')}>
+        <div class="ct__ic" aria-hidden="true"><span>{MONO[c.slug] ?? c.name.slice(0, 3)}</span></div>
+        <div class="ct__nm">
+          <a class="ct__name" href={`${B}/tools/${c.slug}/`}>{c.name}</a>
+          <p set:html={md(c.summary)} />
+          <div class="ct__tags">{rolesOf(c).map((r) => <span>{ROLE[r]}</span>)}{c.status === 'optional' && <span class="opt">Optional</span>}</div>
+        </div>
+        <div class="ct__ver">
+          {c.version
+            ? <><span class={c.dev ? 'vp vp--dev' : 'vp'}>{c.version}</span><small>{[c.versionNote, c.source].filter(Boolean).join(' · ') || 'paired with this line'}</small></>
+            : <><span class="vp vp--na">not paired yet</span><small>follows the previous line</small></>}
+        </div>
+        <div class="ct__act">
+          {c.action === 'none'
+            ? <button class="abtn abtn--ghost" type="button" aria-expanded="false" aria-controls={id}>Why</button>
+            : direct
+              ? <a class={c.action === 'open' ? 'abtn abtn--ghost' : 'abtn'} href={c.downloadUrl} {...(c.downloadUrl!.startsWith('http') ? { target: '_blank', rel: 'noopener' } : {})}>{LABEL[c.action]}{c.action === 'open' ? ' ↗' : ' ↓'}</a>
+              : <button class="abtn abtn--main" type="button" aria-expanded="false" aria-controls={id}>{LABEL[c.action]} <span aria-hidden="true">▾</span></button>}
+          {direct && <button class="ct__more" type="button" aria-expanded="false" aria-controls={id}>Details</button>}
+        </div>
+        <div class="ct__det" id={id} hidden>
+          {rid && <BlenderRepoInstall only={rid} channel={channel(c)} compact />}
+          {c.action === 'app' && <EMStudioInstall />}
+          {c.action === 'pip' && (
+            <div class="pip">
+              <code data-cmd>{c.dev ? `pip install "s3dgraphy==${c.version}"` : `pip install s3dgraphy`}</code>
+              <button type="button" class="abtn abtn--ghost" data-copy>Copy</button>
+            </div>
+          )}
+          {c.action === 'install' && !rid && c.downloadUrl && (
+            <p><a class="abtn" href={c.downloadUrl.startsWith('/') ? B + c.downloadUrl : c.downloadUrl}>Open the install page →</a></p>
+          )}
+          {direct && c.action === 'download' && <p class="file"><code>{fileName(c.downloadUrl)}</code></p>}
+          {c.note && <p class="nt" set:html={note(c)} />}
+          <p class="links">
+            <a href={`${B}/tools/${c.slug}/`}>About {c.name}</a>
+            {c.docsUrl && <> · <a href={c.docsUrl} target="_blank" rel="noopener">Manual ↗</a></>}
+            {c.repoUrl && <> · <a href={c.repoUrl} target="_blank" rel="noopener">Source ↗</a></>}
+          </p>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ct]').forEach((ct) => {
+    ct.querySelectorAll<HTMLButtonElement>('button[aria-controls]').forEach((b) => {
+      b.addEventListener('click', () => {
+        const panel = document.getElementById(b.getAttribute('aria-controls')!);
+        if (!panel) return;
+        const open = panel.hidden;
+        panel.hidden = !open;
+        panel.closest('.ct__row')!.querySelectorAll('button[aria-controls]').forEach((x) => x.setAttribute('aria-expanded', String(open)));
+      });
+    });
+    ct.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
+      b.addEventListener('click', async () => {
+        const cmd = b.parentElement!.querySelector('[data-cmd]')!.textContent ?? '';
+        try { await navigator.clipboard.writeText(cmd); b.textContent = 'Copied'; setTimeout(() => (b.textContent = 'Copy'), 1600); }
+        catch { const r = document.createRange(); r.selectNodeContents(b.parentElement!.querySelector('[data-cmd]')!); getSelection()?.removeAllRanges(); getSelection()?.addRange(r); }
+      });
+    });
+  });
+</script>
+
+<style>
+  .ct { border: 1px solid var(--em-border); border-radius: var(--radius-lg); overflow: hidden; background: var(--em-surface); }
+  .ct__head { padding: 10px 20px; background: var(--em-bg-warm); border-bottom: 1px solid var(--em-border); font: 600 0.7rem var(--font-sans); letter-spacing: 0.12em; text-transform: uppercase; color: var(--em-text-faint); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+  .ct__head span { text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 0.8rem; }
+  .ct__row { display: grid; grid-template-columns: 48px minmax(0, 1fr) 190px 190px; gap: 0 18px; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--em-border); transition: opacity 0.2s; }
+  .ct__row:last-child { border-bottom: 0; }
+  .ct__row.is-dim { opacity: 0.38; }
+  .ct__ic span { display: inline-block; min-width: 44px; text-align: center; font: 700 0.7rem var(--font-mono); color: var(--em-navy); border: 1.5px solid var(--em-border-strong); border-radius: 6px; padding: 5px 4px; }
+  .ct__nm { min-width: 0; }
+  .ct__name { font-weight: 600; font-size: 1rem; color: var(--em-text); }
+  .ct__name:hover { color: var(--em-navy); text-decoration: underline; text-underline-offset: 3px; }
+  .ct__nm p { font-size: 0.86rem; color: var(--em-text-muted); margin-top: 2px; line-height: 1.5; }
+  .ct__tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+  .ct__tags span { font: 500 0.68rem var(--font-sans); color: var(--em-text-muted); border: 1px solid var(--em-border); border-radius: 4px; padding: 0 6px; }
+  .ct__tags .opt { border-style: dashed; }
+  .ct__ver { display: grid; gap: 3px; justify-items: start; min-width: 0; }
+  .vp { font: 600 0.8rem var(--font-mono); color: var(--em-text); background: var(--em-bg-warm); border: 1px solid var(--em-border); border-radius: 999px; padding: 2px 10px; white-space: nowrap; }
+  .vp--dev { background: var(--em-aqua); }
+  .vp--na { color: var(--em-text-faint); font-weight: 400; border-style: dashed; background: none; }
+  .ct__ver small { font: 400 0.7rem var(--font-mono); color: var(--em-text-faint); }
+  .ct__act { display: flex; gap: 10px; justify-content: flex-end; align-items: center; flex-wrap: wrap; }
+  .abtn { display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 6px; font: 600 0.84rem var(--font-sans); border: 1px solid var(--em-navy); background: var(--em-navy); color: #ffffff; cursor: pointer; white-space: nowrap; }
+  .abtn:hover { background: var(--em-navy-soft); color: #ffffff; }
+  .abtn--ghost { background: var(--em-surface); color: var(--em-navy); border-color: var(--em-border-strong); }
+  .abtn--ghost:hover { background: var(--em-bg-warm); color: var(--em-navy); border-color: var(--em-navy); }
+  .abtn[aria-expanded='true'] { background: var(--em-gold); border-color: var(--em-gold); color: var(--em-charcoal); }
+  .ct__more { border: 0; background: none; font: 500 0.8rem var(--font-sans); color: var(--em-text-muted); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; padding: 0; }
+  .ct__more[aria-expanded='true'] { color: var(--em-gold-ink); }
+  .ct__det { grid-column: 2 / -1; margin-top: 14px; padding: 16px 18px; border-radius: 10px; background: var(--em-bg-warm); border: 1px solid var(--em-border); display: grid; gap: 12px; font-size: 0.88rem; }
+  .ct__det[hidden] { display: none; }
+  .ct__det .nt { color: var(--em-text-muted); line-height: 1.6; }
+  .ct__det :global(code) { font: 500 0.84em var(--font-mono); background: var(--em-surface); border: 1px solid var(--em-border); border-radius: 4px; padding: 0 4px; }
+  .ct__det .links { font-size: 0.82rem; color: var(--em-text-faint); }
+  .ct__det .links a, .ct__det .nt :global(a) { text-decoration: underline; text-underline-offset: 2px; }
+  .pip { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .pip code { font-size: 0.86rem !important; padding: 6px 10px !important; }
+  .file code { font-size: 0.8rem; }
+  @media (max-width: 760px) {
+    .ct__row { grid-template-columns: 44px minmax(0, 1fr); gap: 10px 12px; align-items: start; }
+    .ct__ver, .ct__act { grid-column: 2; }
+    .ct__act { justify-content: flex-start; }
+    .ct__det { grid-column: 1 / -1; }
+  }
+</style>

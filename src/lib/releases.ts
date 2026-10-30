@@ -9,7 +9,7 @@
  * `/status.json`, che leggono il banner dei manuali e EMStudio.
  *
  * Lo stato si CALCOLA dalle date, non si scrive:
- *   - senza `releaseDate`                         → dev
+ *   - `status: development` (nessuna data di rilascio) → dev
  *   - con `eolDate` già passata, o senza `eolDate` → archived
  *   - tra le linee rilasciate e ancora supportate,
  *     la più recente                              → recommended
@@ -33,7 +33,7 @@ export interface Componente {
   roles: string[]; core: boolean;
   version: string | null; source: string | null; dev: boolean;
   action: 'download' | 'install' | 'open' | 'pip' | 'app' | 'none';
-  status: string; note?: string; downloadUrl?: string; docsUrl?: string; repoUrl?: string;
+  status: string; versionNote?: string; note?: string; downloadUrl?: string; docsUrl?: string; repoUrl?: string;
 }
 export interface Linea {
   version: string; slug: string; title: string; state: Stato; label: string;
@@ -49,7 +49,8 @@ const CORE = new Set(['yed-palette', 'source-list-xlsx', 'folder-tree']);
 
 export function statoDi(v: CollectionEntry<'versions'>, tutte: CollectionEntry<'versions'>[], oggi = new Date()): Stato {
   const d = v.data;
-  if (!d.releaseDate) return 'dev';
+  if (d.status === 'development') return 'dev';
+  if (!d.releaseDate) return 'archived';
   if (!d.eolDate || d.eolDate < oggi) return 'archived';
   const vive = tutte.filter((x) => x.data.releaseDate && x.data.eolDate && x.data.eolDate >= oggi && x.data.releaseDate <= oggi);
   const piuRecente = vive.sort((a, b) => b.data.releaseDate!.valueOf() - a.data.releaseDate!.valueOf())[0];
@@ -93,6 +94,7 @@ async function costruisci(): Promise<Manifesto> {
           dev: paired && /dev|rc|a\d|b\d/i.test(String(shown)),
           action: !paired ? 'none' : isPip ? 'pip' : isApp ? 'app' : c.action,
           status: c.status,
+          versionNote: c.versionNote,
           note: c.note,
           downloadUrl: c.downloadUrl ?? t?.data.downloadUrl,
           docsUrl: c.docsUrl ?? t?.data.docsUrl,
