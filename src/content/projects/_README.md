@@ -14,15 +14,15 @@ a `homepageImages` array to the project's frontmatter:
 
 ```yaml
 homepageImages:
-  - "villa-of-aiano/unnamed.jpg"
-  - "villa-of-aiano/unnamed-2.jpg"
+  - "villa-of-aiano/villa-of-aiano-01.jpg"
+  - "villa-of-aiano/villa-of-aiano-03.jpg"
 ```
 
 Rules of thumb:
 
 - **Paths are relative to `src/assets/projects/`**. They resolve to
   `src/assets/projects/<entry>` at build time (e.g.
-  `villa-of-aiano/unnamed.jpg` → `src/assets/projects/villa-of-aiano/unnamed.jpg`).
+  `villa-of-aiano/villa-of-aiano-01.jpg` → `src/assets/projects/villa-of-aiano/villa-of-aiano-01.jpg`).
 - **Each entry becomes one tile** in the carousel. Pick images that
   look good at ~320×180 (16:9). Anything under ~800px on the long
   edge will look blurry at that crop.

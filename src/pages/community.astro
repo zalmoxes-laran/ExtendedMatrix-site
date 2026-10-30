@@ -7,13 +7,28 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const emHour = (await getCollection('emHour'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const upcomingEmHour = emHour.filter((e) => e.data.date >= today || e.data.upcoming);
-const pastEmHour     = emHour.filter((e) => e.data.date <  today && !e.data.upcoming);
+// A session is upcoming only while its date is ahead: the `upcoming` flag
+// no longer keeps a July session «upcoming» in October (audit C1).
+const upcomingEmHour = emHour.filter((e) => e.data.date >= today);
+const pastEmHour     = emHour.filter((e) => e.data.date <  today);
+
+// The next EM Hour by its rule: second Thursday of the month, 14:00 Rome.
+// Computed at build time (the site rebuilds every six hours) and again in
+// the browser, so the ticket is right even on an old build.
+function secondThursday(y: number, m: number) {
+  const first = new Date(Date.UTC(y, m, 1));
+  const day = 1 + ((4 - first.getUTCDay() + 7) % 7) + 7;
+  return new Date(Date.UTC(y, m, day, 23, 0)); // end of that day: only the date is shown
+}
+let nextEm = secondThursday(today.getUTCFullYear(), today.getUTCMonth());
+if (nextEm < today) nextEm = secondThursday(today.getUTCFullYear(), today.getUTCMonth() + 1);
+const emJoin = emHour.find((e) => e.data.meetingUrl)?.data.meetingUrl;
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 const devMeetings = (await getCollection('devMeetings'))
   .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const upcomingDev = devMeetings.filter((e) => e.data.date >= today || e.data.upcoming);
-const pastDev     = devMeetings.filter((e) => e.data.date <  today && !e.data.upcoming);
+const upcomingDev = devMeetings.filter((e) => e.data.date >= today);
+const pastDev     = devMeetings.filter((e) => e.data.date <  today);
 
 // Featured events (top 3 most recent) for the preview strip
 const allEvents = (await getCollection('events'))
@@ -159,6 +174,19 @@ const fmtTime = (d: Date) =>
             week?".
           </p>
         </header>
+
+        <div class="ticket" data-next-em>
+          <div class="ticket__date">
+            <span data-em-mon>{MON[nextEm.getUTCMonth()]}</span>
+            <b data-em-day>{nextEm.getUTCDate()}</b>
+            <span>Thu</span>
+          </div>
+          <div>
+            <h3>Next EM Hour</h3>
+            <p>14:00 Rome time, 60 minutes, on Teams in the browser. Open chat, screen shares, demos. No registration, no Microsoft account needed.</p>
+            {emJoin && <a class="ticket__go" href={emJoin} target="_blank" rel="noopener">Join the call ↗</a>}
+          </div>
+        </div>
 
         {upcomingEmHour.length > 0 && (
           <div class="upcoming">
@@ -313,6 +341,19 @@ const fmtTime = (d: Date) =>
   </section>
 </BaseLayout>
 
+<script>
+  // Recompute the next second Thursday in the visitor's browser.
+  const el = document.querySelector<HTMLElement>('[data-next-em]');
+  if (el) {
+    const now = new Date();
+    const second = (y: number, m: number) => { const f = new Date(y, m, 1); return new Date(y, m, 1 + ((4 - f.getDay() + 7) % 7) + 7, 15, 0); };
+    let n = second(now.getFullYear(), now.getMonth());
+    if (n < now) n = second(now.getFullYear(), now.getMonth() + 1);
+    el.querySelector('[data-em-mon]')!.textContent = n.toLocaleString('en-GB', { month: 'short' });
+    el.querySelector('[data-em-day]')!.textContent = String(n.getDate());
+  }
+</script>
+
 <style>
   .comm { padding: 80px 0 60px; }
   .comm h1 { margin: 14px 0 16px; }
@@ -377,7 +418,8 @@ const fmtTime = (d: Date) =>
     color: var(--em-gold-ink);
     white-space: nowrap;
   }
-  .block h3 {
+  /* only the «Upcoming» / «Past sessions» subheads: card titles keep their own style */
+  .block :is(.upcoming, .past) > h3 {
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -588,4 +630,12 @@ const fmtTime = (d: Date) =>
     .channels { grid-template-columns: 1fr; }
     .meet { grid-template-columns: 1fr; gap: 8px; }
   }
+
+  .ticket { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 18px; align-items: start; margin: 18px 0 8px; padding: 20px; border: 1px solid var(--em-border); border-radius: var(--radius-lg); background: var(--em-surface); }
+  .ticket__date { display: grid; justify-items: center; border-radius: 8px; background: var(--em-gold-tint); padding: 8px 0; }
+  .ticket__date b { font: 700 1.7rem/1.1 var(--font-display); color: var(--em-text); }
+  .ticket__date span { font: 600 0.68rem var(--font-sans); letter-spacing: 0.1em; text-transform: uppercase; color: var(--em-gold-ink); }
+  .ticket h3 { font-size: 1.1rem; }
+  .ticket p { color: var(--em-text-muted); font-size: 0.92rem; margin-top: 4px; }
+  .ticket__go { display: inline-block; margin-top: 10px; font-weight: 600; }
 </style>

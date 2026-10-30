@@ -9,8 +9,8 @@ order: 15
 cover: ../../assets/projects/2022_nora.jpg
 coverAlt: "The Roman Forum of Nora — virtual reconstruction"
 homepageImages:
-  - "forum-of-nora/unnamed-2.jpg"
-  - "forum-of-nora/unnamed.jpg"
+  - "forum-of-nora/forum-of-nora-02.jpg"
+  - "forum-of-nora/forum-of-nora-01.jpg"
 ---
 
 The archaeological site of Nora is located on the promontory of Capo di Pula, on the south coast of Sardinia, about 30 km south-west of Cagliari.
@@ -19,7 +19,7 @@ The forum occupies a level zone in the eastern sector of the Roman city and curr
 
 The area was discovered during the second half of the 20th century by Gennaro Pesce, and then intensively excavated from 1997 to 2006 by the **University of Padova**.
 
-![Proxy model of the reconstruction](../../assets/projects/forum-of-nora/unnamed.jpg)
+![Proxy model of the reconstruction](../../assets/projects/forum-of-nora/forum-of-nora-01.jpg)
 
 *Proxy model of the reconstruction*
 
@@ -31,7 +31,7 @@ A 3D reconstruction of all the buildings facing the square — including their i
 
 The aim of the reconstruction was to create a 3D scene easy to understand and explore both for experts and non-experts. The forum of Nora was also published online with both **EMviq** and **Hathor**, the 3D web-apps included in the Extended Matrix Framework (EMF).
 
-![Online sharing](../../assets/projects/forum-of-nora/unnamed-2.jpg)
+![Online sharing](../../assets/projects/forum-of-nora/forum-of-nora-02.jpg)
 
 *Online sharing*
 

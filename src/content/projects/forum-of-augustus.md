@@ -9,8 +9,8 @@ order: 20
 cover: ../../assets/projects/2020_augustus.png
 coverAlt: "Proxy models of the Forum of Augustus reconstruction"
 homepageImages:
-  - "forum-of-augustus/unnamed.jpg"
-  - "forum-of-augustus/unnamed-2.jpg"
+  - "forum-of-augustus/forum-of-augustus-01.jpg"
+  - "forum-of-augustus/forum-of-augustus-02.jpg"
 ---
 
 The Forum of Augustus was built by the Emperor Augustus between the end of the 1st century B.C. and the beginning of the 1st century A.D. in a key position within the centre of Rome, near the Forum of Caesar and the Roman Forum.
@@ -19,7 +19,7 @@ The Forum of Augustus consists of a rectangular square dominated by the **Temple
 
 Recent archaeological discoveries allowed an up-to-date virtual reconstruction of the whole Roman monument, realised by the **DHILab of CNR-ISPC**.
 
-![Proxy models of the reconstruction](../../assets/projects/forum-of-augustus/unnamed.jpg)
+![Proxy models of the reconstruction](../../assets/projects/forum-of-augustus/forum-of-augustus-01.jpg)
 
 *Proxy models of the reconstruction*
 
@@ -27,7 +27,7 @@ Recent archaeological discoveries allowed an up-to-date virtual reconstruction o
 
 For this project the Extended Matrix methodology was employed to track and manage the entire process of reconstruction — sources used, interpretive reasoning, and the resulting reliability of every node in the reconstruction graph.
 
-![Proxy models and representation models](../../assets/projects/forum-of-augustus/unnamed-2.jpg)
+![Proxy models and representation models](../../assets/projects/forum-of-augustus/forum-of-augustus-02.jpg)
 
 *Proxy models and representation models*
 

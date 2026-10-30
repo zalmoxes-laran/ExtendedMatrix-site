@@ -15,19 +15,19 @@ In 2019 a collapsed portion of the external surface of the "M2" wall was discove
 
 The reconstructive proposals of the "M2" and "M3" defensive walls combine fieldwork data, historical and geological data, geophysics results, archaeological comparisons, literary sources, and iconographic sources.
 
-![Proxy models of the reconstruction](../../assets/projects/aquileia-walls/unnamed.jpg)
+![Proxy models of the reconstruction](../../assets/projects/aquileia-walls/aquileia-walls-01.jpg)
 
 *Proxy models of the reconstruction*
 
-![Representation models of the Late Roman wall of Aquileia](../../assets/projects/aquileia-walls/unnamed-2.jpg)
+![Representation models of the Late Roman wall of Aquileia](../../assets/projects/aquileia-walls/aquileia-walls-03.jpg)
 
 *Representation models of the Late Roman wall of Aquileia*
 
-![View of the 3D reconstruction](../../assets/projects/aquileia-walls/unnamed-3.jpg)
+![View of the 3D reconstruction](../../assets/projects/aquileia-walls/aquileia-walls-04.jpg)
 
 *View of the 3D reconstruction*
 
-![One of the entrances located along the external wall](../../assets/projects/aquileia-walls/unnamed-4.jpg)
+![One of the entrances located along the external wall](../../assets/projects/aquileia-walls/aquileia-walls-05.jpg)
 
 *One of the entrances located along the external wall*
 
@@ -35,11 +35,11 @@ The reconstructive proposals of the "M2" and "M3" defensive walls combine fieldw
 
 The Extended Matrix method was used for mapping, validating and representing the 3D reconstruction and the reconstructive process of the Late Roman defensive walls of Aquileia. Applying EM allowed the analysis of both the archaeological context and the connected sources to be improved, supporting a virtual reconstruction based on scientific data — transparent and easy to interact with.
 
-![Extended Matrix](../../assets/projects/aquileia-walls/unnamed-5.jpg)
+![Extended Matrix](../../assets/projects/aquileia-walls/aquileia-walls-06.jpg)
 
 *Extended Matrix*
 
-![Ortographic view of the 3D reconstruction of the Late Roman wall](../../assets/projects/aquileia-walls/unnamed.png)
+![Ortographic view of the 3D reconstruction of the Late Roman wall](../../assets/projects/aquileia-walls/aquileia-walls-02.png)
 
 *Orthographic view of the 3D reconstruction of the Late Roman wall*
 

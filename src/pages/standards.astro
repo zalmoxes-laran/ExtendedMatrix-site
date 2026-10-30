@@ -82,13 +82,17 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
 </BaseLayout>
 
 <style>
-  .std { padding: 3rem 0 4rem; }
-  .std__lede { max-width: 46em; font-size: 1.05rem; }
-  .std__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem; margin: 2rem 0; }
-  .std__card { border: 1px solid rgba(0,0,0,.12); border-radius: 10px; padding: 1.25rem 1.4rem; }
-  .std__card h2 { font-size: 1.2rem; margin: 0 0 .6rem; }
-  .std__card ul { padding-left: 1.1rem; margin: .8rem 0; }
-  .std__card li { margin: .25rem 0; }
-  .std__pid { font-size: .85rem; opacity: .8; word-break: break-all; }
-  .std__note { max-width: 46em; font-size: .95rem; opacity: .85; }
+  .std { padding: clamp(40px, 6vw, 64px) 0 24px; }
+  .std h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); margin-top: 16px; }
+  .std__lede { max-width: 62ch; font-size: 1.05rem; color: var(--em-text-muted); margin-top: 12px; }
+  .std__lede code, .std__pid code { font: 500 0.84em var(--font-mono); background: var(--em-bg-warm); border: 1px solid var(--em-border); border-radius: 4px; padding: 0 4px; }
+  .std__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin: 32px 0; }
+  .std__card { background: var(--em-surface); border: 1px solid var(--em-border); border-radius: var(--radius-lg); padding: 24px; display: grid; gap: 12px; align-content: start; }
+  .std__card h2 { font-size: 1.2rem; }
+  .std__card p { color: var(--em-text-muted); font-size: 0.92rem; }
+  .std__card ul { list-style: none; display: grid; gap: 6px; padding-top: 10px; border-top: 1px solid var(--em-border); font-size: 0.92rem; }
+  .std__card li a { font-weight: 600; }
+  .std__pid { font-size: 0.8rem !important; color: var(--em-text-faint) !important; overflow-wrap: anywhere; }
+  .std__note { max-width: 62ch; font-size: 0.92rem; color: var(--em-text-muted); }
+  .std__note a { text-decoration: underline; text-underline-offset: 2px; }
 </style>

@@ -14,11 +14,11 @@ The **#SegniArcheologia** project aims to enhance the Cultural Heritage of Segni
 
 Digital technologies, Cultural Heritage specialists and experts from different fields of research combined their knowledge to create an interactive guide of Segni. A web-app for smartphone and tablet was realised to store all the information regarding Segni and to establish a connection with the local museum.
 
-![Proxy models of the reconstruction](../../assets/projects/temple-of-segni/unnamed.png)
+![Proxy models of the reconstruction](../../assets/projects/temple-of-segni/temple-of-segni-01.png)
 
 *Proxy models of the reconstruction*
 
-![Online sharing](../../assets/projects/temple-of-segni/unnamed-2.png)
+![Online sharing](../../assets/projects/temple-of-segni/temple-of-segni-02.png)
 
 *Online sharing*
 
@@ -26,15 +26,15 @@ Digital technologies, Cultural Heritage specialists and experts from different f
 
 Within the project, EM was used to guide the reconstructive process of the **Late-Republican temple** built on the acropolis of the city, tracking sources and the reasoning behind every interpretive decision.
 
-![Representation of the chronological periods](../../assets/projects/temple-of-segni/unnamed-3.png)
+![Representation of the chronological periods](../../assets/projects/temple-of-segni/temple-of-segni-03.png)
 
 *Representation of the chronological periods*
 
-![View of the final representation model (aerial point of view)](../../assets/projects/temple-of-segni/unnamed-4.png)
+![View of the final representation model (aerial point of view)](../../assets/projects/temple-of-segni/temple-of-segni-04.png)
 
 *View of the final representation model (aerial point of view)*
 
-![View of the final representation model (terrestrial point of view)](../../assets/projects/temple-of-segni/unnamed-5.png)
+![View of the final representation model (terrestrial point of view)](../../assets/projects/temple-of-segni/temple-of-segni-05.png)
 
 *View of the final representation model (terrestrial point of view)*
 
