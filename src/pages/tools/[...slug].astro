@@ -199,7 +199,7 @@ const B = import.meta.env.BASE_URL.replace(/\/$/, '');
                       : <span class="tp__nodl">—</span>}
                   </td>
                   <td><a href={`${B}/versions/${v.id.replace(/\.md$/, '')}/`}><strong>EM {v.data.version}</strong></a></td>
-                  <td class="tp__ver">{versioneMostrata(ref?.version, versioniRisolte)}</td>
+                  <td class="tp__ver">{/^tbd$/i.test(String(ref?.version ?? "").trim()) ? "not paired yet" : versioneMostrata(ref?.version, versioniRisolte)}{ref?.versionNote && <small> · {ref.versionNote}</small>}</td>
                   <td>{ref?.status ?? '—'}</td>
                   {/* Stessa nota, stessa sostituzione della pagina di versione:
                       un segnaposto reso da un renderer e non dall'altro finisce
