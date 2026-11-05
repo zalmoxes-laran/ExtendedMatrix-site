@@ -44,3 +44,14 @@ to end users.
 
 See the [Heriverse documentation](https://docs.extendedmatrix.org/projects/heriverse/en/1.5/)
 for the user manual.
+
+## How to cite
+
+The platform at version 1.5 — what it does, where it comes from and how
+it reads the Extended Matrix graph — is described in a preprint:
+
+> Demetrescu, E., Aloisi, R., Cuconato, F., Fanini, B., Berto, S.,
+> Lupinacci, A., Cozza, M., Bruno, F. (2026). *Heriverse: a web
+> environment for publishing 3D heritage studies together with their
+> reasoning.* Preprint, Zenodo, version 1.0.
+> [doi:10.5281/zenodo.23982452](https://doi.org/10.5281/zenodo.23982452)
