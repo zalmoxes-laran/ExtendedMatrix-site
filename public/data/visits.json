@@ -1,37 +1,37 @@
 {
   "schema": 1,
-  "fetched_at": "2026-11-05T14:10:06Z",
+  "fetched_at": "2026-11-06T13:51:48Z",
   "range": {
     "start": "2026-06-02",
-    "end": "2026-11-05"
+    "end": "2026-11-06"
   },
-  "total": 6865,
-  "total_events": 1589,
+  "total": 6968,
+  "total_events": 1597,
   "countries": [
     {
       "code": "IT",
       "name": "Italy",
-      "count": 3010
+      "count": 3026
     },
     {
       "code": "US",
       "name": "United States",
-      "count": 911
+      "count": 913
     },
     {
       "code": "ES",
       "name": "Spain",
-      "count": 556
+      "count": 574
     },
     {
       "code": "MX",
       "name": "Mexico",
-      "count": 216
+      "count": 218
     },
     {
       "code": "GB",
       "name": "United Kingdom",
-      "count": 171
+      "count": 172
     },
     {
       "code": "TR",
@@ -46,12 +46,12 @@
     {
       "code": "BE",
       "name": "Belgium",
-      "count": 137
+      "count": 138
     },
     {
       "code": "DE",
       "name": "Germany",
-      "count": 125
+      "count": 126
     },
     {
       "code": "GR",
@@ -59,14 +59,14 @@
       "count": 116
     },
     {
-      "code": "SG",
-      "name": "Singapore",
+      "code": "FR",
+      "name": "France",
       "count": 106
     },
     {
-      "code": "FR",
-      "name": "France",
-      "count": 105
+      "code": "SG",
+      "name": "Singapore",
+      "count": 106
     },
     {
       "code": "SE",
@@ -74,19 +74,19 @@
       "count": 85
     },
     {
+      "code": "PL",
+      "name": "Poland",
+      "count": 80
+    },
+    {
       "code": "IS",
       "name": "Iceland",
       "count": 77
     },
     {
-      "code": "PL",
-      "name": "Poland",
-      "count": 68
-    },
-    {
       "code": "CA",
       "name": "Canada",
-      "count": 64
+      "count": 65
     },
     {
       "code": "AT",
@@ -96,17 +96,17 @@
     {
       "code": "IN",
       "name": "India",
-      "count": 51
+      "count": 53
+    },
+    {
+      "code": "BR",
+      "name": "Brazil",
+      "count": 52
     },
     {
       "code": "AE",
       "name": "United Arab Emirates",
-      "count": 51
-    },
-    {
-      "code": "DZ",
-      "name": "Algeria",
-      "count": 43
+      "count": 52
     }
   ]
 }
