@@ -57,9 +57,17 @@ Jupyter) carry the live figures with them.
 
 ## Manual
 
-The full user manual — tutorial, how-to recipes, interface reference and the
-rationale behind the design — is on **Read the Docs**:
-[EMStudio documentation](https://docs.extendedmatrix.org/projects/emstudio-doc/en/1.6/).
+The manual of EMStudio 1.6 is published, in **English** and in **Italian**, and
+downloadable as PDF or EPUB for whoever works where there is no network:
+
+- [English](https://docs.extendedmatrix.org/projects/emstudio-doc/en/1.6/)
+- [Italiano](https://docs.extendedmatrix.org/projects/emstudio-doc/it/1.6/)
+
+It is organised the way a question arrives: tutorials for the first hour, how-to
+guides for a task at hand, a reference for menus and shortcuts, and explanations
+for why the editor is shaped as it is. The screenshots are taken from the
+running application and retaken in each language, so the picture matches the
+interface the reader has in front of them.
 
 ## Status & versions
 

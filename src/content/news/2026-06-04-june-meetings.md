@@ -34,7 +34,6 @@ slides, no recording. On the table:
 
 👉 **Join:**
 [Teams meeting](https://teams.microsoft.com/meet/391652615209179?p=zvw8dplEO88EhblzOS)
-· Event page on the site: [extendedmatrix.org/events/2026-06-11-june](https://extendedmatrix.org/events/2026-06-11-june/)
 
 ## 🛠️ EM Developer Meeting — Tuesday 23 June, 15:00–16:00 CET
 
