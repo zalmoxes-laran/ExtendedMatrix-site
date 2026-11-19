@@ -1,0 +1,223 @@
+---
+/**
+ * Documentation — one page that says where every manual of the ecosystem is.
+ *
+ * Two houses, on purpose: the Extended Matrix manuals are published under
+ * docs.extendedmatrix.org, the StratiGraph ones under docs.stratigraph-eccch.eu
+ * (the project that funds and builds the node has its own address and its own
+ * look). Each manual lives beside the code it describes; this page only points.
+ *
+ * Keep the cards in reading order — the language first, then what you author
+ * with, then what you publish with — rather than alphabetically.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+const B = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+type Manual = {
+  name: string;
+  role: string;
+  blurb: string;
+  href: string;
+  extra?: { label: string; href: string }[];
+  tool?: string;          // the tool page on this site
+};
+
+const em: Manual[] = [
+  {
+    name: 'Extended Matrix',
+    role: 'The language',
+    blurb:
+      'The method itself: the node types, the connectors, how a stratigraphic ' +
+      'reading becomes a graph that another archaeologist can argue with. Start ' +
+      'here if you are new — every other manual assumes these words.',
+    href: 'https://docs.extendedmatrix.org/en/1.5/',
+    extra: [{ label: 'Glossary', href: 'https://docs.extendedmatrix.org/en/1.5/glossary.html' }],
+  },
+  {
+    name: 'EMStudio',
+    role: 'The editor',
+    blurb:
+      'The standalone editor, recommended for authoring from EM 1.6 onwards: ' +
+      'six workspaces, the native em.json, and the legacy GraphML graphs opened ' +
+      'in place. Published in English and Italian, and downloadable as PDF or ' +
+      'EPUB for a field computer with no network.',
+    href: 'https://docs.extendedmatrix.org/projects/emstudio-doc/en/1.6/',
+    extra: [
+      { label: 'In italiano', href: 'https://docs.extendedmatrix.org/projects/emstudio-doc/it/1.6/' },
+      { label: 'PDF', href: 'https://docs.extendedmatrix.org/_/downloads/emstudio-doc/en/1.6/pdf/' },
+    ],
+    tool: '/tools/emstudio/',
+  },
+  {
+    name: 'EM Tools',
+    role: 'The Blender add-on',
+    blurb:
+      'Where the graph meets the 3D model: proxies, representation models, ' +
+      'epochs and the panels that keep the reconstruction and its argument in ' +
+      'the same file.',
+    href: 'https://docs.extendedmatrix.org/projects/EM-tools/en/1.5/',
+    tool: '/tools/em-tools/',
+  },
+  {
+    name: '3D Survey Collection',
+    role: 'From the survey to the mesh',
+    blurb:
+      'The photogrammetric pipeline and the import of survey data into Blender, ' +
+      'including the georeferencing and the levels of detail the EM workflow expects.',
+    href: 'https://docs.extendedmatrix.org/projects/3DSC/en/1.7.0/',
+    tool: '/tools/3dsc/',
+  },
+  {
+    name: 's3Dgraphy',
+    role: 'The library',
+    blurb:
+      'The Python implementation of the language: the datamodel every tool ' +
+      'reads and writes, the CRMem declarations, and the API for whoever scripts ' +
+      'against a study outside Blender.',
+    href: 'https://docs.extendedmatrix.org/projects/s3dgraphy/en/v1.5/',
+    extra: [{ label: 'CRMem', href: 'https://docs.extendedmatrix.org/projects/s3dgraphy/en/v1.6/crmem.html' }],
+    tool: '/tools/s3dgraphy/',
+  },
+  {
+    name: 'Heriverse',
+    role: 'The published scene',
+    blurb:
+      'What a visitor, a peer or a reviewer meets in a browser: the exported ' +
+      'reconstruction with its paradata, and how a study gets there.',
+    href: 'https://docs.extendedmatrix.org/projects/heriverse/en/1.5/',
+    tool: '/tools/heriverse/',
+  },
+];
+
+const sg: Manual[] = [
+  {
+    name: 'The node, and its catalogue',
+    role: 'StratiGraph',
+    blurb:
+      'The place a team shares: rooms, studies, documents, the signatures that ' +
+      'say who may see what, and the catalogue that publishes what a room decides ' +
+      'to publish. Two parts — working in a room, and running a node of your own.',
+    href: 'https://docs.stratigraph-eccch.eu/projects/node/en/latest/',
+  },
+  {
+    name: 'StratiField',
+    role: 'StratiGraph',
+    blurb:
+      'The field assistant: recording on site, on a phone or on a laptop with no ' +
+      'network, and the synchronisation with the node when there is one.',
+    href: 'https://docs.stratigraph-eccch.eu/projects/field/en/latest/',
+  },
+  {
+    name: 'Recording templates',
+    role: 'StratiGraph',
+    blurb:
+      'The sheets and the controlled vocabularies a team starts from: the ' +
+      'stratigraphic unit record, the axes of status and origin, the modules a ' +
+      'discipline adds. English and Italian.',
+    href: 'https://docs.stratigraph-eccch.eu/projects/templates/en/v0.1.0/',
+    extra: [{ label: 'In italiano', href: 'https://docs.stratigraph-eccch.eu/projects/templates/it/v0.1.0/' }],
+  },
+  {
+    name: 'StratiGraph Academy',
+    role: 'Learning',
+    blurb:
+      'Not a manual: the place where you learn the craft — the competence nodes ' +
+      'and the five working phases of an investigation, citing the manuals ' +
+      'rather than copying them.',
+    href: 'https://academy.stratigraph-eccch.eu',
+  },
+];
+---
+
+<BaseLayout
+  title="Documentation"
+  description="Every manual of the Extended Matrix ecosystem and of the StratiGraph tools, with the address where each one is published."
+>
+  <section class="doc">
+    <div class="container">
+      <span class="tag">Documentation</span>
+      <h1>Every manual, and the door it is behind.</h1>
+      <p class="doc__lede">
+        Each tool keeps its manual beside its own code, and publishes it at one
+        of two addresses: the Extended Matrix manuals live under
+        <a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">docs.extendedmatrix.org</a>,
+        the StratiGraph ones under
+        <a href="https://docs.stratigraph-eccch.eu" target="_blank" rel="noopener">docs.stratigraph-eccch.eu</a>.
+        Every manual has a version menu at the bottom left of its pages: when you
+        cite one in a publication, cite the version you read rather than
+        <code>latest</code>, so that the sentence stays where you found it.
+      </p>
+
+      <h2 class="doc__family">Extended Matrix</h2>
+      <div class="doc__grid">
+        {em.map((m) => (
+          <article class="doc__card">
+            <span class="doc__role">{m.role}</span>
+            <h3><a href={m.href} target="_blank" rel="noopener">{m.name}<span aria-hidden="true"> ↗</span></a></h3>
+            <p>{m.blurb}</p>
+            {(m.extra?.length || m.tool) && (
+              <ul>
+                {m.extra?.map((e) => (
+                  <li><a href={e.href} target="_blank" rel="noopener">{e.label}</a></li>
+                ))}
+                {m.tool && <li><a href={`${B}${m.tool}`}>The tool</a></li>}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+
+      <h2 class="doc__family">StratiGraph</h2>
+      <p class="doc__note">
+        StratiGraph is the Horizon Europe project that builds the shared node
+        around the Extended Matrix. Its manuals have an address and a look of
+        their own, and they cite these ones where a step of the work passes
+        through an EM tool.
+      </p>
+      <div class="doc__grid">
+        {sg.map((m) => (
+          <article class="doc__card doc__card--sg">
+            <span class="doc__role">{m.role}</span>
+            <h3><a href={m.href} target="_blank" rel="noopener">{m.name}<span aria-hidden="true"> ↗</span></a></h3>
+            <p>{m.blurb}</p>
+            {m.extra?.length && (
+              <ul>
+                {m.extra.map((e) => (
+                  <li><a href={e.href} target="_blank" rel="noopener">{e.label}</a></li>
+                ))}
+              </ul>
+            )}
+          </article>
+        ))}
+      </div>
+
+      <p class="doc__note doc__note--last">
+        A manual is changed in the repository of its own tool: the
+        <a href={`${B}/code`}>code map</a> lists them, and each repository's
+        README carries the same table of manuals you see here. Mistakes and gaps
+        are welcome as issues — a page that answered the wrong question is a
+        defect like any other.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .doc { padding: clamp(40px, 6vw, 64px) 0 24px; }
+  .doc h1 { font-size: clamp(2rem, 4.6vw, 3.1rem); margin-top: 16px; }
+  .doc__lede { max-width: 62ch; font-size: 1.05rem; color: var(--em-text-muted); margin-top: 12px; }
+  .doc__lede code { font: 500 0.84em var(--font-mono); background: var(--em-bg-warm); border: 1px solid var(--em-border); border-radius: 4px; padding: 0 4px; }
+  .doc__lede a, .doc__note a { text-decoration: underline; text-underline-offset: 2px; }
+  .doc__family { font-size: 1.05rem; letter-spacing: .08em; text-transform: uppercase; color: var(--em-text-faint); margin: 40px 0 4px; }
+  .doc__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin: 18px 0 8px; }
+  .doc__card { background: var(--em-surface); border: 1px solid var(--em-border); border-radius: var(--radius-lg); padding: 24px; display: grid; gap: 10px; align-content: start; }
+  .doc__card--sg { border-left: 3px solid var(--em-accent, var(--em-border)); }
+  .doc__role { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--em-text-faint); }
+  .doc__card h3 { font-size: 1.2rem; }
+  .doc__card p { color: var(--em-text-muted); font-size: .92rem; }
+  .doc__card ul { list-style: none; display: flex; flex-wrap: wrap; gap: 14px; padding: 0; margin: 0; font-size: .9rem; }
+  .doc__card ul { padding-top: 10px; border-top: 1px solid var(--em-border); }
+  .doc__card li a { font-weight: 600; }
+  .doc__note { max-width: 62ch; font-size: .92rem; color: var(--em-text-muted); }
+  .doc__note--last { margin-top: 28px; }
+</style>

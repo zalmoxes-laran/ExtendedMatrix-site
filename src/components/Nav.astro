@@ -16,6 +16,7 @@ const items: Array<[string, string]> = [
   ['/projects', 'Projects'],
   ['/publications', 'Publications'],
   ['/standards', 'Standards'],
+  ['/documentation', 'Docs'],
   ['/community', 'Community'],
 ];
 const on = (p: string) => here === p || here.startsWith(p + '/');
@@ -37,7 +38,6 @@ const on = (p: string) => here === p || here.startsWith(p + '/');
       {items.map(([p, l]) => (
         <li><a href={`${B}${p}`} aria-current={on(p) ? 'page' : undefined}>{l}</a></li>
       ))}
-      <li><a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">Docs<span aria-hidden="true"> ↗</span></a></li>
       {rec && (
         <li class="em-nav__chip-li">
           <a class="em-nav__chip" href={`${B}/versions/${rec.slug}/`} title="The recommended line, read from the release manifest">
