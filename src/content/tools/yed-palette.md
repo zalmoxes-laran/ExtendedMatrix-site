@@ -1,7 +1,7 @@
 ---
 name: "EM palette for yEd"
 role: "Graph editor extension"
-summary: "The EM palette adds the Extended Matrix typed nodes to yEd — the free graph editor used to author GraphML files. The starting point for anyone who wants to draw an EM by hand."
+summary: "The EM palette adds the Extended Matrix typed nodes to yEd — the free graph editor used to author GraphML files. It belongs to the EM lines up to 1.5; from 1.6 onwards the authoring surface is EMStudio."
 docsUrl: "https://docs.extendedmatrix.org/en/1.5/mini_tutorials/setup_yed_palette.html"
 repoUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix"
 downloadUrl: "https://github.com/zalmoxes-laran/ExtendedMatrix/raw/refs/heads/EM_v1.5/02_ExtendedMatrix_palette/Extended%20Matrix%20palette%20v.1.5.0.graphml.zip"
@@ -12,6 +12,13 @@ order: 10
 ---
 
 ## What it is
+
+> **The palette stops at EM 1.5.** From [EM 1.6](/versions/1-6/) onwards the
+> recommended authoring surface is [EMStudio](/tools/emstudio/), which writes
+> the native `em.json` format and imports legacy `.graphml` graphs in place.
+> The palette stays available, documented and supported for projects on the
+> 1.5 LTS line and earlier; no 1.6 palette is planned.
+
 
 The **EM palette** is the canonical Extended Matrix node palette for
 [yEd Graph Editor](https://www.yworks.com/products/yed). It is a small
@@ -63,5 +70,6 @@ mini tutorial.
 
 ## Versions
 
-The palette tracks the EM formal language version. See the **Versions**
-page for the support matrix.
+The palette tracks the EM formal language version up to 1.5, which is the
+last line that uses yEd as an authoring surface. See the **Versions** page
+for the support matrix.
