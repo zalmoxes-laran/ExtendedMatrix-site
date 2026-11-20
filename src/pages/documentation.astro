@@ -89,6 +89,7 @@ const em: Manual[] = [
   },
 ];
 
+// Dormiente: la sezione che li mostra è commentata nel corpo della pagina.
 const sg: Manual[] = [
   {
     name: 'The node, and its catalogue',
@@ -127,6 +128,7 @@ const sg: Manual[] = [
     href: 'https://academy.stratigraph-eccch.eu',
   },
 ];
+void sg;  // tenuti pronti, non resi: vedi il commento nel corpo della pagina
 ---
 
 <BaseLayout
@@ -138,11 +140,9 @@ const sg: Manual[] = [
       <span class="tag">Documentation</span>
       <h1>Every manual, and the door it is behind.</h1>
       <p class="doc__lede">
-        Each tool keeps its manual beside its own code, and publishes it at one
-        of two addresses: the Extended Matrix manuals live under
+        Each tool keeps its manual beside its own code, and publishes it under
         <a href="https://docs.extendedmatrix.org" target="_blank" rel="noopener">docs.extendedmatrix.org</a>,
-        the StratiGraph ones under
-        <a href="https://docs.stratigraph-eccch.eu" target="_blank" rel="noopener">docs.stratigraph-eccch.eu</a>.
+        so that what you read is as old as what you run.
         Every manual has a version menu at the bottom left of its pages: when you
         cite one in a publication, cite the version you read rather than
         <code>latest</code>, so that the sentence stays where you found it.
@@ -167,6 +167,20 @@ const sg: Manual[] = [
         ))}
       </div>
 
+      {/*
+        SPENTA FINO A NUOVO ORDINE — sezione StratiGraph (E.D., 19 novembre 2026).
+        I manuali StratiGraph esistono e sono pubblici: docs.stratigraph-eccch.eu e
+        academy.stratigraph-eccch.eu, raggiungibili dai README dei repository, dalla
+        console del nodo e dai deliverable. Pubblici ma non pubblicizzati: due dei
+        quattro collegamenti porterebbero oggi a pagine che dichiarano di essere in
+        costruzione (StratiField 2 pagine, l'Academy senza le pagine delle fasi), e
+        su un sito pubblico quella frase diventa «questo progetto non ha ancora la
+        documentazione».
+        SI RIACCENDE quando il manuale del nodo ha i sei gesti della parte utente
+        (portare dentro un file, pubblicare, firmare, foto → modello 3D, immagine →
+        IIIF, il passaggio a StratiField) e l'Academy ha le cinque pagine di fase.
+        Per riaccenderla: togliere questo commento e la riga `void sg` qui sotto.
+
       <h2 class="doc__family">StratiGraph</h2>
       <p class="doc__note">
         StratiGraph is the Horizon Europe project that builds the shared node
@@ -190,6 +204,7 @@ const sg: Manual[] = [
           </article>
         ))}
       </div>
+      */}
 
       <p class="doc__note doc__note--last">
         A manual is changed in the repository of its own tool: the
