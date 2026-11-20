@@ -85,3 +85,13 @@ authoring the Extended Matrix. **yEd** remains fully supported for the entire
 that formalised EM lives on there. The GraphML import path exists precisely to
 make the switch to 1.6 painless: open your `.graphml`, save as `.em.json`, keep
 going.
+
+## Scripting EMStudio in Python
+
+EMStudio has a Python console (*Tools ▸ Python console*) and a scripting API,
+`import em`, in the spirit of Blender's `bpy`: the open graph, its nodes and
+epochs, the windows, and every menu command through `em.app.commands.run(...)`.
+The full reference, with every call and examples, is the
+[EMStudio Python API](https://docs.extendedmatrix.org/projects/emstudio-python-api/en/latest/).
+Extension authors start from the *Extending EMStudio* section of the
+[manual](https://docs.extendedmatrix.org/projects/emstudio-doc/en/1.6/).
